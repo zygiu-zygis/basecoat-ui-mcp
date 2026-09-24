@@ -102,6 +102,6 @@ See [ARCHITECTURE.md](ARCHITECTURE.md) for runtime boundaries, packaging, byte c
 
 ## Author, license, and upstream attribution
 
-Created and maintained by **Žygimantas Jasiulionis / Intellmedia** under the [MIT License](LICENSE).
+Created and maintained by [Žygimantas Jasiulionis](https://zygimantas.jasiulionis.eu/) / Intellmedia under the [MIT License](LICENSE).
 
 Basecoat UI is an independent MIT-licensed project by Ronan Berder. Adapted templates and metadata retain the complete Basecoat notice in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md). Basecoat adapts design patterns from [shadcn/ui](https://ui.shadcn.com); the notice preserves that attribution. No Basecoat CSS or shadcn source is vendored here.
