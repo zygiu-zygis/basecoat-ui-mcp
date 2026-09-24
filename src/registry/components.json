@@ -1,0 +1,2271 @@
+{
+  "schema_version": 1,
+  "upstream": {
+    "repository": "https://github.com/hunvreus/basecoat",
+    "version": "1.0.2",
+    "revision": "6953a4adbe63cb5ba25e2bda30d7b76202d4f2b4",
+    "license": "MIT",
+    "components": [
+      {
+        "id": "accordion",
+        "name": "Accordion",
+        "variants": [],
+        "classes": [
+          "[&>details>:not(summary)]:px-4",
+          "[&>details>summary]:px-4",
+          "accordion",
+          "border",
+          "card",
+          "lucide",
+          "lucide-chevron-down",
+          "max-w-md",
+          "max-w-sm",
+          "rounded-md",
+          "w-full"
+        ],
+        "source_sha256": "91405809cc5a1ab545f4a4348af00700655e25403efecda14793ed54f9ec8ab5"
+      },
+      {
+        "id": "alert-dialog",
+        "name": "Alert Dialog",
+        "variants": [
+          "destructive",
+          "outline",
+          "secondary"
+        ],
+        "classes": [
+          "alert-dialog",
+          "badge",
+          "btn",
+          "lucide",
+          "lucide-circle-fading-plus",
+          "lucide-trash-2",
+          "lucide-users"
+        ],
+        "source_sha256": "87f878c7aba126766b5c1b50c4692a752693fb6eabca85ef75bcfda8c6b819da"
+      },
+      {
+        "id": "alert",
+        "name": "Alert",
+        "variants": [
+          "destructive",
+          "outline",
+          "secondary"
+        ],
+        "classes": [
+          "alert",
+          "badge",
+          "bg-amber-50",
+          "border-amber-200",
+          "btn",
+          "dark:bg-amber-950",
+          "dark:border-amber-900",
+          "dark:text-amber-50",
+          "gap-4",
+          "grid",
+          "items-start",
+          "lucide",
+          "lucide-circle-alert",
+          "lucide-circle-check",
+          "lucide-info",
+          "lucide-triangle-alert",
+          "max-w-md",
+          "text-amber-900",
+          "w-full"
+        ],
+        "source_sha256": "e0a40e58b864efe8a3787129b76fb86f9d5097814a9231ebb2c33006a652328a"
+      },
+      {
+        "id": "avatar",
+        "name": "Avatar",
+        "variants": [
+          "destructive",
+          "ghost",
+          "secondary"
+        ],
+        "classes": [
+          "[&_.avatar]:grayscale",
+          "avatar",
+          "avatar-badge",
+          "avatar-group",
+          "badge",
+          "bg-green-600",
+          "btn",
+          "dark:bg-green-800",
+          "dropdown-menu",
+          "flex",
+          "flex-row",
+          "flex-wrap",
+          "gap-12",
+          "gap-2",
+          "grid",
+          "items-center",
+          "lucide",
+          "lucide-plus",
+          "rounded-full",
+          "rounded-lg",
+          "w-32"
+        ],
+        "source_sha256": "e38d18c619b76fae7c02786eed47ad8582bb3454adbd1e75a28a084529c090fb"
+      },
+      {
+        "id": "badge",
+        "name": "Badge",
+        "variants": [
+          "destructive",
+          "ghost",
+          "outline",
+          "secondary"
+        ],
+        "classes": [
+          "animate-spin",
+          "badge",
+          "bg-blue-50",
+          "bg-green-50",
+          "bg-purple-50",
+          "bg-red-50",
+          "bg-sky-50",
+          "dark:bg-blue-950",
+          "dark:bg-green-950",
+          "dark:bg-purple-950",
+          "dark:bg-red-950",
+          "dark:bg-sky-950",
+          "dark:text-blue-300",
+          "dark:text-green-300",
+          "dark:text-purple-300",
+          "dark:text-red-300",
+          "dark:text-sky-300",
+          "flex",
+          "flex-wrap",
+          "gap-2",
+          "lucide",
+          "lucide-arrow-up-right",
+          "lucide-badge-check",
+          "lucide-bookmark",
+          "lucide-loader-circle",
+          "text-blue-700",
+          "text-green-700",
+          "text-purple-700",
+          "text-red-700",
+          "text-sky-700"
+        ],
+        "source_sha256": "b18706bc10366aa8f0a0ada7b6eee986883fefa6fc34dda5fdb495ccc5c5edaf"
+      },
+      {
+        "id": "breadcrumb",
+        "name": "Breadcrumb",
+        "variants": [
+          "ghost"
+        ],
+        "classes": [
+          "breadcrumb",
+          "btn",
+          "dropdown-menu",
+          "lucide",
+          "lucide-chevron-right",
+          "lucide-dot",
+          "lucide-ellipsis",
+          "sr-only"
+        ],
+        "source_sha256": "71f72ad52377d2eccebd56255a59a2c74c7392a077b015987b49aea88709e4a0"
+      },
+      {
+        "id": "button-group",
+        "name": "Button Group",
+        "variants": [
+          "ghost",
+          "outline",
+          "secondary"
+        ],
+        "classes": [
+          "[&_svg]:!text-destructive",
+          "[&amp;_[data-name]]:hidden",
+          "btn",
+          "button-group",
+          "dark:focus:bg-destructive/20",
+          "dark:hover:bg-destructive/20",
+          "dropdown-menu",
+          "flex",
+          "flex-col",
+          "focus:bg-destructive/10",
+          "focus:text-destructive",
+          "font-medium",
+          "gap-2",
+          "gap-8",
+          "h-fit",
+          "hover:bg-destructive/10",
+          "input",
+          "input-group",
+          "items-start",
+          "items-stretch",
+          "lucide",
+          "lucide-archive",
+          "lucide-arrow-left",
+          "lucide-arrow-right",
+          "lucide-audio-lines",
+          "lucide-bot",
+          "lucide-calendar",
+          "lucide-check",
+          "lucide-chevron-down",
+          "lucide-chevron-down-icon",
+          "lucide-clock",
+          "lucide-copy",
+          "lucide-ellipsis",
+          "lucide-list-filter-plus",
+          "lucide-mail-check",
+          "lucide-minus",
+          "lucide-plus",
+          "lucide-search",
+          "lucide-share",
+          "lucide-trash-2",
+          "lucide-triangle-alert",
+          "lucide-user-round-x",
+          "lucide-volume-off",
+          "min-h-16",
+          "opacity-50",
+          "popover",
+          "resize-none",
+          "rtl:rotate-180",
+          "select",
+          "shrink-0",
+          "text-destructive",
+          "text-muted-foreground",
+          "text-sm",
+          "text-xs",
+          "textarea",
+          "truncate",
+          "w-72",
+          "w-fit",
+          "w-full"
+        ],
+        "source_sha256": "e81d474a144138a6f86ac4ea813e5a52a8f1e314e902cdd6ab54843b8ef2ce4e"
+      },
+      {
+        "id": "button",
+        "name": "Button",
+        "variants": [
+          "destructive",
+          "ghost",
+          "link",
+          "outline",
+          "primary",
+          "secondary"
+        ],
+        "classes": [
+          "[&_svg]:!text-destructive",
+          "animate-spin",
+          "badge",
+          "btn",
+          "button-group",
+          "dark:focus:bg-destructive/20",
+          "dark:hover:bg-destructive/20",
+          "dropdown-menu",
+          "flex",
+          "flex-wrap",
+          "focus:bg-destructive/10",
+          "focus:text-destructive",
+          "gap-2",
+          "hover:bg-destructive/10",
+          "items-center",
+          "items-stretch",
+          "lucide",
+          "lucide-archive",
+          "lucide-arrow-left",
+          "lucide-arrow-right",
+          "lucide-arrow-up",
+          "lucide-arrow-up-right",
+          "lucide-calendar",
+          "lucide-circle-fading-arrow-up",
+          "lucide-clock",
+          "lucide-ellipsis",
+          "lucide-git-branch",
+          "lucide-list-filter-plus",
+          "lucide-loader-circle",
+          "lucide-mail-check",
+          "lucide-plus",
+          "lucide-settings",
+          "lucide-trash-2",
+          "rounded-full",
+          "rtl:rotate-180",
+          "text-destructive",
+          "w-fit"
+        ],
+        "source_sha256": "e4edf8ad16a2dd1003ee294fad216690da37c1a8ad943a005821c26885b0e202"
+      },
+      {
+        "id": "card",
+        "name": "Card",
+        "variants": [
+          "link",
+          "outline",
+          "secondary"
+        ],
+        "classes": [
+          "aspect-video",
+          "badge",
+          "btn",
+          "card",
+          "card-action",
+          "flex",
+          "flex-col",
+          "gap-2",
+          "gap-6",
+          "grid",
+          "hover:underline",
+          "inline-block",
+          "input",
+          "items-center",
+          "label",
+          "max-w-sm",
+          "ms-auto",
+          "object-cover",
+          "text-sm",
+          "underline-offset-4",
+          "w-full"
+        ],
+        "source_sha256": "a8589ff4046975c384d3d00662c3791b38d5f370da02f224476f444410ac9382"
+      },
+      {
+        "id": "chart",
+        "name": "Chart",
+        "variants": [],
+        "classes": [
+          "w-full"
+        ],
+        "source_sha256": "fda82761ed2cb1ae9f4b1295f0a6f36d5e97ae783452b959bc98d82f0e5bf895"
+      },
+      {
+        "id": "checkbox",
+        "name": "Checkbox",
+        "variants": [
+          "label"
+        ],
+        "classes": [
+          "field",
+          "fieldset",
+          "font-medium",
+          "font-normal",
+          "input",
+          "table",
+          "table-container",
+          "w-8",
+          "w-full"
+        ],
+        "source_sha256": "3edb36f5b85bd94fbb2521c26b5706974e00fe442c97a4ca2e841a1edcaf7c75"
+      },
+      {
+        "id": "combobox",
+        "name": "Combobox",
+        "variants": [
+          "ghost",
+          "outline",
+          "secondary"
+        ],
+        "classes": [
+          "badge",
+          "btn",
+          "combobox",
+          "combobox-trigger-icon",
+          "field",
+          "flex",
+          "flex-col",
+          "font-normal",
+          "input-group",
+          "justify-between",
+          "max-w-xs",
+          "scrollbar-sm",
+          "size-4",
+          "text-muted-foreground",
+          "text-xs",
+          "w-60",
+          "w-64",
+          "w-[240px]",
+          "w-full"
+        ],
+        "source_sha256": "a550d0419a739c2654b614c6227af10ac0f3a59a030063b69174f23971babfaa"
+      },
+      {
+        "id": "command",
+        "name": "Command",
+        "variants": [
+          "outline",
+          "secondary"
+        ],
+        "classes": [
+          "badge",
+          "border",
+          "btn",
+          "command",
+          "command-dialog",
+          "lucide",
+          "lucide-bell",
+          "lucide-calculator",
+          "lucide-calendar",
+          "lucide-circle-help",
+          "lucide-clipboard-paste",
+          "lucide-code",
+          "lucide-copy",
+          "lucide-credit-card",
+          "lucide-file-text",
+          "lucide-folder",
+          "lucide-folder-plus",
+          "lucide-home",
+          "lucide-image",
+          "lucide-inbox",
+          "lucide-layout-grid",
+          "lucide-list",
+          "lucide-plus",
+          "lucide-scissors",
+          "lucide-search",
+          "lucide-search-icon",
+          "lucide-settings",
+          "lucide-smile",
+          "lucide-trash",
+          "lucide-user",
+          "lucide-zoom-in",
+          "lucide-zoom-out",
+          "max-w-sm",
+          "w-full"
+        ],
+        "source_sha256": "527ce8795fa667879cb0b45d3f57fb4bb087e65d70ac9d21d341c0bdb2759148"
+      },
+      {
+        "id": "dialog",
+        "name": "Dialog",
+        "variants": [
+          "ghost",
+          "outline",
+          "secondary"
+        ],
+        "classes": [
+          "-mx-4",
+          "badge",
+          "btn",
+          "dialog",
+          "flex",
+          "flex-1",
+          "gap-2",
+          "gap-3",
+          "gap-4",
+          "grid",
+          "input",
+          "items-center",
+          "label",
+          "leading-normal",
+          "lucide",
+          "lucide-x",
+          "lucide-x-icon",
+          "max-h-[50vh]",
+          "mb-4",
+          "overflow-y-auto",
+          "px-4",
+          "scrollbar",
+          "sm:justify-start",
+          "sm:max-w-md",
+          "sm:max-w-sm",
+          "sr-only"
+        ],
+        "source_sha256": "f298ee86576c797cbf00600b1627d19c0f6b37cfb4d2f606e2fa8be43ed8af3f"
+      },
+      {
+        "id": "drawer",
+        "name": "Drawer",
+        "variants": [
+          "outline",
+          "secondary"
+        ],
+        "classes": [
+          "badge",
+          "btn",
+          "drawer",
+          "flex",
+          "flex-wrap",
+          "font-bold",
+          "gap-2",
+          "gap-6",
+          "items-center",
+          "justify-center",
+          "leading-normal",
+          "max-h-[50vh]",
+          "max-w-sm",
+          "mb-4",
+          "mx-auto",
+          "px-4",
+          "rounded-full",
+          "text-7xl",
+          "text-center",
+          "text-muted-foreground",
+          "text-xs",
+          "uppercase",
+          "w-full"
+        ],
+        "source_sha256": "e9832279a64e9768515358d64e3fbb8e48e2c17fcb59b81aa354fd1515b01273"
+      },
+      {
+        "id": "dropdown-menu",
+        "name": "Dropdown Menu",
+        "variants": [
+          "destructive",
+          "ghost",
+          "outline",
+          "secondary"
+        ],
+        "classes": [
+          "avatar",
+          "badge",
+          "btn",
+          "dropdown-menu",
+          "lucide",
+          "lucide-badge-check",
+          "lucide-bell",
+          "lucide-building-2",
+          "lucide-check",
+          "lucide-credit-card",
+          "lucide-log-out",
+          "lucide-mail",
+          "lucide-message-square",
+          "lucide-pencil",
+          "lucide-settings",
+          "lucide-share",
+          "lucide-trash",
+          "lucide-user",
+          "lucide-wallet",
+          "min-w-32",
+          "min-w-46",
+          "min-w-56",
+          "rounded-full",
+          "w-36",
+          "w-40",
+          "w-48"
+        ],
+        "source_sha256": "bf03115f3b68d408505697ea93e7a66c0ffc3daa5df64df23640fb60a7cf74d7"
+      },
+      {
+        "id": "empty",
+        "name": "Empty",
+        "variants": [
+          "link",
+          "outline",
+          "secondary"
+        ],
+        "classes": [
+          "-space-x-2",
+          "[&_img]:grayscale",
+          "[&_img]:ring-2",
+          "[&_img]:ring-background",
+          "[&_img]:rounded-full",
+          "[&_img]:size-12",
+          "badge",
+          "bg-muted/30",
+          "border",
+          "border-dashed",
+          "btn",
+          "empty",
+          "flex",
+          "flex-row",
+          "gap-2",
+          "grayscale",
+          "h-full",
+          "input-group",
+          "justify-center",
+          "kbd",
+          "lucide",
+          "lucide-arrow-up-right",
+          "lucide-bell",
+          "lucide-cloud",
+          "lucide-folder-code",
+          "lucide-plus",
+          "lucide-refresh-ccw",
+          "lucide-search",
+          "max-w-xs",
+          "rounded-full",
+          "rtl:rotate-270",
+          "size-12",
+          "sm:w-3/4",
+          "text-muted-foreground",
+          "text-pretty",
+          "w-full"
+        ],
+        "source_sha256": "52517a2f76007dade8f3033a2b1883518905bb34fcae2628777521b3f332a76c"
+      },
+      {
+        "id": "field",
+        "name": "Field",
+        "variants": [
+          "label",
+          "outline"
+        ],
+        "classes": [
+          "btn",
+          "field",
+          "field-separator",
+          "fieldset",
+          "font-normal",
+          "gap-4",
+          "grid",
+          "grid-cols-2",
+          "grid-cols-3",
+          "input",
+          "max-w-4xl",
+          "max-w-md",
+          "max-w-sm",
+          "max-w-xs",
+          "min-h-[100px]",
+          "resize-none",
+          "select",
+          "sm:min-w-[300px]",
+          "w-full"
+        ],
+        "source_sha256": "f8a9eec76681a286a41797d3fb6fbb92435213ee234e1214c073c053a95c2903"
+      },
+      {
+        "id": "input-group",
+        "name": "Input Group",
+        "variants": [
+          "ghost",
+          "secondary"
+        ],
+        "classes": [
+          "[--radius:0.95rem]",
+          "[--radius:1rem]",
+          "[--radius:9999px]",
+          "animate-spin",
+          "border-b",
+          "border-t",
+          "btn",
+          "dropdown-menu",
+          "field",
+          "field-sizing-content",
+          "fieldset",
+          "flex",
+          "font-mono",
+          "gap-1",
+          "gap-6",
+          "grid",
+          "input-group",
+          "kbd",
+          "lucide",
+          "lucide-check",
+          "lucide-chevron-down",
+          "lucide-copy",
+          "lucide-corner-down-left",
+          "lucide-credit-card",
+          "lucide-ellipsis",
+          "lucide-eye-off",
+          "lucide-file-code",
+          "lucide-info",
+          "lucide-loader",
+          "lucide-loader-circle",
+          "lucide-mail",
+          "lucide-refresh-ccw",
+          "lucide-search",
+          "lucide-star",
+          "max-w-md",
+          "max-w-sm",
+          "max-w-xs",
+          "min-h-16",
+          "min-h-[200px]",
+          "min-w-32",
+          "ml-auto",
+          "ms-auto",
+          "pr-1.5!",
+          "resize-none",
+          "size-3",
+          "size-6",
+          "text-muted-foreground",
+          "text-sm",
+          "text-xs",
+          "w-full"
+        ],
+        "source_sha256": "868d50a3ba07b5d8d9bba9d783abcf891cce3b6cceacba951a5b6216bdc4c5c2"
+      },
+      {
+        "id": "input",
+        "name": "Input",
+        "variants": [
+          "outline",
+          "secondary"
+        ],
+        "classes": [
+          "-translate-y-1/2",
+          "[&>svg]:size-4",
+          "absolute",
+          "badge",
+          "btn",
+          "button-group",
+          "field",
+          "flex",
+          "gap-2",
+          "gap-4",
+          "grid",
+          "input",
+          "items-center",
+          "lucide",
+          "lucide-search",
+          "max-w-sm",
+          "max-w-xs",
+          "md:col-span-2",
+          "md:grid-cols-2",
+          "ml-auto",
+          "pointer-events-none",
+          "ps-9",
+          "relative",
+          "space-y-6",
+          "start-3",
+          "text-destructive",
+          "text-muted-foreground",
+          "top-1/2",
+          "w-full"
+        ],
+        "source_sha256": "10889ae1ced19cedb48b70e88032fd5b3766199306dbdbc6960563cf4cba0391"
+      },
+      {
+        "id": "item",
+        "name": "Item",
+        "variants": [
+          "ghost",
+          "muted",
+          "outline",
+          "secondary"
+        ],
+        "classes": [
+          "aspect-square",
+          "avatar",
+          "avatar-group",
+          "badge",
+          "border-0",
+          "btn",
+          "dropdown-menu",
+          "flex",
+          "flex-col",
+          "gap-0",
+          "gap-4",
+          "gap-6",
+          "grayscale",
+          "grid",
+          "grid-cols-1",
+          "hidden",
+          "item",
+          "item-group",
+          "items-center",
+          "justify-center",
+          "leading-none",
+          "lucide",
+          "lucide-badge-check",
+          "lucide-chevron-down",
+          "lucide-chevron-right",
+          "lucide-external-link",
+          "lucide-inbox",
+          "lucide-plus",
+          "lucide-shield-alert",
+          "max-w-lg",
+          "max-w-md",
+          "max-w-xl",
+          "min-h-64",
+          "object-cover",
+          "p-0",
+          "rounded-full",
+          "rounded-sm",
+          "rtl:rotate-180",
+          "shadow-none",
+          "size-4",
+          "size-5",
+          "sm:flex",
+          "sm:grid-cols-3",
+          "text-muted-foreground",
+          "w-48",
+          "w-fit",
+          "w-full"
+        ],
+        "source_sha256": "430ea56d880d8f98b2e2e9f26f2182c651bdb1e05b1f1bb619dc45e05fb302d2"
+      },
+      {
+        "id": "kbd",
+        "name": "Kbd",
+        "variants": [
+          "outline"
+        ],
+        "classes": [
+          "btn",
+          "flex",
+          "flex-col",
+          "gap-1",
+          "gap-4",
+          "inline-flex",
+          "input-group",
+          "items-center",
+          "kbd",
+          "lucide",
+          "lucide-search",
+          "max-w-xs",
+          "text-muted-foreground",
+          "text-sm",
+          "translate-x-0.5",
+          "w-full"
+        ],
+        "source_sha256": "b7e5da36b9b87123ea0ee5c82f72f3060d327967f4c5d2786eae36cf3b94d1da"
+      },
+      {
+        "id": "label",
+        "name": "Label",
+        "variants": [],
+        "classes": [
+          "gap-2",
+          "gap-3",
+          "grid",
+          "input",
+          "label"
+        ],
+        "source_sha256": "7a6b263cd920f74c041648b7b47add35d3b1cbb40238bbac7dd1e65e7afad5ed"
+      },
+      {
+        "id": "native-select",
+        "name": "Native Select",
+        "variants": [],
+        "classes": [
+          "field",
+          "flex",
+          "flex-wrap",
+          "gap-3",
+          "items-center",
+          "select",
+          "w-42",
+          "w-full"
+        ],
+        "source_sha256": "7a57f66da839ef9726e6f96ec4633343d46ca845b95d8bd47982c23d64f578de"
+      },
+      {
+        "id": "pagination",
+        "name": "Pagination",
+        "variants": [
+          "ghost",
+          "outline"
+        ],
+        "classes": [
+          "btn",
+          "flex",
+          "flex-row",
+          "gap-1",
+          "items-center",
+          "justify-center",
+          "lucide",
+          "lucide-chevron-left",
+          "lucide-chevron-right",
+          "lucide-ellipsis",
+          "max-w-md",
+          "mx-auto",
+          "shrink-0",
+          "size-4",
+          "size-9",
+          "w-full"
+        ],
+        "source_sha256": "6d8a69e3e55eefdd9ce38cc6415b2e3b72f8204dec0c9896f3a4900324a8cc32"
+      },
+      {
+        "id": "popover",
+        "name": "Popover",
+        "variants": [
+          "outline"
+        ],
+        "classes": [
+          "btn",
+          "col-span-2",
+          "flex",
+          "flex-wrap",
+          "gap-2",
+          "gap-3",
+          "gap-4",
+          "grid",
+          "grid-cols-3",
+          "h-8",
+          "input",
+          "items-center",
+          "popover",
+          "w-40",
+          "w-56",
+          "w-72"
+        ],
+        "source_sha256": "c7a2bf52b488ca03890b1809642f2a3b4b0fde85f574e2bbe379a0fb660528bf"
+      },
+      {
+        "id": "progress",
+        "name": "Progress",
+        "variants": [],
+        "classes": [
+          "field",
+          "flex",
+          "gap-3",
+          "items-center",
+          "max-w-sm",
+          "ms-auto",
+          "progress",
+          "tabular-nums",
+          "text-sm",
+          "w-full"
+        ],
+        "source_sha256": "d3914a69b2ad20928476d6bb36a5efbd790ec5f5651072a860155b6f23bfd201"
+      },
+      {
+        "id": "radio-group",
+        "name": "Radio Group",
+        "variants": [
+          "label"
+        ],
+        "classes": [
+          "field",
+          "fieldset",
+          "flex",
+          "font-normal",
+          "gap-3",
+          "input",
+          "items-center",
+          "max-w-md",
+          "max-w-sm",
+          "w-fit",
+          "w-full"
+        ],
+        "source_sha256": "2ea809157bb012be22175717824dd56ea10072160e60a47d4096fbf6c8b4ff36"
+      },
+      {
+        "id": "scroll-area",
+        "name": "Scroll Area",
+        "variants": [],
+        "classes": [
+          "aspect-[3/4]",
+          "bg-muted",
+          "border",
+          "border-b",
+          "card",
+          "flex",
+          "font-medium",
+          "gap-4",
+          "h-72",
+          "h-full",
+          "hover:bg-accent",
+          "items-center",
+          "justify-between",
+          "leading-none",
+          "max-h-48",
+          "max-w-42",
+          "max-w-64",
+          "max-w-sm",
+          "overflow-x-auto",
+          "overflow-y-auto",
+          "p-0",
+          "p-1",
+          "p-4",
+          "pt-2",
+          "px-2",
+          "py-1.5",
+          "py-2",
+          "rounded-md",
+          "rounded-sm",
+          "scrollbar",
+          "scrollbar-sm",
+          "shrink-0",
+          "space-y-4",
+          "text-muted-foreground",
+          "text-sm",
+          "text-xs",
+          "w-40",
+          "w-full",
+          "w-max"
+        ],
+        "source_sha256": "965da90c430196e5c3ec04607a369f742d6a157c0a26145105e0c2e94f83b360"
+      },
+      {
+        "id": "select",
+        "name": "Select",
+        "variants": [
+          "secondary"
+        ],
+        "classes": [
+          "badge",
+          "field",
+          "lucide",
+          "lucide-chevron-down",
+          "max-h-70",
+          "opacity-50",
+          "overflow-y-auto",
+          "scrollbar-sm",
+          "select",
+          "shrink-0",
+          "text-muted-foreground",
+          "truncate",
+          "w-[180px]",
+          "w-[280px]"
+        ],
+        "source_sha256": "652e94d0614c12435cafc982248a174e317d07908827a3be0106e92daedbdd56"
+      },
+      {
+        "id": "sidebar",
+        "name": "Sidebar",
+        "variants": [
+          "default",
+          "outline"
+        ],
+        "classes": [
+          "lucide",
+          "lucide-bot",
+          "lucide-settings",
+          "lucide-square-terminal",
+          "scrollbar-sm",
+          "sidebar"
+        ],
+        "source_sha256": "12035c05f428040c850a14d6330f4fdfd587f91f9895141bf9a5d04e95f6818a"
+      },
+      {
+        "id": "skeleton",
+        "name": "Skeleton",
+        "variants": [],
+        "classes": [
+          "aspect-video",
+          "card",
+          "flex",
+          "flex-1",
+          "flex-col",
+          "gap-2",
+          "gap-3",
+          "gap-4",
+          "gap-7",
+          "grid",
+          "h-10",
+          "h-4",
+          "h-9",
+          "items-center",
+          "max-w-sm",
+          "max-w-xs",
+          "rounded-full",
+          "shrink-0",
+          "size-10",
+          "skeleton",
+          "w-1/2",
+          "w-2/3",
+          "w-20",
+          "w-24",
+          "w-3/4",
+          "w-[100px]",
+          "w-[150px]",
+          "w-[200px]",
+          "w-[250px]",
+          "w-full"
+        ],
+        "source_sha256": "5bccb4bfef3656898139e2153a8784d72174977107cbdf1cf8a55909ffcd7834"
+      },
+      {
+        "id": "slider",
+        "name": "Slider",
+        "variants": [],
+        "classes": [
+          "flex",
+          "gap-1",
+          "gap-2",
+          "grid",
+          "input",
+          "items-center",
+          "justify-between",
+          "label",
+          "max-w-sm",
+          "text-muted-foreground",
+          "text-sm",
+          "w-full"
+        ],
+        "source_sha256": "1b9c87f0fd37ec13f01d26e2c469fef1f52be0cd3c0b2bd750403ac630293cb3"
+      },
+      {
+        "id": "spinner",
+        "name": "Spinner",
+        "variants": [
+          "outline",
+          "secondary"
+        ],
+        "classes": [
+          "animate-spin",
+          "badge",
+          "bg-muted/50",
+          "border-transparent",
+          "btn",
+          "empty",
+          "flex",
+          "flex-col",
+          "gap-4",
+          "gap-6",
+          "input-group",
+          "item",
+          "items-center",
+          "lucide",
+          "lucide-arrow-up",
+          "lucide-loader-circle",
+          "max-w-md",
+          "max-w-xs",
+          "ms-auto",
+          "size-3",
+          "size-4",
+          "size-6",
+          "size-8",
+          "sr-only",
+          "tabular-nums",
+          "text-sm",
+          "w-full"
+        ],
+        "source_sha256": "470dcf50d7746ebe527fb163521f220dc020cecf41cb004c7c23e2db77ebd5a4"
+      },
+      {
+        "id": "switch",
+        "name": "Switch",
+        "variants": [
+          "secondary"
+        ],
+        "classes": [
+          "badge",
+          "field",
+          "gap-3",
+          "gap-4",
+          "grid",
+          "input",
+          "max-w-[10rem]",
+          "max-w-sm",
+          "w-full"
+        ],
+        "source_sha256": "37f654d9bd8949f81f021e719e966a9669cac2aad93025235cf8adec453005ec"
+      },
+      {
+        "id": "table",
+        "name": "Table",
+        "variants": [
+          "destructive",
+          "outline"
+        ],
+        "classes": [
+          "btn",
+          "font-medium",
+          "gap-2",
+          "inline-flex",
+          "table",
+          "table-container",
+          "text-end",
+          "w-[100px]",
+          "w-full"
+        ],
+        "source_sha256": "0d85b4c0899337e6b6d119799714b53cba5d0fe4cba2bd1b72dc59765aba70a5"
+      },
+      {
+        "id": "tabs",
+        "name": "Tabs",
+        "variants": [
+          "line"
+        ],
+        "classes": [
+          "btn",
+          "card",
+          "field",
+          "gap-4",
+          "grid",
+          "lucide",
+          "lucide-app-window",
+          "lucide-code",
+          "max-w-[400px]",
+          "max-w-sm",
+          "tabs",
+          "text-muted-foreground",
+          "text-sm",
+          "w-full"
+        ],
+        "source_sha256": "4278a7e4b4a91c401c45f078e114fb8c9b8b10ffd4a52aebc530a9cc13388702"
+      },
+      {
+        "id": "textarea",
+        "name": "Textarea",
+        "variants": [],
+        "classes": [
+          "btn",
+          "field",
+          "gap-3",
+          "grid",
+          "max-w-sm",
+          "max-w-xs",
+          "space-y-6",
+          "textarea",
+          "w-full"
+        ],
+        "source_sha256": "86135460cb9709fea0c952618d1f072d1704b91141e91c11841088a00b1b09ac"
+      },
+      {
+        "id": "theme-switcher",
+        "name": "Theme Switcher",
+        "variants": [
+          "outline"
+        ],
+        "classes": [
+          "block",
+          "btn",
+          "dark:block",
+          "dark:hidden",
+          "hidden",
+          "lucide",
+          "lucide-moon",
+          "lucide-sun",
+          "size-8"
+        ],
+        "source_sha256": "ba5fcae8c2a36afd0b6e01018237a1b9e1c5aa368a68261e79ee09b2d092c902"
+      },
+      {
+        "id": "toast",
+        "name": "Toast",
+        "variants": [
+          "outline",
+          "secondary"
+        ],
+        "classes": [
+          "badge",
+          "btn",
+          "max-w-md",
+          "toast",
+          "toast-content",
+          "toaster"
+        ],
+        "source_sha256": "9d883eb787cb9b401c73c2d19a57f2e1b1e6897cb8571d9abdbe096c50dab52a"
+      },
+      {
+        "id": "tooltip",
+        "name": "Tooltip",
+        "variants": [
+          "ghost",
+          "outline"
+        ],
+        "classes": [
+          "btn",
+          "flex",
+          "flex-wrap",
+          "gap-2",
+          "hover:underline",
+          "inline-block",
+          "lucide",
+          "lucide-info",
+          "text-primary",
+          "text-sm",
+          "underline-offset-4"
+        ],
+        "source_sha256": "40425348b568f77f4e6e4e41adc9a0e8099c25c5e6271307eb3f3841b5201b84"
+      }
+    ],
+    "css_classes": [
+      "accordion",
+      "active",
+      "alert",
+      "alert-dialog",
+      "avatar",
+      "avatar-badge",
+      "avatar-group",
+      "badge",
+      "border-b",
+      "border-t",
+      "breadcrumb",
+      "btn",
+      "button-group",
+      "card",
+      "card-action",
+      "card-description",
+      "card-title",
+      "chart",
+      "chart-legend",
+      "chart-legend-indicator",
+      "chart-legend-item",
+      "chart-tooltip",
+      "chart-tooltip-indicator",
+      "chart-tooltip-item",
+      "chart-tooltip-items",
+      "chart-tooltip-label",
+      "chart-tooltip-title",
+      "chart-tooltip-value",
+      "combobox",
+      "combobox-chip",
+      "combobox-chip-remove",
+      "combobox-chips",
+      "combobox-trigger-icon",
+      "command",
+      "command-dialog",
+      "css",
+      "dark",
+      "dialog",
+      "drawer",
+      "dropdown-menu",
+      "empty",
+      "field",
+      "field-separator",
+      "fieldset",
+      "input",
+      "input-group",
+      "item",
+      "item-group",
+      "kbd",
+      "label",
+      "popover",
+      "progress",
+      "scrollbar",
+      "scrollbar-sm",
+      "select",
+      "sidebar",
+      "skeleton",
+      "sr-only",
+      "table",
+      "table-container",
+      "tabs",
+      "textarea",
+      "toast",
+      "toast-content",
+      "toaster"
+    ]
+  },
+  "index": [
+    {
+      "id": "accordion",
+      "name": "Accordion",
+      "intent": "Expand or collapse content sections",
+      "categories": [
+        "disclosure"
+      ],
+      "keywords": [
+        "disclosure",
+        "expand",
+        "collapse"
+      ]
+    },
+    {
+      "id": "alert",
+      "name": "Alert",
+      "intent": "Show persistent inline warnings and notices",
+      "categories": [
+        "feedback"
+      ],
+      "keywords": [
+        "banner",
+        "warning",
+        "notice"
+      ]
+    },
+    {
+      "id": "alert-dialog",
+      "name": "Alert Dialog",
+      "intent": "Interrupt with a destructive confirmation",
+      "categories": [
+        "overlay",
+        "feedback"
+      ],
+      "keywords": [
+        "confirm",
+        "destructive",
+        "modal"
+      ]
+    },
+    {
+      "id": "avatar",
+      "name": "Avatar",
+      "intent": "Display a portrait or initials fallback",
+      "categories": [
+        "data"
+      ],
+      "keywords": [
+        "profile",
+        "image",
+        "initials"
+      ]
+    },
+    {
+      "id": "badge",
+      "name": "Badge",
+      "intent": "Display compact status or a short label",
+      "categories": [
+        "feedback"
+      ],
+      "keywords": [
+        "compact",
+        "status",
+        "label",
+        "tag"
+      ]
+    },
+    {
+      "id": "breadcrumb",
+      "name": "Breadcrumb",
+      "intent": "Show hierarchy from home to current page",
+      "categories": [
+        "navigation"
+      ],
+      "keywords": [
+        "trail",
+        "hierarchy",
+        "path"
+      ]
+    },
+    {
+      "id": "button",
+      "name": "Button",
+      "intent": "Trigger an action or submit a form",
+      "categories": [
+        "actions",
+        "forms"
+      ],
+      "keywords": [
+        "primary",
+        "secondary",
+        "outline",
+        "save",
+        "cancel"
+      ]
+    },
+    {
+      "id": "button-group",
+      "name": "Button Group",
+      "intent": "Group related segmented buttons",
+      "categories": [
+        "actions",
+        "forms"
+      ],
+      "keywords": [
+        "segmented",
+        "toolbar",
+        "cluster"
+      ]
+    },
+    {
+      "id": "card",
+      "name": "Card",
+      "intent": "Group a self-contained content section",
+      "categories": [
+        "layout"
+      ],
+      "keywords": [
+        "surface",
+        "container",
+        "section"
+      ]
+    },
+    {
+      "id": "chart",
+      "name": "Chart",
+      "intent": "Visualize numeric data as a chart",
+      "categories": [
+        "data"
+      ],
+      "keywords": [
+        "chart",
+        "graph",
+        "visualization"
+      ]
+    },
+    {
+      "id": "checkbox",
+      "name": "Checkbox",
+      "intent": "Toggle an independent boolean option",
+      "categories": [
+        "forms"
+      ],
+      "keywords": [
+        "boolean",
+        "multi-select",
+        "toggle"
+      ]
+    },
+    {
+      "id": "combobox",
+      "name": "Combobox",
+      "intent": "Filter options and select a value",
+      "categories": [
+        "forms"
+      ],
+      "keywords": [
+        "filter",
+        "autocomplete"
+      ]
+    },
+    {
+      "id": "command",
+      "name": "Command",
+      "intent": "Search and invoke commands",
+      "categories": [
+        "actions"
+      ],
+      "keywords": [
+        "palette",
+        "commands"
+      ]
+    },
+    {
+      "id": "dialog",
+      "name": "Dialog",
+      "intent": "Request focused input or destructive confirmation",
+      "categories": [
+        "overlay",
+        "feedback"
+      ],
+      "keywords": [
+        "modal",
+        "confirm",
+        "delete",
+        "interrupt"
+      ]
+    },
+    {
+      "id": "drawer",
+      "name": "Drawer",
+      "intent": "Open a modal panel from a screen edge",
+      "categories": [
+        "overlay"
+      ],
+      "keywords": [
+        "panel",
+        "sheet"
+      ]
+    },
+    {
+      "id": "dropdown-menu",
+      "name": "Dropdown Menu",
+      "intent": "Reveal contextual actions from a trigger",
+      "categories": [
+        "overlay",
+        "actions"
+      ],
+      "keywords": [
+        "dropdown",
+        "menu",
+        "contextual",
+        "options"
+      ]
+    },
+    {
+      "id": "empty",
+      "name": "Empty",
+      "intent": "Explain an empty state and offer a next step",
+      "categories": [
+        "feedback"
+      ],
+      "keywords": [
+        "empty",
+        "state",
+        "no-results",
+        "placeholder"
+      ]
+    },
+    {
+      "id": "field",
+      "name": "Field",
+      "intent": "Stack label, control, and helper text",
+      "categories": [
+        "forms"
+      ],
+      "keywords": [
+        "label",
+        "helper",
+        "validation"
+      ]
+    },
+    {
+      "id": "input",
+      "name": "Input",
+      "intent": "Enter a single text value",
+      "categories": [
+        "forms"
+      ],
+      "keywords": [
+        "field",
+        "email",
+        "name",
+        "search",
+        "text"
+      ]
+    },
+    {
+      "id": "input-group",
+      "name": "Input Group",
+      "intent": "Combine an input with inline addons",
+      "categories": [
+        "forms"
+      ],
+      "keywords": [
+        "addon",
+        "prefix",
+        "suffix"
+      ]
+    },
+    {
+      "id": "item",
+      "name": "Item",
+      "intent": "Display one row of content in a list",
+      "categories": [
+        "data"
+      ],
+      "keywords": [
+        "row",
+        "list",
+        "item-group"
+      ]
+    },
+    {
+      "id": "kbd",
+      "name": "Kbd",
+      "intent": "Render keyboard shortcut key caps",
+      "categories": [
+        "data"
+      ],
+      "keywords": [
+        "shortcut",
+        "keyboard",
+        "keys"
+      ]
+    },
+    {
+      "id": "label",
+      "name": "Label",
+      "intent": "Name a form control accessibly",
+      "categories": [
+        "forms"
+      ],
+      "keywords": [
+        "caption",
+        "for",
+        "name"
+      ]
+    },
+    {
+      "id": "native-select",
+      "name": "Native Select",
+      "intent": "Choose a value with a native select",
+      "categories": [
+        "forms"
+      ],
+      "keywords": [
+        "native",
+        "options",
+        "pick"
+      ]
+    },
+    {
+      "id": "popover",
+      "name": "Popover",
+      "intent": "Reveal contextual content beside a trigger",
+      "categories": [
+        "overlay"
+      ],
+      "keywords": [
+        "popup",
+        "content"
+      ]
+    },
+    {
+      "id": "progress",
+      "name": "Progress",
+      "intent": "Show determinate task completion",
+      "categories": [
+        "feedback"
+      ],
+      "keywords": [
+        "loading",
+        "bar",
+        "percent"
+      ]
+    },
+    {
+      "id": "radio-group",
+      "name": "Radio Group",
+      "intent": "Choose one option from a small set",
+      "categories": [
+        "forms"
+      ],
+      "keywords": [
+        "exclusive",
+        "choice",
+        "radio"
+      ]
+    },
+    {
+      "id": "scroll-area",
+      "name": "Scroll Area",
+      "intent": "Style a bounded overflow region",
+      "categories": [
+        "layout"
+      ],
+      "keywords": [
+        "scrollbar",
+        "overflow",
+        "scroll"
+      ]
+    },
+    {
+      "id": "select",
+      "name": "Select",
+      "intent": "Choose a value from a list",
+      "categories": [
+        "forms"
+      ],
+      "keywords": [
+        "options",
+        "choice"
+      ]
+    },
+    {
+      "id": "sidebar",
+      "name": "Sidebar",
+      "intent": "Show collapsible application navigation",
+      "categories": [
+        "navigation"
+      ],
+      "keywords": [
+        "navigation",
+        "sidebar"
+      ]
+    },
+    {
+      "id": "skeleton",
+      "name": "Skeleton",
+      "intent": "Placeholder blocks while content loads",
+      "categories": [
+        "feedback"
+      ],
+      "keywords": [
+        "loading",
+        "placeholder",
+        "pulse"
+      ]
+    },
+    {
+      "id": "slider",
+      "name": "Slider",
+      "intent": "Pick a numeric value on a range track",
+      "categories": [
+        "forms"
+      ],
+      "keywords": [
+        "range",
+        "thumb",
+        "value"
+      ]
+    },
+    {
+      "id": "switch",
+      "name": "Switch",
+      "intent": "Toggle a boolean setting immediately",
+      "categories": [
+        "forms"
+      ],
+      "keywords": [
+        "toggle",
+        "on-off",
+        "setting"
+      ]
+    },
+    {
+      "id": "table",
+      "name": "Table",
+      "intent": "Compare structured records in rows and columns",
+      "categories": [
+        "data"
+      ],
+      "keywords": [
+        "tabular",
+        "invoices",
+        "rows",
+        "records",
+        "compare"
+      ]
+    },
+    {
+      "id": "tabs",
+      "name": "Tabs",
+      "intent": "Switch between related views in one context",
+      "categories": [
+        "navigation"
+      ],
+      "keywords": [
+        "panels",
+        "switch",
+        "views",
+        "sections"
+      ]
+    },
+    {
+      "id": "textarea",
+      "name": "Textarea",
+      "intent": "Enter multiline text",
+      "categories": [
+        "forms"
+      ],
+      "keywords": [
+        "message",
+        "multiline",
+        "long"
+      ]
+    },
+    {
+      "id": "theme-switcher",
+      "name": "Theme Switcher",
+      "intent": "Toggle light and dark color mode",
+      "categories": [
+        "actions"
+      ],
+      "keywords": [
+        "dark",
+        "light",
+        "theme"
+      ]
+    },
+    {
+      "id": "toast",
+      "name": "Toast",
+      "intent": "Show a brief notification",
+      "categories": [
+        "feedback"
+      ],
+      "keywords": [
+        "notification",
+        "toaster"
+      ]
+    },
+    {
+      "id": "tooltip",
+      "name": "Tooltip",
+      "intent": "Show a brief hint on hover or focus",
+      "categories": [
+        "feedback"
+      ],
+      "keywords": [
+        "hint",
+        "hover",
+        "help"
+      ]
+    }
+  ],
+  "details": {
+    "accordion": {
+      "dependencies": {
+        "css": [
+          "basecoat-css/base"
+        ],
+        "js": [
+          "basecoat-css/basecoat",
+          "basecoat-css/accordion"
+        ]
+      },
+      "markup_template": "<section class=\"accordion\">\n  <details open>\n    <summary>Overview</summary>\n    <section>Overview content.</section>\n  </details>\n  <details>\n    <summary>More</summary>\n    <section>More content.</section>\n  </details>\n  <details aria-disabled=\"true\">\n    <summary>Unavailable</summary>\n    <section>Unavailable content.</section>\n  </details>\n</section>",
+      "composition_rules": "Open: details has open; closed: omit open. aria-disabled=true prevents toggling. One item opens at a time; data-multiple on .accordion allows several. Wrong: replace native details/summary with div/button and invented data-state attributes."
+    },
+    "alert": {
+      "dependencies": {
+        "css": [
+          "basecoat-css/base"
+        ],
+        "js": []
+      },
+      "markup_template": "<div class=\"alert\">\n  <h2>Heads up!</h2>\n  <section>You can add components and dependencies to your app.</section>\n</div>",
+      "composition_rules": "Use data-variant=\"destructive\" for errors. Optional direct child footer aligns actions inline-end. Wrong: use role=\"alert\" on a div without the alert class or omit the section wrapper for body text."
+    },
+    "alert-dialog": {
+      "dependencies": {
+        "css": [
+          "basecoat-css/base"
+        ],
+        "js": []
+      },
+      "markup_template": "<button type=\"button\" class=\"btn\" data-variant=\"outline\" data-open-dialog=\"confirm\">Review action</button>\n<dialog id=\"confirm\" class=\"alert-dialog\" aria-labelledby=\"confirm-title\" aria-describedby=\"confirm-help\">\n  <div>\n    <header><h2 id=\"confirm-title\">Are you absolutely sure?</h2><p id=\"confirm-help\">This action cannot be undone.</p></header>\n    <footer><button type=\"button\" class=\"btn\" data-variant=\"outline\" value=\"cancel\" onclick=\"this.closest('dialog').close(this.value)\">Cancel</button><button type=\"button\" class=\"btn\" value=\"confirm\" onclick=\"this.closest('dialog').close(this.value)\">Continue</button></footer>\n  </div>\n</dialog>",
+      "composition_rules": "Native dialog with alert-dialog class; no Basecoat JS. Omit dismiss controls when the user must choose explicitly. Wire showModal() from a trigger; check returnValue on close. Wrong: use class=\"dialog\" alone or backdrop click to dismiss a destructive confirm.",
+      "native_script": "document.addEventListener('click', (e) => {\n  if (!(e.target instanceof Element)) return;\n  const id = e.target.closest('[data-open-dialog]')?.getAttribute('data-open-dialog');\n  const dialog = id && document.getElementById(id);\n  if (dialog instanceof HTMLDialogElement) dialog.showModal();\n});"
+    },
+    "avatar": {
+      "dependencies": {
+        "css": [
+          "basecoat-css/base"
+        ],
+        "js": []
+      },
+      "markup_template": "<span class=\"avatar\">\n  <img src=\"/avatar.jpg\" alt=\"User\" />\n  <span>CN</span>\n</span>",
+      "composition_rules": "Image first, fallback span after. data-size=\"sm\" or data-size=\"lg\" for alternate sizes. avatar-badge for status dot. avatar-group wraps overlapping avatars. Wrong: put initials before img or omit alt on the image."
+    },
+    "badge": {
+      "dependencies": {
+        "css": [
+          "basecoat-css/base"
+        ],
+        "js": []
+      },
+      "markup_template": "<span class=\"badge\" data-variant=\"secondary\">Active</span>",
+      "composition_rules": "Use short text for status. Do not rely on color alone or use a badge as a primary action."
+    },
+    "breadcrumb": {
+      "dependencies": {
+        "css": [
+          "basecoat-css/base"
+        ],
+        "js": []
+      },
+      "markup_template": "<nav class=\"breadcrumb\" aria-label=\"Breadcrumb\">\n  <ol>\n    <li><a href=\"/\">Home</a></li>\n    <li><span aria-current=\"page\">Current</span></li>\n  </ol>\n</nav>",
+      "composition_rules": "nav.breadcrumb with aria-label=\"Breadcrumb\". Mark current page with aria-current=\"page\". Separators use li[aria-hidden=\"true\"]. Wrong: use a div instead of nav/ol or skip aria-current on the current item."
+    },
+    "button": {
+      "dependencies": {
+        "css": [
+          "basecoat-css/base"
+        ],
+        "js": []
+      },
+      "markup_template": "<button type=\"button\" class=\"btn\">Save changes</button>",
+      "composition_rules": "One primary action per task group. Use data-variant=\"outline\" for Cancel; group actions with gap-2 and separate the group with gap-6."
+    },
+    "button-group": {
+      "dependencies": {
+        "css": [
+          "basecoat-css/base"
+        ],
+        "js": []
+      },
+      "markup_template": "<div role=\"group\" aria-label=\"Message actions\" class=\"button-group\">\n  <button type=\"button\" class=\"btn\" data-variant=\"outline\">Archive</button>\n  <button type=\"button\" class=\"btn\" data-variant=\"outline\">Report</button>\n</div>",
+      "composition_rules": "Wrap related btn controls sharing outer radius. data-orientation=\"vertical\" stacks controls. hr[role=\"separator\"] divides groups. Wrong: nest unrelated standalone buttons without the button-group wrapper."
+    },
+    "card": {
+      "dependencies": {
+        "css": [
+          "basecoat-css/base"
+        ],
+        "js": []
+      },
+      "markup_template": "<article class=\"card\">\n  <header><h2>Summary</h2><p>Supporting context.</p></header>\n  <section>Content</section>\n  <footer><button type=\"button\" class=\"btn\">Continue</button></footer>\n</article>",
+      "composition_rules": "Never nest a card inside a card. Use flat sections or dividers for inner groups. Keep one primary action per card."
+    },
+    "chart": {
+      "dependencies": {
+        "css": [
+          "basecoat-css/base"
+        ],
+        "js": [
+          "basecoat-css/basecoat",
+          "basecoat-css/chart"
+        ]
+      },
+      "markup_template": "<div class=\"chart\">\n  <canvas id=\"metrics\" role=\"img\" aria-label=\"Totals: A 3; B 5\" data-chart-type=\"bar\" data-chart-data='{\"labels\":[\"A\",\"B\"],\"datasets\":[{\"label\":\"Total\",\"data\":[3,5]}]}'>A: 3; B: 5.</canvas>\n</div>",
+      "composition_rules": "Requires app-supplied Chart.js on window.Chart before initialization. Basecoat does not bundle it. Use a canvas inside .chart with an accessible label and text alternative. No open/closed/disabled state. Wrong: assume data-chart-data or initAll() initializes charts; call basecoat.chart() explicitly.",
+      "native_script": "document.addEventListener('DOMContentLoaded', () => {\n  Reflect.get(window, 'basecoat').chart('#metrics');\n}, { once: true });"
+    },
+    "checkbox": {
+      "dependencies": {
+        "css": [
+          "basecoat-css/base"
+        ],
+        "js": []
+      },
+      "markup_template": "<div role=\"group\" class=\"field\" data-orientation=\"horizontal\">\n  <input type=\"checkbox\" id=\"terms\" name=\"terms\" class=\"input\" />\n  <label for=\"terms\">Accept terms and conditions</label>\n</div>",
+      "composition_rules": "Checkbox uses class=\"input\" on input[type=\"checkbox\"]. Pair with field and label. data-disabled on field mirrors disabled input. Wrong: add role=\"checkbox\" on a div or omit the label association."
+    },
+    "combobox": {
+      "dependencies": {
+        "css": [
+          "basecoat-css/base"
+        ],
+        "js": [
+          "basecoat-css/basecoat",
+          "basecoat-css/combobox"
+        ]
+      },
+      "markup_template": "<div id=\"c\" class=\"combobox\">\n  <input type=\"text\" role=\"combobox\" aria-label=\"Choice\" placeholder=\"Choose\" autocomplete=\"off\" autocorrect=\"off\" spellcheck=\"false\" aria-autocomplete=\"list\" aria-expanded=\"false\" aria-controls=\"c-l\" />\n  <div id=\"c-p\" data-popover aria-hidden=\"true\">\n    <div role=\"listbox\" id=\"c-l\" aria-label=\"Choices\" aria-orientation=\"vertical\" data-empty=\"No matches\">\n      <div id=\"c-a\" role=\"option\" data-value=\"a\">Alpha</div>\n      <div id=\"c-b\" role=\"option\" data-value=\"b\" aria-disabled=\"true\">Beta</div>\n    </div>\n  </div>\n  <input type=\"hidden\" name=\"choice\" value=\"\" />\n</div>",
+      "composition_rules": "Closed: aria-expanded=false, aria-hidden=true; open reverses both. Runtime manages aria-selected, aria-activedescendant and option aria-hidden for filtering. Disable text input with disabled; options with aria-disabled=true. Wrong: replace the hidden value input with a name on the search input."
+    },
+    "command": {
+      "dependencies": {
+        "css": [
+          "basecoat-css/base"
+        ],
+        "js": [
+          "basecoat-css/basecoat",
+          "basecoat-css/command"
+        ]
+      },
+      "markup_template": "<div id=\"cmd\" class=\"command\" aria-label=\"Command menu\">\n  <header><input type=\"text\" id=\"cmd-input\" aria-label=\"Search commands\" placeholder=\"Search\" autocomplete=\"off\" autocorrect=\"off\" spellcheck=\"false\" aria-autocomplete=\"list\" role=\"combobox\" aria-expanded=\"true\" aria-controls=\"cmd-menu\" /></header>\n  <div role=\"menu\" id=\"cmd-menu\" aria-orientation=\"vertical\" data-empty=\"No results\">\n    <div id=\"cmd-a\" role=\"menuitem\">Open</div>\n    <div id=\"cmd-b\" role=\"menuitem\" aria-disabled=\"true\">Unavailable</div>\n  </div>\n</div>",
+      "composition_rules": "Standalone command stays expanded. Modal variant: dialog.command-dialog wraps .command; use showModal()/close(). Disabled items: aria-disabled=true. Runtime manages active, aria-activedescendant and filtered aria-hidden. Bind application actions. Wrong: use listbox/option instead of menu/menuitem."
+    },
+    "dialog": {
+      "dependencies": {
+        "css": [
+          "basecoat-css/base"
+        ],
+        "js": []
+      },
+      "markup_template": "<button type=\"button\" class=\"btn\" data-variant=\"outline\" data-open-dialog=\"confirm\">Review action</button>\n<dialog id=\"confirm\" class=\"dialog\" aria-labelledby=\"confirm-title\" aria-describedby=\"confirm-help\">\n  <div>\n    <header><h2 id=\"confirm-title\">Confirm action</h2><p id=\"confirm-help\">Review the consequences before continuing.</p></header>\n    <footer><form method=\"dialog\" class=\"flex gap-2\">\n      <button class=\"btn\" data-variant=\"outline\" value=\"cancel\" autofocus>Cancel</button>\n      <button class=\"btn\" data-variant=\"destructive\" value=\"confirm\">Confirm</button>\n    </form></footer>\n  </div>\n</dialog>",
+      "composition_rules": "Native dialog: no Basecoat JS. Listen for close and check returnValue === 'confirm' before performing the action; this template only closes. Keep Cancel focused; no nested card.",
+      "native_script": "document.addEventListener('click', (e) => {\n  if (!(e.target instanceof Element)) return;\n  const id = e.target.closest('[data-open-dialog]')?.getAttribute('data-open-dialog');\n  const dialog = id && document.getElementById(id);\n  if (dialog instanceof HTMLDialogElement) dialog.showModal();\n});"
+    },
+    "drawer": {
+      "dependencies": {
+        "css": [
+          "basecoat-css/base"
+        ],
+        "js": [
+          "basecoat-css/basecoat",
+          "basecoat-css/drawer"
+        ]
+      },
+      "markup_template": "<button type=\"button\" class=\"btn\" data-variant=\"outline\" onclick=\"document.getElementById('dr').showModal()\">Open drawer</button>\n<dialog id=\"dr\" class=\"drawer\" data-side=\"bottom\" aria-labelledby=\"dr-title\">\n  <div>\n    <header><h2 id=\"dr-title\">Details</h2></header>\n    <section>Panel content.</section>\n    <footer><button type=\"button\" class=\"btn\" data-variant=\"outline\" onclick=\"this.closest('dialog').close()\">Close</button></footer>\n  </div>\n</dialog>",
+      "composition_rules": "showModal() sets native open; close() animates with data-closing then clears open. Keep one inner surface. Escape/backdrop close via the controller. Native disabled blocks trigger buttons; no drawer disabled state. Wrong: use a div.drawer or invent data-open-drawer behavior."
+    },
+    "dropdown-menu": {
+      "dependencies": {
+        "css": [
+          "basecoat-css/base"
+        ],
+        "js": [
+          "basecoat-css/basecoat",
+          "basecoat-css/dropdown-menu"
+        ]
+      },
+      "markup_template": "<div id=\"actions\" class=\"dropdown-menu\">\n  <button type=\"button\" id=\"actions-trigger\" class=\"btn\" data-variant=\"outline\" aria-haspopup=\"menu\" aria-controls=\"actions-menu\" aria-expanded=\"false\">Actions</button>\n  <div id=\"actions-popover\" data-popover aria-hidden=\"true\">\n    <div role=\"menu\" id=\"actions-menu\" aria-labelledby=\"actions-trigger\">\n      <button type=\"button\" role=\"menuitem\">Edit</button>\n    </div>\n  </div>\n</div>",
+      "composition_rules": "Keep trigger, popover and menu in one wrapper with matching IDs. Preserve menu roles and keyboard behavior. Bind application actions to menu items."
+    },
+    "empty": {
+      "dependencies": {
+        "css": [
+          "basecoat-css/base"
+        ],
+        "js": []
+      },
+      "markup_template": "<section class=\"empty\">\n  <header><h2>No records yet</h2><p>Create a record to get started.</p></header>\n  <footer><button type=\"button\" class=\"btn\">Create record</button></footer>\n</section>",
+      "composition_rules": "Explain why content is absent and offer one useful next action. Keep the state in its content region; do not wrap it in nested cards."
+    },
+    "field": {
+      "dependencies": {
+        "css": [
+          "basecoat-css/base"
+        ],
+        "js": []
+      },
+      "markup_template": "<div role=\"group\" class=\"field\">\n  <label for=\"message\">Message</label>\n  <textarea id=\"message\" placeholder=\"Type your message here\"></textarea>\n  <p>Write a short message.</p>\n</div>",
+      "composition_rules": "One control per field. data-orientation=\"horizontal\" or responsive flips label beside control. fieldset/fieldset groups related fields. Wrong: stack multiple unrelated inputs in one field without a group legend."
+    },
+    "input": {
+      "dependencies": {
+        "css": [
+          "basecoat-css/base"
+        ],
+        "js": []
+      },
+      "markup_template": "<div class=\"grid gap-2\">\n  <label class=\"label\" for=\"email\">Email</label>\n  <input class=\"input\" id=\"email\" name=\"email\" type=\"email\" autocomplete=\"email\" aria-describedby=\"email-help\" required />\n  <p id=\"email-help\" class=\"text-sm text-muted-foreground\">Use your work email.</p>\n</div>",
+      "composition_rules": "Keep the label visible. Use gap-2 within each field, gap-4 between fields and gap-6 before actions. Associate errors using aria-describedby and aria-invalid."
+    },
+    "input-group": {
+      "dependencies": {
+        "css": [
+          "basecoat-css/base"
+        ],
+        "js": []
+      },
+      "markup_template": "<div class=\"input-group\">\n  <input type=\"text\" placeholder=\"Search...\" />\n  <span data-align=\"start\" aria-hidden=\"true\">⌕</span>\n  <span data-align=\"end\">12 results</span>\n</div>",
+      "composition_rules": "Native input/textarea/select stay borderless children. data-align=\"start|end\" places addons; data-orientation=\"vertical\" uses header/footer rows. Wrong: wrap the control outside input-group or omit aria-hidden on decorative icons."
+    },
+    "item": {
+      "dependencies": {
+        "css": [
+          "basecoat-css/base"
+        ],
+        "js": []
+      },
+      "markup_template": "<div class=\"item-group\" role=\"list\">\n  <article class=\"item\" role=\"listitem\">\n    <section><h3>Record title</h3><p>Supporting details.</p></section>\n    <aside><button type=\"button\" class=\"btn\" data-variant=\"outline\" data-size=\"sm\">View</button></aside>\n  </article>\n</div>",
+      "composition_rules": "One item is one row inside item-group, not a card grid. Repeat sibling items for a list; keep content in section and trailing actions in aside."
+    },
+    "kbd": {
+      "dependencies": {
+        "css": [
+          "basecoat-css/base"
+        ],
+        "js": []
+      },
+      "markup_template": "<span class=\"inline-flex items-center gap-2\"><kbd class=\"kbd\">Ctrl</kbd><span>+</span><kbd class=\"kbd\">K</kbd></span>",
+      "composition_rules": "Use kbd.kbd per key cap. Group combos with inline-flex and + text between keys. Wrong: style shortcuts with code or span alone without the kbd class."
+    },
+    "label": {
+      "dependencies": {
+        "css": [
+          "basecoat-css/base"
+        ],
+        "js": []
+      },
+      "markup_template": "<label class=\"label\" for=\"email\">Your email address</label>",
+      "composition_rules": "Apply label class on native label. for must match control id. Can wrap checkbox/radio inside label. Wrong: replace label with a bare span for visible field names."
+    },
+    "native-select": {
+      "dependencies": {
+        "css": [
+          "basecoat-css/base"
+        ],
+        "js": []
+      },
+      "markup_template": "<select class=\"select\" aria-label=\"Fruit\">\n  <option value=\"\">Select a fruit</option>\n  <option value=\"apple\">Apple</option>\n  <option value=\"banana\">Banana</option>\n</select>",
+      "composition_rules": "Native select uses class=\"select\" (not the JS custom select). Provide aria-label or an associated label. disabled on select blocks interaction. Wrong: reuse the custom .select div/listbox markup for a native element."
+    },
+    "popover": {
+      "dependencies": {
+        "css": [
+          "basecoat-css/base"
+        ],
+        "js": [
+          "basecoat-css/basecoat",
+          "basecoat-css/popover"
+        ]
+      },
+      "markup_template": "<div id=\"p\" class=\"popover\">\n  <button id=\"p-t\" type=\"button\" class=\"btn\" data-variant=\"outline\" aria-expanded=\"false\" aria-controls=\"p-c\">Details</button>\n  <div id=\"p-c\" data-popover aria-hidden=\"true\">\n    <header><h4>Details</h4><p>Supporting information.</p></header>\n  </div>\n</div>",
+      "composition_rules": "Closed: trigger aria-expanded=false, content aria-hidden=true; open reverses both. Native disabled on the trigger blocks activation. Wrong: wrap the trigger or data-popover in another element; both must be direct children of .popover."
+    },
+    "progress": {
+      "dependencies": {
+        "css": [
+          "basecoat-css/base"
+        ],
+        "js": []
+      },
+      "markup_template": "<div class=\"progress\" role=\"progressbar\" aria-label=\"Loading\" aria-valuenow=\"66\" aria-valuemin=\"0\" aria-valuemax=\"100\">\n  <span style=\"width: 66%\"></span>\n</div>",
+      "composition_rules": "One child span width matches aria-valuenow. Set aria-label or aria-labelledby. Wrong: use progress element without the progress class or omit aria-valuenow on a determinate bar."
+    },
+    "radio-group": {
+      "dependencies": {
+        "css": [
+          "basecoat-css/base"
+        ],
+        "js": []
+      },
+      "markup_template": "<div role=\"radiogroup\" aria-label=\"View density\" class=\"w-fit\">\n  <div class=\"flex items-center gap-2\">\n    <input type=\"radio\" id=\"r1\" name=\"density\" value=\"default\" class=\"input\" />\n    <label for=\"r1\">Default</label>\n  </div>\n  <div class=\"flex items-center gap-2\">\n    <input type=\"radio\" id=\"r2\" name=\"density\" value=\"comfortable\" class=\"input\" checked />\n    <label for=\"r2\">Comfortable</label>\n  </div>\n</div>",
+      "composition_rules": "Radios use class=\"input\" with a shared name. Wrap in role=\"radiogroup\" or fieldset with legend. field+section adds descriptions. Wrong: give each radio a different name or skip the group landmark."
+    },
+    "scroll-area": {
+      "dependencies": {
+        "css": [
+          "basecoat-css/base"
+        ],
+        "js": []
+      },
+      "markup_template": "<div class=\"scrollbar h-72 overflow-y-auto rounded-md border p-4\">\n  Your scrollable content here.\n</div>",
+      "composition_rules": "Apply scrollbar or scrollbar-sm on an element that already uses overflow-auto/y/x. CSS-only; no JS wrapper. Wrong: expect scroll-area to create overflow without overflow utilities on the same node."
+    },
+    "select": {
+      "dependencies": {
+        "css": [
+          "basecoat-css/base"
+        ],
+        "js": [
+          "basecoat-css/basecoat",
+          "basecoat-css/select"
+        ]
+      },
+      "markup_template": "<div id=\"s\" class=\"select\" data-placeholder=\"Choose\">\n  <button type=\"button\" id=\"s-t\" aria-haspopup=\"listbox\" aria-expanded=\"false\" aria-controls=\"s-l\"><span>Choose</span></button>\n  <div id=\"s-p\" data-popover aria-hidden=\"true\">\n    <div role=\"listbox\" id=\"s-l\" aria-orientation=\"vertical\" aria-labelledby=\"s-t\">\n      <div id=\"s-a\" role=\"option\" data-value=\"a\">Alpha</div>\n      <div id=\"s-b\" role=\"option\" data-value=\"b\" aria-disabled=\"true\">Beta</div>\n    </div>\n  </div>\n  <input type=\"hidden\" name=\"choice\" value=\"\" />\n</div>",
+      "composition_rules": "Closed: aria-expanded=false, aria-hidden=true; open reverses both. Selected option: aria-selected=true; runtime sets aria-activedescendant. Disable trigger with disabled; options with aria-disabled=true. Wrong: omit the direct-child hidden input or trigger span."
+    },
+    "sidebar": {
+      "dependencies": {
+        "css": [
+          "basecoat-css/base"
+        ],
+        "js": [
+          "basecoat-css/basecoat",
+          "basecoat-css/sidebar"
+        ]
+      },
+      "markup_template": "<aside id=\"side\" class=\"sidebar\" data-side=\"left\" data-initial-open=\"false\" data-initial-mobile-open=\"false\" aria-hidden=\"true\" inert>\n  <nav aria-label=\"Main navigation\"><section><ul>\n    <li><a href=\"/\" aria-current=\"page\"><span>Home</span></a></li>\n    <li><button type=\"button\" disabled><span>Unavailable</span></button></li>\n  </ul></section></nav>\n</aside>\n<main><button type=\"button\" class=\"btn\" data-variant=\"outline\" aria-controls=\"side\" onclick=\"document.getElementById('side').toggle()\">Toggle navigation</button></main>",
+      "composition_rules": "open()/close()/toggle() manage aria-hidden and inert: closed=true+inert; open=false without inert. Initial state uses data-initial-open and data-initial-mobile-open. Native disabled blocks buttons. Keep page content immediately after .sidebar. Wrong: invent data-sidebar-toggle; bind the trigger to toggle()."
+    },
+    "skeleton": {
+      "dependencies": {
+        "css": [
+          "basecoat-css/base"
+        ],
+        "js": []
+      },
+      "markup_template": "<div class=\"skeleton h-4 w-[150px]\"></div>",
+      "composition_rules": "skeleton plus sizing utilities shapes placeholders. Mark decorative blocks aria-hidden when adjacent text explains loading. Wrong: use skeleton as a live content container without aria-busy on the updating region."
+    },
+    "slider": {
+      "dependencies": {
+        "css": [
+          "basecoat-css/base"
+        ],
+        "js": [
+          "basecoat-css/basecoat",
+          "basecoat-css/range"
+        ]
+      },
+      "markup_template": "<input type=\"range\" class=\"input w-full\" min=\"0\" max=\"100\" value=\"50\" />",
+      "composition_rules": "Native input[type=\"range\"] with class=\"input\". range.js sets --slider-value on input events. Single thumb only; no vertical or multi-thumb API. Wrong: import basecoat-css/slider or omit the range module while using type=\"range\"."
+    },
+    "switch": {
+      "dependencies": {
+        "css": [
+          "basecoat-css/base"
+        ],
+        "js": []
+      },
+      "markup_template": "<div role=\"group\" class=\"field\" data-orientation=\"horizontal\">\n  <input type=\"checkbox\" id=\"airplane-mode\" role=\"switch\" class=\"input\" />\n  <label for=\"airplane-mode\">Airplane Mode</label>\n</div>",
+      "composition_rules": "Switch is input[type=\"checkbox\"] with role=\"switch\" and class=\"input\". checked/disabled/aria-invalid follow native state. data-size=\"sm\" shrinks track. Wrong: use role=\"switch\" on a div or a button element."
+    },
+    "table": {
+      "dependencies": {
+        "css": [
+          "basecoat-css/base"
+        ],
+        "js": []
+      },
+      "markup_template": "<div class=\"table-container\">\n  <table class=\"table\">\n    <caption>Recent invoices</caption>\n    <thead><tr><th scope=\"col\">Invoice</th><th scope=\"col\" class=\"text-end\">Amount</th></tr></thead>\n    <tbody><tr><th scope=\"row\">INV-001</th><td class=\"text-end tabular-nums\">$250.00</td></tr></tbody>\n  </table>\n</div>",
+      "composition_rules": "Use a table for comparable records; no card per row. Keep labels start-aligned and numbers end-aligned. Place the toolbar gap-4 above. Keep overlays outside the scrolling container."
+    },
+    "tabs": {
+      "dependencies": {
+        "css": [
+          "basecoat-css/base"
+        ],
+        "js": [
+          "basecoat-css/basecoat",
+          "basecoat-css/tabs"
+        ]
+      },
+      "markup_template": "<div class=\"tabs\">\n  <nav role=\"tablist\" aria-label=\"Record views\" aria-orientation=\"horizontal\" data-variant=\"line\">\n    <button type=\"button\" role=\"tab\" id=\"tab-overview\" aria-controls=\"panel-overview\" aria-selected=\"true\" tabindex=\"0\">Overview</button>\n    <button type=\"button\" role=\"tab\" id=\"tab-history\" aria-controls=\"panel-history\" aria-selected=\"false\" tabindex=\"-1\">History</button>\n  </nav>\n  <div role=\"tabpanel\" id=\"panel-overview\" aria-labelledby=\"tab-overview\" tabindex=\"-1\">Overview content</div>\n  <div role=\"tabpanel\" id=\"panel-history\" aria-labelledby=\"tab-history\" tabindex=\"-1\" hidden>History content</div>\n</div>",
+      "composition_rules": "Use tabs for peer views, not sequential steps. Keep panels flat; use gap-6 between content groups. Preserve matching IDs, hidden state and keyboard navigation."
+    },
+    "textarea": {
+      "dependencies": {
+        "css": [
+          "basecoat-css/base"
+        ],
+        "js": []
+      },
+      "markup_template": "<textarea class=\"textarea\" placeholder=\"Type your message here\"></textarea>",
+      "composition_rules": "textarea class on native textarea; field wrapper styles nested textareas too. disabled and aria-invalid=\"true\" for states. Wrong: use input type=\"text\" for multiline copy or omit label in a field group."
+    },
+    "theme-switcher": {
+      "dependencies": {
+        "css": [
+          "basecoat-css/base"
+        ],
+        "js": [
+          "basecoat-css/basecoat"
+        ]
+      },
+      "markup_template": "<button type=\"button\" aria-label=\"Toggle dark mode\" data-tooltip=\"Toggle dark mode\" data-side=\"bottom\" onclick=\"window.basecoat.theme.toggle()\" class=\"btn\" data-variant=\"outline\" data-size=\"icon\">\n  <span class=\"hidden dark:block\">☀</span>\n  <span class=\"block dark:hidden\">☾</span>\n</button>",
+      "composition_rules": "Requires basecoat runtime for window.basecoat.theme.toggle(). Pair sun/moon icons with dark:hidden/dark:block. Add inline pre-CSS themeMode script to avoid flash. Wrong: import basecoat-css/all or a nonexistent theme-switcher module."
+    },
+    "toast": {
+      "dependencies": {
+        "css": [
+          "basecoat-css/base"
+        ],
+        "js": [
+          "basecoat-css/basecoat",
+          "basecoat-css/toast"
+        ]
+      },
+      "markup_template": "<div id=\"toaster\" class=\"toaster\">\n  <div class=\"toast\" role=\"status\" aria-atomic=\"true\" aria-hidden=\"false\" data-duration=\"-1\">\n    <div class=\"toast-content\">\n      <section><h2>Saved</h2><p>Changes saved.</p></section>\n      <footer><button type=\"button\" class=\"btn\" data-variant=\"outline\" data-size=\"sm\" data-toast-cancel>Dismiss</button></footer>\n    </div>\n  </div>\n</div>",
+      "composition_rules": "Use one #toaster. Open: aria-hidden=false; close() sets true then removes the toast after transition. data-duration=-1 disables timeout. Footer buttons/links dismiss; native disabled blocks buttons. Error category uses role=alert. Wrong: rename #toaster or add a fake data-toast-trigger attribute."
+    },
+    "tooltip": {
+      "dependencies": {
+        "css": [
+          "basecoat-css/base"
+        ],
+        "js": []
+      },
+      "markup_template": "<button class=\"btn\" data-variant=\"outline\" data-tooltip=\"Tooltip text\" data-side=\"bottom\" data-align=\"center\">Hover</button>",
+      "composition_rules": "CSS-only: data-tooltip text on the trigger. data-side top|bottom|left|right|inline-start|inline-end; data-align start|center|end. Text only, no portal markup. Wrong: nest a separate tooltip span or invent aria-describedby portals like shadcn Tooltip."
+    }
+  }
+}

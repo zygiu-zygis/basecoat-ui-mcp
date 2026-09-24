@@ -1,0 +1,41 @@
+{
+  "name": "@intellmedia/basecoat-ui-mcp",
+  "version": "1.0.1",
+  "description": "Offline MCP server for Basecoat UI composition, curated templates, and static validation (stdio, no runtime network)",
+  "author": "Žygimantas Jasiulionis / Intellmedia",
+  "maintainers": ["Žygimantas Jasiulionis / Intellmedia"],
+  "license": "MIT",
+  "keywords": [
+    "basecoat-ui",
+    "basecoat-css",
+    "model-context-protocol",
+    "mcp",
+    "astro",
+    "html",
+    "tailwind-css-4",
+    "ai-coding-tools"
+  ],
+  "type": "module",
+  "engines": { "node": ">=22.14.0" },
+  "files": [
+    "src",
+    "scripts",
+    "tests",
+    "tsconfig.json",
+    "tsconfig.check.json",
+    "README.md",
+    "ARCHITECTURE.md",
+    "CHANGELOG.md",
+    "LICENSE",
+    "THIRD_PARTY_NOTICES.md"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/server/stdio.js",
+    "test": "npm run build && node --import tsx --test tests/*.test.ts",
+    "typecheck": "tsc -p tsconfig.check.json",
+    "sync": "node --import tsx scripts/sync.ts"
+  },
+  "dependencies": { "@modelcontextprotocol/sdk": "1.29.0", "zod": "4.3.6" },
+  "devDependencies": { "@types/node": "^22.19.0", "tsx": "^4.21.0", "typescript": "5.9.3" }
+}
