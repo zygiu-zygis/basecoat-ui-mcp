@@ -1,0 +1,31 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.zygiu-zygis/basecoat-ui-mcp",
+  "title": "Basecoat UI MCP",
+  "description": "Offline stdio MCP for Basecoat UI templates, composition guidance, and static validation.",
+  "websiteUrl": "https://github.com/zygiu-zygis/basecoat-ui-mcp",
+  "repository": {
+    "url": "https://github.com/zygiu-zygis/basecoat-ui-mcp",
+    "source": "github"
+  },
+  "version": "1.0.2",
+  "packages": [
+    {
+      "registryType": "npm",
+      "registryBaseUrl": "https://registry.npmjs.org",
+      "identifier": "@intellmedia/basecoat-ui-mcp",
+      "version": "1.0.2",
+      "transport": {
+        "type": "stdio"
+      },
+      "environmentVariables": [
+        {
+          "name": "BASECOAT_PROJECT_ROOT",
+          "description": "Optional host application directory for basecoat://project/context (overridden by --project-root)",
+          "isRequired": false,
+          "format": "string"
+        }
+      ]
+    }
+  ]
+}

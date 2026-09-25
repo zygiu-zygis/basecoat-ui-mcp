@@ -1,10 +1,22 @@
 {
   "name": "@intellmedia/basecoat-ui-mcp",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Offline MCP server for Basecoat UI composition, curated templates, and static validation (stdio, no runtime network)",
   "author": "Žygimantas Jasiulionis / Intellmedia",
   "maintainers": ["Žygimantas Jasiulionis / Intellmedia"],
   "license": "MIT",
+  "mcpName": "io.github.zygiu-zygis/basecoat-ui-mcp",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zygiu-zygis/basecoat-ui-mcp.git"
+  },
+  "homepage": "https://github.com/zygiu-zygis/basecoat-ui-mcp",
+  "bugs": {
+    "url": "https://github.com/zygiu-zygis/basecoat-ui-mcp/issues"
+  },
+  "bin": {
+    "basecoat-ui-mcp": "dist/server/stdio.js"
+  },
   "keywords": [
     "basecoat-ui",
     "basecoat-css",
@@ -18,6 +30,7 @@
   "type": "module",
   "engines": { "node": ">=22.14.0" },
   "files": [
+    "dist",
     "src",
     "scripts",
     "tests",
@@ -30,6 +43,7 @@
     "THIRD_PARTY_NOTICES.md"
   ],
   "scripts": {
+    "prepublishOnly": "npm run build",
     "build": "tsc -p tsconfig.json",
     "start": "node dist/server/stdio.js",
     "test": "npm run build && node --import tsx --test tests/*.test.ts",

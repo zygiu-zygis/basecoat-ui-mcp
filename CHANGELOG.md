@@ -4,6 +4,12 @@ Maintained by **Žygimantas Jasiulionis / Intellmedia**.
 
 ## Unreleased
 
+## 1.0.2 - 2026-09-25
+
+- Publish runnable npm tarballs: `prepublishOnly` build, `bin`, and `dist/` in the package allowlist.
+
+## 1.0.1 - 2026-09-24 (unpublished)
+
 - Created the standalone source-first project with an explicit npm `files` allowlist.
 - Removed the generated executable declaration and pack-time build hook so source archives do not include or generate `dist/`.
 - Reworked public documentation for Astro, static HTML, exact runtime contracts, offline use, package boundaries, attribution, and AI-assisted development disclosure.
@@ -16,8 +22,6 @@ Maintained by **Žygimantas Jasiulionis / Intellmedia**.
 - `get_component_details` fail-closed at 1,999 UTF-8 bytes for the complete JSON response; no sliced JSON.
 - Sync resolves `basecoat-css` npm `gitHead`, refuses version downgrades, and does not auto-promote newly discovered upstream components into curated templates.
 - Upstream discovered inventory records 41 components; `pagination` and `spinner` remain maintenance-only until curated.
-
-## 1.0.1 - 2026-09-24
 
 - Verified `validateComposition` requires `basecoat-css/range` for `input[type="range"]`.
 
