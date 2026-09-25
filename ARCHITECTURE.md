@@ -19,9 +19,9 @@ The build compiles `src/` into the ignored `dist/` directory. The server never i
 
 The runtime registers exactly three tools - `search_components`, `get_component_details`, and `validate_composition` - and exactly three resources - `basecoat://design/rhythm`, `basecoat://integration/astro`, and `basecoat://project/context`.
 
-## Source-only package boundary
+## Package boundary
 
-The npm `files` allowlist contains `src/`, `scripts/`, `tests/`, TypeScript configurations, and public documentation, licenses, and notices. There is no package `bin` declaration or `prepack` build hook. `dist/`, `node_modules/`, cache files, generated archives, and internal audit notes are excluded. A cloned checkout must run `npm run build` before `npm start`.
+Git omits generated `dist/`. Published npm tarballs include prebuilt `dist/` because `prepublishOnly` runs `npm run build`, and the `basecoat-ui-mcp` bin points at `dist/server/stdio.js`. The `files` allowlist still ships `src/`, scripts, tests, and documentation for source inspection. Cloned checkouts must run `npm run build` before `npm start`.
 
 ## Registry vs tools vs design resources
 

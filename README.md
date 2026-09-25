@@ -10,19 +10,33 @@ It gives AI coding tools a small, deterministic Basecoat registry instead of mak
 - Astro or static HTML projects built with Tailwind CSS 4 and `basecoat-css`.
 - Teams that keep project-specific design tokens and density guidance in `DESIGN.md`.
 
-## Build and run from source
+## Install and run
 
 Requires Node.js **22.14.0** or newer.
 
+### From npm
+
 ```sh
-npm ci
-npm run build
-npm start -- --project-root path/to/your/application
+npm install -g @intellmedia/basecoat-ui-mcp
 ```
 
-The npm package is intentionally source-only. A cloned checkout generates `dist/server/stdio.js` only when `npm run build` is run; packing the source does not build or publish generated output.
+Configure an MCP client:
 
-Configure an MCP client after building:
+```json
+{
+  "mcpServers": {
+    "basecoat-ui": {
+      "command": "basecoat-ui-mcp",
+      "args": [
+        "--project-root",
+        "path/to/your/application"
+      ]
+    }
+  }
+}
+```
+
+Or invoke the compiled entry directly:
 
 ```json
 {
@@ -30,13 +44,25 @@ Configure an MCP client after building:
     "basecoat-ui": {
       "command": "node",
       "args": [
-        "path/to/basecoat-ui-mcp/dist/server/stdio.js",
+        "path/to/node_modules/@intellmedia/basecoat-ui-mcp/dist/server/stdio.js",
         "--project-root",
         "path/to/your/application"
       ]
     }
   }
 }
+```
+
+Published tarballs include a prebuilt `dist/` (`prepublishOnly` runs `npm run build`). Git checkouts omit `dist/`; build locally before running from a clone.
+
+### From source
+
+```sh
+git clone https://github.com/zygiu-zygis/basecoat-ui-mcp.git
+cd basecoat-ui-mcp
+npm ci
+npm run build
+npm start -- --project-root path/to/your/application
 ```
 
 `--project-root` overrides `BASECOAT_PROJECT_ROOT`, which overrides the launch directory. It selects the host application's `DESIGN.md`; it is not the MCP installation directory. The server exposes stdio only.
