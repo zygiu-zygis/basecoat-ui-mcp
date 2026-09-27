@@ -69,9 +69,9 @@ npm start -- --project-root path/to/your/application
 
 ## Basecoat MCP tools
 
-- `search_components` returns up to 8 compact `{id, name, intent}` summaries and never returns markup.
-- `get_component_details` returns one Astro or HTML template with dependencies and composition guidance. The complete JSON response must remain at or below **1,999 UTF-8 bytes**; oversized entries fail closed.
-- `validate_composition` statically checks up to **65,536 UTF-8 bytes** of HTML or Astro source and returns at most 24 issues.
+- `search_components` returns up to 8 compact `{id, name, intent}` summaries and never returns markup. Either `intent` or `query` may be omitted; both empty returns an empty list.
+- `get_component_details` returns one Astro or HTML template with dependencies and composition guidance. The complete JSON response must remain at or below **1,999 UTF-8 bytes**; oversized entries fail closed. `theme-toggle` resolves to `theme-switcher`.
+- `validate_composition` statically checks up to **65,536 UTF-8 bytes** of HTML or Astro source and returns at most 24 issues. Pass `code` or the alias `html` (not both with different values). When errors are dropped at the cap, the result includes `errorsOmitted: true` and an `issues-truncated` issue. `valid` is true when only warnings remain.
 
 ## Basecoat design resources
 

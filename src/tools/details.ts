@@ -1,9 +1,16 @@
 import { registry } from '../registry/index.js';
 import type { Registry } from '../registry/schema.js';
 import { assertDetailBudget } from './budget.js';
+import { resolveComponentId, suggestComponentId } from './component-id.js';
 
 export function getComponentDetails(id: string, environment: 'astro' | 'html', source: Registry = registry) {
-  if (!Object.hasOwn(source.details, id)) throw new Error(`Unknown component: ${id.slice(0, 80)}. Use search_components.`);
+  const resolved = resolveComponentId(id);
+  if (!Object.hasOwn(source.details, resolved)) {
+    const hint = suggestComponentId(resolved);
+    const suffix = hint ? ` Did you mean ${hint}?` : '';
+    throw new Error(`Unknown component: ${id.slice(0, 80)}.${suffix} Use search_components.`);
+  }
+  id = resolved;
   const entry = source.details[id]!;
   const scripts = environment === 'astro'
     ? entry.dependencies.js.map(path => `import '${path}';`).join('\n')

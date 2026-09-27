@@ -11,7 +11,11 @@ export interface CompositionIssue {
 
 const LIMITATIONS = 'Static HTML/Astro heuristic: cannot resolve dynamic classes, imported layouts, external scripts, CSS overrides or runtime DOM. Missing imports may be supplied by a parent layout. This is not an accessibility or browser conformance audit.';
 const SPACING = new Set(['0', '2', '4', '6', '12']);
-const VARIANTS = new Set(['primary', 'secondary', 'outline', 'ghost', 'destructive', 'link']);
+const VARIANTS = new Set(['default', 'primary', 'secondary', 'outline', 'ghost', 'destructive', 'link']);
+const ITEM_ANATOMY_CLASSES = new Set([
+  'item-title', 'item-description', 'item-media', 'item-content', 'item-actions', 'item-header',
+]);
+const ISSUE_CAP = 24;
 const SIZES = new Set(['xs', 'default', 'sm', 'lg', 'icon', 'icon-xs', 'icon-sm', 'icon-lg']);
 const BASECOAT_CLASSES = new Set(registry.upstream.css_classes);
 const TAILWIND_OVERLAP = /^(?:table-(?:auto|fixed|caption|cell|column|column-group|footer-group|header-group|row|row-group)|select-(?:auto|all|none|text)|field-sizing-(?:content|fixed))$/;
@@ -43,9 +47,14 @@ export function validateComposition(code: string) {
   const issues: CompositionIssue[] = [];
   let truncated = false;
   let hasErrors = false;
+  let droppedErrors = 0;
   const report = (rule: string, severity: CompositionIssue['severity'], message: string, line: number) => {
     if (severity === 'error') hasErrors = true;
-    if (issues.length >= 24) { truncated = true; return; }
+    if (issues.length >= ISSUE_CAP) {
+      truncated = true;
+      if (severity === 'error') droppedErrors++;
+      return;
+    }
     issues.push({ rule, severity, message: message.slice(0, 240), line });
   };
   if (Buffer.byteLength(code, 'utf8') > 65_536) {
@@ -84,7 +93,7 @@ export function validateComposition(code: string) {
       }
     }
     for (const token of classes) {
-      if (COMPONENT_FAMILY.test(token) && !BASECOAT_CLASSES.has(token) && !TAILWIND_OVERLAP.test(token)) report('invalid-basecoat-class', 'error', `Unknown Basecoat class ${token}; use the current component anatomy and data-variant/data-size attributes. Custom project classes should use a separate namespace.`, node.line);
+      if (COMPONENT_FAMILY.test(token) && !BASECOAT_CLASSES.has(token) && !TAILWIND_OVERLAP.test(token) && !ITEM_ANATOMY_CLASSES.has(token)) report('invalid-basecoat-class', 'error', `Unknown Basecoat class ${token}; use the current component anatomy and data-variant/data-size attributes. Custom project classes should use a separate namespace.`, node.line);
       const spacing = /^(-?)(gap(?:-[xy])?|space-[xy]|[mp][trblxyse]?)-(.+)$/.exec(token);
       if (spacing) {
         const [, negative, family, value] = spacing;
@@ -96,7 +105,7 @@ export function validateComposition(code: string) {
     if (classes.includes('btn')) {
       const variant = node.attrs['data-variant'];
       const size = node.attrs['data-size'];
-      if (variant !== undefined && !VARIANTS.has(variant)) report('button-variant', 'error', `Unknown button data-variant ${JSON.stringify(variant)}. Use primary, secondary, outline, ghost, destructive or link.`, node.line);
+      if (variant !== undefined && !VARIANTS.has(variant)) report('button-variant', 'error', `Unknown button data-variant ${JSON.stringify(variant)}. Use default, primary, secondary, outline, ghost, destructive or link.`, node.line);
       if (size !== undefined && !SIZES.has(size)) report('button-size', 'error', `Unknown button data-size ${JSON.stringify(size)}. Use xs, sm, default, lg, icon, icon-xs, icon-sm or icon-lg.`, node.line);
     }
     if (isPrimary(node)) {
@@ -132,5 +141,28 @@ export function validateComposition(code: string) {
     const module = importOrder.findIndex(value => required.has(importedModule(value) ?? ''));
     if (module >= 0 && runtime > module) report('js-import-order', 'warning', 'Load the Basecoat runtime before component modules so window.basecoat exists when modules register.', [...required.values()][0]!);
   }
-  return { valid: !hasErrors, issues, truncated, limitations: LIMITATIONS };
+  if (droppedErrors > 0) {
+    const notice: CompositionIssue = {
+      rule: 'issues-truncated',
+      severity: 'error',
+      message: `${droppedErrors} additional error(s) omitted; fix listed issues and re-validate.`,
+      line: 1,
+    };
+    if (issues.length >= ISSUE_CAP) {
+      let slot = ISSUE_CAP - 1;
+      for (let i = ISSUE_CAP - 1; i >= 0; i--) {
+        if (issues[i]!.severity === 'warning') { slot = i; break; }
+      }
+      issues[slot] = notice;
+    } else {
+      issues.push(notice);
+    }
+  }
+  return {
+    valid: !hasErrors,
+    issues,
+    truncated,
+    errorsOmitted: droppedErrors > 0,
+    limitations: LIMITATIONS,
+  };
 }

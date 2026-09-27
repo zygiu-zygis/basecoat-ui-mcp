@@ -19,7 +19,8 @@ async function main() {
     process.once(signal, () => { void server.close().then(() => process.exit(0)); });
   }
 }
-main().catch(() => {
-  console.error('basecoat-ui-mcp: startup failed; verify arguments, project root and registry budgets.');
+main().catch((error: unknown) => {
+  const message = error instanceof Error ? error.message : String(error);
+  console.error(`basecoat-ui-mcp: ${message}`);
   process.exitCode = 1;
 });

@@ -61,7 +61,7 @@ This keeps tool output deterministic and bounded. Upstream demo pages are refere
 | `get_component_details` JSON (full MCP content wrapper) | 1,999 UTF-8 bytes | Tool error; no truncation |
 | `search_components` | 8 summaries, schema-bounded fields | N/A |
 | `validate_composition` input | 65,536 UTF-8 bytes | Error issue |
-| `validate_composition` output | 24 issues max | `truncated: true` |
+| `validate_composition` output | 24 issues max | `truncated: true`, `errorsOmitted` when capped errors were dropped |
 | `DESIGN.md` read | 6,000 UTF-8 bytes emitted | Truncate on last newline or `. ` boundary inside cap |
 
 `assertDetailBudget` runs at server startup, on each detail request, during sync, and in tests. The bound is intentionally below 2,000 bytes without embedding a model-specific tokenizer.

@@ -43,6 +43,7 @@ test('offline stdio initializes and serves the bounded, project-scoped MCP surfa
   try {
     await client.connect(transport);
     assert.equal(client.getServerVersion()?.name, 'basecoat-ui-mcp');
+    assert.equal(client.getServerVersion()?.version, '1.0.3');
     assert.match(client.getInstructions() ?? '', /content hierarchy.*layout.*component selection/i);
     assert.match(client.getInstructions() ?? '', /offline/i);
 
@@ -80,6 +81,31 @@ test('offline stdio initializes and serves the bounded, project-scoped MCP surfa
       const result = await client.callTool({ name: 'search_components', arguments: { intent: '', query } });
       assert.deepEqual(JSON.parse(resultText(result)).map((item: { id: string }) => item.id), expected);
     }
+    const intentOnly = await client.callTool({ name: 'search_components', arguments: { intent: 'modal' } });
+    assert.equal(JSON.parse(resultText(intentOnly))[0]?.id, 'dialog');
+
+    const htmlAlias = await client.callTool({
+      name: 'validate_composition',
+      arguments: { html: '<div class="card"><div class="card"></div></div>' },
+    });
+    assert.match(resultText(htmlAlias), /nested-cards/);
+
+    const missingPayload = await client.callTool({ name: 'validate_composition', arguments: {} });
+    assert.equal(missingPayload.isError, true);
+    assert.match(resultText(missingPayload), /Provide code or html/i);
+
+    const conflicting = await client.callTool({
+      name: 'validate_composition',
+      arguments: { code: '<div></div>', html: '<span></span>' },
+    });
+    assert.equal(conflicting.isError, true);
+    assert.match(resultText(conflicting), /differ/i);
+
+    const matchingAlias = await client.callTool({
+      name: 'validate_composition',
+      arguments: { code: '<div class="card"><div class="card"></div></div>', html: '<div class="card"><div class="card"></div></div>' },
+    });
+    assert.match(resultText(matchingAlias), /nested-cards/);
 
     for (const id of ['badge', 'item', 'card', 'dropdown-menu', 'empty']) {
       assert(registry.index.some(component => component.id === id), `${id} must be curated`);

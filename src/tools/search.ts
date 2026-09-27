@@ -4,7 +4,8 @@ const synonyms: Record<string, string[]> = {
   modal: ['dialog'], confirm: ['dialog'], confirmation: ['dialog'], destructive: ['dialog'],
   action: ['button'], submit: ['button'], cta: ['button'],
   field: ['input'], email: ['input'], text: ['input'],
-  switch: ['tabs'], views: ['tabs'], panels: ['tabs'],
+  views: ['tabs'], panels: ['tabs'],
+  'theme-toggle': ['theme-switcher'],
   rows: ['table'], tabular: ['table'], compare: ['table'], invoices: ['table'],
 };
 function words(value: string): string[] {

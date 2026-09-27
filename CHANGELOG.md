@@ -4,6 +4,15 @@ Maintained by **Žygimantas Jasiulionis / Intellmedia**.
 
 ## Unreleased
 
+## 1.0.3 - 2026-09-27
+
+- MCP server `version` now matches `package.json` (was hardcoded `1.0.0`).
+- `validate_composition` accepts `html` as an alias for `code`; reports `errorsOmitted` / `issues-truncated` when errors are dropped at the 24-issue cap; allows common `item-*` anatomy hooks; accepts `data-variant="default"` on buttons; `valid` stays true when only warnings remain.
+- `search_components` allows either `intent` or `query` alone; fixes `switch` vs `tabs` synonym collision; adds `theme-toggle` search alias for `theme-switcher`.
+- `get_component_details` resolves `theme-toggle` to `theme-switcher` and adds a short did-you-mean hint for unknown ids.
+- Stdio startup failures print the error message on stderr.
+- Dependency: `@modelcontextprotocol/sdk` 1.30.1 (Zod unchanged at 4.3.6).
+
 ## 1.0.2 - 2026-09-25
 
 - Publish runnable npm tarballs: `prepublishOnly` build, `bin`, and `dist/` in the package allowlist.

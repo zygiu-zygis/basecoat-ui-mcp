@@ -53,6 +53,18 @@ test('search matches the new curated intents without unrelated fallback results'
     assert.deepEqual(searchComponents({ intent: '', query }).map(item => item.id), [id]);
     assert.deepEqual(searchComponents({ intent: query, query: '' }).map(item => item.id), [id]);
   }
+  assert.equal(searchComponents({ intent: '', query: 'switch' })[0]?.id, 'switch');
+  assert.equal(searchComponents({ intent: '', query: 'theme-toggle' })[0]?.id, 'theme-switcher');
+});
+
+test('get_component_details resolves aliases and suggests close ids', () => {
+  assert.equal(getComponentDetails('theme-toggle', 'astro').id, 'theme-switcher');
+  try {
+    getComponentDetails('theme-togle', 'astro');
+    assert.fail('expected unknown id');
+  } catch (error) {
+    assert.match((error as Error).message, /Did you mean theme-switcher/);
+  }
 });
 
 test('all minimal templates pass static validation and complete result byte bounds', () => {

@@ -1,9 +1,11 @@
 {
   "name": "@intellmedia/basecoat-ui-mcp",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Offline MCP server for Basecoat UI composition, curated templates, and static validation (stdio, no runtime network)",
   "author": "Žygimantas Jasiulionis / Intellmedia",
-  "maintainers": ["Žygimantas Jasiulionis / Intellmedia"],
+  "maintainers": [
+    "Žygimantas Jasiulionis / Intellmedia"
+  ],
   "license": "MIT",
   "mcpName": "io.github.zygiu-zygis/basecoat-ui-mcp",
   "repository": {
@@ -28,7 +30,9 @@
     "ai-coding-tools"
   ],
   "type": "module",
-  "engines": { "node": ">=22.14.0" },
+  "engines": {
+    "node": ">=22.14.0"
+  },
   "files": [
     "dist",
     "src",
@@ -40,7 +44,8 @@
     "ARCHITECTURE.md",
     "CHANGELOG.md",
     "LICENSE",
-    "THIRD_PARTY_NOTICES.md"
+    "THIRD_PARTY_NOTICES.md",
+    "server.json"
   ],
   "scripts": {
     "prepublishOnly": "npm run build",
@@ -50,6 +55,13 @@
     "typecheck": "tsc -p tsconfig.check.json",
     "sync": "node --import tsx scripts/sync.ts"
   },
-  "dependencies": { "@modelcontextprotocol/sdk": "1.29.0", "zod": "4.3.6" },
-  "devDependencies": { "@types/node": "^22.19.0", "tsx": "^4.21.0", "typescript": "5.9.3" }
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "1.30.1",
+    "zod": "4.3.6"
+  },
+  "devDependencies": {
+    "@types/node": "^22.19.0",
+    "tsx": "^4.21.0",
+    "typescript": "5.9.3"
+  }
 }

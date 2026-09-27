@@ -168,7 +168,7 @@ describe('composition validation', () => {
   });
 
   it('validates Basecoat v1 button data attributes', () => {
-    assert(rules('<button class="btn" data-variant="default"></button>').includes('button-variant'));
+    assert.deepEqual(rules('<button class="btn" data-variant="default"></button>'), []);
     assert(rules('<button class="btn" data-size="huge"></button>').includes('button-size'));
     assert.deepEqual(rules('<button class="btn" data-variant="primary" data-size="icon-xs"></button>'), []);
     assert.deepEqual(rules('<button class="btn" data-variant="secondary" data-size="xs"></button>'), []);
@@ -189,9 +189,24 @@ describe('composition validation', () => {
   it('keeps an invalid verdict when errors follow 24 truncated warnings', () => {
     const result = validateComposition('<div class="gap-3"></div>'.repeat(24) + '<button class="btn-nonsense"></button>');
     assert.equal(result.issues.length, 24);
-    assert(result.issues.every(issue => issue.severity === 'warning'));
     assert.equal(result.truncated, true);
     assert.equal(result.valid, false);
+    assert.equal(result.errorsOmitted, true);
+    assert(result.issues.some(issue => issue.rule === 'issues-truncated'));
+  });
+
+  it('returns valid true when only warnings are reported', () => {
+    const result = validateComposition('<div class="gap-3"></div>');
+    assert.equal(result.valid, true);
+    assert(result.issues.some(issue => issue.rule === 'spacing-rhythm' && issue.severity === 'warning'));
+  });
+
+  it('allows common item anatomy hook classes used in project markup', () => {
+    assert.deepEqual(
+      rules('<div class="item"><h3 class="item-title">T</h3><p class="item-description">D</p><div class="item-media"></div><div class="item-content"></div><div class="item-actions"></div><header class="item-header"></header></div>'),
+      [],
+    );
+    assert(rules('<div class="item-fake-hook"></div>').includes('invalid-basecoat-class'));
   });
 
   it('rejects oversized UTF-8 input before parsing', () => {
