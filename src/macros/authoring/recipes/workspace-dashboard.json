@@ -1,0 +1,76 @@
+{
+  "schemaVersion": 1,
+  "id": "workspace-dashboard",
+  "kind": "page",
+  "profile": "app-default",
+  "entryPage": "dashboard",
+  "routeLinks": [],
+  "pages": [
+    {
+      "id": "dashboard",
+      "route": "/workspace",
+      "recipe": "workspace-dashboard",
+      "root": "shell",
+      "status": "plan-ready",
+      "decisions": { "density": "comfortable" },
+      "nodes": {
+        "shell": {
+          "id": "shell",
+          "block": "app-shell",
+          "bindings": {}
+        },
+        "nav": {
+          "id": "nav",
+          "block": "sidebar-nav",
+          "parent": { "node": "shell", "slot": "navigation", "order": 0 },
+          "bindings": {}
+        },
+        "header": {
+          "id": "header",
+          "block": "page-header",
+          "parent": { "node": "shell", "slot": "header", "order": 0 },
+          "bindings": {}
+        },
+        "main": {
+          "id": "main",
+          "block": "dashboard-main",
+          "parent": { "node": "shell", "slot": "content", "order": 0 },
+          "bindings": {}
+        }
+      },
+      "connections": [
+        {
+          "id": "shell-to-main",
+          "relation": "controls",
+          "from": { "node": "shell", "port": "main-region" },
+          "to": { "node": "main", "port": "main-in" }
+        },
+        {
+          "id": "header-to-nav",
+          "relation": "controls",
+          "from": { "node": "header", "port": "nav-toggle-out" },
+          "to": { "node": "nav", "port": "nav-toggle-in" }
+        }
+      ],
+      "rules": [
+        {
+          "id": "dashboard-shell-frame",
+          "type": "same-frame",
+          "nodes": ["header", "main"]
+        },
+        {
+          "id": "dashboard-same-shell",
+          "type": "same-shell",
+          "nodes": ["nav", "header", "main"]
+        },
+        {
+          "id": "dashboard-shell-gutter",
+          "type": "single-owner",
+          "boundary": "shell-root",
+          "property": "gutter",
+          "nodes": ["shell"]
+        }
+      ]
+    }
+  ]
+}

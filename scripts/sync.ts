@@ -81,6 +81,29 @@ export async function buildSnapshot(current: Registry, treeInput: unknown, readS
   return candidate;
 }
 
+export function parseSyncArgs(args: readonly string[]): { ref: string; check: boolean } {
+  let ref: string | undefined;
+  let check = false;
+  for (let i = 0; i < args.length; i++) {
+    if (args[i] === '--check') {
+      check = true;
+    } else if (args[i] === '--ref' && args[i + 1]) {
+      ref = args[++i];
+    } else {
+      throw new Error('Usage: npm run sync -- --ref <40-character commit SHA> [--check]');
+    }
+  }
+  if (!ref) {
+    throw new Error(
+      'An explicit 40-character upstream commit SHA is required; refusing to resolve a moving latest source.',
+    );
+  }
+  if (!/^[a-f0-9]{40}$/i.test(ref)) {
+    throw new Error('Upstream ref must be a 40-character hexadecimal commit SHA.');
+  }
+  return { ref: ref.toLowerCase(), check };
+}
+
 async function fetchText(url: string): Promise<string> {
   const response = await fetch(url, { signal: AbortSignal.timeout(20_000), redirect: 'error', headers: { 'User-Agent': 'Intellmedia-Basecoat-MCP-Sync' } });
   if (!response.ok) throw new Error(`Upstream returned HTTP ${response.status}: ${url}`);
@@ -102,21 +125,7 @@ async function fetchText(url: string): Promise<string> {
 }
 
 async function main() {
-  const args = process.argv.slice(2);
-  let ref: string | undefined;
-  let check = false;
-  for (let i = 0; i < args.length; i++) {
-    if (args[i] === '--check') check = true;
-    else if (args[i] === '--ref' && args[i + 1]) ref = args[++i];
-    else throw new Error('Usage: npm run sync -- [--ref release-tag-or-commit] [--check]');
-  }
-  if (!ref) {
-    // GitHub releases can lag npm. Resolve the published version's immutable commit.
-    const release = z.object({ version: z.string(), gitHead: z.string().regex(/^[a-f0-9]{40}$/) })
-      .parse(JSON.parse(await fetchText('https://registry.npmjs.org/basecoat-css/latest')));
-    ref = release.gitHead;
-  }
-  if (!/^[a-zA-Z0-9._-]+$/.test(ref)) throw new Error('Invalid upstream ref.');
+  const { ref, check } = parseSyncArgs(process.argv.slice(2));
   const tree = treeSchema.parse(JSON.parse(await fetchText(`${REPO}/git/trees/${encodeURIComponent(ref)}?recursive=1`)));
   const readSource = (path: string) => fetchText(`https://raw.githubusercontent.com/hunvreus/basecoat/${tree.sha}/${path}`);
   const filename = resolve(ROOT, 'src/registry/components.json');

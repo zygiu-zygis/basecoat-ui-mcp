@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { registry } from '../src/registry/index.js';
-import { buildSnapshot, scrapeComponent } from '../scripts/sync.js';
+import { buildSnapshot, parseSyncArgs, scrapeComponent } from '../scripts/sync.js';
 
 function fixtures() {
   const sources: Record<string, string> = {
@@ -25,6 +25,21 @@ test('sync extracts variants/classes deterministically and retains curated skele
   const scraped = scrapeComponent('button', '# Button\n<button class="btn btn" data-variant="outline|primary">');
   assert.deepEqual(scraped.variants, ['outline', 'primary']);
   assert.deepEqual(scraped.classes, ['btn']);
+});
+
+test('sync requires an explicit immutable commit SHA', () => {
+  assert.throws(
+    () => parseSyncArgs([]),
+    /explicit 40-character upstream commit SHA/,
+  );
+  assert.throws(
+    () => parseSyncArgs(['--ref', 'main']),
+    /40-character hexadecimal commit SHA/,
+  );
+  assert.deepEqual(
+    parseSyncArgs(['--ref', 'A'.repeat(40), '--check']),
+    { ref: 'a'.repeat(40), check: true },
+  );
 });
 
 test('sync permits the documented chart canvas root but preserves other root checks', async () => {

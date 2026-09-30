@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "id": "data-filters",
+  "role": "filters",
+  "family": "data",
+  "description": "Filter bar using field, input, select, and checkbox leaves.",
+  "tags": ["data", "filters"],
+  "root": "filters-root",
+  "fragments": [
+    {
+      "id": "filters-root",
+      "emmet": "div.flex.flex-wrap.items-end.gap-3>div[data-component=field][data-slot=search]+div[data-component=select][data-slot=status]+div[data-component=checkbox][data-slot=archived]+div[data-component=button][data-slot=apply]"
+    }
+  ],
+  "mounts": [],
+  "slots": [],
+  "ports": [
+    {
+      "id": "dataset-out",
+      "at": { "fragment": "filters-root", "name": "filters-root" },
+      "direction": "out",
+      "kind": "data",
+      "contract": "dataset",
+      "minLinks": 1,
+      "maxLinks": 4,
+      "scope": "page"
+    }
+  ],
+  "componentRefs": ["field", "input", "select", "checkbox", "button", "label"],
+  "ruleRefs": [],
+  "dependencyBlockIds": [],
+  "layout": { "frameRef": "filters-root" },
+  "landmarks": { "main": 0, "primaryHeading": 0 },
+  "provenance": {
+    "origin": "authored",
+    "sourceHashes": {},
+    "mappingVersion": "1.0.0"
+  }
+}

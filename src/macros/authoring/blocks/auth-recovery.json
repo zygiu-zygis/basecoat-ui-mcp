@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "id": "auth-recovery",
+  "role": "page",
+  "family": "auth",
+  "description": "Password recovery request form.",
+  "tags": ["auth", "recovery"],
+  "root": "recovery-root",
+  "fragments": [
+    {
+      "id": "recovery-root",
+      "emmet": "div.mx-auto.max-w-sm.p-6>div[data-component=card]>form.grid.gap-4>div[data-component=field][data-slot=email]+div[data-component=button][data-slot=submit]+a[data-slot=back]{Back to sign in}"
+    }
+  ],
+  "mounts": [],
+  "slots": [],
+  "ports": [],
+  "componentRefs": ["card", "field", "input", "label", "button"],
+  "ruleRefs": [],
+  "dependencyBlockIds": [],
+  "layout": { "frameRef": "recovery-root" },
+  "landmarks": { "main": 1, "primaryHeading": 1 },
+  "provenance": {
+    "origin": "authored",
+    "sourceHashes": {},
+    "mappingVersion": "1.0.0"
+  }
+}

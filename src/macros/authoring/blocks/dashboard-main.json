@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "id": "dashboard-main",
+  "role": "dashboard",
+  "family": "workspace",
+  "description": "Dashboard content region with card summary grid.",
+  "tags": ["dashboard", "cards"],
+  "root": "content-frame",
+  "fragments": [
+    {
+      "id": "content-frame",
+      "emmet": "section.grid.gap-4.p-4.md:grid-cols-2.xl:grid-cols-3>div[data-component=card][data-slot=card-a]+div[data-component=card][data-slot=card-b]+div[data-component=card][data-slot=card-c]"
+    }
+  ],
+  "mounts": [],
+  "slots": [],
+  "ports": [
+    {
+      "id": "main-in",
+      "at": { "fragment": "content-frame", "name": "content-frame" },
+      "direction": "in",
+      "kind": "region",
+      "contract": "main",
+      "minLinks": 0,
+      "maxLinks": 1,
+      "scope": "shell"
+    }
+  ],
+  "componentRefs": ["card", "button"],
+  "ruleRefs": [],
+  "dependencyBlockIds": [],
+  "layout": { "frameRef": "content-frame", "scrollBoundary": "content-frame" },
+  "landmarks": { "main": 1, "primaryHeading": 0 },
+  "provenance": {
+    "origin": "authored",
+    "sourceHashes": {},
+    "mappingVersion": "1.0.0"
+  }
+}

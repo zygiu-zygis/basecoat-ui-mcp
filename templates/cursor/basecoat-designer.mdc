@@ -1,0 +1,55 @@
+---
+description: Basecoat macro design workflow for Cursor agents using basecoat-ui-mcp
+globs:
+alwaysApply: false
+---
+
+# Basecoat designer workflow
+
+Use this workflow when creating or modifying a Basecoat page with
+`basecoat-ui-mcp`:
+
+1. Identify the explicit design session. If unknown, call
+   `get_design_context` with `view: "sessions"`. Never guess a global
+   "current session".
+
+2. Read the current context and revision with `get_design_context`
+   (`overview` or `next`).
+
+3. Select or resume an approved page or flow recipe such as
+   `workspace-dashboard`, `auth-flow`, or `data-records`. Create the session
+   with `begin_design`; change shared decisions with
+   `apply_design_patch` using a `set_decision` operation.
+
+4. Make structural changes through `apply_design_patch`, always using the
+   current `expectedRevision` and a unique `operationId`.
+
+5. Before implementing a region, read its focused context, applicable
+   `rules`, and referenced blueprint sections with `get_macro_block`. Follow
+   `next` cursors until the required section is complete.
+
+6. Expand the approved static fragments in the host application. Preserve
+   named slots, instance boundaries, ordering, and declared connections.
+   The server does not write application source files.
+
+7. Use `search_components` and `get_component_details` only for selected
+   component leaves. Keep OAuth, captcha, session, credential, data, and
+   other runtime behavior in the host application.
+
+8. Record completed regions as client-reported checkpoints with
+   `apply_design_patch` and a `record_written` operation tied to the current
+   plan digest.
+
+9. After a conflict or restart, reread context. Do not continue from an
+   assumed stale layout. A changed registry or design revision invalidates old
+   cursors.
+
+10. Validate the complete graph with `validate_design` in `complete` mode.
+    Compare generated source with that graph, then run
+    `validate_composition` on the generated application source.
+
+11. Report remaining obligations explicitly. A graph marked `plan-ready` is
+    not proof of rendered correctness, runtime behavior, or accessibility.
+
+Layout contracts come from this project's pinned macro registry via MCP tools.
+They are not supplied automatically by shadcn or by MCP itself.

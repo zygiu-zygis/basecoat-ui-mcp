@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "adaptationBoundary": {
+    "source": "shadcn-registry-item",
+    "target": "basecoat-macro",
+    "layout": "curated"
+  },
+  "upstreamName": "login-form",
+  "role": "page",
+  "family": "auth",
+  "description": "Synthetic curated mapping for a local login-form fixture (offline importer test).",
+  "tags": ["auth", "synthetic", "imported"],
+  "root": "login-root",
+  "fragments": [
+    {
+      "id": "login-root",
+      "emmet": "div[data-component=card]>form.grid.gap-3>div[data-component=field]+div[data-component=button]"
+    }
+  ],
+  "mounts": [],
+  "slots": [],
+  "ports": [],
+  "componentRefs": ["card", "field", "input", "button", "label"],
+  "ruleRefs": [],
+  "dependencyBlockIds": [],
+  "layout": { "frameRef": "login-root" },
+  "landmarks": { "main": 1, "primaryHeading": 1 },
+  "adapted": ["form fields", "submit button"],
+  "omitted": ["social oauth buttons", "captcha"],
+  "requiresAppIntegration": ["credential submit handler"],
+  "mappingVersion": "1.0.0-synthetic"
+}

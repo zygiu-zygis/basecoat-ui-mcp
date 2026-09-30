@@ -1,0 +1,5 @@
+{
+  "id": "shell-frame",
+  "type": "same-frame",
+  "nodes": ["header", "main"]
+}

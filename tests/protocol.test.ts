@@ -46,14 +46,40 @@ test('offline stdio initializes and serves the bounded, project-scoped MCP surfa
     assert.equal(client.getServerVersion()?.version, '1.0.3');
     assert.match(client.getInstructions() ?? '', /content hierarchy.*layout.*component selection/i);
     assert.match(client.getInstructions() ?? '', /offline/i);
+    assert.match(client.getInstructions() ?? '', /begin_design/i);
+    assert.match(client.getInstructions() ?? '', /validate_design/i);
 
     const { tools } = await client.listTools();
     assert.deepEqual(tools.map(tool => tool.name).sort(), [
-      'get_component_details', 'search_components', 'validate_composition',
+      'apply_design_patch',
+      'begin_design',
+      'get_component_details',
+      'get_design_context',
+      'get_macro_block',
+      'search_components',
+      'search_macro_blocks',
+      'validate_composition',
+      'validate_design',
     ]);
+    const readOnly = new Set([
+      'get_component_details',
+      'get_design_context',
+      'get_macro_block',
+      'search_components',
+      'search_macro_blocks',
+      'validate_composition',
+      'validate_design',
+    ]);
+    const mutations = new Set(['apply_design_patch', 'begin_design']);
     for (const tool of tools) {
-      assert.equal(tool.annotations?.readOnlyHint, true);
       assert.equal(tool.annotations?.openWorldHint, false);
+      if (readOnly.has(tool.name)) {
+        assert.equal(tool.annotations?.readOnlyHint, true, tool.name);
+      }
+      if (mutations.has(tool.name)) {
+        assert.equal(tool.annotations?.readOnlyHint, false, tool.name);
+        assert.equal(tool.annotations?.idempotentHint, true, tool.name);
+      }
     }
     const { resources } = await client.listResources();
     assert.deepEqual(resources.map(resource => resource.uri).sort(), [

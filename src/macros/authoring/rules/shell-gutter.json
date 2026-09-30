@@ -1,0 +1,7 @@
+{
+  "id": "shell-gutter",
+  "type": "single-owner",
+  "boundary": "shell-root",
+  "property": "gutter",
+  "nodes": ["shell"]
+}

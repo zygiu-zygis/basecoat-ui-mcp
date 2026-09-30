@@ -38,6 +38,7 @@
     "src",
     "scripts",
     "tests",
+    "templates",
     "tsconfig.json",
     "tsconfig.check.json",
     "README.md",
@@ -53,7 +54,10 @@
     "start": "node dist/server/stdio.js",
     "test": "npm run build && node --import tsx --test tests/*.test.ts",
     "typecheck": "tsc -p tsconfig.check.json",
-    "sync": "node --import tsx scripts/sync.ts"
+    "sync": "node --import tsx scripts/sync.ts",
+    "compile:blocks": "node --import tsx scripts/compile-blocks.ts",
+    "compile:blocks:check": "node --import tsx scripts/compile-blocks.ts --check",
+    "import:blocks": "node --import tsx scripts/import-blocks.ts"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "1.30.1",

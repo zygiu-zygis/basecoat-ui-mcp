@@ -1,0 +1,82 @@
+{
+  "schemaVersion": 1,
+  "id": "auth-flow",
+  "kind": "flow",
+  "profile": "app-default",
+  "entryPage": "sign-in",
+  "routeLinks": [
+    {
+      "fromPage": "sign-in",
+      "fromAnchor": { "fragment": "sign-in-root", "name": "recover" },
+      "toPage": "recovery"
+    },
+    {
+      "fromPage": "recovery",
+      "fromAnchor": { "fragment": "recovery-root", "name": "back" },
+      "toPage": "sign-in"
+    },
+    {
+      "fromPage": "recovery",
+      "fromAnchor": { "fragment": "recovery-root", "name": "submit" },
+      "toPage": "reset"
+    },
+    {
+      "fromPage": "reset",
+      "fromAnchor": { "fragment": "reset-root", "name": "submit" },
+      "toPage": "sign-in"
+    }
+  ],
+  "pages": [
+    {
+      "id": "sign-in",
+      "route": "/auth/sign-in",
+      "recipe": "auth-flow",
+      "root": "form",
+      "status": "plan-ready",
+      "decisions": { "auth-brand": "App" },
+      "nodes": {
+        "form": {
+          "id": "form",
+          "block": "auth-sign-in",
+          "bindings": {}
+        }
+      },
+      "connections": [],
+      "rules": []
+    },
+    {
+      "id": "recovery",
+      "route": "/auth/recovery",
+      "recipe": "auth-flow",
+      "root": "form",
+      "status": "plan-ready",
+      "decisions": {},
+      "nodes": {
+        "form": {
+          "id": "form",
+          "block": "auth-recovery",
+          "bindings": {}
+        }
+      },
+      "connections": [],
+      "rules": []
+    },
+    {
+      "id": "reset",
+      "route": "/auth/reset",
+      "recipe": "auth-flow",
+      "root": "form",
+      "status": "plan-ready",
+      "decisions": {},
+      "nodes": {
+        "form": {
+          "id": "form",
+          "block": "auth-reset",
+          "bindings": {}
+        }
+      },
+      "connections": [],
+      "rules": []
+    }
+  ]
+}

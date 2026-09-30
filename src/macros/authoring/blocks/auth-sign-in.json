@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "id": "auth-sign-in",
+  "role": "page",
+  "family": "auth",
+  "description": "Sign-in card with email/password fields and submit action.",
+  "tags": ["auth", "sign-in"],
+  "root": "sign-in-root",
+  "fragments": [
+    {
+      "id": "sign-in-root",
+      "emmet": "div.mx-auto.max-w-sm.p-6>div[data-component=card]>form.grid.gap-4>div[data-component=field][data-slot=email]+div[data-component=field][data-slot=password]+div[data-component=button][data-slot=submit]+a[data-slot=recover]{Forgot password?}"
+    }
+  ],
+  "mounts": [],
+  "slots": [],
+  "ports": [],
+  "componentRefs": ["card", "field", "input", "label", "button"],
+  "ruleRefs": [],
+  "dependencyBlockIds": [],
+  "layout": { "frameRef": "sign-in-root" },
+  "landmarks": { "main": 1, "primaryHeading": 1 },
+  "provenance": {
+    "origin": "authored",
+    "sourceHashes": {},
+    "mappingVersion": "1.0.0"
+  }
+}

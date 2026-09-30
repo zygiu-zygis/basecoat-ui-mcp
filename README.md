@@ -1,42 +1,33 @@
-# Basecoat UI MCP server for Astro and HTML
+# Basecoat UI MCP
 
-A source-first, offline Model Context Protocol server for composing [Basecoat UI](https://basecoatui.com) interfaces in Astro, static HTML, and Tailwind CSS 4 projects.
+Offline, source-first [Model Context Protocol](https://modelcontextprotocol.io/) server for composing [Basecoat UI](https://basecoatui.com) in Astro, static HTML, and Tailwind CSS 4 projects.
 
-It gives AI coding tools a small, deterministic Basecoat registry instead of making every client scrape documentation. The same local stdio configuration can be used by editors and agents, with each client starting its own server process; the server makes no runtime network requests. Composition follows a fixed order: content hierarchy, layout, component selection, spacing, typography, then final review.
+The server exposes a small, deterministic registry instead of asking each client to scrape documentation. It runs over local stdio and makes no runtime network requests. The host application remains responsible for rendering, data access, authentication, sessions, credentials, OAuth, captcha, and other runtime behavior.
 
-## Who should use it
-
-- Agents and editors that need bounded Basecoat templates and dependency guidance.
-- Astro or static HTML projects built with Tailwind CSS 4 and `basecoat-css`.
-- Teams that keep project-specific design tokens and density guidance in `DESIGN.md`.
-
-## Install and run
+## Install
 
 Requires Node.js **22.14.0** or newer.
 
-### From npm
+### npm
 
 ```sh
-npm install -g @intellmedia/basecoat-ui-mcp
+npm install --global @intellmedia/basecoat-ui-mcp
 ```
 
-Configure an MCP client:
+Add the server to an MCP client. Use an absolute path for the host application so design context and persistent sessions belong to the intended project:
 
 ```json
 {
   "mcpServers": {
     "basecoat-ui": {
       "command": "basecoat-ui-mcp",
-      "args": [
-        "--project-root",
-        "path/to/your/application"
-      ]
+      "args": ["--project-root", "/absolute/path/to/your/application"]
     }
   }
 }
 ```
 
-Or invoke the compiled entry directly:
+The compiled entry can also be invoked directly:
 
 ```json
 {
@@ -44,16 +35,16 @@ Or invoke the compiled entry directly:
     "basecoat-ui": {
       "command": "node",
       "args": [
-        "path/to/node_modules/@intellmedia/basecoat-ui-mcp/dist/server/stdio.js",
+        "/absolute/path/to/node_modules/@intellmedia/basecoat-ui-mcp/dist/server/stdio.js",
         "--project-root",
-        "path/to/your/application"
+        "/absolute/path/to/your/application"
       ]
     }
   }
 }
 ```
 
-Published tarballs include a prebuilt `dist/` (`prepublishOnly` runs `npm run build`). Git checkouts omit `dist/`; build locally before running from a clone.
+Published packages include prebuilt `dist/`. A source checkout does not.
 
 ### From source
 
@@ -62,16 +53,93 @@ git clone https://github.com/zygiu-zygis/basecoat-ui-mcp.git
 cd basecoat-ui-mcp
 npm ci
 npm run build
-npm start -- --project-root path/to/your/application
+npm start -- --project-root /absolute/path/to/your/application
 ```
 
-`--project-root` overrides `BASECOAT_PROJECT_ROOT`, which overrides the launch directory. It selects the host application's `DESIGN.md`; it is not the MCP installation directory. The server exposes stdio only.
+`--project-root` takes precedence over `BASECOAT_PROJECT_ROOT`, which takes precedence over the launch directory. The selected directory is the host project, not the MCP installation directory. The server exposes stdio only.
+
+## Project-root configuration
+
+The configured root controls two things:
+
+- `DESIGN.md` is read from that directory by `basecoat://project/context`.
+- Persistent macro sessions are stored under `<project-root>/.basecoat/designer/`.
+
+Only that exact directory is used. The server does not walk parent directories. Keep `.basecoat/` in the host project and back it up if design sessions are part of your workflow. The MCP server never writes host application source files.
 
 ## Basecoat MCP tools
 
-- `search_components` returns up to 8 compact `{id, name, intent}` summaries and never returns markup. Either `intent` or `query` may be omitted; both empty returns an empty list.
-- `get_component_details` returns one Astro or HTML template with dependencies and composition guidance. The complete JSON response must remain at or below **1,999 UTF-8 bytes**; oversized entries fail closed. `theme-toggle` resolves to `theme-switcher`.
-- `validate_composition` statically checks up to **65,536 UTF-8 bytes** of HTML or Astro source and returns at most 24 issues. Pass `code` or the alias `html` (not both with different values). When errors are dropped at the cap, the result includes `errorsOmitted: true` and an `issues-truncated` issue. `valid` is true when only warnings remain.
+The server exposes three component tools and six macro tools. Every macro result is a bounded MCP packet of at most **1,999 UTF-8 bytes**. Larger result sets use cursors; responses are not sliced mid-JSON.
+
+### Component tools
+
+- `search_components` returns up to 8 compact `{id, name, intent}` summaries and never returns markup. `intent` and `query` are optional; an empty search returns an empty list.
+- `get_component_details` returns one Astro or HTML template with dependencies and composition guidance. Oversized entries fail closed. `theme-toggle` resolves to `theme-switcher`.
+- `validate_composition` statically checks up to **65,536 UTF-8 bytes** of HTML or Astro source and returns at most 24 issues. Pass `code` or `html`. It does not render, execute, resolve application modules, or certify accessibility.
+
+### Macro tools
+
+The macro layer is this project's curated, project-specific composition system for shells, auth flows, data workspaces, slots, ports, rules, and recipes. It is compiled into a pinned registry snapshot. These layout contracts are not supplied automatically by shadcn or by MCP.
+
+1. `search_macro_blocks` - find compatible blueprint blocks by query, role, family, or tag.
+2. `get_macro_block` - read a block section such as `manifest`, `structure`, `slots`, `ports`, `rules`, `dependencies`, or `provenance`.
+3. `begin_design` - create a persistent design session and pin its profile and registry revision.
+4. `get_design_context` - read session lists or focused views such as `overview`, `graph`, `rules`, `focus`, and `next`.
+5. `apply_design_patch` - apply atomic graph changes with `expectedRevision` and an idempotent `operationId`.
+6. `validate_design` - validate a draft or complete design graph and page its diagnostics.
+
+Design sessions persist under `<project-root>/.basecoat/designer/`. Registry revisions are content-addressed; a session keeps using its pinned revision even after the package snapshot changes. Design snapshots use the form `d:<designId>@<revision>`.
+
+### End-to-end example
+
+A dashboard page can follow this sequence:
+
+```text
+get_design_context(view="sessions")
+begin_design(designId="admin", profile="app-default", operationId="begin-admin")
+search_macro_blocks(q="shell", limit=8)
+apply_design_patch(
+  designId="admin",
+  expectedRevision=0,
+  operationId="add-dashboard",
+  operations=[{ op: "instantiate_recipe",
+               recipe: "workspace-dashboard",
+               pagePrefix: "admin" }]
+)
+get_design_context(view="overview", designId="admin")
+get_macro_block(idOrRef="app-shell", section="structure", designId="admin")
+```
+
+Implement the selected component leaves in the host project, then record completed regions with `apply_design_patch(record_written)`. Finish with `validate_design(mode="complete")` and `validate_composition` on the generated Astro or HTML source. After a conflict or restart, reread the session and use the returned revision and cursors.
+
+Copy `templates/cursor/basecoat-designer.mdc` into a host project's `.cursor/rules` for agent guidance. The MCP server does not write consumer application source files.
+
+### Source adaptation and offline import
+
+The macro importer is intentionally local-first. It accepts a checked-out or otherwise
+locally saved shadcn-style `registry-item.json`, a reviewed mapping, and a local
+dependency lock:
+
+```sh
+npm run import:blocks -- \
+  --item=/path/to/registry-item.json \
+  --mapping=/path/to/mapping.json \
+  --lock=/path/to/dependency-lock.json \
+  --dry-run
+```
+
+This command does not fetch live shadcn registry items, install packages, execute
+upstream code, or make runtime network requests. Unknown, unlocked, or explicitly
+unsupported dependencies produce diagnostics instead of guesses. Omitted OAuth,
+captcha, session, credential, and other application features are reported as
+obligations. The importer emits only the curated structural block; the host
+application must implement the runtime behavior.
+
+The mapping and resulting provenance make the boundary explicit: shadcn-style source
+is an input reference, while layout contracts, slots, ports, rules, and recipes are
+curated adaptations owned by this project's macro layer. They are not features
+provided by shadcn or by MCP. Upstream refreshes are separate maintainer authoring
+operations and never occur from the MCP server.
 
 ## Basecoat design resources
 
@@ -112,19 +180,69 @@ The runtime has no network client, remote documentation dependency, frontend fra
 
 In Astro, use the integration resource for Vite, Tailwind CSS 4, CSS ordering, selective controller imports, native `<dialog>` wiring, and ClientRouter hooks. In static HTML, copy the listed built controller files from `basecoat-css` into the host application's asset directory and preserve dependency order. Chart templates require host-supplied Chart.js.
 
-Maintainers can refresh the pinned upstream snapshot with `npm run sync`; this is the only command that uses HTTPS. It validates schema, exports, notices, response budgets, version direction, and atomic replacement before changing the registry.
+Maintainers can refresh the pinned Basecoat snapshot only with an explicit immutable
+commit source, for example `npm run sync -- --ref <40-character-commit-sha>`.
+This is the only command that uses HTTPS. It validates schema, exports, notices,
+response budgets, version direction, and atomic replacement before changing the
+registry. It does not refresh shadcn mappings or macro blocks.
 
 ## Development and verification
 
+Install dependencies with `npm ci`, then run the focused checks:
+
 ```sh
 npm run typecheck
+npm run build
+npm run compile:blocks:check
 npm run test
-npm run sync -- --check
+npm pack --dry-run
 ```
 
-Development was AI-assisted. Behavior and documentation are verified against checked-in source, contract tests, and the pinned registry rather than generated claims.
+`npm run test` builds first and runs the Node test suite. `npm pack --dry-run`
+checks the package file allowlist without creating a tarball. Maintainers can
+verify the pinned Basecoat source with:
 
-See [ARCHITECTURE.md](ARCHITECTURE.md) for runtime boundaries, packaging, byte caps, and sync policy.
+```sh
+npm run sync -- --ref <40-character-commit-sha> --check
+```
+
+The sync command is the only network boundary. Macro authoring changes require
+`npm run compile:blocks`; review the generated
+`src/macros/registry.snapshot.json` and then run
+`npm run compile:blocks:check`.
+
+## Contributing
+
+1. Create a focused branch from the default branch.
+2. Keep component templates, macro contracts, and documentation aligned with
+   checked-in source.
+3. Run `npm run typecheck`, `npm run compile:blocks:check`, and `npm run test`.
+4. Run `npm pack --dry-run` when package contents or metadata change.
+5. Describe behavior changes, bounded-output effects, and any required host
+   application work in the pull request.
+
+Do not add GitHub Actions workflows. Upstream registry refreshes and macro
+authoring are maintainer-reviewed changes, not server startup tasks.
+
+## Troubleshooting
+
+- **The server starts but reads the wrong project:** set an absolute
+  `--project-root` or `BASECOAT_PROJECT_ROOT`. The fallback is the process
+  launch directory.
+- **`DESIGN.md` is not available:** place a regular file at the configured
+  root. Parent directories and symlinks are not followed.
+- **A source checkout cannot start:** run `npm run build` before `npm start`.
+- **A macro result has a cursor:** request the next page with that cursor;
+  do not concatenate or parse partial JSON.
+- **An importer diagnostic mentions OAuth, captcha, or an unsupported
+  dependency:** implement or resolve it in the host application or reviewed
+  mapping. The importer does not guess runtime behavior.
+- **A design patch conflicts:** reread `get_design_context`, use its current
+  revision, and send a new unique `operationId`.
+
+See [ARCHITECTURE.md](ARCHITECTURE.md) for runtime boundaries, persistence,
+packet limits, and sync policy. Report reproducible defects in the
+[issue tracker](https://github.com/zygiu-zygis/basecoat-ui-mcp/issues).
 
 ## Author, license, and upstream attribution
 

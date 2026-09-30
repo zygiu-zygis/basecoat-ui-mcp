@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "id": "page-header",
+  "role": "header",
+  "family": "layout",
+  "description": "Page header with breadcrumb trail and action cluster.",
+  "tags": ["header", "breadcrumb"],
+  "root": "content-frame",
+  "fragments": [
+    {
+      "id": "content-frame",
+      "emmet": "div.flex.items-center.justify-between.gap-4.border-b.p-4>div[data-component=breadcrumb]+div.flex.gap-2[data-slot=actions]"
+    }
+  ],
+  "mounts": [],
+  "slots": [
+    {
+      "id": "actions",
+      "at": { "fragment": "content-frame", "name": "actions" },
+      "accepts": ["action"],
+      "min": 0,
+      "max": 4
+    }
+  ],
+  "ports": [
+    {
+      "id": "nav-toggle-out",
+      "at": { "fragment": "content-frame", "name": "content-frame" },
+      "direction": "out",
+      "kind": "control",
+      "contract": "nav-toggle",
+      "minLinks": 0,
+      "maxLinks": 1,
+      "scope": "shell"
+    }
+  ],
+  "componentRefs": ["breadcrumb", "button"],
+  "ruleRefs": [],
+  "dependencyBlockIds": [],
+  "layout": { "frameRef": "content-frame" },
+  "landmarks": { "main": 0, "primaryHeading": 1 },
+  "provenance": {
+    "origin": "authored",
+    "sourceHashes": {},
+    "mappingVersion": "1.0.0"
+  }
+}

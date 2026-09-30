@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "id": "sidebar-nav",
+  "role": "navigation",
+  "family": "layout",
+  "description": "Sidebar navigation leaf wrapping the curated sidebar component.",
+  "tags": ["navigation", "sidebar", "collapsible-nav"],
+  "root": "nav-root",
+  "fragments": [
+    {
+      "id": "nav-root",
+      "emmet": "div[data-slot=sidebar-host][data-component=sidebar]"
+    }
+  ],
+  "mounts": [],
+  "slots": [],
+  "ports": [
+    {
+      "id": "nav-toggle-in",
+      "at": { "fragment": "nav-root", "name": "nav-root" },
+      "direction": "in",
+      "kind": "control",
+      "contract": "nav-toggle",
+      "minLinks": 0,
+      "maxLinks": 1,
+      "scope": "shell"
+    }
+  ],
+  "componentRefs": ["sidebar"],
+  "ruleRefs": [],
+  "dependencyBlockIds": [],
+  "layout": { "frameRef": "nav-root" },
+  "landmarks": { "main": 0, "primaryHeading": 0 },
+  "provenance": {
+    "origin": "authored",
+    "sourceHashes": {},
+    "mappingVersion": "1.0.0"
+  }
+}

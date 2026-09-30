@@ -1,0 +1,1149 @@
+{
+  "schemaVersion": 1,
+  "revision": "ae0301f244bc65729fe152f175738a07e1491d2326d6ac6c165256833f932921",
+  "blocks": {
+    "67de989d195a092ab9f5f799c19e64909a8faf84cb2277271b2619d3f9a62fb3": {
+      "schemaVersion": 1,
+      "id": "app-shell",
+      "role": "shell",
+      "family": "layout",
+      "description": "Application shell with navigation, header, and main content slots.",
+      "tags": [
+        "shell",
+        "layout",
+        "workspace"
+      ],
+      "root": "shell-root",
+      "fragments": [
+        {
+          "id": "shell-root",
+          "emmet": "div.flex.min-h-screen.bg-background>aside[data-slot=nav]+div.flex.flex-1.flex-col>header[data-slot=header]+main#main[data-slot=content]"
+        }
+      ],
+      "mounts": [],
+      "slots": [
+        {
+          "id": "navigation",
+          "at": {
+            "fragment": "shell-root",
+            "name": "nav"
+          },
+          "accepts": [
+            "navigation"
+          ],
+          "min": 1,
+          "max": 1,
+          "boundary": "shell-root"
+        },
+        {
+          "id": "header",
+          "at": {
+            "fragment": "shell-root",
+            "name": "header"
+          },
+          "accepts": [
+            "header"
+          ],
+          "min": 1,
+          "max": 1
+        },
+        {
+          "id": "content",
+          "at": {
+            "fragment": "shell-root",
+            "name": "content"
+          },
+          "accepts": [
+            "page",
+            "workspace",
+            "dashboard"
+          ],
+          "min": 1,
+          "max": 1,
+          "boundary": "shell-root"
+        }
+      ],
+      "ports": [
+        {
+          "id": "nav-control",
+          "at": {
+            "fragment": "shell-root",
+            "name": "nav"
+          },
+          "direction": "out",
+          "kind": "control",
+          "contract": "nav-toggle",
+          "minLinks": 0,
+          "maxLinks": 1,
+          "scope": "shell"
+        },
+        {
+          "id": "main-region",
+          "at": {
+            "fragment": "shell-root",
+            "name": "content"
+          },
+          "direction": "out",
+          "kind": "region",
+          "contract": "main",
+          "minLinks": 0,
+          "maxLinks": 4,
+          "scope": "shell"
+        }
+      ],
+      "componentRefs": [],
+      "ruleRefs": [
+        "b5d7a493bc7eac10e352c137750a54fdd11140b9a0e36442e7a4693de7a64c92",
+        "3804c304e4328847ae10c8de08dc4d56994e306217f3b66eab1c08f205591954"
+      ],
+      "dependencyRefs": [],
+      "layout": {
+        "frameRef": "shell-root",
+        "gutterBoundary": "shell-root",
+        "scrollBoundary": "shell-root"
+      },
+      "landmarks": {
+        "main": 0,
+        "primaryHeading": 0
+      },
+      "provenance": {
+        "origin": "authored",
+        "sourceHashes": {},
+        "mappingVersion": "1.0.0"
+      }
+    },
+    "44f07830cae181975863955bf469725b946855a8914e4cc6b63797bddf7f805d": {
+      "schemaVersion": 1,
+      "id": "auth-recovery",
+      "role": "page",
+      "family": "auth",
+      "description": "Password recovery request form.",
+      "tags": [
+        "auth",
+        "recovery"
+      ],
+      "root": "recovery-root",
+      "fragments": [
+        {
+          "id": "recovery-root",
+          "emmet": "div.mx-auto.max-w-sm.p-6>div[data-component=card]>form.grid.gap-4>div[data-component=field][data-slot=email]+div[data-component=button][data-slot=submit]+a[data-slot=back]{Back to sign in}"
+        }
+      ],
+      "mounts": [],
+      "slots": [],
+      "ports": [],
+      "componentRefs": [
+        "card",
+        "field",
+        "input",
+        "label",
+        "button"
+      ],
+      "ruleRefs": [],
+      "dependencyRefs": [],
+      "layout": {
+        "frameRef": "recovery-root"
+      },
+      "landmarks": {
+        "main": 1,
+        "primaryHeading": 1
+      },
+      "provenance": {
+        "origin": "authored",
+        "sourceHashes": {},
+        "mappingVersion": "1.0.0"
+      }
+    },
+    "a3f4265e047c061e5f009cd4cd2c5bb001701c29c3bcd655c67572d7468e0776": {
+      "schemaVersion": 1,
+      "id": "auth-reset",
+      "role": "page",
+      "family": "auth",
+      "description": "Password reset form with confirmation field.",
+      "tags": [
+        "auth",
+        "reset"
+      ],
+      "root": "reset-root",
+      "fragments": [
+        {
+          "id": "reset-root",
+          "emmet": "div.mx-auto.max-w-sm.p-6>div[data-component=card]>form.grid.gap-4>div[data-component=field][data-slot=password]+div[data-component=field][data-slot=confirm]+div[data-component=button][data-slot=submit]"
+        }
+      ],
+      "mounts": [],
+      "slots": [],
+      "ports": [],
+      "componentRefs": [
+        "card",
+        "field",
+        "input",
+        "label",
+        "button"
+      ],
+      "ruleRefs": [],
+      "dependencyRefs": [],
+      "layout": {
+        "frameRef": "reset-root"
+      },
+      "landmarks": {
+        "main": 1,
+        "primaryHeading": 1
+      },
+      "provenance": {
+        "origin": "authored",
+        "sourceHashes": {},
+        "mappingVersion": "1.0.0"
+      }
+    },
+    "c2f9b936b85ceaaf489484411a43cbbe054caedebe652ea1d5f47a1f5dcdd2f8": {
+      "schemaVersion": 1,
+      "id": "auth-sign-in",
+      "role": "page",
+      "family": "auth",
+      "description": "Sign-in card with email/password fields and submit action.",
+      "tags": [
+        "auth",
+        "sign-in"
+      ],
+      "root": "sign-in-root",
+      "fragments": [
+        {
+          "id": "sign-in-root",
+          "emmet": "div.mx-auto.max-w-sm.p-6>div[data-component=card]>form.grid.gap-4>div[data-component=field][data-slot=email]+div[data-component=field][data-slot=password]+div[data-component=button][data-slot=submit]+a[data-slot=recover]{Forgot password?}"
+        }
+      ],
+      "mounts": [],
+      "slots": [],
+      "ports": [],
+      "componentRefs": [
+        "card",
+        "field",
+        "input",
+        "label",
+        "button"
+      ],
+      "ruleRefs": [],
+      "dependencyRefs": [],
+      "layout": {
+        "frameRef": "sign-in-root"
+      },
+      "landmarks": {
+        "main": 1,
+        "primaryHeading": 1
+      },
+      "provenance": {
+        "origin": "authored",
+        "sourceHashes": {},
+        "mappingVersion": "1.0.0"
+      }
+    },
+    "b25cbad1cc251b700e17284d453a7a4c8e4b97b54e55f0e0ef0ea06b146070a0": {
+      "schemaVersion": 1,
+      "id": "dashboard-main",
+      "role": "dashboard",
+      "family": "workspace",
+      "description": "Dashboard content region with card summary grid.",
+      "tags": [
+        "dashboard",
+        "cards"
+      ],
+      "root": "content-frame",
+      "fragments": [
+        {
+          "id": "content-frame",
+          "emmet": "section.grid.gap-4.p-4.md:grid-cols-2.xl:grid-cols-3>div[data-component=card][data-slot=card-a]+div[data-component=card][data-slot=card-b]+div[data-component=card][data-slot=card-c]"
+        }
+      ],
+      "mounts": [],
+      "slots": [],
+      "ports": [
+        {
+          "id": "main-in",
+          "at": {
+            "fragment": "content-frame",
+            "name": "content-frame"
+          },
+          "direction": "in",
+          "kind": "region",
+          "contract": "main",
+          "minLinks": 0,
+          "maxLinks": 1,
+          "scope": "shell"
+        }
+      ],
+      "componentRefs": [
+        "card",
+        "button"
+      ],
+      "ruleRefs": [],
+      "dependencyRefs": [],
+      "layout": {
+        "frameRef": "content-frame",
+        "scrollBoundary": "content-frame"
+      },
+      "landmarks": {
+        "main": 1,
+        "primaryHeading": 0
+      },
+      "provenance": {
+        "origin": "authored",
+        "sourceHashes": {},
+        "mappingVersion": "1.0.0"
+      }
+    },
+    "60a5f2d4266f0a8777e0b6516e1e86292588c1b2839d66eaf941bacc4782fb34": {
+      "schemaVersion": 1,
+      "id": "data-filters",
+      "role": "filters",
+      "family": "data",
+      "description": "Filter bar using field, input, select, and checkbox leaves.",
+      "tags": [
+        "data",
+        "filters"
+      ],
+      "root": "filters-root",
+      "fragments": [
+        {
+          "id": "filters-root",
+          "emmet": "div.flex.flex-wrap.items-end.gap-3>div[data-component=field][data-slot=search]+div[data-component=select][data-slot=status]+div[data-component=checkbox][data-slot=archived]+div[data-component=button][data-slot=apply]"
+        }
+      ],
+      "mounts": [],
+      "slots": [],
+      "ports": [
+        {
+          "id": "dataset-out",
+          "at": {
+            "fragment": "filters-root",
+            "name": "filters-root"
+          },
+          "direction": "out",
+          "kind": "data",
+          "contract": "dataset",
+          "minLinks": 1,
+          "maxLinks": 4,
+          "scope": "page"
+        }
+      ],
+      "componentRefs": [
+        "field",
+        "input",
+        "select",
+        "checkbox",
+        "button",
+        "label"
+      ],
+      "ruleRefs": [],
+      "dependencyRefs": [],
+      "layout": {
+        "frameRef": "filters-root"
+      },
+      "landmarks": {
+        "main": 0,
+        "primaryHeading": 0
+      },
+      "provenance": {
+        "origin": "authored",
+        "sourceHashes": {},
+        "mappingVersion": "1.0.0"
+      }
+    },
+    "8db430e806c397ae4259c221b7030e80e783f34c1f1c5002702020e1041a9296": {
+      "schemaVersion": 1,
+      "id": "data-pager",
+      "role": "pager",
+      "family": "data",
+      "description": "Result pager using button-group leaves (no curated pagination component).",
+      "tags": [
+        "data",
+        "pager"
+      ],
+      "root": "pager-root",
+      "fragments": [
+        {
+          "id": "pager-root",
+          "emmet": "div.flex.items-center.justify-between.gap-2>p.text-sm[data-slot=summary]+div[data-component=button-group][data-slot=controls]"
+        }
+      ],
+      "mounts": [],
+      "slots": [],
+      "ports": [
+        {
+          "id": "dataset-in",
+          "at": {
+            "fragment": "pager-root",
+            "name": "pager-root"
+          },
+          "direction": "in",
+          "kind": "data",
+          "contract": "dataset",
+          "minLinks": 1,
+          "maxLinks": 1,
+          "scope": "page"
+        }
+      ],
+      "componentRefs": [
+        "button-group",
+        "button"
+      ],
+      "ruleRefs": [],
+      "dependencyRefs": [],
+      "layout": {
+        "frameRef": "pager-root"
+      },
+      "landmarks": {
+        "main": 0,
+        "primaryHeading": 0
+      },
+      "provenance": {
+        "origin": "authored",
+        "sourceHashes": {},
+        "mappingVersion": "1.0.0"
+      }
+    },
+    "3cf92bf80520abe59ab18ec9ce3ff1714ab917a31d5eab9ac8cd7f913f47b0cd": {
+      "schemaVersion": 1,
+      "id": "data-table",
+      "role": "table",
+      "family": "data",
+      "description": "Tabular results region wrapping the curated table component.",
+      "tags": [
+        "data",
+        "table"
+      ],
+      "root": "table-root",
+      "fragments": [
+        {
+          "id": "table-root",
+          "emmet": "div.overflow-auto.rounded-md.border>div[data-component=table]"
+        }
+      ],
+      "mounts": [],
+      "slots": [],
+      "ports": [
+        {
+          "id": "dataset-in",
+          "at": {
+            "fragment": "table-root",
+            "name": "table-root"
+          },
+          "direction": "in",
+          "kind": "data",
+          "contract": "dataset",
+          "minLinks": 1,
+          "maxLinks": 1,
+          "scope": "page"
+        }
+      ],
+      "componentRefs": [
+        "table"
+      ],
+      "ruleRefs": [],
+      "dependencyRefs": [],
+      "layout": {
+        "frameRef": "table-root",
+        "scrollBoundary": "table-root"
+      },
+      "landmarks": {
+        "main": 0,
+        "primaryHeading": 0
+      },
+      "provenance": {
+        "origin": "authored",
+        "sourceHashes": {},
+        "mappingVersion": "1.0.0"
+      }
+    },
+    "52287589e2a5caf82fc025e9766384f00fbb2cd24b663859875065272d08c424": {
+      "schemaVersion": 1,
+      "id": "data-workspace",
+      "role": "workspace",
+      "family": "data",
+      "description": "Data workspace frame with ordered filters, table, and pager slots.",
+      "tags": [
+        "data",
+        "workspace",
+        "table"
+      ],
+      "root": "content-frame",
+      "fragments": [
+        {
+          "id": "content-frame",
+          "emmet": "section.flex.flex-col.gap-4.p-4>div[data-slot=filters]+div[data-slot=table]+div[data-slot=pager]"
+        }
+      ],
+      "mounts": [],
+      "slots": [
+        {
+          "id": "filters",
+          "at": {
+            "fragment": "content-frame",
+            "name": "filters"
+          },
+          "accepts": [
+            "filters"
+          ],
+          "min": 1,
+          "max": 1
+        },
+        {
+          "id": "table",
+          "at": {
+            "fragment": "content-frame",
+            "name": "table"
+          },
+          "accepts": [
+            "table"
+          ],
+          "min": 1,
+          "max": 1
+        },
+        {
+          "id": "pager",
+          "at": {
+            "fragment": "content-frame",
+            "name": "pager"
+          },
+          "accepts": [
+            "pager"
+          ],
+          "min": 1,
+          "max": 1
+        }
+      ],
+      "ports": [
+        {
+          "id": "main-in",
+          "at": {
+            "fragment": "content-frame",
+            "name": "content-frame"
+          },
+          "direction": "in",
+          "kind": "region",
+          "contract": "main",
+          "minLinks": 0,
+          "maxLinks": 1,
+          "scope": "shell"
+        }
+      ],
+      "componentRefs": [],
+      "ruleRefs": [
+        "e945c29b9ae85271e16c3fe4c6a430b8163cbd9e9b471500649ec09df60b01cd"
+      ],
+      "dependencyRefs": [
+        "60a5f2d4266f0a8777e0b6516e1e86292588c1b2839d66eaf941bacc4782fb34",
+        "3cf92bf80520abe59ab18ec9ce3ff1714ab917a31d5eab9ac8cd7f913f47b0cd",
+        "8db430e806c397ae4259c221b7030e80e783f34c1f1c5002702020e1041a9296"
+      ],
+      "layout": {
+        "frameRef": "content-frame",
+        "scrollBoundary": "content-frame"
+      },
+      "landmarks": {
+        "main": 1,
+        "primaryHeading": 0
+      },
+      "provenance": {
+        "origin": "authored",
+        "sourceHashes": {},
+        "mappingVersion": "1.0.0"
+      }
+    },
+    "dbfae20d1ef27d597a119b019dfc9444fb0ae3800016076fc4271830b9565caf": {
+      "schemaVersion": 1,
+      "id": "page-header",
+      "role": "header",
+      "family": "layout",
+      "description": "Page header with breadcrumb trail and action cluster.",
+      "tags": [
+        "header",
+        "breadcrumb"
+      ],
+      "root": "content-frame",
+      "fragments": [
+        {
+          "id": "content-frame",
+          "emmet": "div.flex.items-center.justify-between.gap-4.border-b.p-4>div[data-component=breadcrumb]+div.flex.gap-2[data-slot=actions]"
+        }
+      ],
+      "mounts": [],
+      "slots": [
+        {
+          "id": "actions",
+          "at": {
+            "fragment": "content-frame",
+            "name": "actions"
+          },
+          "accepts": [
+            "action"
+          ],
+          "min": 0,
+          "max": 4
+        }
+      ],
+      "ports": [
+        {
+          "id": "nav-toggle-out",
+          "at": {
+            "fragment": "content-frame",
+            "name": "content-frame"
+          },
+          "direction": "out",
+          "kind": "control",
+          "contract": "nav-toggle",
+          "minLinks": 0,
+          "maxLinks": 1,
+          "scope": "shell"
+        }
+      ],
+      "componentRefs": [
+        "breadcrumb",
+        "button"
+      ],
+      "ruleRefs": [],
+      "dependencyRefs": [],
+      "layout": {
+        "frameRef": "content-frame"
+      },
+      "landmarks": {
+        "main": 0,
+        "primaryHeading": 1
+      },
+      "provenance": {
+        "origin": "authored",
+        "sourceHashes": {},
+        "mappingVersion": "1.0.0"
+      }
+    },
+    "9625532a4f0d2a345eb368fbf7fa3fc77337782d5c6340c28f0d5df2d525ecd3": {
+      "schemaVersion": 1,
+      "id": "sidebar-nav",
+      "role": "navigation",
+      "family": "layout",
+      "description": "Sidebar navigation leaf wrapping the curated sidebar component.",
+      "tags": [
+        "navigation",
+        "sidebar",
+        "collapsible-nav"
+      ],
+      "root": "nav-root",
+      "fragments": [
+        {
+          "id": "nav-root",
+          "emmet": "div[data-slot=sidebar-host][data-component=sidebar]"
+        }
+      ],
+      "mounts": [],
+      "slots": [],
+      "ports": [
+        {
+          "id": "nav-toggle-in",
+          "at": {
+            "fragment": "nav-root",
+            "name": "nav-root"
+          },
+          "direction": "in",
+          "kind": "control",
+          "contract": "nav-toggle",
+          "minLinks": 0,
+          "maxLinks": 1,
+          "scope": "shell"
+        }
+      ],
+      "componentRefs": [
+        "sidebar"
+      ],
+      "ruleRefs": [],
+      "dependencyRefs": [],
+      "layout": {
+        "frameRef": "nav-root"
+      },
+      "landmarks": {
+        "main": 0,
+        "primaryHeading": 0
+      },
+      "provenance": {
+        "origin": "authored",
+        "sourceHashes": {},
+        "mappingVersion": "1.0.0"
+      }
+    }
+  },
+  "recipes": {
+    "4f66c309904c41fb1df4074d96dbac5ea28bb22038506fa904e82c77040757e7": {
+      "schemaVersion": 1,
+      "id": "auth-flow",
+      "kind": "flow",
+      "profile": "efcf2f3e93ee5b4730cff4a6d760833299d19ca480be4b16424ae24a810e6057",
+      "pages": [
+        {
+          "id": "sign-in",
+          "route": "/auth/sign-in",
+          "recipe": "4f66c309904c41fb1df4074d96dbac5ea28bb22038506fa904e82c77040757e7",
+          "root": "form",
+          "nodes": {
+            "form": {
+              "id": "form",
+              "block": "c2f9b936b85ceaaf489484411a43cbbe054caedebe652ea1d5f47a1f5dcdd2f8",
+              "bindings": {}
+            }
+          },
+          "connections": [],
+          "rules": [],
+          "decisions": {
+            "auth-brand": "App"
+          },
+          "status": "plan-ready"
+        },
+        {
+          "id": "recovery",
+          "route": "/auth/recovery",
+          "recipe": "4f66c309904c41fb1df4074d96dbac5ea28bb22038506fa904e82c77040757e7",
+          "root": "form",
+          "nodes": {
+            "form": {
+              "id": "form",
+              "block": "44f07830cae181975863955bf469725b946855a8914e4cc6b63797bddf7f805d",
+              "bindings": {}
+            }
+          },
+          "connections": [],
+          "rules": [],
+          "decisions": {},
+          "status": "plan-ready"
+        },
+        {
+          "id": "reset",
+          "route": "/auth/reset",
+          "recipe": "4f66c309904c41fb1df4074d96dbac5ea28bb22038506fa904e82c77040757e7",
+          "root": "form",
+          "nodes": {
+            "form": {
+              "id": "form",
+              "block": "a3f4265e047c061e5f009cd4cd2c5bb001701c29c3bcd655c67572d7468e0776",
+              "bindings": {}
+            }
+          },
+          "connections": [],
+          "rules": [],
+          "decisions": {},
+          "status": "plan-ready"
+        }
+      ],
+      "entryPage": "sign-in",
+      "routeLinks": [
+        {
+          "fromPage": "sign-in",
+          "fromAnchor": {
+            "fragment": "sign-in-root",
+            "name": "recover"
+          },
+          "toPage": "recovery"
+        },
+        {
+          "fromPage": "recovery",
+          "fromAnchor": {
+            "fragment": "recovery-root",
+            "name": "back"
+          },
+          "toPage": "sign-in"
+        },
+        {
+          "fromPage": "recovery",
+          "fromAnchor": {
+            "fragment": "recovery-root",
+            "name": "submit"
+          },
+          "toPage": "reset"
+        },
+        {
+          "fromPage": "reset",
+          "fromAnchor": {
+            "fragment": "reset-root",
+            "name": "submit"
+          },
+          "toPage": "sign-in"
+        }
+      ]
+    },
+    "bac977fb3594aae708323d8e7218487e4ef2d34a4397c70401ba4555715addbb": {
+      "schemaVersion": 1,
+      "id": "data-records",
+      "kind": "page",
+      "profile": "efcf2f3e93ee5b4730cff4a6d760833299d19ca480be4b16424ae24a810e6057",
+      "pages": [
+        {
+          "id": "records",
+          "route": "/data",
+          "recipe": "bac977fb3594aae708323d8e7218487e4ef2d34a4397c70401ba4555715addbb",
+          "root": "shell",
+          "nodes": {
+            "shell": {
+              "id": "shell",
+              "block": "67de989d195a092ab9f5f799c19e64909a8faf84cb2277271b2619d3f9a62fb3",
+              "bindings": {}
+            },
+            "nav": {
+              "id": "nav",
+              "block": "9625532a4f0d2a345eb368fbf7fa3fc77337782d5c6340c28f0d5df2d525ecd3",
+              "parent": {
+                "node": "shell",
+                "slot": "navigation",
+                "order": 0
+              },
+              "bindings": {}
+            },
+            "header": {
+              "id": "header",
+              "block": "dbfae20d1ef27d597a119b019dfc9444fb0ae3800016076fc4271830b9565caf",
+              "parent": {
+                "node": "shell",
+                "slot": "header",
+                "order": 0
+              },
+              "bindings": {}
+            },
+            "workspace": {
+              "id": "workspace",
+              "block": "52287589e2a5caf82fc025e9766384f00fbb2cd24b663859875065272d08c424",
+              "parent": {
+                "node": "shell",
+                "slot": "content",
+                "order": 0
+              },
+              "bindings": {
+                "data-context": "records-dataset"
+              }
+            },
+            "filters": {
+              "id": "filters",
+              "block": "60a5f2d4266f0a8777e0b6516e1e86292588c1b2839d66eaf941bacc4782fb34",
+              "parent": {
+                "node": "workspace",
+                "slot": "filters",
+                "order": 0
+              },
+              "bindings": {
+                "data-context": "records-dataset"
+              }
+            },
+            "table": {
+              "id": "table",
+              "block": "3cf92bf80520abe59ab18ec9ce3ff1714ab917a31d5eab9ac8cd7f913f47b0cd",
+              "parent": {
+                "node": "workspace",
+                "slot": "table",
+                "order": 1
+              },
+              "bindings": {
+                "data-context": "records-dataset"
+              }
+            },
+            "pager": {
+              "id": "pager",
+              "block": "8db430e806c397ae4259c221b7030e80e783f34c1f1c5002702020e1041a9296",
+              "parent": {
+                "node": "workspace",
+                "slot": "pager",
+                "order": 2
+              },
+              "bindings": {
+                "data-context": "records-dataset"
+              }
+            }
+          },
+          "connections": [
+            {
+              "id": "shell-to-workspace",
+              "relation": "controls",
+              "from": {
+                "node": "shell",
+                "port": "main-region"
+              },
+              "to": {
+                "node": "workspace",
+                "port": "main-in"
+              }
+            },
+            {
+              "id": "header-to-nav",
+              "relation": "controls",
+              "from": {
+                "node": "header",
+                "port": "nav-toggle-out"
+              },
+              "to": {
+                "node": "nav",
+                "port": "nav-toggle-in"
+              }
+            },
+            {
+              "id": "filters-to-table",
+              "relation": "data",
+              "from": {
+                "node": "filters",
+                "port": "dataset-out"
+              },
+              "to": {
+                "node": "table",
+                "port": "dataset-in"
+              }
+            },
+            {
+              "id": "filters-to-pager",
+              "relation": "data",
+              "from": {
+                "node": "filters",
+                "port": "dataset-out"
+              },
+              "to": {
+                "node": "pager",
+                "port": "dataset-in"
+              }
+            }
+          ],
+          "rules": [
+            {
+              "id": "records-shared-data",
+              "type": "shared-data",
+              "binding": "records-dataset",
+              "nodes": [
+                "filters",
+                "table",
+                "pager"
+              ]
+            },
+            {
+              "id": "records-shell-frame",
+              "type": "same-frame",
+              "nodes": [
+                "header",
+                "workspace"
+              ]
+            },
+            {
+              "id": "records-same-shell",
+              "type": "same-shell",
+              "nodes": [
+                "nav",
+                "header",
+                "workspace"
+              ]
+            }
+          ],
+          "decisions": {
+            "density": "compact"
+          },
+          "status": "plan-ready"
+        }
+      ],
+      "entryPage": "records",
+      "routeLinks": []
+    },
+    "c81165a1b837e6267c060dc7fb8e138254a036e3479a110cc9e2a0ebe883d8c6": {
+      "schemaVersion": 1,
+      "id": "workspace-dashboard",
+      "kind": "page",
+      "profile": "efcf2f3e93ee5b4730cff4a6d760833299d19ca480be4b16424ae24a810e6057",
+      "pages": [
+        {
+          "id": "dashboard",
+          "route": "/workspace",
+          "recipe": "c81165a1b837e6267c060dc7fb8e138254a036e3479a110cc9e2a0ebe883d8c6",
+          "root": "shell",
+          "nodes": {
+            "shell": {
+              "id": "shell",
+              "block": "67de989d195a092ab9f5f799c19e64909a8faf84cb2277271b2619d3f9a62fb3",
+              "bindings": {}
+            },
+            "nav": {
+              "id": "nav",
+              "block": "9625532a4f0d2a345eb368fbf7fa3fc77337782d5c6340c28f0d5df2d525ecd3",
+              "parent": {
+                "node": "shell",
+                "slot": "navigation",
+                "order": 0
+              },
+              "bindings": {}
+            },
+            "header": {
+              "id": "header",
+              "block": "dbfae20d1ef27d597a119b019dfc9444fb0ae3800016076fc4271830b9565caf",
+              "parent": {
+                "node": "shell",
+                "slot": "header",
+                "order": 0
+              },
+              "bindings": {}
+            },
+            "main": {
+              "id": "main",
+              "block": "b25cbad1cc251b700e17284d453a7a4c8e4b97b54e55f0e0ef0ea06b146070a0",
+              "parent": {
+                "node": "shell",
+                "slot": "content",
+                "order": 0
+              },
+              "bindings": {}
+            }
+          },
+          "connections": [
+            {
+              "id": "shell-to-main",
+              "relation": "controls",
+              "from": {
+                "node": "shell",
+                "port": "main-region"
+              },
+              "to": {
+                "node": "main",
+                "port": "main-in"
+              }
+            },
+            {
+              "id": "header-to-nav",
+              "relation": "controls",
+              "from": {
+                "node": "header",
+                "port": "nav-toggle-out"
+              },
+              "to": {
+                "node": "nav",
+                "port": "nav-toggle-in"
+              }
+            }
+          ],
+          "rules": [
+            {
+              "id": "dashboard-shell-frame",
+              "type": "same-frame",
+              "nodes": [
+                "header",
+                "main"
+              ]
+            },
+            {
+              "id": "dashboard-same-shell",
+              "type": "same-shell",
+              "nodes": [
+                "nav",
+                "header",
+                "main"
+              ]
+            },
+            {
+              "id": "dashboard-shell-gutter",
+              "type": "single-owner",
+              "boundary": "shell-root",
+              "property": "gutter",
+              "nodes": [
+                "shell"
+              ]
+            }
+          ],
+          "decisions": {
+            "density": "comfortable"
+          },
+          "status": "plan-ready"
+        }
+      ],
+      "entryPage": "dashboard",
+      "routeLinks": []
+    }
+  },
+  "profiles": {
+    "efcf2f3e93ee5b4730cff4a6d760833299d19ca480be4b16424ae24a810e6057": {
+      "schemaVersion": 1,
+      "id": "app-default",
+      "description": "Default application design profile for workspace shells, auth flows, and data pages.",
+      "allowedDecisions": {
+        "density": {
+          "type": "enum",
+          "values": [
+            "comfortable",
+            "compact"
+          ],
+          "allowPageOverride": true,
+          "defaultValue": "comfortable"
+        },
+        "nav-collapsed": {
+          "type": "boolean",
+          "allowPageOverride": false,
+          "defaultValue": false
+        },
+        "auth-brand": {
+          "type": "string",
+          "allowPageOverride": true,
+          "defaultValue": "App"
+        }
+      },
+      "sharedDecisionKeys": [
+        "density",
+        "nav-collapsed"
+      ]
+    }
+  },
+  "rules": {
+    "7c64d29553cb5800e7a9b0321616eb41d8faa727152d212b8b19e85c193bc12a": {
+      "id": "data-ordered",
+      "type": "ordered",
+      "parent": "workspace",
+      "slot": "body",
+      "nodes": [
+        "filters",
+        "table",
+        "pager"
+      ]
+    },
+    "e945c29b9ae85271e16c3fe4c6a430b8163cbd9e9b471500649ec09df60b01cd": {
+      "id": "data-shared",
+      "type": "shared-data",
+      "binding": "records-dataset",
+      "nodes": [
+        "filters",
+        "table",
+        "pager"
+      ]
+    },
+    "b5d7a493bc7eac10e352c137750a54fdd11140b9a0e36442e7a4693de7a64c92": {
+      "id": "shell-frame",
+      "type": "same-frame",
+      "nodes": [
+        "header",
+        "main"
+      ]
+    },
+    "3804c304e4328847ae10c8de08dc4d56994e306217f3b66eab1c08f205591954": {
+      "id": "shell-gutter",
+      "type": "single-owner",
+      "boundary": "shell-root",
+      "property": "gutter",
+      "nodes": [
+        "shell"
+      ]
+    }
+  },
+  "aliases": {
+    "data-ordered": "7c64d29553cb5800e7a9b0321616eb41d8faa727152d212b8b19e85c193bc12a",
+    "data-shared": "e945c29b9ae85271e16c3fe4c6a430b8163cbd9e9b471500649ec09df60b01cd",
+    "shell-frame": "b5d7a493bc7eac10e352c137750a54fdd11140b9a0e36442e7a4693de7a64c92",
+    "shell-gutter": "3804c304e4328847ae10c8de08dc4d56994e306217f3b66eab1c08f205591954",
+    "app-default": "efcf2f3e93ee5b4730cff4a6d760833299d19ca480be4b16424ae24a810e6057",
+    "app-shell": "67de989d195a092ab9f5f799c19e64909a8faf84cb2277271b2619d3f9a62fb3",
+    "auth-recovery": "44f07830cae181975863955bf469725b946855a8914e4cc6b63797bddf7f805d",
+    "auth-reset": "a3f4265e047c061e5f009cd4cd2c5bb001701c29c3bcd655c67572d7468e0776",
+    "auth-sign-in": "c2f9b936b85ceaaf489484411a43cbbe054caedebe652ea1d5f47a1f5dcdd2f8",
+    "dashboard-main": "b25cbad1cc251b700e17284d453a7a4c8e4b97b54e55f0e0ef0ea06b146070a0",
+    "data-filters": "60a5f2d4266f0a8777e0b6516e1e86292588c1b2839d66eaf941bacc4782fb34",
+    "data-pager": "8db430e806c397ae4259c221b7030e80e783f34c1f1c5002702020e1041a9296",
+    "data-table": "3cf92bf80520abe59ab18ec9ce3ff1714ab917a31d5eab9ac8cd7f913f47b0cd",
+    "data-workspace": "52287589e2a5caf82fc025e9766384f00fbb2cd24b663859875065272d08c424",
+    "page-header": "dbfae20d1ef27d597a119b019dfc9444fb0ae3800016076fc4271830b9565caf",
+    "sidebar-nav": "9625532a4f0d2a345eb368fbf7fa3fc77337782d5c6340c28f0d5df2d525ecd3",
+    "auth-flow": "4f66c309904c41fb1df4074d96dbac5ea28bb22038506fa904e82c77040757e7",
+    "data-records": "bac977fb3594aae708323d8e7218487e4ef2d34a4397c70401ba4555715addbb",
+    "workspace-dashboard": "c81165a1b837e6267c060dc7fb8e138254a036e3479a110cc9e2a0ebe883d8c6"
+  }
+}
