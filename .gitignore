@@ -3,3 +3,7 @@ dist/
 .npm/
 *.tsbuildinfo
 *.tgz
+
+# Local disposable MCP consumer probe (do not publish / push)
+tests/fixtures/offline-dashboard/
+examples/offline-dashboard/

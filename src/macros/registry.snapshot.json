@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "revision": "ae0301f244bc65729fe152f175738a07e1491d2326d6ac6c165256833f932921",
+  "revision": "ee5fa8d56415d6db8c92c8c63fc46735f2658bfd21808aae39b8cad5ffaf72dd",
   "blocks": {
     "67de989d195a092ab9f5f799c19e64909a8faf84cb2277271b2619d3f9a62fb3": {
       "schemaVersion": 1,
@@ -238,38 +238,39 @@
         "mappingVersion": "1.0.0"
       }
     },
-    "b25cbad1cc251b700e17284d453a7a4c8e4b97b54e55f0e0ef0ea06b146070a0": {
+    "dc633c7b5a31229b36eef74338791a30c9254446987fe1d4d7d3d726ee095d3d": {
       "schemaVersion": 1,
       "id": "dashboard-main",
-      "role": "dashboard",
+      "role": "metrics",
       "family": "workspace",
-      "description": "Dashboard content region with card summary grid.",
+      "description": "Dashboard metrics region with a four-card KPI grid using approved rhythm utilities.",
       "tags": [
         "dashboard",
-        "cards"
+        "cards",
+        "metrics"
       ],
       "root": "content-frame",
       "fragments": [
         {
           "id": "content-frame",
-          "emmet": "section.grid.gap-4.p-4.md:grid-cols-2.xl:grid-cols-3>div[data-component=card][data-slot=card-a]+div[data-component=card][data-slot=card-b]+div[data-component=card][data-slot=card-c]"
+          "emmet": "section.grid.gap-4.p-4.md:grid-cols-2.xl:grid-cols-4>div[data-component=card][data-slot=card-a]+div[data-component=card][data-slot=card-b]+div[data-component=card][data-slot=card-c]+div[data-component=card][data-slot=card-d]"
         }
       ],
       "mounts": [],
       "slots": [],
       "ports": [
         {
-          "id": "main-in",
+          "id": "metrics-in",
           "at": {
             "fragment": "content-frame",
             "name": "content-frame"
           },
           "direction": "in",
           "kind": "region",
-          "contract": "main",
+          "contract": "metrics",
           "minLinks": 0,
           "maxLinks": 1,
-          "scope": "shell"
+          "scope": "page"
         }
       ],
       "componentRefs": [
@@ -279,11 +280,10 @@
       "ruleRefs": [],
       "dependencyRefs": [],
       "layout": {
-        "frameRef": "content-frame",
-        "scrollBoundary": "content-frame"
+        "frameRef": "content-frame"
       },
       "landmarks": {
-        "main": 1,
+        "main": 0,
         "primaryHeading": 0
       },
       "provenance": {
@@ -292,7 +292,7 @@
         "mappingVersion": "1.0.0"
       }
     },
-    "60a5f2d4266f0a8777e0b6516e1e86292588c1b2839d66eaf941bacc4782fb34": {
+    "7b8a12c860ba038232b4973d25051b98867ca278cd0761541603f8516958265c": {
       "schemaVersion": 1,
       "id": "data-filters",
       "role": "filters",
@@ -306,7 +306,7 @@
       "fragments": [
         {
           "id": "filters-root",
-          "emmet": "div.flex.flex-wrap.items-end.gap-3>div[data-component=field][data-slot=search]+div[data-component=select][data-slot=status]+div[data-component=checkbox][data-slot=archived]+div[data-component=button][data-slot=apply]"
+          "emmet": "div.flex.flex-wrap.items-end.gap-2>div[data-component=field][data-slot=search]+div[data-component=select][data-slot=status]+div[data-component=checkbox][data-slot=archived]+div[data-component=button][data-slot=apply]"
         }
       ],
       "mounts": [],
@@ -455,7 +455,7 @@
         "mappingVersion": "1.0.0"
       }
     },
-    "52287589e2a5caf82fc025e9766384f00fbb2cd24b663859875065272d08c424": {
+    "02273050b9b6ad5f887ec47b177f349c8330c3fdd6565df310743c773771a6f4": {
       "schemaVersion": 1,
       "id": "data-workspace",
       "role": "workspace",
@@ -532,7 +532,7 @@
         "e945c29b9ae85271e16c3fe4c6a430b8163cbd9e9b471500649ec09df60b01cd"
       ],
       "dependencyRefs": [
-        "60a5f2d4266f0a8777e0b6516e1e86292588c1b2839d66eaf941bacc4782fb34",
+        "7b8a12c860ba038232b4973d25051b98867ca278cd0761541603f8516958265c",
         "3cf92bf80520abe59ab18ec9ce3ff1714ab917a31d5eab9ac8cd7f913f47b0cd",
         "8db430e806c397ae4259c221b7030e80e783f34c1f1c5002702020e1041a9296"
       ],
@@ -616,6 +616,166 @@
         "mappingVersion": "1.0.0"
       }
     },
+    "ff35aa4378cbabb98ebb0fc43c4f1fdf7f5ad94601078c1490f721c940a4fc5c": {
+      "schemaVersion": 1,
+      "id": "segmented-toggle",
+      "role": "range-control",
+      "family": "workspace",
+      "description": "Radio-group-backed pill segmented control for dashboard date ranges.",
+      "tags": [
+        "dashboard",
+        "radio",
+        "segmented",
+        "date-range"
+      ],
+      "root": "toggle-root",
+      "fragments": [
+        {
+          "id": "toggle-root",
+          "emmet": "div[data-component=segmented-toggle][data-variant=pill][role=radiogroup][aria-label='Date range'].flex.gap-2>label.btn[data-variant=outline]>input[type=radio][name=date-range][value=3m].sr-only+span{Last 3 months}^label.btn[data-variant=outline]>input[type=radio][name=date-range][value=30d][checked].sr-only+span{Last 30 days}^label.btn[data-variant=outline]>input[type=radio][name=date-range][value=7d].sr-only+span{Last 7 days}"
+        }
+      ],
+      "mounts": [],
+      "slots": [],
+      "ports": [
+        {
+          "id": "range-out",
+          "at": {
+            "fragment": "toggle-root",
+            "name": "toggle-root"
+          },
+          "direction": "out",
+          "kind": "data",
+          "contract": "date-range",
+          "minLinks": 0,
+          "maxLinks": 2,
+          "scope": "page"
+        }
+      ],
+      "componentRefs": [
+        "segmented-toggle",
+        "radio-group",
+        "button"
+      ],
+      "ruleRefs": [],
+      "dependencyRefs": [],
+      "layout": {
+        "frameRef": "toggle-root"
+      },
+      "landmarks": {
+        "main": 0,
+        "primaryHeading": 0
+      },
+      "provenance": {
+        "origin": "authored",
+        "sourceHashes": {},
+        "mappingVersion": "1.0.0"
+      }
+    },
+    "6245b44b5b79b16b6a7ba5cc61c9246a0330ddac6d2021ac374c2671cf61c14f": {
+      "schemaVersion": 1,
+      "id": "sidebar-dashboard-shell",
+      "role": "navigation",
+      "family": "layout",
+      "description": "Dashboard sidebar with workspace switcher, grouped collapsible nav, user footer, and responsive canvas anchors.",
+      "tags": [
+        "navigation",
+        "sidebar",
+        "dashboard",
+        "collapsible-nav"
+      ],
+      "root": "nav-root",
+      "fragments": [
+        {
+          "id": "nav-root",
+          "emmet": "aside.sidebar[data-slot=sidebar-host][data-component=sidebar][data-side=left][data-initial-open=true]>div.flex.flex-col.gap-4.p-4>div[data-slot=workspace-switcher]>button.btn[data-variant=outline]{Acme Inc}^nav.flex.flex-col.gap-4[aria-label=Main]>section[data-slot=nav-home]>h3.text-sm{Home}+ul>li>a[aria-current=page]{Dashboard}^^section[data-slot=nav-documents]>h3.text-sm{Documents}+ul>li>a{Library}^^div.mt-auto[data-slot=user-footer]>button.btn[data-variant=ghost]{Account}"
+        }
+      ],
+      "mounts": [],
+      "slots": [
+        {
+          "id": "workspace-switcher",
+          "at": {
+            "fragment": "nav-root",
+            "name": "workspace-switcher"
+          },
+          "accepts": [
+            "action"
+          ],
+          "min": 0,
+          "max": 1
+        },
+        {
+          "id": "nav-home",
+          "at": {
+            "fragment": "nav-root",
+            "name": "nav-home"
+          },
+          "accepts": [
+            "nav-group"
+          ],
+          "min": 0,
+          "max": 1
+        },
+        {
+          "id": "nav-documents",
+          "at": {
+            "fragment": "nav-root",
+            "name": "nav-documents"
+          },
+          "accepts": [
+            "nav-group"
+          ],
+          "min": 0,
+          "max": 1
+        },
+        {
+          "id": "user-footer",
+          "at": {
+            "fragment": "nav-root",
+            "name": "user-footer"
+          },
+          "accepts": [
+            "action"
+          ],
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "ports": [
+        {
+          "id": "nav-toggle-in",
+          "at": {
+            "fragment": "nav-root",
+            "name": "nav-root"
+          },
+          "direction": "in",
+          "kind": "control",
+          "contract": "nav-toggle",
+          "minLinks": 0,
+          "maxLinks": 1,
+          "scope": "shell"
+        }
+      ],
+      "componentRefs": [
+        "sidebar",
+        "button"
+      ],
+      "ruleRefs": [],
+      "dependencyRefs": [],
+      "layout": {
+        "frameRef": "nav-root"
+      },
+      "landmarks": {
+        "main": 0,
+        "primaryHeading": 0
+      },
+      "provenance": {
+        "origin": "authored",
+        "sourceHashes": {},
+        "mappingVersion": "1.0.0"
+      }
+    },
     "9625532a4f0d2a345eb368fbf7fa3fc77337782d5c6340c28f0d5df2d525ecd3": {
       "schemaVersion": 1,
       "id": "sidebar-nav",
@@ -658,6 +818,233 @@
       "dependencyRefs": [],
       "layout": {
         "frameRef": "nav-root"
+      },
+      "landmarks": {
+        "main": 0,
+        "primaryHeading": 0
+      },
+      "provenance": {
+        "origin": "authored",
+        "sourceHashes": {},
+        "mappingVersion": "1.0.0"
+      }
+    },
+    "9882f38bc966b690f268ad7f962ea638b8598b812d167a5340c6ab29b70f8209": {
+      "schemaVersion": 1,
+      "id": "svg-area-chart",
+      "role": "chart",
+      "family": "workspace",
+      "description": "Zero-runtime SVG area chart for offline dashboards; does not require window.Chart or Chart.js.",
+      "tags": [
+        "dashboard",
+        "chart",
+        "svg",
+        "offline"
+      ],
+      "root": "chart-root",
+      "fragments": [
+        {
+          "id": "chart-root",
+          "emmet": "div[data-component=svg-area-chart][data-slot=chart]>svg.w-full[role=img][aria-label='Total visitors area chart']>title{Total visitors}+desc{Area series for desktop and mobile visitors.}+path[data-series=desktop][fill=currentColor]+path[data-series=mobile][fill=currentColor]"
+        }
+      ],
+      "mounts": [],
+      "slots": [],
+      "ports": [
+        {
+          "id": "chart-in",
+          "at": {
+            "fragment": "chart-root",
+            "name": "chart-root"
+          },
+          "direction": "in",
+          "kind": "region",
+          "contract": "chart",
+          "minLinks": 0,
+          "maxLinks": 1,
+          "scope": "page"
+        }
+      ],
+      "componentRefs": [
+        "svg-area-chart"
+      ],
+      "ruleRefs": [],
+      "dependencyRefs": [],
+      "layout": {
+        "frameRef": "chart-root"
+      },
+      "landmarks": {
+        "main": 0,
+        "primaryHeading": 0
+      },
+      "provenance": {
+        "origin": "authored",
+        "sourceHashes": {},
+        "mappingVersion": "1.0.0"
+      }
+    },
+    "78a55115c554a664f0e6389e597539ce1938b5b12e796a4c81e149a29091908e": {
+      "schemaVersion": 1,
+      "id": "dashboard-activity",
+      "role": "activity",
+      "family": "workspace",
+      "description": "Dashboard visitors activity region with title, date-range controls, and chart mount.",
+      "tags": [
+        "dashboard",
+        "chart",
+        "activity"
+      ],
+      "root": "activity-root",
+      "fragments": [
+        {
+          "id": "activity-root",
+          "emmet": "section.flex.flex-col.gap-4[data-slot=activity-panel]>(div.flex.items-center.justify-between.gap-4>h2.text-xl{Total Visitors}+div[data-slot=range])+div[data-component=chart][data-slot=chart]"
+        }
+      ],
+      "mounts": [],
+      "slots": [
+        {
+          "id": "range",
+          "at": {
+            "fragment": "activity-root",
+            "name": "range"
+          },
+          "accepts": [
+            "range-control"
+          ],
+          "min": 0,
+          "max": 1
+        },
+        {
+          "id": "chart",
+          "at": {
+            "fragment": "activity-root",
+            "name": "chart"
+          },
+          "accepts": [
+            "chart"
+          ],
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "ports": [
+        {
+          "id": "activity-in",
+          "at": {
+            "fragment": "activity-root",
+            "name": "activity-root"
+          },
+          "direction": "in",
+          "kind": "region",
+          "contract": "activity",
+          "minLinks": 0,
+          "maxLinks": 1,
+          "scope": "page"
+        }
+      ],
+      "componentRefs": [
+        "chart"
+      ],
+      "ruleRefs": [],
+      "dependencyRefs": [
+        "ff35aa4378cbabb98ebb0fc43c4f1fdf7f5ad94601078c1490f721c940a4fc5c",
+        "9882f38bc966b690f268ad7f962ea638b8598b812d167a5340c6ab29b70f8209"
+      ],
+      "layout": {
+        "frameRef": "activity-root"
+      },
+      "landmarks": {
+        "main": 0,
+        "primaryHeading": 0
+      },
+      "provenance": {
+        "origin": "authored",
+        "sourceHashes": {},
+        "mappingVersion": "1.0.0"
+      }
+    },
+    "1cc396b2660819c97d54e38c5ce12031f0e83213af29913ed178f0bb0a41fca8": {
+      "schemaVersion": 1,
+      "id": "dashboard-workspace",
+      "role": "dashboard",
+      "family": "workspace",
+      "description": "Operate dashboard canvas hosting metrics, activity, and records regions without nesting cards.",
+      "tags": [
+        "dashboard",
+        "canvas",
+        "workspace"
+      ],
+      "root": "content-frame",
+      "fragments": [
+        {
+          "id": "content-frame",
+          "emmet": "section.flex.flex-col.gap-4.p-4[data-role=canvas][data-macro=canvas]>div[data-slot=metrics]+div[data-slot=activity]+div[data-slot=records]"
+        }
+      ],
+      "mounts": [],
+      "slots": [
+        {
+          "id": "metrics",
+          "at": {
+            "fragment": "content-frame",
+            "name": "metrics"
+          },
+          "accepts": [
+            "metrics"
+          ],
+          "min": 1,
+          "max": 1
+        },
+        {
+          "id": "activity",
+          "at": {
+            "fragment": "content-frame",
+            "name": "activity"
+          },
+          "accepts": [
+            "activity"
+          ],
+          "min": 0,
+          "max": 1
+        },
+        {
+          "id": "records",
+          "at": {
+            "fragment": "content-frame",
+            "name": "records"
+          },
+          "accepts": [
+            "workspace"
+          ],
+          "min": 1,
+          "max": 1
+        }
+      ],
+      "ports": [
+        {
+          "id": "main-in",
+          "at": {
+            "fragment": "content-frame",
+            "name": "content-frame"
+          },
+          "direction": "in",
+          "kind": "region",
+          "contract": "main",
+          "minLinks": 0,
+          "maxLinks": 1,
+          "scope": "shell"
+        }
+      ],
+      "componentRefs": [],
+      "ruleRefs": [],
+      "dependencyRefs": [
+        "dc633c7b5a31229b36eef74338791a30c9254446987fe1d4d7d3d726ee095d3d",
+        "78a55115c554a664f0e6389e597539ce1938b5b12e796a4c81e149a29091908e",
+        "02273050b9b6ad5f887ec47b177f349c8330c3fdd6565df310743c773771a6f4"
+      ],
+      "layout": {
+        "frameRef": "content-frame"
       },
       "landmarks": {
         "main": 0,
@@ -767,7 +1154,7 @@
         }
       ]
     },
-    "bac977fb3594aae708323d8e7218487e4ef2d34a4397c70401ba4555715addbb": {
+    "3d80d26e292c4d72ce9adc5b816eb4b5e009b4361c0f74420e218e823d6658e0": {
       "schemaVersion": 1,
       "id": "data-records",
       "kind": "page",
@@ -776,7 +1163,7 @@
         {
           "id": "records",
           "route": "/data",
-          "recipe": "bac977fb3594aae708323d8e7218487e4ef2d34a4397c70401ba4555715addbb",
+          "recipe": "3d80d26e292c4d72ce9adc5b816eb4b5e009b4361c0f74420e218e823d6658e0",
           "root": "shell",
           "nodes": {
             "shell": {
@@ -806,7 +1193,7 @@
             },
             "workspace": {
               "id": "workspace",
-              "block": "52287589e2a5caf82fc025e9766384f00fbb2cd24b663859875065272d08c424",
+              "block": "02273050b9b6ad5f887ec47b177f349c8330c3fdd6565df310743c773771a6f4",
               "parent": {
                 "node": "shell",
                 "slot": "content",
@@ -818,7 +1205,7 @@
             },
             "filters": {
               "id": "filters",
-              "block": "60a5f2d4266f0a8777e0b6516e1e86292588c1b2839d66eaf941bacc4782fb34",
+              "block": "7b8a12c860ba038232b4973d25051b98867ca278cd0761541603f8516958265c",
               "parent": {
                 "node": "workspace",
                 "slot": "filters",
@@ -941,7 +1328,7 @@
       "entryPage": "records",
       "routeLinks": []
     },
-    "c81165a1b837e6267c060dc7fb8e138254a036e3479a110cc9e2a0ebe883d8c6": {
+    "b20f7e5d9f0b7e7000753009adc81e84e4a1ad61e6be439c34e241d9c37bbbd9": {
       "schemaVersion": 1,
       "id": "workspace-dashboard",
       "kind": "page",
@@ -950,7 +1337,7 @@
         {
           "id": "dashboard",
           "route": "/workspace",
-          "recipe": "c81165a1b837e6267c060dc7fb8e138254a036e3479a110cc9e2a0ebe883d8c6",
+          "recipe": "b20f7e5d9f0b7e7000753009adc81e84e4a1ad61e6be439c34e241d9c37bbbd9",
           "root": "shell",
           "nodes": {
             "shell": {
@@ -960,7 +1347,7 @@
             },
             "nav": {
               "id": "nav",
-              "block": "9625532a4f0d2a345eb368fbf7fa3fc77337782d5c6340c28f0d5df2d525ecd3",
+              "block": "6245b44b5b79b16b6a7ba5cc61c9246a0330ddac6d2021ac374c2671cf61c14f",
               "parent": {
                 "node": "shell",
                 "slot": "navigation",
@@ -978,27 +1365,115 @@
               },
               "bindings": {}
             },
-            "main": {
-              "id": "main",
-              "block": "b25cbad1cc251b700e17284d453a7a4c8e4b97b54e55f0e0ef0ea06b146070a0",
+            "canvas": {
+              "id": "canvas",
+              "block": "1cc396b2660819c97d54e38c5ce12031f0e83213af29913ed178f0bb0a41fca8",
               "parent": {
                 "node": "shell",
                 "slot": "content",
                 "order": 0
               },
               "bindings": {}
+            },
+            "metrics": {
+              "id": "metrics",
+              "block": "dc633c7b5a31229b36eef74338791a30c9254446987fe1d4d7d3d726ee095d3d",
+              "parent": {
+                "node": "canvas",
+                "slot": "metrics",
+                "order": 0
+              },
+              "bindings": {}
+            },
+            "activity": {
+              "id": "activity",
+              "block": "78a55115c554a664f0e6389e597539ce1938b5b12e796a4c81e149a29091908e",
+              "parent": {
+                "node": "canvas",
+                "slot": "activity",
+                "order": 0
+              },
+              "bindings": {}
+            },
+            "range": {
+              "id": "range",
+              "block": "ff35aa4378cbabb98ebb0fc43c4f1fdf7f5ad94601078c1490f721c940a4fc5c",
+              "parent": {
+                "node": "activity",
+                "slot": "range",
+                "order": 0
+              },
+              "bindings": {}
+            },
+            "chart": {
+              "id": "chart",
+              "block": "9882f38bc966b690f268ad7f962ea638b8598b812d167a5340c6ab29b70f8209",
+              "parent": {
+                "node": "activity",
+                "slot": "chart",
+                "order": 0
+              },
+              "bindings": {}
+            },
+            "records": {
+              "id": "records",
+              "block": "02273050b9b6ad5f887ec47b177f349c8330c3fdd6565df310743c773771a6f4",
+              "parent": {
+                "node": "canvas",
+                "slot": "records",
+                "order": 0
+              },
+              "bindings": {
+                "data-context": "records-dataset"
+              }
+            },
+            "filters": {
+              "id": "filters",
+              "block": "7b8a12c860ba038232b4973d25051b98867ca278cd0761541603f8516958265c",
+              "parent": {
+                "node": "records",
+                "slot": "filters",
+                "order": 0
+              },
+              "bindings": {
+                "data-context": "records-dataset"
+              }
+            },
+            "table": {
+              "id": "table",
+              "block": "3cf92bf80520abe59ab18ec9ce3ff1714ab917a31d5eab9ac8cd7f913f47b0cd",
+              "parent": {
+                "node": "records",
+                "slot": "table",
+                "order": 1
+              },
+              "bindings": {
+                "data-context": "records-dataset"
+              }
+            },
+            "pager": {
+              "id": "pager",
+              "block": "8db430e806c397ae4259c221b7030e80e783f34c1f1c5002702020e1041a9296",
+              "parent": {
+                "node": "records",
+                "slot": "pager",
+                "order": 2
+              },
+              "bindings": {
+                "data-context": "records-dataset"
+              }
             }
           },
           "connections": [
             {
-              "id": "shell-to-main",
+              "id": "shell-to-canvas",
               "relation": "controls",
               "from": {
                 "node": "shell",
                 "port": "main-region"
               },
               "to": {
-                "node": "main",
+                "node": "canvas",
                 "port": "main-in"
               }
             },
@@ -1013,6 +1488,30 @@
                 "node": "nav",
                 "port": "nav-toggle-in"
               }
+            },
+            {
+              "id": "filters-to-table",
+              "relation": "data",
+              "from": {
+                "node": "filters",
+                "port": "dataset-out"
+              },
+              "to": {
+                "node": "table",
+                "port": "dataset-in"
+              }
+            },
+            {
+              "id": "filters-to-pager",
+              "relation": "data",
+              "from": {
+                "node": "filters",
+                "port": "dataset-out"
+              },
+              "to": {
+                "node": "pager",
+                "port": "dataset-in"
+              }
             }
           ],
           "rules": [
@@ -1021,7 +1520,7 @@
               "type": "same-frame",
               "nodes": [
                 "header",
-                "main"
+                "canvas"
               ]
             },
             {
@@ -1030,7 +1529,7 @@
               "nodes": [
                 "nav",
                 "header",
-                "main"
+                "canvas"
               ]
             },
             {
@@ -1040,6 +1539,16 @@
               "property": "gutter",
               "nodes": [
                 "shell"
+              ]
+            },
+            {
+              "id": "dashboard-records-shared-data",
+              "type": "shared-data",
+              "binding": "records-dataset",
+              "nodes": [
+                "filters",
+                "table",
+                "pager"
               ]
             }
           ],
@@ -1135,15 +1644,20 @@
     "auth-recovery": "44f07830cae181975863955bf469725b946855a8914e4cc6b63797bddf7f805d",
     "auth-reset": "a3f4265e047c061e5f009cd4cd2c5bb001701c29c3bcd655c67572d7468e0776",
     "auth-sign-in": "c2f9b936b85ceaaf489484411a43cbbe054caedebe652ea1d5f47a1f5dcdd2f8",
-    "dashboard-main": "b25cbad1cc251b700e17284d453a7a4c8e4b97b54e55f0e0ef0ea06b146070a0",
-    "data-filters": "60a5f2d4266f0a8777e0b6516e1e86292588c1b2839d66eaf941bacc4782fb34",
+    "dashboard-main": "dc633c7b5a31229b36eef74338791a30c9254446987fe1d4d7d3d726ee095d3d",
+    "data-filters": "7b8a12c860ba038232b4973d25051b98867ca278cd0761541603f8516958265c",
     "data-pager": "8db430e806c397ae4259c221b7030e80e783f34c1f1c5002702020e1041a9296",
     "data-table": "3cf92bf80520abe59ab18ec9ce3ff1714ab917a31d5eab9ac8cd7f913f47b0cd",
-    "data-workspace": "52287589e2a5caf82fc025e9766384f00fbb2cd24b663859875065272d08c424",
+    "data-workspace": "02273050b9b6ad5f887ec47b177f349c8330c3fdd6565df310743c773771a6f4",
     "page-header": "dbfae20d1ef27d597a119b019dfc9444fb0ae3800016076fc4271830b9565caf",
+    "segmented-toggle": "ff35aa4378cbabb98ebb0fc43c4f1fdf7f5ad94601078c1490f721c940a4fc5c",
+    "sidebar-dashboard-shell": "6245b44b5b79b16b6a7ba5cc61c9246a0330ddac6d2021ac374c2671cf61c14f",
     "sidebar-nav": "9625532a4f0d2a345eb368fbf7fa3fc77337782d5c6340c28f0d5df2d525ecd3",
+    "svg-area-chart": "9882f38bc966b690f268ad7f962ea638b8598b812d167a5340c6ab29b70f8209",
+    "dashboard-activity": "78a55115c554a664f0e6389e597539ce1938b5b12e796a4c81e149a29091908e",
+    "dashboard-workspace": "1cc396b2660819c97d54e38c5ce12031f0e83213af29913ed178f0bb0a41fca8",
     "auth-flow": "4f66c309904c41fb1df4074d96dbac5ea28bb22038506fa904e82c77040757e7",
-    "data-records": "bac977fb3594aae708323d8e7218487e4ef2d34a4397c70401ba4555715addbb",
-    "workspace-dashboard": "c81165a1b837e6267c060dc7fb8e138254a036e3479a110cc9e2a0ebe883d8c6"
+    "data-records": "3d80d26e292c4d72ce9adc5b816eb4b5e009b4361c0f74420e218e823d6658e0",
+    "workspace-dashboard": "b20f7e5d9f0b7e7000753009adc81e84e4a1ad61e6be439c34e241d9c37bbbd9"
   }
 }

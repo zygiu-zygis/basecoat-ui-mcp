@@ -147,3 +147,13 @@ test('FSM handler pages complete records and rejects mismatched, stale, and tamp
   assert.equal(packet(await handleGetFsmRecipe({ recipe: 'missing' })).error?.code, 'NOT_FOUND');
   assert(maxBytes > 0);
 });
+
+test('rhythm handler accepts singular family aliases for surfaces and borders', async () => {
+  const surfaces = packet(await handleGetRhythmRules({ profile: 'default', family: 'surface', limit: 8 }));
+  assert.notEqual(surfaces.error?.code, 'NOT_FOUND');
+  assert(surfaces.items?.some(item => item.mapping?.id === 'bg-surface-primary'));
+
+  const borders = packet(await handleGetRhythmRules({ profile: 'default', family: 'border', limit: 8 }));
+  assert.notEqual(borders.error?.code, 'NOT_FOUND');
+  assert(borders.items?.some(item => item.mapping?.id === 'border-subtle'));
+});

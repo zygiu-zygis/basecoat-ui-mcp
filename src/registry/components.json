@@ -1692,6 +1692,21 @@
       ]
     },
     {
+      "id": "segmented-toggle",
+      "name": "Segmented Toggle",
+      "intent": "Choose one date or filter option from a pill radio group",
+      "categories": [
+        "forms",
+        "actions"
+      ],
+      "keywords": [
+        "segmented",
+        "radio",
+        "pill",
+        "date-range"
+      ]
+    },
+    {
       "id": "select",
       "name": "Select",
       "intent": "Choose a value from a list",
@@ -1739,6 +1754,20 @@
         "range",
         "thumb",
         "value"
+      ]
+    },
+    {
+      "id": "svg-area-chart",
+      "name": "SVG Area Chart",
+      "intent": "Render an offline SVG area chart without Chart.js",
+      "categories": [
+        "data"
+      ],
+      "keywords": [
+        "chart",
+        "svg",
+        "area",
+        "offline"
       ]
     },
     {
@@ -2266,6 +2295,26 @@
       },
       "markup_template": "<button class=\"btn\" data-variant=\"outline\" data-tooltip=\"Tooltip text\" data-side=\"bottom\" data-align=\"center\">Hover</button>",
       "composition_rules": "CSS-only: data-tooltip text on the trigger. data-side top|bottom|left|right|inline-start|inline-end; data-align start|center|end. Text only, no portal markup. Wrong: nest a separate tooltip span or invent aria-describedby portals like shadcn Tooltip."
+    },
+    "segmented-toggle": {
+      "dependencies": {
+        "css": [
+          "basecoat-css/base"
+        ],
+        "js": []
+      },
+      "markup_template": "<div data-component=\"segmented-toggle\" data-variant=\"pill\" role=\"radiogroup\" aria-label=\"Date range\" class=\"flex gap-2\">\n  <label class=\"btn\" data-variant=\"outline\"><input type=\"radio\" name=\"date-range\" value=\"3m\" class=\"sr-only\" /><span>Last 3 months</span></label>\n  <label class=\"btn\" data-variant=\"outline\"><input type=\"radio\" name=\"date-range\" value=\"30d\" class=\"sr-only\" checked /><span>Last 30 days</span></label>\n  <label class=\"btn\" data-variant=\"outline\"><input type=\"radio\" name=\"date-range\" value=\"7d\" class=\"sr-only\" /><span>Last 7 days</span></label>\n</div>",
+      "composition_rules": "Radio-backed pill control: role=radiogroup, data-variant=pill, shared radio name, three options. Reuses radio-group semantics without Chart.js. Wrong: use button-group alone without radios for exclusive selection."
+    },
+    "svg-area-chart": {
+      "dependencies": {
+        "css": [
+          "basecoat-css/base"
+        ],
+        "js": []
+      },
+      "markup_template": "<div data-component=\"svg-area-chart\">\n  <svg class=\"w-full\" role=\"img\" aria-label=\"Total visitors area chart\" viewBox=\"0 0 100 40\">\n    <title>Total visitors</title>\n    <desc>Area series for desktop and mobile visitors.</desc>\n    <path data-series=\"desktop\" fill=\"currentColor\" d=\"M0 30 L20 18 L40 22 L60 10 L80 16 L100 8 L100 40 L0 40 Z\"></path>\n    <path data-series=\"mobile\" fill=\"currentColor\" d=\"M0 34 L20 28 L40 30 L60 24 L80 26 L100 20 L100 40 L0 40 Z\"></path>\n  </svg>\n</div>",
+      "composition_rules": "Zero-runtime SVG area chart. No window.Chart or basecoat.chart(). Keep accessible title/desc. Existing chart leaf remains Chart.js-based. Wrong: require Chart.js for this leaf."
     }
   }
 }

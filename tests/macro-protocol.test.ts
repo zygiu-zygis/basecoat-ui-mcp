@@ -397,6 +397,28 @@ test('macro MCP protocol tools stay ≤1999 bytes with annotations, offline trip
     });
     assert.equal(badBlock.isError, true);
 
+    for (const recipeAlias of ['data-records', 'workspace-dashboard'] as const) {
+      const recipeAsBlock = await call('get_macro_block', {
+        idOrRef: recipeAlias,
+        section: 'structure',
+      });
+      assert.equal(recipeAsBlock.isError, true);
+      const recipeError = JSON.parse(resultText(recipeAsBlock)) as {
+        error: {
+          code: string;
+          recipeId?: string;
+          rootBlockId?: string;
+          entryPage?: string;
+          steps?: unknown[];
+        };
+      };
+      assert.equal(recipeError.error.code, 'EXPECTED_BLOCK_GOT_RECIPE');
+      assert.equal(recipeError.error.recipeId, recipeAlias);
+      assert.equal(typeof recipeError.error.rootBlockId, 'string');
+      assert.equal(typeof recipeError.error.entryPage, 'string');
+      assert(Array.isArray(recipeError.error.steps));
+    }
+
     // E2E smoke: begin_design → search → instantiate_recipe → get_design_context → get_macro_block → validate_design
     e2eDesignId = 'smoke-design';
     const begun = await call('begin_design', {
@@ -411,9 +433,11 @@ test('macro MCP protocol tools stay ≤1999 bytes with annotations, offline trip
       revision: number;
       snapshot: string;
       registryRevision: string;
+      projectRoot?: string;
     };
     assert.equal(begunPacket.designId, e2eDesignId);
     assert.equal(begunPacket.revision, 0);
+    assert.equal(begunPacket.projectRoot, host);
     e2eSnapshot = begunPacket.snapshot;
 
     const search = await call('search_macro_blocks', { q: 'shell', limit: 8 });
@@ -445,6 +469,15 @@ test('macro MCP protocol tools stay ≤1999 bytes with annotations, offline trip
     assert.notEqual(patched.isError, true, resultText(patched));
     const patchedPacket = JSON.parse(resultText(patched)) as { revision: number; snapshot: string };
     assert.equal(patchedPacket.revision, 1);
+
+    const graph = await call('get_design_context', {
+      view: 'graph',
+      designId: e2eDesignId,
+      pageId: `${e2eRecipePrefix}-dashboard`,
+    });
+    assert.notEqual(graph.isError, true, resultText(graph));
+    const graphText = resultText(graph);
+    assert.match(graphText, /metrics|dashboard-main|canvas|activity|records/);
 
     const context = await call('get_design_context', {
       view: 'overview',

@@ -1,36 +1,36 @@
 {
   "schemaVersion": 1,
   "id": "dashboard-main",
-  "role": "dashboard",
+  "role": "metrics",
   "family": "workspace",
-  "description": "Dashboard content region with card summary grid.",
-  "tags": ["dashboard", "cards"],
+  "description": "Dashboard metrics region with a four-card KPI grid using approved rhythm utilities.",
+  "tags": ["dashboard", "cards", "metrics"],
   "root": "content-frame",
   "fragments": [
     {
       "id": "content-frame",
-      "emmet": "section.grid.gap-4.p-4.md:grid-cols-2.xl:grid-cols-3>div[data-component=card][data-slot=card-a]+div[data-component=card][data-slot=card-b]+div[data-component=card][data-slot=card-c]"
+      "emmet": "section.grid.gap-4.p-4.md:grid-cols-2.xl:grid-cols-4>div[data-component=card][data-slot=card-a]+div[data-component=card][data-slot=card-b]+div[data-component=card][data-slot=card-c]+div[data-component=card][data-slot=card-d]"
     }
   ],
   "mounts": [],
   "slots": [],
   "ports": [
     {
-      "id": "main-in",
+      "id": "metrics-in",
       "at": { "fragment": "content-frame", "name": "content-frame" },
       "direction": "in",
       "kind": "region",
-      "contract": "main",
+      "contract": "metrics",
       "minLinks": 0,
       "maxLinks": 1,
-      "scope": "shell"
+      "scope": "page"
     }
   ],
   "componentRefs": ["card", "button"],
   "ruleRefs": [],
   "dependencyBlockIds": [],
-  "layout": { "frameRef": "content-frame", "scrollBoundary": "content-frame" },
-  "landmarks": { "main": 1, "primaryHeading": 0 },
+  "layout": { "frameRef": "content-frame" },
+  "landmarks": { "main": 0, "primaryHeading": 0 },
   "provenance": {
     "origin": "authored",
     "sourceHashes": {},

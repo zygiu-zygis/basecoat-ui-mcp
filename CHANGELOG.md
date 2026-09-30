@@ -2,6 +2,20 @@
 
 Maintained by **Žygimantas Jasiulionis / Intellmedia**.
 
+## Unreleased
+
+- Documented offline dashboard MCP evaluation vs https://ui.shadcn.com/examples/dashboard in `docs/mcp-dashboard-eval.md`. Local disposable consumer probe lives at `tests/fixtures/offline-dashboard/` (gitignored; not for GitHub).
+- Decision rejection messages now list allowed profile keys (`begin_design` / `set_decision`).
+- `get_rhythm_rules` accepts singular family aliases `surface`→`surfaces` and `border`→`borders`.
+- `get_macro_block` returns `EXPECTED_BLOCK_GOT_RECIPE` (with recipe id, steps, root block) instead of opaque `UNKNOWN_BLOCK` for recipe aliases such as `data-records`.
+- Added `dashboard-workspace` canvas host (metrics / activity / records), four-KPI `dashboard-main` (`xl:grid-cols-4`), `dashboard-activity`, and updated `workspace-dashboard` recipe so KPIs + chart + table live in one design graph.
+- Remapped `data-filters` off `gap-3`; compiler rejects macro Emmet spacing outside approved rhythm steps (`0/2/4/6/12`).
+- Nested-cards stay banned; approved canvas markers (`data-role`/`data-macro=canvas`) allow cards in operate canvases.
+- `validate_composition` gains `densityProfile: comfortable|compact` (compact adds `1/1.5/2.5/3/5`, suppresses micro-spacing noise in nav/badge/table cells), dedupes `semantic-token-available` by `approvedUtility`, and raises the shared UTF-8 input limit to **256 KiB**.
+- `begin_design` / `get_design_context` receipts expose resolved `projectRoot`.
+- Added macros + curated leaves: `sidebar-dashboard-shell`, `svg-area-chart` (no Chart.js), `segmented-toggle` (pill radiogroup). Documented sidebar FSM vs Basecoat `toggle()`/`aria-hidden`/`inert` in Astro integration guidance.
+- Curated leaf count is **41** (includes MCP-only `svg-area-chart` / `segmented-toggle`; upstream inventory still 41 with `pagination`/`spinner` maintenance-only).
+
 ## 1.2.0 - 2026-09-30
 
 - Added independent compiled semantic registry with rhythm profiles and FSM recipes under `src/semantics/`.
@@ -71,6 +85,3 @@ Maintained by **Žygimantas Jasiulionis / Intellmedia**.
 - Added lexical composition validation, migration feedback and explicit static-analysis limits.
 - Replaced string truncation with complete response validation below 2,000 UTF-8 bytes.
 - Added explicit upstream sync, provenance hashes, immutable revisions, atomic updates and drift checks.
-- Added strict TypeScript compilation, offline stdio protocol tests, deterministic search and response-budget coverage.
-- Removed the old catalog, generated documentation, site-specific layout recipes, implicit monorepo configuration, source-time launcher and cached TypeScript build state from the replacement distribution.
-- Preserved Intellmedia ownership and added the complete upstream Basecoat MIT notice.

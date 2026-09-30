@@ -44,6 +44,23 @@ include accordion, combobox, command, drawer, dropdown-menu, popover, range,
 select, sidebar, and toast. Do not import "basecoat-css/all";
 load the runtime followed by only the granular controllers the page uses.
 Chart uses "basecoat-css/chart" with Chart.js supplied separately by the app.
+For offline dashboards that cannot ship Chart.js, prefer the curated
+"svg-area-chart" leaf and macro: declarative SVG with role="img", title/desc,
+and no window.Chart requirement. Keep the existing chart leaf unchanged for
+hosts that already initialize basecoat.chart().
+
+## Sidebar FSM vs Basecoat sidebar controller
+
+Semantic recipe "collapsible-navigation" models interaction states, events,
+guards, and transitions for agent planning. It does not drive the DOM.
+
+Basecoat's sidebar controller owns runtime behavior: call element.toggle(),
+and keep aria-hidden plus inert in sync with the open/closed visual state.
+Wire header Menu buttons with aria-controls pointing at the sidebar id.
+Do not invent a parallel JS FSM that fights toggle()/aria-hidden/inert.
+Use get_fsm_recipe("collapsible-navigation") for planning vocabulary, then
+implement with the Basecoat sidebar controller and sidebar-dashboard-shell
+(or sidebar-nav) macros.
 
 Astro processes an attribute-free <script>, bundles npm imports, supports
 TypeScript, deduplicates the script, and adds module semantics automatically.

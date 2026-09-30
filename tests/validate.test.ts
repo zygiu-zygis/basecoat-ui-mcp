@@ -64,6 +64,21 @@ describe('composition validation', () => {
     assert(result.issues.some(issue => issue.rule === 'nested-cards'));
   });
 
+  it('allows cards inside an approved canvas host', () => {
+    assert.deepEqual(
+      rules('<section data-role="canvas" data-macro="canvas"><div class="card"></div><div class="card"></div></section>'),
+      [],
+    );
+    assert.deepEqual(
+      rules('<div class="card" data-role="canvas"><section><div class="card"></div></section></div>'),
+      [],
+    );
+  });
+
+  it('still bans true card-in-card outside a canvas marker', () => {
+    assert(rules('<div class="card"><div class="card"></div></div>').includes('nested-cards'));
+  });
+
   it('detects legacy ui-card nesting and legacy class vocabulary', () => {
     const found = rules('<div class="ui-card"><div class="ui-card"><button class="btn-primary">Save</button></div></div>');
     assert(found.includes('nested-cards'));
@@ -220,10 +235,36 @@ describe('composition validation', () => {
   });
 
   it('rejects oversized UTF-8 input before parsing', () => {
-    const result = validateComposition('é'.repeat(32_769));
+    const result = validateComposition('é'.repeat(131_073));
     assert.equal(result.valid, false);
     assert.equal(result.truncated, true);
     assert.deepEqual(result.issues.map(issue => issue.rule), ['input-size']);
+  });
+
+  it('accepts compact density micro-spacing and suppresses nav/badge/table noise', () => {
+    const comfortable = validateComposition('<div class="p-3 gap-2.5"></div>');
+    assert(comfortable.issues.some(issue => issue.rule === 'spacing-rhythm'));
+
+    const compact = validateComposition('<div class="p-3 gap-2.5 gap-5"></div>', {
+      densityProfile: 'compact',
+    });
+    assert.equal(compact.issues.filter(issue => issue.rule === 'spacing-rhythm').length, 0);
+
+    const microNav = validateComposition(
+      '<nav class="flex gap-1"><a class="px-1.5 py-1">Home</a><span class="badge px-1">New</span></nav><table><tr><td class="py-1 px-2.5">Cell</td></tr></table>',
+      { densityProfile: 'compact' },
+    );
+    assert.equal(microNav.issues.filter(issue => issue.rule === 'spacing-rhythm').length, 0);
+  });
+
+  it('deduplicates semantic-token-available advisories by approvedUtility', () => {
+    const result = validateComposition(
+      '<div class="gap-2"></div><section class="gap-2 p-2"></section><aside class="gap-2"></aside>',
+      { semanticProfile: 'default' },
+    );
+    const advisories = result.issues.filter(issue => issue.rule === 'semantic-token-available');
+    const utilities = advisories.map(issue => issue.approvedUtility).sort();
+    assert.deepEqual(utilities, ['gap-2', 'p-2']);
   });
 
   it('accepts empty input and states the static analysis limits', () => {

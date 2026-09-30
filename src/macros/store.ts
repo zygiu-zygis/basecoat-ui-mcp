@@ -334,9 +334,15 @@ function assertDecisionValue(
   key: string,
   value: Scalar,
   spec: CompiledMacroRegistry['profiles'][string]['allowedDecisions'][string] | undefined,
+  allowedKeys: readonly string[] = [],
 ): void {
   if (!spec) {
-    throw new MacroError('HARD_VIOLATION', `Decision key is not allowed by profile: ${key}`);
+    const allowed =
+      allowedKeys.length > 0 ? ` Allowed keys: ${allowedKeys.join(', ')}.` : '';
+    throw new MacroError(
+      'HARD_VIOLATION',
+      `Decision key is not allowed by profile: ${key}.${allowed}`,
+    );
   }
   switch (spec.type) {
     case 'string':
@@ -586,7 +592,7 @@ function applySetDecision(
   const profile = registry.profiles[session.profile];
   if (!profile) throw new MacroError('HARD_VIOLATION', 'Session profile missing from pinned registry');
   const spec = profile.allowedDecisions[op.key];
-  assertDecisionValue(op.key, op.value, spec);
+  assertDecisionValue(op.key, op.value, spec, Object.keys(profile.allowedDecisions).sort());
   if (op.scope === 'project') {
     if (op.page !== undefined) {
       throw new MacroError('HARD_VIOLATION', 'Project decision must not include page');
@@ -839,12 +845,14 @@ function applyRequestHash(input: ApplyDesignPatchInput): Ref {
 
 export class FilesystemDesignStore implements DesignStore {
   private readonly designerRootReal: string;
+  private readonly projectRootReal: string;
   private readonly projectKey: string;
   /** Serialize mutations per process to reduce lost-update races on the same design. */
   private readonly locks = new Map<Id, Promise<unknown>>();
 
-  private constructor(designerRootReal: string, projectKey: string) {
+  private constructor(designerRootReal: string, projectRootReal: string, projectKey: string) {
     this.designerRootReal = designerRootReal;
+    this.projectRootReal = projectRootReal;
     this.projectKey = projectKey;
   }
 
@@ -900,7 +908,7 @@ export class FilesystemDesignStore implements DesignStore {
     }
 
     const projectKey = projectKeyFromRoot(projectRootReal);
-    return new FilesystemDesignStore(designerRootReal, projectKey);
+    return new FilesystemDesignStore(designerRootReal, projectRootReal, projectKey);
   }
 
   /** Load a pinned compiled registry revision from the designer store. */
@@ -910,6 +918,10 @@ export class FilesystemDesignStore implements DesignStore {
 
   getProjectKey(): string {
     return this.projectKey;
+  }
+
+  getProjectRoot(): string {
+    return this.projectRootReal;
   }
 
   getDesignerRoot(): string {
@@ -1119,8 +1131,9 @@ export class FilesystemDesignStore implements DesignStore {
       }
       const profile = parsed.registry.profiles[parsed.profile]!;
       const decisions = { ...(parsed.decisions ?? {}) };
+      const allowedKeys = Object.keys(profile.allowedDecisions).sort();
       for (const [key, value] of Object.entries(decisions)) {
-        assertDecisionValue(key, value, profile.allowedDecisions[key]);
+        assertDecisionValue(key, value, profile.allowedDecisions[key], allowedKeys);
       }
       for (const [key, spec] of Object.entries(profile.allowedDecisions)) {
         if (!Object.hasOwn(decisions, key) && spec.defaultValue !== undefined) {
@@ -1134,6 +1147,7 @@ export class FilesystemDesignStore implements DesignStore {
       const response: Record<string, unknown> = {
         snapshot: encodeDesignSnapshot(parsed.designId, revision),
         projectKey: this.projectKey,
+        projectRoot: this.projectRootReal,
         registryRevision: parsed.registry.revision,
         profile: parsed.profile,
       };
@@ -1215,6 +1229,7 @@ export class FilesystemDesignStore implements DesignStore {
 
       const response: Record<string, unknown> = {
         snapshot: encodeDesignSnapshot(parsed.designId, nextRevision),
+        projectRoot: this.projectRootReal,
         registryRevision: draft.registryRevision,
         pageCount: Object.keys(draft.pages).length,
         status: pageStatusSummary(draft.pages),

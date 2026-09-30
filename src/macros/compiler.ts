@@ -121,6 +121,48 @@ export function assertFragmentPacketBudget(
   }
 }
 
+/** Comfortable rhythm spacing steps approved for macro Emmet authoring. */
+export const APPROVED_MACRO_SPACING = new Set(['0', '2', '4', '6', '12']);
+
+const EMMET_SPACING =
+  /(?:^|[.>+*^()\[\],\s])(?:(?:sm|md|lg|xl|2xl):)?(!?)(-?)(gap(?:-[xy])?|space-[xy]|[mp][trblxyse]?)-(\d+(?:\.\d+)?)(?=[.>+*^()\[\],\s]|$)/g;
+
+/** Extract spacing utilities from Emmet class chains (e.g. `.gap-3`, `.md:p-4`). */
+export function extractEmmetSpacingUtilities(emmet: string): string[] {
+  const found: string[] = [];
+  EMMET_SPACING.lastIndex = 0;
+  let match: RegExpExecArray | null;
+  while ((match = EMMET_SPACING.exec(emmet)) !== null) {
+    const important = match[1] === '!';
+    const negative = match[2] === '-';
+    const family = match[3]!;
+    const value = match[4]!;
+    const token = `${important ? '!' : ''}${negative ? '-' : ''}${family}-${value}`;
+    found.push(token);
+  }
+  return found;
+}
+
+export function assertEmmetUsesApprovedSpacing(
+  emmet: string,
+  context: { blockId: Id; fragmentId: Id },
+  approved: ReadonlySet<string> = APPROVED_MACRO_SPACING,
+): void {
+  for (const token of extractEmmetSpacingUtilities(emmet)) {
+    const spacing = /^(!?)(-?)(gap(?:-[xy])?|space-[xy]|[mp][trblxyse]?)-(.+)$/.exec(token);
+    if (!spacing) continue;
+    const [, , negative, family, value] = spacing;
+    const allowedAuto = family!.startsWith('m') && value === 'auto' && !negative;
+    if (allowedAuto) continue;
+    if (negative || !approved.has(value!)) {
+      throw new MacroError(
+        'UNAPPROVED_SPACING',
+        `Block ${context.blockId} fragment ${context.fragmentId} uses spacing '${token}' outside approved rhythm steps (${[...approved].join(', ')}).`,
+      );
+    }
+  }
+}
+
 function diagnostic(
   code: string,
   message: string,
@@ -310,10 +352,18 @@ function compileBlock(
   for (const fragment of authoring.fragments) {
     try {
       assertFragmentPacketBudget(fragment, provisionalRevision);
+      assertEmmetUsesApprovedSpacing(fragment.emmet, {
+        blockId: authoring.id,
+        fragmentId: fragment.id,
+      });
     } catch (error) {
       if (error instanceof MacroError && error.code === 'ATOM_TOO_LARGE') {
         diagnostics.push(
           diagnostic('ATOM_TOO_LARGE', error.message, { id: authoring.id }),
+        );
+      } else if (error instanceof MacroError && error.code === 'UNAPPROVED_SPACING') {
+        diagnostics.push(
+          diagnostic('UNAPPROVED_SPACING', error.message, { id: authoring.id }),
         );
       } else {
         throw error;

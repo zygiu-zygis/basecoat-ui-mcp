@@ -468,6 +468,8 @@ export interface DesignStore {
   read(designId: Id, revision?: number): Promise<DesignSession>;
   create(input: BeginDesignInput): Promise<MutationReceipt>;
   apply(input: ApplyDesignPatchInput): Promise<MutationReceipt>;
+  getProjectRoot(): string;
+  getProjectKey(): string;
 }
 
 export type RepairKind =

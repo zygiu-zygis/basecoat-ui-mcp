@@ -8,8 +8,10 @@ function fixtures() {
     'package.json': JSON.stringify({ version: '1.0.2', exports: { '.': './dist/basecoat.css', './base': './dist/basecoat.base.css', './tabs': './dist/js/tabs.js', './basecoat': './dist/js/basecoat.js', './dropdown-menu': './dist/js/dropdown-menu.js', './select': './dist/js/select.js', './combobox': './dist/js/combobox.js', './popover': './dist/js/popover.js', './accordion': './dist/js/accordion.js', './command': './dist/js/command.js', './drawer': './dist/js/drawer.js', './sidebar': './dist/js/sidebar.js', './toast': './dist/js/toast.js', './range': './dist/js/range.js', './chart': './dist/js/chart.js' } }),
     'src/css/components/all.css': '.accordion {} .alert {} .alert-dialog {} .avatar {} .badge {} .breadcrumb {} .btn {} .button-group {} .card {} .chart {} .checkbox {} .combobox {} .command {} .dialog {} .drawer {} .dropdown-menu {} .empty {} .field {} .input {} .input-group {} .item {} .kbd {} .label {} .native-select {} .popover {} .progress {} .radio-group {} .scroll-area {} .select {} .sidebar {} .skeleton {} .slider {} .switch {} .table {} .tabs {} .textarea {} .theme-switcher {} .toast {} .tooltip {}',
   };
-  for (const { id, name } of registry.index) sources[`site/src/docs/components/${id}.mdx`] = `# ${name}\n<Preview><div class="${id === 'button' ? 'btn' : id}" data-variant="outline"></div></Preview>`;
-  const tree = { sha: 'a'.repeat(40), truncated: false, tree: Object.keys(sources).map(path => ({ path, type: 'blob' })) };
+  for (const { id, name } of registry.index) {
+    if (id === 'segmented-toggle' || id === 'svg-area-chart') continue;
+    sources[`site/src/docs/components/${id}.mdx`] = `# ${name}\n<Preview><div class="${id === 'button' ? 'btn' : id}" data-variant="outline"></div></Preview>`;
+  }  const tree = { sha: 'a'.repeat(40), truncated: false, tree: Object.keys(sources).map(path => ({ path, type: 'blob' })) };
   return { sources, tree, read: async (path: string) => { if (!(path in sources)) throw new Error(`Missing fixture: ${path}`); return sources[path]!; } };
 }
 

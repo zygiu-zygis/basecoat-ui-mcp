@@ -125,12 +125,15 @@ test('design sessions survive store reopen (restart)', async () => {
       registry,
     });
     assert.equal(created.revision, 0);
+    assert.equal(created.response.projectRoot, store.getProjectRoot());
+    assert.equal(typeof created.response.projectRoot, 'string');
 
     const reopened = await openDesignStore(projectRoot, { create: false });
     const session = await reopened.read('session-a');
     assert.equal(session.revision, 0);
     assert.equal(session.registryRevision, registry.revision);
     assert.equal(session.projectDecisions.density, 'comfortable');
+    assert.equal(reopened.getProjectRoot(), store.getProjectRoot());
   });
 });
 
@@ -697,5 +700,26 @@ test('auth entry resolution with prefixed operations', async () => {
     // Operation IDs should be resolvable in receipts
     assert('prefix-alpha' in session.receipts);
     assert('prefix-beta' in session.receipts);
+  });
+});
+
+test('rejected decision keys list profile allowlist', async () => {
+  await withProject(async (projectRoot, registry) => {
+    const store = await openDesignStore(projectRoot, { create: true });
+    await assert.rejects(
+      () =>
+        store.create({
+          designId: 'decision-hint',
+          profile: registry.aliases['store-profile']!,
+          operationId: 'op-bad-decision',
+          registry,
+          decisions: { surface: 'operate' },
+        }),
+      (error: unknown) =>
+        error instanceof MacroError &&
+        error.code === 'HARD_VIOLATION' &&
+        error.message.includes('Decision key is not allowed by profile: surface') &&
+        error.message.includes('Allowed keys: density'),
+    );
   });
 });

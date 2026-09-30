@@ -9,7 +9,7 @@
   "fragments": [
     {
       "id": "filters-root",
-      "emmet": "div.flex.flex-wrap.items-end.gap-3>div[data-component=field][data-slot=search]+div[data-component=select][data-slot=status]+div[data-component=checkbox][data-slot=archived]+div[data-component=button][data-slot=apply]"
+      "emmet": "div.flex.flex-wrap.items-end.gap-2>div[data-component=field][data-slot=search]+div[data-component=select][data-slot=status]+div[data-component=checkbox][data-slot=archived]+div[data-component=button][data-slot=apply]"
     }
   ],
   "mounts": [],

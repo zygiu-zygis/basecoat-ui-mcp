@@ -359,24 +359,24 @@ test('rhythm override replacement races invalidate prior cursors', async () => {
   }
 });
 
-test('parser accepts exact 65536 UTF-8 bytes and rejects 65537', () => {
-  const exact = 'a'.repeat(65_536);
-  assert.equal(Buffer.byteLength(exact, 'utf8'), 65_536);
+test('parser accepts exact 262144 UTF-8 bytes and rejects 262145', () => {
+  const exact = 'a'.repeat(262_144);
+  assert.equal(Buffer.byteLength(exact, 'utf8'), 262_144);
   const ok = validateComposition(exact);
   assert.equal(ok.issues.some(issue => issue.rule === 'input-size'), false);
 
-  const over = 'a'.repeat(65_537);
-  assert.equal(Buffer.byteLength(over, 'utf8'), 65_537);
+  const over = 'a'.repeat(262_145);
+  assert.equal(Buffer.byteLength(over, 'utf8'), 262_145);
   const bad = validateComposition(over);
   assert(bad.issues.some(issue => issue.rule === 'input-size'));
 
-  const multibyte = `${'界'.repeat(21_845)}!`;
-  assert.equal(Buffer.byteLength(multibyte, 'utf8'), 65_536);
-  assert.equal(validateComposition(multibyte).issues.some(issue => issue.rule === 'input-size'), false);
+  const multibyte = '界'.repeat(87_381) + '!!';
+  assert.equal(Buffer.byteLength(multibyte, 'utf8'), 262_145);
+  assert(validateComposition(multibyte).issues.some(issue => issue.rule === 'input-size'));
 
-  const multibyteOver = `${'界'.repeat(21_845)}!!`;
-  assert(Buffer.byteLength(multibyteOver, 'utf8') > 65_536);
-  assert(validateComposition(multibyteOver).issues.some(issue => issue.rule === 'input-size'));
+  const multibyteExact = '界'.repeat(87_381) + '!';
+  assert.equal(Buffer.byteLength(multibyteExact, 'utf8'), 262_144);
+  assert.equal(validateComposition(multibyteExact).issues.some(issue => issue.rule === 'input-size'), false);
 });
 
 test('parser reports CRLF and non-BMP locations without executing markup', () => {

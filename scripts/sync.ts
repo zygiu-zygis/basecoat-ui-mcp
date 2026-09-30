@@ -10,6 +10,8 @@ import { getComponentDetails } from '../src/tools/details.js';
 
 const ROOT = fileURLToPath(new URL('..', import.meta.url));
 const REPO = 'https://api.github.com/repos/hunvreus/basecoat';
+/** Curated MCP-authored leaves that are not present in Basecoat upstream docs. */
+const MCP_ONLY_LEAVES = new Set(['segmented-toggle', 'svg-area-chart']);
 const treeSchema = z.object({ sha: z.string().regex(/^[a-f0-9]{40}$/), truncated: z.boolean(),
   tree: z.array(z.object({ path: z.string(), type: z.string() })) });
 type Tree = z.infer<typeof treeSchema>;
@@ -57,6 +59,7 @@ export async function buildSnapshot(current: Registry, treeInput: unknown, readS
     for (const match of css.matchAll(/\.([a-z][a-z0-9-]*)\b/g)) classes.add(match[1]!);
   }
   for (const component of current.index) {
+    if (MCP_ONLY_LEAVES.has(component.id)) continue;
     const upstream = components.find(item => item.id === component.id);
     if (!upstream) throw new Error(`Curated component disappeared upstream: ${component.id}`);
     const details = current.details[component.id]!;

@@ -21,7 +21,7 @@
         },
         "nav": {
           "id": "nav",
-          "block": "sidebar-nav",
+          "block": "sidebar-dashboard-shell",
           "parent": { "node": "shell", "slot": "navigation", "order": 0 },
           "bindings": {}
         },
@@ -31,37 +31,97 @@
           "parent": { "node": "shell", "slot": "header", "order": 0 },
           "bindings": {}
         },
-        "main": {
-          "id": "main",
-          "block": "dashboard-main",
+        "canvas": {
+          "id": "canvas",
+          "block": "dashboard-workspace",
           "parent": { "node": "shell", "slot": "content", "order": 0 },
           "bindings": {}
+        },
+        "metrics": {
+          "id": "metrics",
+          "block": "dashboard-main",
+          "parent": { "node": "canvas", "slot": "metrics", "order": 0 },
+          "bindings": {}
+        },
+        "activity": {
+          "id": "activity",
+          "block": "dashboard-activity",
+          "parent": { "node": "canvas", "slot": "activity", "order": 0 },
+          "bindings": {}
+        },
+        "range": {
+          "id": "range",
+          "block": "segmented-toggle",
+          "parent": { "node": "activity", "slot": "range", "order": 0 },
+          "bindings": {}
+        },
+        "chart": {
+          "id": "chart",
+          "block": "svg-area-chart",
+          "parent": { "node": "activity", "slot": "chart", "order": 0 },
+          "bindings": {}
+        },
+        "records": {
+          "id": "records",
+          "block": "data-workspace",
+          "parent": { "node": "canvas", "slot": "records", "order": 0 },
+          "bindings": { "data-context": "records-dataset" }
+        },
+        "filters": {
+          "id": "filters",
+          "block": "data-filters",
+          "parent": { "node": "records", "slot": "filters", "order": 0 },
+          "bindings": { "data-context": "records-dataset" }
+        },
+        "table": {
+          "id": "table",
+          "block": "data-table",
+          "parent": { "node": "records", "slot": "table", "order": 1 },
+          "bindings": { "data-context": "records-dataset" }
+        },
+        "pager": {
+          "id": "pager",
+          "block": "data-pager",
+          "parent": { "node": "records", "slot": "pager", "order": 2 },
+          "bindings": { "data-context": "records-dataset" }
         }
       },
       "connections": [
         {
-          "id": "shell-to-main",
+          "id": "shell-to-canvas",
           "relation": "controls",
           "from": { "node": "shell", "port": "main-region" },
-          "to": { "node": "main", "port": "main-in" }
+          "to": { "node": "canvas", "port": "main-in" }
         },
         {
           "id": "header-to-nav",
           "relation": "controls",
           "from": { "node": "header", "port": "nav-toggle-out" },
           "to": { "node": "nav", "port": "nav-toggle-in" }
+        },
+        {
+          "id": "filters-to-table",
+          "relation": "data",
+          "from": { "node": "filters", "port": "dataset-out" },
+          "to": { "node": "table", "port": "dataset-in" }
+        },
+        {
+          "id": "filters-to-pager",
+          "relation": "data",
+          "from": { "node": "filters", "port": "dataset-out" },
+          "to": { "node": "pager", "port": "dataset-in" }
         }
       ],
       "rules": [
         {
           "id": "dashboard-shell-frame",
           "type": "same-frame",
-          "nodes": ["header", "main"]
+          "nodes": ["header", "canvas"]
         },
         {
           "id": "dashboard-same-shell",
           "type": "same-shell",
-          "nodes": ["nav", "header", "main"]
+          "nodes": ["nav", "header", "canvas"]
         },
         {
           "id": "dashboard-shell-gutter",
@@ -69,6 +129,12 @@
           "boundary": "shell-root",
           "property": "gutter",
           "nodes": ["shell"]
+        },
+        {
+          "id": "dashboard-records-shared-data",
+          "type": "shared-data",
+          "binding": "records-dataset",
+          "nodes": ["filters", "table", "pager"]
         }
       ]
     }

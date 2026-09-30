@@ -21,10 +21,17 @@ export interface ValidationOptions {
   semanticProfile?: Id;
   /** Project root path for rhythm overrides. */
   projectRoot?: string;
+  /** Spacing density profile. Compact allows denser dashboard chrome. */
+  densityProfile?: 'comfortable' | 'compact';
 }
 
+/** Shared UTF-8 byte limit for validate_composition input (validator + server schema). */
+export const VALIDATE_COMPOSITION_MAX_BYTES = 262_144;
+
 const LIMITATIONS = 'Static HTML/Astro heuristic: cannot resolve dynamic classes, imported layouts, external scripts, CSS overrides or runtime DOM. Missing imports may be supplied by a parent layout. This is not an accessibility or browser conformance audit.';
-const SPACING = new Set(['0', '2', '4', '6', '12']);
+const SPACING_COMFORTABLE = new Set(['0', '2', '4', '6', '12']);
+const SPACING_COMPACT = new Set(['0', '1', '1.5', '2', '2.5', '3', '4', '5', '6', '12']);
+const MICRO_SPACING = new Set(['1', '1.5', '2.5', '3', '5']);
 const VARIANTS = new Set(['default', 'primary', 'secondary', 'outline', 'ghost', 'destructive', 'link']);
 const ITEM_ANATOMY_CLASSES = new Set([
   'item-title', 'item-description', 'item-media', 'item-content', 'item-actions', 'item-header',
@@ -43,6 +50,29 @@ const COLOR_NAMES = /^(?:transparent|current|inherit|black|white|background|fore
 const NON_COLOR_TEXT = /^(?:left|center|right|justify|start|end|wrap|nowrap|balance|pretty|ellipsis|clip|xs|sm|base|lg|xl|[2-9]xl)$/;
 const NON_COLOR_BORDER = /^(?:0|2|4|8|x|y|s|e|t|r|b|l|x-0|x-2|x-4|x-8|y-0|y-2|y-4|y-8|s-0|s-2|s-4|s-8|e-0|e-2|e-4|e-8|t-0|t-2|t-4|t-8|r-0|r-2|r-4|r-8|b-0|b-2|b-4|b-8|l-0|l-2|l-4|l-8|solid|dashed|dotted|double|hidden|none|collapse|separate)$/;
 const NON_COLOR_BACKGROUND = /^(?:auto|cover|contain|fixed|local|scroll|clip-(?:border|padding|content|text)|origin-(?:border|padding|content)|(?:center|top|right|bottom|left)(?:-(?:top|bottom|left|right))?|no-repeat|repeat(?:-x|-y|-round|-space)?)$/;
+
+function isMicroChromeContext(node: HtmlNode, nodes: HtmlNode[]): boolean {
+  if (node.tag === 'a' || node.tag === 'nav' || node.tag === 'td' || node.tag === 'th') return true;
+  const classes = node.classes.map(utility);
+  if (classes.includes('badge') || classes.includes('sidebar') || classes.some(c => c.startsWith('badge-'))) {
+    return true;
+  }
+  let parent = node.parent;
+  while (parent !== null) {
+    const ancestor = nodes[parent]!;
+    if (
+      ancestor.tag === 'nav' ||
+      ancestor.tag === 'td' ||
+      ancestor.tag === 'th' ||
+      ancestor.tag === 'table' ||
+      ancestor.classes.map(utility).some(c => c === 'badge' || c === 'sidebar' || c.startsWith('badge-'))
+    ) {
+      return true;
+    }
+    parent = ancestor.parent;
+  }
+  return false;
+}
 
 function importedModule(value: string): string | undefined {
   const bare = /^basecoat-css\/([\w-]+)(?:\.min)?(?:\.js)?$/.exec(value);
@@ -118,6 +148,9 @@ export function validateComposition(code: string, options: ValidationOptions = {
   let truncated = false;
   let hasErrors = false;
   let droppedErrors = 0;
+  const densityProfile = options.densityProfile === 'compact' ? 'compact' : 'comfortable';
+  const spacingSteps = densityProfile === 'compact' ? SPACING_COMPACT : SPACING_COMFORTABLE;
+  const seenSemanticUtilities = new Set<string>();
   const report = (
     rule: string,
     severity: CompositionIssue['severity'],
@@ -126,6 +159,10 @@ export function validateComposition(code: string, options: ValidationOptions = {
     repair?: string,
     details: Pick<CompositionIssue, 'column' | 'semanticToken' | 'approvedUtility'> = {},
   ) => {
+    if (rule === 'semantic-token-available' && details.approvedUtility) {
+      if (seenSemanticUtilities.has(details.approvedUtility)) return;
+      seenSemanticUtilities.add(details.approvedUtility);
+    }
     if (severity === 'error') hasErrors = true;
     if (issues.length >= ISSUE_CAP) {
       truncated = true;
@@ -141,8 +178,8 @@ export function validateComposition(code: string, options: ValidationOptions = {
       ...(repair ? { repair: repair.slice(0, 240) } : {}),
     });
   };
-  if (Buffer.byteLength(code, 'utf8') > 65_536) {
-    report('input-size', 'error', 'Code exceeds the 64 KiB UTF-8 limit. Validate a smaller component.', 1);
+  if (Buffer.byteLength(code, 'utf8') > VALIDATE_COMPOSITION_MAX_BYTES) {
+    report('input-size', 'error', 'Code exceeds the 256 KiB UTF-8 limit. Validate a smaller component.', 1);
     return { valid: false, issues, truncated: true, limitations: LIMITATIONS };
   }
   const parsedHtml = parseHtmlWithDiagnostics(code);
@@ -197,7 +234,12 @@ export function validateComposition(code: string, options: ValidationOptions = {
       let parent = node.parent;
       while (parent !== null) {
         const ancestor = nodes[parent]!;
-        if (ancestor.classes.some(value => ['card', 'ui-card'].includes(utility(value)))) {
+        const isCanvas =
+          ancestor.attrs['data-role'] === 'canvas' || ancestor.attrs['data-macro'] === 'canvas';
+        if (
+          !isCanvas &&
+          ancestor.classes.some(value => ['card', 'ui-card'].includes(utility(value)))
+        ) {
           report('nested-cards', 'error', 'Cards inside cards are forbidden. Use a flat section, list or divider for the inner group.', node.line); break;
         }
         parent = ancestor.parent;
@@ -209,7 +251,20 @@ export function validateComposition(code: string, options: ValidationOptions = {
       if (spacing) {
         const [, negative, family, value] = spacing;
         const allowedAuto = family!.startsWith('m') && value === 'auto' && !negative;
-        if ((!SPACING.has(value!) || !!negative) && !allowedAuto) report('spacing-rhythm', 'warning', `Use 0, 2, 4, 6 or 12 spacing steps; replace ${token}. Margin auto is allowed for alignment.`, node.line);
+        const microSuppressed =
+          densityProfile === 'compact' &&
+          !negative &&
+          MICRO_SPACING.has(value!) &&
+          isMicroChromeContext(node, nodes);
+        if ((!spacingSteps.has(value!) || !!negative) && !allowedAuto && !microSuppressed) {
+          const allowed = [...spacingSteps].join(', ');
+          report(
+            'spacing-rhythm',
+            'warning',
+            `Use ${allowed} spacing steps; replace ${token}. Margin auto is allowed for alignment.`,
+            node.line,
+          );
+        }
       }
       if (/^(?:bg-(?:gradient|linear|radial|conic)(?:-|$)|bg-\[.*gradient\(|(?:from|via|to)-)/.test(token)) report('random-gradient', 'warning', `Remove decorative gradient utility ${token}; use a neutral surface and hierarchy.`, node.line);
 

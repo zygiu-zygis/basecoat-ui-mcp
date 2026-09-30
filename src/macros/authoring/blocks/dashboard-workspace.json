@@ -1,0 +1,63 @@
+{
+  "schemaVersion": 1,
+  "id": "dashboard-workspace",
+  "role": "dashboard",
+  "family": "workspace",
+  "description": "Operate dashboard canvas hosting metrics, activity, and records regions without nesting cards.",
+  "tags": ["dashboard", "canvas", "workspace"],
+  "root": "content-frame",
+  "fragments": [
+    {
+      "id": "content-frame",
+      "emmet": "section.flex.flex-col.gap-4.p-4[data-role=canvas][data-macro=canvas]>div[data-slot=metrics]+div[data-slot=activity]+div[data-slot=records]"
+    }
+  ],
+  "mounts": [],
+  "slots": [
+    {
+      "id": "metrics",
+      "at": { "fragment": "content-frame", "name": "metrics" },
+      "accepts": ["metrics"],
+      "min": 1,
+      "max": 1
+    },
+    {
+      "id": "activity",
+      "at": { "fragment": "content-frame", "name": "activity" },
+      "accepts": ["activity"],
+      "min": 0,
+      "max": 1
+    },
+    {
+      "id": "records",
+      "at": { "fragment": "content-frame", "name": "records" },
+      "accepts": ["workspace"],
+      "min": 1,
+      "max": 1
+    }
+  ],
+  "ports": [
+    {
+      "id": "main-in",
+      "at": { "fragment": "content-frame", "name": "content-frame" },
+      "direction": "in",
+      "kind": "region",
+      "contract": "main",
+      "minLinks": 0,
+      "maxLinks": 1,
+      "scope": "shell"
+    }
+  ],
+  "componentRefs": [],
+  "ruleRefs": [],
+  "dependencyBlockIds": ["dashboard-main", "dashboard-activity", "data-workspace"],
+  "layout": {
+    "frameRef": "content-frame"
+  },
+  "landmarks": { "main": 0, "primaryHeading": 0 },
+  "provenance": {
+    "origin": "authored",
+    "sourceHashes": {},
+    "mappingVersion": "1.0.0"
+  }
+}

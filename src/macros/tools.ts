@@ -121,6 +121,9 @@ export function macroErrorResult(
     if (error.message && error.message !== error.code) {
       message = clip(error.message);
     }
+    for (const [key, value] of Object.entries(error.details)) {
+      if (!(key in details)) details[key] = value;
+    }
   } else if (error instanceof z.ZodError) {
     code = 'INVALID_INPUT';
     message = clip(error.issues[0]?.message ?? 'Invalid input');
@@ -501,7 +504,12 @@ export async function handleGetDesignContext(
       return pageRecords(
         records,
         start,
-        { kind: 'context', view: 'sessions', total: records.length },
+        {
+          kind: 'context',
+          view: 'sessions',
+          total: records.length,
+          ...(store ? { projectRoot: store.getProjectRoot(), projectKey: store.getProjectKey() } : {}),
+        },
         cursorFor,
       );
     }
@@ -568,6 +576,8 @@ export async function handleGetDesignContext(
         designId: session.id,
         designRevision: session.revision,
         registryRevision: session.registryRevision,
+        projectRoot: store.getProjectRoot(),
+        projectKey: store.getProjectKey(),
         total: records.length,
       },
       cursorFor,

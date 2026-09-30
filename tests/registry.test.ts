@@ -22,13 +22,17 @@ test('registry links metadata and details, preserves upstream provenance', () =>
 test('registry preserves the exact curated and discovered component boundary', () => {
   const curatedIds = new Set(registry.index.map(component => component.id));
   const discoveredIds = new Set(registry.upstream.components.map(component => component.id));
-  assert.equal(registry.index.length, 39);
-  assert.equal(Object.keys(registry.details).length, 39);
+  assert.equal(registry.index.length, 41);
+  assert.equal(Object.keys(registry.details).length, 41);
   assert.equal(registry.upstream.components.length, 41);
   for (const id of ['pagination', 'spinner']) {
     assert.equal(curatedIds.has(id), false);
     assert.equal(Object.hasOwn(registry.details, id), false);
     assert.equal(discoveredIds.has(id), true);
+  }
+  for (const id of ['segmented-toggle', 'svg-area-chart']) {
+    assert.equal(curatedIds.has(id), true);
+    assert.equal(discoveredIds.has(id), false);
   }
   assert.deepEqual(registry.details.slider?.dependencies.js, [
     'basecoat-css/basecoat',

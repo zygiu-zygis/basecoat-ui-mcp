@@ -190,7 +190,7 @@ Basecoat 1.x uses `btn` with `data-variant` and `data-size`. Interactive compone
 
 ## Registry and exclusions
 
-The checked-in Basecoat 1.0.2 registry contains **39 curated templates**:
+The checked-in Basecoat 1.0.2 registry contains **41 curated templates**:
 
 `accordion`, `alert`, `alert-dialog`, `avatar`, `badge`, `breadcrumb`, `button`, `button-group`, `card`, `chart`, `checkbox`, `combobox`, `command`, `dialog`, `drawer`, `dropdown-menu`, `empty`, `field`, `input`, `input-group`, `item`, `kbd`, `label`, `native-select`, `popover`, `progress`, `radio-group`, `scroll-area`, `select`, `sidebar`, `skeleton`, `slider`, `switch`, `table`, `tabs`, `textarea`, `theme-switcher`, `toast`, `tooltip`
 

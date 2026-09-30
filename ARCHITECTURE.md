@@ -99,7 +99,7 @@ Search never returns markup. Details never participate in search scoring. Resour
 
 ## Curated templates vs discovered inventory
 
-The registry currently ships **39** curated index and detail pairs. Upstream sync discovers a broader set (41 components in the pinned snapshot, including `pagination` and `spinner` not present in the index).
+The registry currently ships **41** curated index and detail pairs. Upstream sync discovers a broader set (41 components in the pinned snapshot, including `pagination` and `spinner` not present in the index).
 
 New upstream components are **not** auto-promoted into `index` or `details`. Sync updates `upstream.components`, variants, classes, and hashes while preserving curated templates. Promotion requires:
 

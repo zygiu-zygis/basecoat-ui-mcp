@@ -14,7 +14,7 @@
   "fragments": [
     {
       "id": "login-root",
-      "emmet": "div[data-component=card]>form.grid.gap-3>div[data-component=field]+div[data-component=button]"
+      "emmet": "div[data-component=card]>form.grid.gap-4>div[data-component=field]+div[data-component=button]"
     }
   ],
   "mounts": [],

@@ -14,6 +14,7 @@ import {
   createCursorFactory,
 } from '../src/macros/packets.js';
 import {
+  getBlock,
   getBlockSection,
   loadCompiledRegistry,
   resolveAlias,
@@ -615,6 +616,108 @@ test('provenance tracking preserves source integrity across compilation', () => 
   assert.deepEqual(compiledBlock.provenance.sourceHashes, sourceHashes);
   assert.equal(compiledBlock.provenance.mappingVersion, '2.1.0');
   assert.equal(compiledBlock.provenance.upstreamItem, 'test-item-v1.2.3');
+});
+
+test('getBlockSection distinguishes block ids from recipe aliases', () => {
+  const packaged = loadCompiledRegistry();
+  const shell = getBlockSection(packaged, { idOrRef: 'app-shell', section: 'manifest' });
+  assert.notEqual(shell.isError, true);
+  const shellPacket = JSON.parse((shell.content[0] as { text: string }).text) as {
+    id: string;
+    items: Array<{ id: string; role?: string }>;
+  };
+  assert.equal(shellPacket.id, 'app-shell');
+  assert.equal(shellPacket.items[0]?.id, 'app-shell');
+
+  const shellRef = packaged.aliases['app-shell'];
+  assert(shellRef);
+  const byRef = getBlockSection(packaged, { idOrRef: shellRef, section: 'manifest' });
+  assert.notEqual(byRef.isError, true);
+
+  for (const recipeAlias of ['data-records', 'workspace-dashboard'] as const) {
+    assert.throws(
+      () => getBlockSection(packaged, { idOrRef: recipeAlias, section: 'structure' }),
+      (error: unknown) => {
+        assert(error instanceof MacroError);
+        assert.equal(error.code, 'EXPECTED_BLOCK_GOT_RECIPE');
+        assert.equal(error.details.recipeId, recipeAlias);
+        assert.equal(typeof error.details.recipeRef, 'string');
+        assert.equal(typeof error.details.entryPage, 'string');
+        assert(Array.isArray(error.details.steps));
+        assert.equal(typeof error.details.rootBlockId, 'string');
+        assert.match(error.message, /not a block/i);
+        return true;
+      },
+    );
+  }
+
+  const recipeRef = packaged.aliases['data-records'];
+  assert(recipeRef);
+  assert.throws(
+    () => getBlockSection(packaged, { idOrRef: recipeRef, section: 'slots' }),
+    (error: unknown) => {
+      assert(error instanceof MacroError);
+      assert.equal(error.code, 'EXPECTED_BLOCK_GOT_RECIPE');
+      assert.equal(error.details.recipeId, 'data-records');
+      assert.equal(error.details.recipeRef, recipeRef);
+      return true;
+    },
+  );
+});
+
+test('macro Emmet spacing must use approved rhythm steps', () => {
+  const bad = leafBlock('bad-gap', {
+    fragments: [{ id: 'bad-gap-root', emmet: 'div.flex.gap-3>span' }],
+  });
+  const { diagnostics } = compileRegistry(inputWith([bad]));
+  assert(
+    diagnostics.some(d => d.code === 'UNAPPROVED_SPACING' && d.severity === 'error'),
+    diagnostics.map(d => `${d.code}:${d.message}`).join('; '),
+  );
+
+  const good = leafBlock('good-gap', {
+    fragments: [{ id: 'good-gap-root', emmet: 'div.flex.gap-2.p-4.md:gap-4>span' }],
+  });
+  const ok = compileRegistry(inputWith([good]));
+  assert.equal(ok.diagnostics.filter(d => d.severity === 'error').length, 0);
+});
+
+test('packaged dashboard graph exposes four KPIs plus activity and records slots', () => {
+  const packaged = loadCompiledRegistry();
+  assert(packaged.aliases['dashboard-workspace']);
+  assert(packaged.aliases['dashboard-activity']);
+  assert(packaged.aliases['dashboard-main']);
+  assert(packaged.aliases['sidebar-dashboard-shell']);
+  assert(packaged.aliases['svg-area-chart']);
+  assert(packaged.aliases['segmented-toggle']);
+
+  const workspace = getBlock(packaged, 'dashboard-workspace');
+  assert.equal(workspace.role, 'dashboard');
+  assert.deepEqual(
+    workspace.slots.map(slot => slot.id).sort(),
+    ['activity', 'metrics', 'records'],
+  );
+  assert(workspace.fragments[0]?.emmet.includes('data-role=canvas'));
+  assert(workspace.fragments[0]?.emmet.includes('data-macro=canvas'));
+
+  const metrics = getBlock(packaged, 'dashboard-main');
+  assert.equal(metrics.role, 'metrics');
+  assert(metrics.fragments[0]?.emmet.includes('xl:grid-cols-4'));
+  assert(metrics.fragments[0]?.emmet.includes('card-d'));
+
+  const filters = getBlock(packaged, 'data-filters');
+  assert(filters.fragments[0]?.emmet.includes('gap-2'));
+  assert(!filters.fragments[0]?.emmet.includes('gap-3'));
+
+  const chart = getBlock(packaged, 'svg-area-chart');
+  assert.equal(chart.role, 'chart');
+  assert(!chart.fragments[0]?.emmet.includes('canvas'));
+  assert(chart.fragments[0]?.emmet.includes('svg'));
+
+  const toggle = getBlock(packaged, 'segmented-toggle');
+  assert.equal(toggle.role, 'range-control');
+  assert(toggle.fragments[0]?.emmet.includes('role=radiogroup'));
+  assert(toggle.fragments[0]?.emmet.includes('data-variant=pill'));
 });
 
 test('registry revision calculation determinism', () => {

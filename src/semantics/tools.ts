@@ -105,7 +105,14 @@ export async function handleGetRhythmRules(
 ): Promise<CallToolResult> {
   try {
     const registry = defaultSemanticsStore.getRegistry();
-    const { profile: profileFilter, family: familyFilter, limit, cursor } = input;
+    let { profile: profileFilter, family: familyFilter, limit, cursor } = input;
+    const FAMILY_ALIASES: Record<string, string> = {
+      surface: 'surfaces',
+      border: 'borders',
+    };
+    if (familyFilter && FAMILY_ALIASES[familyFilter]) {
+      familyFilter = FAMILY_ALIASES[familyFilter];
+    }
     if (profileFilter && !Object.values(registry.rhythmProfiles).some(profile => profile.id === profileFilter)) {
       throw new MacroError('NOT_FOUND', `Unknown rhythm profile: ${profileFilter}`);
     }

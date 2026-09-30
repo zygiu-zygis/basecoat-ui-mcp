@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import { compileRegistry, contentRef } from '../src/macros/compiler.js';
 import { buildContextView, selectNextStep } from '../src/macros/context.js';
+import { loadCompiledRegistry } from '../src/macros/registry.js';
 import { validateDesign, validatePage } from '../src/macros/validate.js';
 import type {
   AuthoringMacroBlock,
@@ -947,4 +948,43 @@ test('auth reachability validation with complex flow graphs', () => {
   const unreachable = report.diagnostics.filter(d => d.code === 'AUTH_PAGE_UNREACHABLE');
   assert(unreachable.length > 0, 'Should detect unreachable auth pages');
   assert(unreachable.some(d => d.page === 'verify'), 'Verify page should be unreachable');
+});
+
+test('packaged workspace-dashboard recipe holds metrics, activity, and records in one graph', () => {
+  const registry = loadCompiledRegistry();
+  const recipeRef = registry.aliases['workspace-dashboard'];
+  assert(recipeRef);
+  const recipe = registry.recipes[recipeRef]!;
+  const page = recipe.pages.find(entry => entry.id === recipe.entryPage) ?? recipe.pages[0]!;
+  const nodeRoles = Object.values(page.nodes).map(node => {
+    const block = registry.blocks[node.block];
+    return { id: node.id, role: block?.role, parent: node.parent?.slot };
+  });
+  assert(nodeRoles.some(n => n.id === 'canvas' && n.role === 'dashboard'));
+  assert(nodeRoles.some(n => n.id === 'metrics' && n.role === 'metrics' && n.parent === 'metrics'));
+  assert(nodeRoles.some(n => n.id === 'activity' && n.role === 'activity' && n.parent === 'activity'));
+  assert(nodeRoles.some(n => n.id === 'records' && n.role === 'workspace' && n.parent === 'records'));
+  assert(nodeRoles.some(n => n.id === 'filters' && n.parent === 'filters'));
+  assert(nodeRoles.some(n => n.id === 'table' && n.parent === 'table'));
+  assert(nodeRoles.some(n => n.id === 'pager' && n.parent === 'pager'));
+
+  const session: DesignSession = {
+    schemaVersion: 1,
+    id: 'dash-graph',
+    projectKey: 'p'.repeat(64),
+    revision: 1,
+    registryRevision: registry.revision,
+    profile: registry.aliases['app-default']!,
+    projectDecisions: { density: 'comfortable' },
+    pages: { [page.id]: page },
+    routeLinks: [],
+    checkpoints: [],
+    receipts: {},
+  };
+  const report = validatePage(page, session, registry, 'draft');
+  assert.equal(
+    report.diagnostics.filter(d => d.severity === 'error').length,
+    0,
+    report.diagnostics.map(d => `${d.code}:${d.message}`).join('; '),
+  );
 });

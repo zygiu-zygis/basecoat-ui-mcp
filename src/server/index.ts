@@ -6,7 +6,7 @@ import { ASTRO_INTEGRATION } from '../design/astro.js';
 import { readProjectContext } from '../design/project.js';
 import { searchComponents } from '../tools/search.js';
 import { getComponentDetails } from '../tools/details.js';
-import { validateComposition } from '../tools/validate.js';
+import { validateComposition, VALIDATE_COMPOSITION_MAX_BYTES } from '../tools/validate.js';
 import { jsonResult } from '../tools/budget.js';
 import { registry } from '../registry/index.js';
 import { SERVER_VERSION } from './version.js';
@@ -87,11 +87,12 @@ export function createServer(projectRoot = process.cwd()) {
   });
 
   server.registerTool('validate_composition', {
-    description: 'Statically check HTML/Astro source for Basecoat migration errors, semantic rhythm, FSM bindings, missing scripts, nested cards, spacing and hierarchy issues. Pass `code` or alias `html` and optionally a semanticProfile. Does not render or evaluate dynamic code.',
+    description: 'Statically check HTML/Astro source for Basecoat migration errors, semantic rhythm, FSM bindings, missing scripts, nested cards, spacing and hierarchy issues. Pass `code` or alias `html` and optionally a semanticProfile and densityProfile. Does not render or evaluate dynamic code.',
     inputSchema: {
-      code: z.string().max(65_536).optional(),
-      html: z.string().max(65_536).optional(),
+      code: z.string().max(VALIDATE_COMPOSITION_MAX_BYTES).optional(),
+      html: z.string().max(VALIDATE_COMPOSITION_MAX_BYTES).optional(),
       semanticProfile: z.string().max(64).optional(),
+      densityProfile: z.enum(['comfortable', 'compact']).optional(),
     },
     annotations: READ_ANNOTATIONS,
   }, input => {
@@ -104,6 +105,7 @@ export function createServer(projectRoot = process.cwd()) {
     }
     return jsonResult(validateComposition(code ?? html!, {
       semanticProfile: input.semanticProfile,
+      densityProfile: input.densityProfile,
       projectRoot,
     }));
   });

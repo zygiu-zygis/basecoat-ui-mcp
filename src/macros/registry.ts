@@ -160,11 +160,51 @@ export interface GetBlockSectionInput {
   cursor?: string;
 }
 
+function recipeRootBlockId(
+  registry: CompiledMacroRegistry,
+  recipe: NonNullable<CompiledMacroRegistry['recipes'][string]>,
+): Id | undefined {
+  const entry = recipe.pages.find(page => page.id === recipe.entryPage) ?? recipe.pages[0];
+  if (!entry) return undefined;
+  const rootNode = entry.nodes[entry.root];
+  if (!rootNode) return undefined;
+  const blockRef = rootNode.block;
+  const block = registry.blocks[blockRef];
+  if (block) return block.id;
+  // Authoring recipes store block aliases; resolve when still an id.
+  try {
+    return getBlock(registry, blockRef).id;
+  } catch {
+    return blockRef;
+  }
+}
+
 export function getBlockSection(
   registry: CompiledMacroRegistry,
   input: GetBlockSectionInput,
 ) {
   const ref = resolveAlias(registry, input.idOrRef);
+  const recipe = registry.recipes[ref];
+  if (recipe && !registry.blocks[ref]) {
+    const rootBlockId = recipeRootBlockId(registry, recipe);
+    const steps = recipe.pages.map(page => ({
+      id: page.id,
+      route: page.route,
+      root: page.root,
+      nodeCount: Object.keys(page.nodes).length,
+    }));
+    throw new MacroError(
+      'EXPECTED_BLOCK_GOT_RECIPE',
+      `Resolved '${input.idOrRef}' to recipe '${recipe.id}', not a block. Instantiate the recipe or fetch its root block${rootBlockId ? ` '${rootBlockId}'` : ''}.`,
+      {
+        recipeId: recipe.id,
+        recipeRef: ref,
+        entryPage: recipe.entryPage,
+        steps,
+        ...(rootBlockId ? { rootBlockId } : {}),
+      },
+    );
+  }
   const block = getBlock(registry, ref);
   const snapshot = registrySnapshotId(registry.revision);
   const fingerprint = compactFingerprint(['block', ref, input.section]);

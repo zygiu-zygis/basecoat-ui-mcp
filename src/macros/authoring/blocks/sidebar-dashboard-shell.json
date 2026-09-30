@@ -1,0 +1,68 @@
+{
+  "schemaVersion": 1,
+  "id": "sidebar-dashboard-shell",
+  "role": "navigation",
+  "family": "layout",
+  "description": "Dashboard sidebar with workspace switcher, grouped collapsible nav, user footer, and responsive canvas anchors.",
+  "tags": ["navigation", "sidebar", "dashboard", "collapsible-nav"],
+  "root": "nav-root",
+  "fragments": [
+    {
+      "id": "nav-root",
+      "emmet": "aside.sidebar[data-slot=sidebar-host][data-component=sidebar][data-side=left][data-initial-open=true]>div.flex.flex-col.gap-4.p-4>div[data-slot=workspace-switcher]>button.btn[data-variant=outline]{Acme Inc}^nav.flex.flex-col.gap-4[aria-label=Main]>section[data-slot=nav-home]>h3.text-sm{Home}+ul>li>a[aria-current=page]{Dashboard}^^section[data-slot=nav-documents]>h3.text-sm{Documents}+ul>li>a{Library}^^div.mt-auto[data-slot=user-footer]>button.btn[data-variant=ghost]{Account}"
+    }
+  ],
+  "mounts": [],
+  "slots": [
+    {
+      "id": "workspace-switcher",
+      "at": { "fragment": "nav-root", "name": "workspace-switcher" },
+      "accepts": ["action"],
+      "min": 0,
+      "max": 1
+    },
+    {
+      "id": "nav-home",
+      "at": { "fragment": "nav-root", "name": "nav-home" },
+      "accepts": ["nav-group"],
+      "min": 0,
+      "max": 1
+    },
+    {
+      "id": "nav-documents",
+      "at": { "fragment": "nav-root", "name": "nav-documents" },
+      "accepts": ["nav-group"],
+      "min": 0,
+      "max": 1
+    },
+    {
+      "id": "user-footer",
+      "at": { "fragment": "nav-root", "name": "user-footer" },
+      "accepts": ["action"],
+      "min": 0,
+      "max": 1
+    }
+  ],
+  "ports": [
+    {
+      "id": "nav-toggle-in",
+      "at": { "fragment": "nav-root", "name": "nav-root" },
+      "direction": "in",
+      "kind": "control",
+      "contract": "nav-toggle",
+      "minLinks": 0,
+      "maxLinks": 1,
+      "scope": "shell"
+    }
+  ],
+  "componentRefs": ["sidebar", "button"],
+  "ruleRefs": [],
+  "dependencyBlockIds": [],
+  "layout": { "frameRef": "nav-root" },
+  "landmarks": { "main": 0, "primaryHeading": 0 },
+  "provenance": {
+    "origin": "authored",
+    "sourceHashes": {},
+    "mappingVersion": "1.0.0"
+  }
+}
