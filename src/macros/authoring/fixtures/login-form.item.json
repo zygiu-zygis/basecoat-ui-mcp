@@ -3,13 +3,13 @@
   "name": "login-form",
   "type": "registry:block",
   "title": "Login Form",
-  "description": "SYNTHETIC fixture — not fetched from network. Offline importer test item.",
+  "description": "SYNTHETIC fixture - not fetched from network. Offline importer test item.",
   "dependencies": ["card", "field", "input", "button", "label"],
   "registryDependencies": ["card", "field", "input", "button", "label"],
   "files": [
     {
       "path": "blocks/login-form.tsx",
-      "content": "/* SYNTHETIC — offline fixture only */\nexport function LoginForm() { return null }\n",
+      "content": "/* SYNTHETIC - offline fixture only */\nexport function LoginForm() { return null }\n",
       "type": "registry:block"
     }
   ],

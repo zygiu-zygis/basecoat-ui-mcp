@@ -31,6 +31,11 @@ export const DEFAULT_RHYTHM_PROFILE: AuthoringRhythmProfile = {
           value: 'gap-6',
           description: 'Section heading to content or separation of meaningful local groups (1.5rem)',
         },
+        {
+          id: 'gap-rhythm-xl',
+          value: 'gap-12',
+          description: 'Major page sections with distinct purposes (3rem)',
+        },
       ],
     },
     {

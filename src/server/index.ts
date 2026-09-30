@@ -145,10 +145,10 @@ export function createServer(projectRoot = process.cwd()) {
   }, input => handleValidateDesign(input, projectRoot));
 
   server.registerTool('get_rhythm_rules', {
-    description: 'Read a compiled semantic rhythm profile by family. Results are content-addressed, deterministic, and cursor-paginated.',
+    description: 'Read the effective semantic rhythm profile by family, including project-local overrides. Semantic IDs and approved implementation utilities are returned separately. Results are content-addressed and cursor-paginated.',
     inputSchema: getRhythmRulesInputShape,
     annotations: READ_ANNOTATIONS,
-  }, input => handleGetRhythmRules(input));
+  }, input => handleGetRhythmRules(input, projectRoot));
 
   server.registerTool('get_fsm_recipe', {
     description: 'Read finite FSM states, events, guards, actions, or transitions. Recipes are structural metadata, not executable runtime code.',

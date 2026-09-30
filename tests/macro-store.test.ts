@@ -1,7 +1,7 @@
 // Author and maintainer: Žygimantas Jasiulionis / Intellmedia.
 import assert from 'node:assert/strict';
 import { fork } from 'node:child_process';
-import { mkdtemp, readFile, readdir, rm, unlink, writeFile } from 'node:fs/promises';
+import { access, mkdtemp, readFile, readdir, realpath, rm, unlink, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -9,7 +9,12 @@ import test from 'node:test';
 import { compileRegistry } from '../src/macros/compiler.js';
 import { MacroError } from '../src/macros/packets.js';
 import { getCompiledRegistry, loadCompiledRegistry } from '../src/macros/registry.js';
-import { openDesignStore, openFilesystemDesignStore } from '../src/macros/store.js';
+import {
+  getPublicationDurabilityFailureCount,
+  openDesignStore,
+  openFilesystemDesignStore,
+  publishImmutableJson,
+} from '../src/macros/store.js';
 import type {
   AuthoringMacroBlock,
   AuthoringRegistryInput,
@@ -339,6 +344,49 @@ test('crash-before-publish leaves no partial revision', async () => {
     assert.equal(session.revision, 0);
     assert.equal(names.filter(name => /^\d+\.json$/.test(name)).length, 1);
   });
+});
+
+test('directory sync failure before link fails without publishing', async () => {
+  const root = await mkdtemp(join(tmpdir(), 'basecoat-publish-'));
+  try {
+    const rootReal = await realpath(root);
+    const finalPath = join(rootReal, 'records', 'one.json');
+    await assert.rejects(
+      () => publishImmutableJson(rootReal, finalPath, { value: 1 }, async () => {
+        const error = new Error('sync failed') as NodeJS.ErrnoException;
+        error.code = 'EIO';
+        throw error;
+      }),
+      (error: unknown) => error instanceof MacroError && error.code === 'STORAGE_FAILED',
+    );
+    await assert.rejects(() => access(finalPath));
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
+test('post-link directory sync failure keeps the committed mutation visible', async () => {
+  const root = await mkdtemp(join(tmpdir(), 'basecoat-publish-'));
+  try {
+    const rootReal = await realpath(root);
+    const finalPath = join(rootReal, 'records', 'one.json');
+    const before = getPublicationDurabilityFailureCount();
+    let syncCalls = 0;
+    await publishImmutableJson(rootReal, finalPath, { value: 1 }, async handle => {
+      syncCalls++;
+      if (syncCalls === 1) {
+        await handle.sync();
+        return;
+      }
+      const error = new Error('post-link sync failed') as NodeJS.ErrnoException;
+      error.code = 'EIO';
+      throw error;
+    });
+    assert.equal(JSON.parse(await readFile(finalPath, 'utf8')).value, 1);
+    assert.equal(getPublicationDurabilityFailureCount(), before + 1);
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
 });
 
 test('project roots isolate designer state', async () => {

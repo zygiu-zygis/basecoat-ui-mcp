@@ -267,7 +267,7 @@ function shellFixture(options?: {
     // Second main under content is not allowed by slot max=1; put as sibling under a fake path
     // by temporarily raising occupancy via attach into content is impossible. Instead nest under
     // page as unreachable is wrong. Use a second shell-less main by attaching under content via
-    // replacing content block with a host that accepts pages — simpler: add second main as root sibling.
+    // replacing content block with a host that accepts pages - simpler: add second main as root sibling.
     nodes.extra = {
       id: 'extra',
       block: ref(registry, 'extra-main'),

@@ -1,16 +1,11 @@
 // Author & maintainer: Žygimantas Jasiulionis / Intellmedia.
 // Immutable semantics registry store with content-addressed snapshots.
-import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs';
-import { dirname, join } from 'node:path';
-import { fsyncSync, openSync, closeSync } from 'node:fs';
-import { compileSemantics, canonicalJson, contentRef } from './compiler.js';
+import { readFileSync, existsSync } from 'node:fs';
+import { join } from 'node:path';
+import { compileSemantics, contentRef } from './compiler.js';
 import { compiledSemanticsRegistrySchema } from './schema.js';
-import { DEFAULT_SEMANTICS_INPUT } from './fixtures.js';
 import type {
   CompiledSemanticsRegistry,
-  AuthoringSemanticsInput,
-  SemanticsDiagnostic,
-  ProjectRhythmOverride,
   CompiledRhythmProfile,
   Ref,
   Id,
@@ -31,12 +26,6 @@ export interface SemanticsStore {
   /** Get effective rhythm profile with project overrides applied. */
   getEffectiveRhythmProfile(profileId: Id, projectRoot?: string): CompiledRhythmProfile;
   
-  /** Compile and store a new registry from authoring input. */
-  compile(input: AuthoringSemanticsInput): { 
-    registry: CompiledSemanticsRegistry; 
-    diagnostics: SemanticsDiagnostic[];
-  };
-  
   /** Get the current registry revision. */
   getRevision(): Ref;
 }
@@ -48,47 +37,6 @@ export class FileSemanticsStore implements SemanticsStore {
 
   constructor(baseDir: string) {
     this.snapshotPath = join(baseDir, 'semantics.snapshot.json');
-    this.ensureDefaultSnapshot();
-  }
-
-  private ensureDefaultSnapshot(): void {
-    if (!existsSync(this.snapshotPath)) {
-      // Compile default semantics and create initial snapshot
-      const { registry, diagnostics } = compileSemantics(DEFAULT_SEMANTICS_INPUT);
-      if (diagnostics.some(d => d.severity === 'error')) {
-        throw new SemanticsError(
-          'COMPILATION_FAILED',
-          `Failed to compile default semantics: ${diagnostics
-            .filter(d => d.severity === 'error')
-            .map(d => d.message)
-            .join('; ')}`
-        );
-      }
-      this.writeSnapshot(registry);
-    }
-  }
-
-  private writeSnapshot(registry: CompiledSemanticsRegistry): void {
-    // Ensure directory exists
-    const dir = dirname(this.snapshotPath);
-    if (!existsSync(dir)) {
-      mkdirSync(dir, { recursive: true });
-    }
-
-    // Write atomically with fsync
-    const content = canonicalJson(registry);
-    writeFileSync(this.snapshotPath, content, 'utf8');
-    
-    // Force fsync for durability
-    const fd = openSync(this.snapshotPath, 'r+');
-    try {
-      fsyncSync(fd);
-    } finally {
-      closeSync(fd);
-    }
-
-    // Clear cache to force reload
-    this.cachedRegistry = null;
   }
 
   private loadSnapshot(): CompiledSemanticsRegistry {
@@ -107,7 +55,27 @@ export class FileSemanticsStore implements SemanticsStore {
       // Validate snapshot schema
       const validatedRegistry = compiledSemanticsRegistrySchema.parse(parsed);
       
-      // Verify revision hash
+      for (const [ref, profile] of Object.entries(validatedRegistry.rhythmProfiles)) {
+        if (contentRef(profile) !== ref) {
+          throw new SemanticsError('RECORD_REF_MISMATCH', `Rhythm profile record key does not match content: ${profile.id}`);
+        }
+      }
+      for (const [ref, recipe] of Object.entries(validatedRegistry.fsmRecipes)) {
+        if (contentRef(recipe) !== ref) {
+          throw new SemanticsError('RECORD_REF_MISMATCH', `FSM recipe record key does not match content: ${recipe.id}`);
+        }
+      }
+      for (const [id, ref] of Object.entries(validatedRegistry.aliases)) {
+        const record = validatedRegistry.rhythmProfiles[ref] ?? validatedRegistry.fsmRecipes[ref];
+        if (!record) {
+          throw new SemanticsError('ALIAS_REF_INVALID', `Semantic alias does not resolve: ${id}`);
+        }
+        if (record.id !== id) {
+          throw new SemanticsError('ALIAS_ID_MISMATCH', `Semantic alias does not match record identity: ${id}`);
+        }
+      }
+
+      // Verify the revision only after every record and alias has been validated.
       const expectedRevision = contentRef({
         rhythmProfiles: Object.keys(validatedRegistry.rhythmProfiles).sort(),
         fsmRecipes: Object.keys(validatedRegistry.fsmRecipes).sort(),
@@ -142,19 +110,6 @@ export class FileSemanticsStore implements SemanticsStore {
 
   getRevision(): Ref {
     return this.getRegistry().revision;
-  }
-
-  compile(input: AuthoringSemanticsInput): { 
-    registry: CompiledSemanticsRegistry; 
-    diagnostics: SemanticsDiagnostic[];
-  } {
-    const result = compileSemantics(input);
-    
-    if (!result.diagnostics.some(d => d.severity === 'error')) {
-      this.writeSnapshot(result.registry);
-    }
-    
-    return result;
   }
 
   getEffectiveRhythmProfile(profileId: Id, projectRoot?: string): CompiledRhythmProfile {
@@ -216,17 +171,23 @@ export class FileSemanticsStore implements SemanticsStore {
         };
       });
 
-      // Create effective profile (note: this creates a new content ref)
-      const effectiveProfile: CompiledRhythmProfile = {
-        ...baseProfile,
-        families: effectiveFamilies,
-        // Regenerate rhythm text based on effective profile
-        rhythmText: baseProfile.rhythmText, // For now, keep base text
-      };
-
-      return effectiveProfile;
-    } catch (error) {
-      // If override is malformed, fall back to base profile
+      const compiled = compileSemantics({
+        schemaVersion: 1,
+        rhythmProfiles: [{
+          schemaVersion: 1,
+          id: baseProfile.id,
+          description: baseProfile.description,
+          families: effectiveFamilies,
+        }],
+        fsmRecipes: [],
+      });
+      if (compiled.diagnostics.some(diagnostic => diagnostic.severity === 'error')) {
+        return baseProfile;
+      }
+      const effectiveRef = compiled.registry.aliases[baseProfile.id];
+      return effectiveRef ? compiled.registry.rhythmProfiles[effectiveRef] ?? baseProfile : baseProfile;
+    } catch {
+      // Malformed project data never mutates or replaces the packaged profile.
       return baseProfile;
     }
   }

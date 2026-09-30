@@ -54,9 +54,11 @@ by MCP itself. Design sessions persist under
 
 ## Semantic boundaries and compilation
 
-The semantic registry provides compiled rhythm profiles and FSM recipes from `src/semantics/semantics.snapshot.json`. Rhythm profiles map IDs to approved Tailwind v4 `@theme` declarations and utilities, organized by families like density, gaps, typography, surfaces, and borders. FSM recipes define strict states, events, transitions, guards, and actions for structural patterns - not runtime implementations.
+The semantic registry provides compiled rhythm profiles and FSM recipes from `src/semantics/semantics.snapshot.json`. Runtime startup reads this packaged snapshot from the source package layout, including when execution begins in `dist/`. It never creates or rewrites package files. Only the explicit `compile:semantics` authoring command writes the snapshot.
 
-Both semantic tools use content-addressed refs, bounded pagination, and immutable snapshots like macro tools. The registry supports optional project-local rhythm overrides at `<projectRoot>/.basecoat/rhythm.json` without mutating the packaged snapshot. Semantic compilation uses deterministic SHA-256 fingerprints and fails closed on invalid inputs or oversized results.
+Rhythm profiles keep a semantic ID separate from its approved Tailwind utility. The ID is design metadata; the utility is executable class text. FSM recipes define states, events, transitions, guards, and metadata-only actions. They are not runtime implementations.
+
+Both semantic tools use content-addressed refs, bounded pagination, and immutable snapshots like macro tools. The loader verifies every record key against its canonical content hash, checks alias targets and identities, then verifies the registry revision. Project-local rhythm overrides at `<projectRoot>/.basecoat/rhythm.json` produce an effective profile ref and revision without mutating the packaged snapshot. Changed overrides invalidate prior cursors.
 
 ## Package boundary
 
@@ -160,7 +162,14 @@ is no parent traversal. Symlinks and non-regular files are refused. Each
 resource request re-reads the file so edits are visible immediately. Content is
 labeled untrusted design data.
 
-The server writes only its own `.basecoat/designer/` store. It does not write
+The server writes only its own `.basecoat/designer/` store. Immutable publication
+fsyncs the temporary file and directory before linking the final name, then
+fsyncs the directory after the link. Unsupported directory fsync behavior is
+handled only on affected platforms. A rare post-link sync failure leaves the
+already committed mutation visible and increments an inspectable process-local
+durability-failure counter instead of reporting a false failed mutation.
+
+The server does not write
 Astro, HTML, CSS, JavaScript, package, route, auth, or infrastructure files.
 The host application owns rendering, data fetching, session and credential
 handling, OAuth, captcha, and all other runtime integration.
@@ -218,7 +227,7 @@ run during server startup or MCP requests.
 
 ## Validation scope
 
-`validate_composition` lexes HTML structure and script imports. It checks nested cards, legacy class families, button variants, missing controllers, spacing tokens, centered layouts, and `basecoat-css/all`. It does not execute scripts, resolve app modules, or certify accessibility or visual design.
+`validate_composition` uses a bounded HTML/Astro lexer, not an Astro AST. It returns bounded parser diagnostics with line and column, checks page-level landmark ordering without treating nested component headers or footers as page landmarks, and distinguishes color utilities from text alignment, border style or width, and background layout utilities. It does not execute scripts, inspect runtime interaction, resolve app modules, render, or certify accessibility or visual design.
 
 ## Development guidelines
 
@@ -236,7 +245,11 @@ npm run compile:semantics:check
 npm run compile:blocks:check
 npm run test
 npm pack --dry-run
+npm audit --omit=dev
 ```
+
+`npm audit --omit=dev` is the only listed verification command that needs the
+npm advisory service. It is not part of server runtime.
 
 `npm run test` builds first and runs the Node test runner. Coverage includes
 registry invariants, search ties, complete detail budgets, host context

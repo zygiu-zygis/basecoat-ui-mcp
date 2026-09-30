@@ -1,5 +1,5 @@
 // Copyright Žygimantas Jasiulionis / Intellmedia.
-import { parseHtml, scriptImports, type HtmlNode } from './html.js';
+import { parseHtmlWithDiagnostics, scriptImports, type HtmlNode } from './html.js';
 import { registry } from '../registry/index.js';
 import { defaultSemanticsStore } from '../semantics/index.js';
 import type { Id } from '../semantics/types.js';
@@ -9,7 +9,10 @@ export interface CompositionIssue {
   severity: 'error' | 'warning';
   message: string;
   line: number;
+  column?: number;
   repair?: string;
+  semanticToken?: string;
+  approvedUtility?: string;
 }
 
 /** Options for composition validation. */
@@ -35,8 +38,11 @@ const COMPONENT_FAMILY = /^(?:ui-(?:card|button|input|dialog|tabs|table|select|t
 const SEMANTIC_TOKEN = /^(?:p-density-|gap-rhythm-|text-(?:heading-|body$|muted$)|bg-surface-|border-subtle$)/;
 const SAFE_ANCHOR = /^[a-z][a-z0-9-]*$/;
 const TYPOGRAPHY_UTILITY = /^text-(?:xs|sm|base|lg|xl|[2-9]xl)$/;
-const COLOR_UTILITY = /^(?:bg|border|text)-(?!xs$|sm$|base$|lg$|xl$|[2-9]xl$)[a-z][\w-]*$/;
 const ARBITRARY_COLOR = /^(?:bg|border|text|from|via|to)-\[(?:#|rgba?\(|hsla?\(|oklch\(|lab\(|lch\(|color:|var\(--)/i;
+const COLOR_NAMES = /^(?:transparent|current|inherit|black|white|background|foreground|card|popover|primary|secondary|muted|accent|destructive|border|input|ring|chart-[1-5]|sidebar(?:-[a-z-]+)?|(?:slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-(?:50|100|200|300|400|500|600|700|800|900|950))(?:\/\d{1,3})?$/;
+const NON_COLOR_TEXT = /^(?:left|center|right|justify|start|end|wrap|nowrap|balance|pretty|ellipsis|clip|xs|sm|base|lg|xl|[2-9]xl)$/;
+const NON_COLOR_BORDER = /^(?:0|2|4|8|x|y|s|e|t|r|b|l|x-0|x-2|x-4|x-8|y-0|y-2|y-4|y-8|s-0|s-2|s-4|s-8|e-0|e-2|e-4|e-8|t-0|t-2|t-4|t-8|r-0|r-2|r-4|r-8|b-0|b-2|b-4|b-8|l-0|l-2|l-4|l-8|solid|dashed|dotted|double|hidden|none|collapse|separate)$/;
+const NON_COLOR_BACKGROUND = /^(?:auto|cover|contain|fixed|local|scroll|clip-(?:border|padding|content|text)|origin-(?:border|padding|content)|(?:center|top|right|bottom|left)(?:-(?:top|bottom|left|right))?|no-repeat|repeat(?:-x|-y|-round|-space)?)$/;
 
 function importedModule(value: string): string | undefined {
   const bare = /^basecoat-css\/([\w-]+)(?:\.min)?(?:\.js)?$/.exec(value);
@@ -62,7 +68,7 @@ function isPrimary(node: HtmlNode): boolean {
 /** Get semantic token mappings for validation. */
 interface SemanticContext {
   byUtility: Map<string, string>;
-  tokenIds: Set<string>;
+  byToken: Map<string, string>;
 }
 
 function getSemanticMappings(profileId?: Id, projectRoot?: string): SemanticContext | null {
@@ -73,22 +79,38 @@ function getSemanticMappings(profileId?: Id, projectRoot?: string): SemanticCont
     .sort((a, b) => a.id.localeCompare(b.id));
   return {
     byUtility: new Map(mappings.map(mapping => [mapping.value, mapping.id])),
-    tokenIds: new Set(mappings.map(mapping => mapping.id)),
+    byToken: new Map(mappings.map(mapping => [mapping.id, mapping.value])),
   };
 }
 
 /** Check if a utility class has a semantic equivalent. */
-function checkSemanticViolation(token: string, semanticMappings: SemanticContext | null): { message: string; repair: string } | null {
+function checkSemanticViolation(token: string, semanticMappings: SemanticContext | null): {
+  message: string;
+  repair: string;
+  semanticToken: string;
+  approvedUtility: string;
+} | null {
   if (!semanticMappings) return null;
-  if (semanticMappings.tokenIds.has(token)) return null;
   const direct = semanticMappings.byUtility.get(token);
   if (direct) {
     return {
-      message: `Use semantic token '${direct}' instead of hardcoded '${token}'`,
-      repair: `Replace '${token}' with '${direct}'.`,
+      message: `Approved implementation utility '${token}' maps to semantic token '${direct}'.`,
+      repair: `Keep '${token}' as the executable class and record semantic token '${direct}' in design metadata.`,
+      semanticToken: direct,
+      approvedUtility: token,
     };
   }
   return null;
+}
+
+function isColorUtility(token: string): boolean {
+  const match = /^(bg|border|text)-(.+)$/.exec(token);
+  if (!match) return false;
+  const [, family, value] = match;
+  if (family === 'text' && NON_COLOR_TEXT.test(value!)) return false;
+  if (family === 'border' && NON_COLOR_BORDER.test(value!)) return false;
+  if (family === 'bg' && NON_COLOR_BACKGROUND.test(value!)) return false;
+  return COLOR_NAMES.test(value!);
 }
 
 export function validateComposition(code: string, options: ValidationOptions = {}) {
@@ -96,7 +118,14 @@ export function validateComposition(code: string, options: ValidationOptions = {
   let truncated = false;
   let hasErrors = false;
   let droppedErrors = 0;
-  const report = (rule: string, severity: CompositionIssue['severity'], message: string, line: number, repair?: string) => {
+  const report = (
+    rule: string,
+    severity: CompositionIssue['severity'],
+    message: string,
+    line: number,
+    repair?: string,
+    details: Pick<CompositionIssue, 'column' | 'semanticToken' | 'approvedUtility'> = {},
+  ) => {
     if (severity === 'error') hasErrors = true;
     if (issues.length >= ISSUE_CAP) {
       truncated = true;
@@ -108,6 +137,7 @@ export function validateComposition(code: string, options: ValidationOptions = {
       severity,
       message: message.slice(0, 240),
       line,
+      ...details,
       ...(repair ? { repair: repair.slice(0, 240) } : {}),
     });
   };
@@ -115,7 +145,18 @@ export function validateComposition(code: string, options: ValidationOptions = {
     report('input-size', 'error', 'Code exceeds the 64 KiB UTF-8 limit. Validate a smaller component.', 1);
     return { valid: false, issues, truncated: true, limitations: LIMITATIONS };
   }
-  const nodes = parseHtml(code);
+  const parsedHtml = parseHtmlWithDiagnostics(code);
+  const nodes = parsedHtml.nodes;
+  for (const diagnostic of parsedHtml.diagnostics) {
+    report(
+      `html-parser-${diagnostic.code}`,
+      diagnostic.severity,
+      diagnostic.message,
+      diagnostic.line,
+      undefined,
+      { column: diagnostic.column },
+    );
+  }
   const scripts = nodes.filter(node => node.tag === 'script' && ['', 'module', 'text/javascript', 'application/javascript', 'text/ecmascript', 'application/ecmascript'].includes((node.attrs.type ?? '').trim().toLowerCase()));
   const importOrder = scripts.flatMap(node => node.attrs.src ? [node.attrs.src] : scriptImports(node.content ?? ''));
   const imported = new Set(importOrder);
@@ -174,20 +215,42 @@ export function validateComposition(code: string, options: ValidationOptions = {
       
       // Semantic validation: check for hardcoded utilities that have semantic equivalents
       if (semanticMappings) {
+        const semanticUtility = semanticMappings.byToken.get(token);
+        if (semanticUtility) {
+          report(
+            'semantic-token-as-utility',
+            'error',
+            `Semantic token '${token}' is an identity, not an executable Tailwind utility.`,
+            node.line,
+            `Use approved utility '${semanticUtility}' in class and keep '${token}' in design metadata.`,
+            { semanticToken: token, approvedUtility: semanticUtility },
+          );
+          continue;
+        }
         const semanticViolation = checkSemanticViolation(token, semanticMappings);
         if (semanticViolation) {
-          report('semantic-token-available', 'warning', semanticViolation.message, node.line, semanticViolation.repair);
+          report(
+            'semantic-token-available',
+            'warning',
+            semanticViolation.message,
+            node.line,
+            semanticViolation.repair,
+            {
+              semanticToken: semanticViolation.semanticToken,
+              approvedUtility: semanticViolation.approvedUtility,
+            },
+          );
         }
-        if (SEMANTIC_TOKEN.test(token) && !semanticMappings.tokenIds.has(token)) {
+        if (SEMANTIC_TOKEN.test(token) && !semanticMappings.byToken.has(token)) {
           report(
             'semantic-token-invalid',
             'error',
             `Semantic token '${token}' is not defined by profile '${options.semanticProfile}'.`,
             node.line,
-            'Use an exact token ID returned by get_rhythm_rules.',
+            'Use an approved utility from get_rhythm_rules and keep its token ID in design metadata.',
           );
         }
-        const hardcodedSpacing = semanticMappings.tokenIds.has(token)
+        const hardcodedSpacing = semanticMappings.byToken.has(token)
           ? null
           : /^-?(?:gap(?:-[xy])?|space-[xy]|[mp][trblxyse]?)-(.+)$/.exec(token);
         if (hardcodedSpacing && hardcodedSpacing[1] !== '0' && hardcodedSpacing[1] !== 'auto' && !semanticMappings.byUtility.has(token)) {
@@ -196,25 +259,25 @@ export function validateComposition(code: string, options: ValidationOptions = {
             'warning',
             `Hardcoded spacing utility '${token}' is outside the selected semantic profile.`,
             node.line,
-            'Choose a spacing or density token returned by get_rhythm_rules.',
+            'Choose a spacing or density mapping from get_rhythm_rules and apply its approved utility.',
           );
         }
-        if (TYPOGRAPHY_UTILITY.test(token) && !semanticMappings.tokenIds.has(token) && !semanticMappings.byUtility.has(token)) {
+        if (TYPOGRAPHY_UTILITY.test(token) && !semanticMappings.byToken.has(token) && !semanticMappings.byUtility.has(token)) {
           report(
             'semantic-hardcoded-typography',
             'warning',
             `Hardcoded typography utility '${token}' is outside the selected semantic profile.`,
             node.line,
-            'Choose a typography token returned by get_rhythm_rules.',
+            'Choose a typography mapping from get_rhythm_rules and apply its approved utility.',
           );
         }
-        if (COLOR_UTILITY.test(token) && !semanticMappings.tokenIds.has(token) && !semanticMappings.byUtility.has(token) && !/-(?:transparent|current|inherit)$/.test(token)) {
+        if (isColorUtility(token) && !semanticMappings.byToken.has(token) && !semanticMappings.byUtility.has(token) && !/-(?:transparent|current|inherit)$/.test(token)) {
           report(
             'semantic-hardcoded-color',
             'warning',
             `Hardcoded color utility '${token}' is outside the selected semantic profile.`,
             node.line,
-            'Choose a surface or border token returned by get_rhythm_rules.',
+            'Choose a surface or border mapping from get_rhythm_rules and apply its approved utility.',
           );
         }
       }
@@ -252,9 +315,10 @@ export function validateComposition(code: string, options: ValidationOptions = {
   if (primaryHeadings.length > 1) {
     report('duplicate-primary-heading', 'error', `Found ${primaryHeadings.length} h1 elements; exactly one is allowed.`, primaryHeadings[1]!.line, 'Keep one h1 and demote later headings to h2.');
   }
-  const header = nodes.find(node => node.tag === 'header');
-  const main = mains[0];
-  const footer = nodes.find(node => node.tag === 'footer');
+  const pageLandmarks = nodes.filter(node => node.parent === null);
+  const header = pageLandmarks.find(node => node.tag === 'header');
+  const main = pageLandmarks.find(node => node.tag === 'main');
+  const footer = pageLandmarks.find(node => node.tag === 'footer');
   if (header && main && header.index > main.index) {
     report('structural-order', 'error', 'Header appears after main in source order.', header.line, 'Move header before main.');
   }

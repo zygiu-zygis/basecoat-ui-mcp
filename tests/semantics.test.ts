@@ -12,6 +12,7 @@ import {
   DEFAULT_RHYTHM_PROFILE,
   DIALOG_FSM_RECIPE,
   authoringFsmRecipeSchema,
+  canonicalJson,
   contentRef,
 } from '../src/semantics/index.js';
 
@@ -51,6 +52,7 @@ test('semantic registry compilation produces stable content-addressable results'
       'gap-rhythm-lg',
       'gap-rhythm-md',
       'gap-rhythm-sm',
+      'gap-rhythm-xl',
       'p-density-base',
       'p-density-compact',
       'text-body',
@@ -121,6 +123,8 @@ test('semantics store provides effective rhythm profiles with project overrides'
   mkdirSync(testDir, { recursive: true });
 
   try {
+    const { registry: snapshot } = compileSemantics(DEFAULT_SEMANTICS_INPUT);
+    writeFileSync(join(testDir, 'semantics.snapshot.json'), canonicalJson(snapshot));
     const store = createSemanticsStore(testDir);
     
     // Should get default profile
@@ -135,6 +139,7 @@ test('semantics store provides effective rhythm profiles with project overrides'
       'gap-rhythm-sm',
       'gap-rhythm-md',
       'gap-rhythm-lg',
+      'gap-rhythm-xl',
     ]);
 
     const overrideDir = join(testDir, '.basecoat');
@@ -195,6 +200,43 @@ test('invalid FSM recipes produce compilation errors', () => {
   const errors = diagnostics.filter(d => d.severity === 'error');
   assert(errors.length > 0);
   assert(errors.some(e => e.code === 'NONDETERMINISTIC_TRANSITION'));
+});
+
+test('semantics store fails closed on record, alias, and revision tampering', () => {
+  const testDir = join(__dirname, '../tmp/semantics-tamper-test');
+  rmSync(testDir, { recursive: true, force: true });
+  mkdirSync(testDir, { recursive: true });
+  try {
+    const { registry } = compileSemantics(DEFAULT_SEMANTICS_INPUT);
+    const expectCode = (value: unknown, code: string) => {
+      writeFileSync(join(testDir, 'semantics.snapshot.json'), canonicalJson(value));
+      assert.throws(
+        () => createSemanticsStore(testDir).getRegistry(),
+        (error: unknown) => error instanceof Error && 'code' in error && error.code === code,
+      );
+    };
+
+    const profileRef = registry.aliases.default!;
+    const movedProfile = structuredClone(registry);
+    movedProfile.rhythmProfiles['f'.repeat(64)] = movedProfile.rhythmProfiles[profileRef]!;
+    delete movedProfile.rhythmProfiles[profileRef];
+    movedProfile.aliases.default = 'f'.repeat(64);
+    expectCode(movedProfile, 'RECORD_REF_MISMATCH');
+
+    const missingAlias = structuredClone(registry);
+    missingAlias.aliases.default = 'f'.repeat(64);
+    expectCode(missingAlias, 'ALIAS_REF_INVALID');
+
+    const wrongIdentity = structuredClone(registry);
+    wrongIdentity.aliases.dialog = profileRef;
+    expectCode(wrongIdentity, 'ALIAS_ID_MISMATCH');
+
+    const wrongRevision = structuredClone(registry);
+    wrongRevision.revision = 'f'.repeat(64);
+    expectCode(wrongRevision, 'REVISION_MISMATCH');
+  } finally {
+    rmSync(testDir, { recursive: true, force: true });
+  }
 });
 
 test('FSM schema rejects duplicate identities and invalid graph references', () => {

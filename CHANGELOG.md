@@ -4,16 +4,20 @@ Maintained by **Žygimantas Jasiulionis / Intellmedia**.
 
 ## Unreleased
 
-### 1.2.0 - Semantic design layers and enhanced validation
+### Recommended 1.2.0 - Semantic protocol hardening
 
 - Added independent compiled semantic registry with rhythm profiles and FSM recipes under `src/semantics/`.
 - Added two new read-only semantic tools: `get_rhythm_rules` for spacing, typography, surfaces, borders, and layout patterns; `get_fsm_recipe` for interaction states, events, transitions, guards, and actions.
 - Enhanced `validate_composition` with bounded static-tree analysis, semantic rhythm validation, macro anchor checks, and FSM `data-state` diagnostics while preserving the existing API.
-- Added optional project-local rhythm profile overrides at `<projectRoot>/.basecoat/rhythm.json` without mutating the packaged snapshot.
+- Added optional project-local rhythm profile overrides at `<projectRoot>/.basecoat/rhythm.json` with effective content refs and cursor revisions, without mutating the packaged snapshot.
 - Hardened macro subsystem with 21 additional tests covering cursor pagination, precedence, cross-process races, and immutable publication with directory `fsync`.
-- Extended validation to detect profile-forbidden hardcoded utilities, arbitrary colors, duplicate landmarks, and structural ordering issues.
+- Extended validation with bounded parser diagnostics, semantic ID and utility separation, bounded color matching, duplicate landmarks, and page-level structural ordering.
 - Semantic tools use the same 1,999-byte bounded pagination as macro tools with content-addressed refs and deterministic cursors.
-- All semantic rhythm mappings target approved Tailwind v4 `@theme` declarations only; FSM recipes provide structural guidance without runtime implementations.
+- Added canonical record, alias, and revision verification for the packaged semantic snapshot.
+- Restored the `gap-12` major-section contract as `gap-rhythm-xl`.
+- Hardened immutable publication ordering around directory fsync without reporting a failed mutation after its final link is visible.
+- Verified read-only installed-package startup with an offline network tripwire.
+- The package remains at version 1.1.0. Release these changes as 1.2.0 after maintainer review.
 
 ## 1.1.0 - 2026-09-30
 

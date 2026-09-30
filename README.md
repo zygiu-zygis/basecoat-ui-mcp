@@ -44,7 +44,9 @@ The compiled entry can also be invoked directly:
 }
 ```
 
-Published packages include prebuilt `dist/`. A source checkout does not.
+Published packages include prebuilt `dist/` and the immutable semantic snapshot
+under `src/semantics/`. Server startup reads that snapshot and does not write
+inside the installed package. A source checkout does not include `dist/`.
 
 ### From source
 
@@ -92,12 +94,12 @@ Design sessions persist under `<project-root>/.basecoat/designer/`. Registry rev
 
 ### Semantic tools
 
-The semantic layer provides compiled rhythm profiles and finite state machine recipes for consistent design patterns:
+The semantic layer provides compiled rhythm profiles and finite state machine recipes:
 
 7. `get_rhythm_rules` - access approved spacing, typography, surfaces, borders, and layout patterns by profile and family filters.
 8. `get_fsm_recipe` - read interaction states, events, transitions, guards, and actions for dialogs, navigation, and behavioral patterns.
 
-Semantic tools use the same bounded pagination as macro tools. Rhythm rules map to approved Tailwind v4 declarations, while FSM recipes provide structural guidance only - not runtime implementations.
+Semantic tools use the same bounded pagination as macro tools. Each rhythm record keeps the semantic token ID separate from its approved Tailwind utility. Put the utility in `class`; keep the semantic ID in design metadata and agent reasoning. Project overrides from `<project-root>/.basecoat/rhythm.json` are reflected in an effective content ref and revision. FSM recipes are structural metadata, not runtime implementations.
 
 ### End-to-end example
 
@@ -208,10 +210,13 @@ npm run compile:semantics:check
 npm run compile:blocks:check
 npm run test
 npm pack --dry-run
+npm audit --omit=dev
 ```
 
 `npm run test` builds first and runs the Node test suite. `npm pack --dry-run`
-checks the package file allowlist without creating a tarball. Maintainers can
+checks the package file allowlist without creating a tarball. `npm audit --omit=dev`
+checks production dependencies against the npm advisory database and therefore
+requires network access. Maintainers can
 verify the pinned Basecoat source with:
 
 ```sh

@@ -3,7 +3,7 @@
 import { createHash } from 'node:crypto';
 import type { CallToolResult } from '@modelcontextprotocol/sdk/types.js';
 import { z } from 'zod';
-import { defaultRegistry } from './index.js';
+import { contentRef, defaultSemanticsStore } from './index.js';
 import {
   MacroError,
   boundedMacroResult,
@@ -22,17 +22,17 @@ import type {
 // --- Input Schemas ---
 
 export const getRhythmRulesInputShape = {
-  profile: z.string().max(LIMITS.idMax).optional(),
-  family: z.string().max(LIMITS.idMax).optional(),
+  profile: idSchema.optional(),
+  family: idSchema.optional(),
   limit: z.number().int().min(1).max(32).optional(),
-  cursor: z.string().max(LIMITS.cursorMaxBytes).optional(),
+  cursor: z.string().min(1).max(LIMITS.cursorMaxBytes).optional(),
 };
 
 export const getFsmRecipeInputShape = {
-  recipe: z.string().max(LIMITS.idMax).optional(),
+  recipe: idSchema.optional(),
   section: z.enum(['states', 'events', 'guards', 'actions', 'transitions']).optional(),
   limit: z.number().int().min(1).max(32).optional(),
-  cursor: z.string().max(LIMITS.cursorMaxBytes).optional(),
+  cursor: z.string().min(1).max(LIMITS.cursorMaxBytes).optional(),
 };
 
 // --- Helper Types ---
@@ -101,9 +101,10 @@ function macroErrorResult(
 
 export async function handleGetRhythmRules(
   input: z.infer<z.ZodObject<typeof getRhythmRulesInputShape>>,
+  projectRoot?: string,
 ): Promise<CallToolResult> {
   try {
-    const registry = defaultRegistry;
+    const registry = defaultSemanticsStore.getRegistry();
     const { profile: profileFilter, family: familyFilter, limit, cursor } = input;
     if (profileFilter && !Object.values(registry.rhythmProfiles).some(profile => profile.id === profileFilter)) {
       throw new MacroError('NOT_FOUND', `Unknown rhythm profile: ${profileFilter}`);
@@ -120,7 +121,15 @@ export async function handleGetRhythmRules(
     // Collect all rhythm rule entries
     const allEntries: RhythmRuleEntry[] = [];
     
-    for (const [ref, profile] of Object.entries(registry.rhythmProfiles)) {
+    const effectiveProfiles = Object.values(registry.rhythmProfiles)
+      .map(profile => {
+        const effective = defaultSemanticsStore.getEffectiveRhythmProfile(profile.id, projectRoot);
+        return { profile: effective, ref: contentRef(effective) };
+      })
+      .sort((a, b) => a.profile.id.localeCompare(b.profile.id));
+    const effectiveRevision = contentRef(effectiveProfiles.map(({ profile, ref }) => [profile.id, ref]));
+
+    for (const { ref, profile } of effectiveProfiles) {
       if (profileFilter && profile.id !== profileFilter) continue;
       
       for (const family of profile.families) {
@@ -162,7 +171,7 @@ export async function handleGetRhythmRules(
     if (cursor) {
       const payload = validateMacroCursor(cursor, {
         fingerprint,
-        snapshot: registry.revision,
+        snapshot: effectiveRevision,
         registryRevision: registry.revision,
       });
       start = payload.offset;
@@ -171,7 +180,7 @@ export async function handleGetRhythmRules(
     const cursorFactory = createCursorFactory({
       v: 1,
       fingerprint,
-      snapshot: registry.revision,
+      snapshot: effectiveRevision,
       registryRevision: registry.revision,
     });
 
@@ -180,6 +189,7 @@ export async function handleGetRhythmRules(
       rhythmRules: {
         total: allEntries.length,
         registryRevision: registry.revision,
+        effectiveRevision,
         ...(profileFilter ? { profileFilter } : {}),
         ...(familyFilter ? { familyFilter } : {}),
       },
@@ -198,7 +208,7 @@ export async function handleGetFsmRecipe(
   input: z.infer<z.ZodObject<typeof getFsmRecipeInputShape>>,
 ): Promise<CallToolResult> {
   try {
-    const registry = defaultRegistry;
+    const registry = defaultSemanticsStore.getRegistry();
     const { recipe: recipeFilter, section: sectionFilter, limit, cursor } = input;
     if (recipeFilter && !Object.values(registry.fsmRecipes).some(recipe => recipe.id === recipeFilter)) {
       throw new MacroError('NOT_FOUND', `Unknown FSM recipe: ${recipeFilter}`);

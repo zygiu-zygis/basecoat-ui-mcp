@@ -21,6 +21,7 @@ import {
   realpath,
   unlink,
 } from 'node:fs/promises';
+import type { FileHandle } from 'node:fs/promises';
 import { dirname, join, resolve, sep } from 'node:path';
 import { MacroError } from './packets.js';
 import {
@@ -240,10 +241,25 @@ async function readJsonFile<T>(
  * Crash-safe immutable publish: temp + fsync + link(final) + directory fsync. Never overwrite via rename.
  * Temp names are never read by list/read paths.
  */
-async function publishImmutableJson(
+type DirectorySync = (handle: FileHandle) => Promise<void>;
+
+function directorySyncUnsupported(error: unknown): boolean {
+  const code = (error as NodeJS.ErrnoException | undefined)?.code;
+  return process.platform === 'win32' && ['EBADF', 'EINVAL', 'ENOTSUP', 'EPERM'].includes(code ?? '');
+}
+
+let publicationDurabilityFailures = 0;
+
+/** Process-local signal for a rare post-link directory sync failure. */
+export function getPublicationDurabilityFailureCount(): number {
+  return publicationDurabilityFailures;
+}
+
+export async function publishImmutableJson(
   designerRootReal: string,
   finalPath: string,
   value: unknown,
+  syncDirectory: DirectorySync = async handle => handle.sync(),
 ): Promise<void> {
   const dir = dirname(finalPath);
   await ensureDirNoSymlink(designerRootReal, dir);
@@ -259,6 +275,14 @@ async function publishImmutableJson(
     await handle.sync();
     await handle.close();
     handle = undefined;
+    let directorySyncSupported = true;
+    dirHandle = await open(dir, constants.O_RDONLY);
+    try {
+      await syncDirectory(dirHandle);
+    } catch (error) {
+      if (!directorySyncUnsupported(error)) throw error;
+      directorySyncSupported = false;
+    }
     try {
       await link(tempPath, finalPath);
     } catch (error) {
@@ -267,13 +291,15 @@ async function publishImmutableJson(
       }
       wrapStorageError(error, 'STORAGE_FAILED');
     }
-    // Directory fsync after immutable publication for durability hardening
-    try {
-      dirHandle = await open(dir, constants.O_RDONLY);
-      await dirHandle.sync();
-    } catch (error) {
-      // Non-fatal if directory fsync fails; the link already succeeded
-      wrapStorageError(error, 'STORAGE_FAILED');
+    if (directorySyncSupported) {
+      try {
+        await syncDirectory(dirHandle);
+      } catch {
+        // The immutable target is already committed and visible. Reporting the
+        // mutation as failed would invite an unsafe retry. Expose the rare
+        // durability uncertainty through the process-local counter instead.
+        publicationDurabilityFailures++;
+      }
     }
   } catch (error) {
     if (error instanceof MacroError) throw error;

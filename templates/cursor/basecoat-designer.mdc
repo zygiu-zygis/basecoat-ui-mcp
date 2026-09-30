@@ -33,9 +33,11 @@ Use this workflow when creating or modifying a Basecoat page with
 
 7. For semantic consistency, use `get_rhythm_rules` to access approved
    spacing, typography, and layout patterns. Filter by profile and family
-   as needed and use the returned semantic token IDs rather than hardcoded
-   utility values. Use `get_fsm_recipe` for interaction states, transitions,
-   and behavioral patterns. Follow every `next` cursor from either tool.
+   as needed. Keep each returned semantic token ID in design metadata and use
+   its separate approved utility in application `class` attributes. A token ID
+   is not itself a Tailwind class. Use `get_fsm_recipe` for structural states,
+   transitions, guards, and metadata-only actions. Follow every `next` cursor
+   from either tool.
    Bind source explicitly with matching `data-fsm-recipe` and
    `data-fsm-state` attributes.
 
@@ -58,13 +60,14 @@ Use this workflow when creating or modifying a Basecoat page with
 12. Validate the complete graph with `validate_design` in `complete` mode.
     Compare generated source with that graph, then run
     `validate_composition` on the generated application source with the
-    selected `semanticProfile`. Resolve invalid tokens, arbitrary colors,
-    duplicate landmarks, macro anchors, structural order, and FSM bindings.
+    selected `semanticProfile`. Resolve parser diagnostics, invalid mappings,
+    arbitrary colors, duplicate page landmarks, macro anchors, structural
+    order, and FSM bindings.
 
 13. Report remaining obligations explicitly. A graph marked `plan-ready` is
     not proof of rendered correctness, runtime behavior, accessibility, or
-    visual verification. Perform and report visual verification separately
-    when the task requires it.
+    visual verification, runtime interaction testing, or full Astro AST
+    verification. Perform and report those checks separately when required.
 
 Layout contracts come from this project's pinned macro registry via MCP tools.
 They are not supplied automatically by shadcn or by MCP itself.

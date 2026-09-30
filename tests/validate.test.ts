@@ -242,7 +242,10 @@ describe('semantic validation', () => {
     assert(semanticRules('<div class="gap-4"></div>').includes('semantic-token-available'));
     assert(semanticRules('<div class="p-2"></div>').includes('semantic-token-available'));
     const result = validateComposition('<div class="gap-2"></div>', { semanticProfile: 'default' });
-    assert.equal(result.issues.find(issue => issue.rule === 'semantic-token-available')?.repair, "Replace 'gap-2' with 'gap-rhythm-sm'.");
+    const issue = result.issues.find(candidate => candidate.rule === 'semantic-token-available');
+    assert.equal(issue?.semanticToken, 'gap-rhythm-sm');
+    assert.equal(issue?.approvedUtility, 'gap-2');
+    assert.match(issue?.repair ?? '', /Keep 'gap-2' as the executable class/);
   });
 
   it('suggests semantic tokens for hardcoded background utilities', () => {
@@ -259,15 +262,22 @@ describe('semantic validation', () => {
     assert(found.includes('semantic-hardcoded-typography'));
   });
 
-  it('accepts semantic token identities and approved structural exceptions', () => {
+  it('separates semantic identities from executable utility classes', () => {
     const found = semanticRules('<div class="gap-rhythm-sm p-density-base bg-surface-primary text-body border-subtle m-0 mx-auto bg-transparent"></div>');
-    assert(!found.includes('semantic-token-invalid'));
+    assert.equal(found.filter(rule => rule === 'semantic-token-as-utility').length, 5);
     assert(!found.includes('semantic-hardcoded-spacing'));
     assert(!found.includes('semantic-hardcoded-color'));
   });
 
+  it('does not classify non-color text, border, or background utilities as colors', () => {
+    const found = semanticRules('<div class="text-center text-lg border-2 border-dashed bg-cover bg-center bg-no-repeat"></div>');
+    assert(!found.includes('semantic-hardcoded-color'));
+    assert(found.includes('semantic-hardcoded-typography'));
+    assert(semanticRules('<div class="text-red-500 border-blue-500 bg-amber-100"></div>').filter(rule => rule === 'semantic-hardcoded-color').length === 3);
+  });
+
   it('rejects invalid semantic identities and arbitrary colors', () => {
-    const found = semanticRules('<div class="gap-rhythm-xl bg-[#123456] text-[oklch(50%_0.2_20)]"></div>');
+    const found = semanticRules('<div class="gap-rhythm-xxl bg-[#123456] text-[oklch(50%_0.2_20)]"></div>');
     assert(found.includes('semantic-token-invalid'));
     assert.equal(found.filter(rule => rule === 'arbitrary-color').length, 2);
   });
@@ -291,6 +301,11 @@ describe('semantic structure bindings', () => {
     assert(found.includes('duplicate-main-landmark'));
     assert(found.includes('duplicate-primary-heading'));
     assert(found.includes('structural-order'));
+  });
+
+  it('ignores nested component headers and footers for page ordering', () => {
+    const found = rules('<header>Page</header><main><article><footer>Card footer</footer><header>Card header</header></article></main><footer>Page footer</footer>');
+    assert(!found.includes('structural-order'));
   });
 
   it('validates unique safe macro anchors', () => {
@@ -343,5 +358,13 @@ describe('HTML parsing diagnostics', () => {
   it('handles well-formed HTML without diagnostics', () => {
     const result = parseHtmlWithDiagnostics('<div><p>Text</p></div>');
     assert.equal(result.diagnostics.length, 0);
+  });
+
+  it('returns bounded parser diagnostics with line and column', () => {
+    const result = validateComposition('<main>\n  </span>');
+    const diagnostic = result.issues.find(issue => issue.rule === 'html-parser-unmatched-closing-tag');
+    assert.equal(diagnostic?.line, 2);
+    assert.equal(diagnostic?.column, 3);
+    assert(result.issues.length <= 24);
   });
 });
