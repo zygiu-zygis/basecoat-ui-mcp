@@ -1,14 +1,74 @@
 // Author and maintainer: Žygimantas Jasiulionis / Intellmedia.
 import assert from 'node:assert/strict';
 import { execFile } from 'node:child_process';
-import { chmod, cp, mkdir, mkdtemp, readdir, rm, writeFile } from 'node:fs/promises';
+import { chmod, cp, mkdir, mkdtemp, readFile, readdir, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { pathToFileURL } from 'node:url';
+import { fileURLToPath } from 'node:url';
 import { promisify } from 'node:util';
 import test from 'node:test';
+import { Client } from '@modelcontextprotocol/sdk/client/index.js';
+import { StdioClientTransport } from '@modelcontextprotocol/sdk/client/stdio.js';
 
 const execFileAsync = promisify(execFile);
+const offlineFixture = fileURLToPath(new URL('./fixtures/offline.mjs', import.meta.url));
+
+async function makeReadOnly(directory: string): Promise<void> {
+  for (const entry of await readdir(directory, { withFileTypes: true })) {
+    const path = join(directory, entry.name);
+    if (entry.isSymbolicLink()) continue;
+    if (entry.isDirectory()) {
+      await makeReadOnly(path);
+      await chmod(path, 0o555);
+    } else {
+      await chmod(path, 0o444);
+    }
+  }
+  await chmod(directory, 0o555);
+}
+
+async function makeWritable(directory: string): Promise<void> {
+  await chmod(directory, 0o755);
+  for (const entry of await readdir(directory, { withFileTypes: true })) {
+    const path = join(directory, entry.name);
+    if (entry.isSymbolicLink()) continue;
+    if (entry.isDirectory()) {
+      await makeWritable(path);
+    } else {
+      await chmod(path, 0o644);
+    }
+  }
+}
+
+async function copyProductionDependencies(packageRoot: string): Promise<void> {
+  const queue = ['@modelcontextprotocol/sdk', 'zod'];
+  const copied = new Set<string>();
+  while (queue.length > 0) {
+    const name = queue.shift()!;
+    if (copied.has(name)) continue;
+    const source = join(process.cwd(), 'node_modules', ...name.split('/'));
+    const destination = join(packageRoot, 'node_modules', ...name.split('/'));
+    try {
+      const manifest = JSON.parse(await readFile(join(source, 'package.json'), 'utf8')) as {
+        dependencies?: Record<string, string>;
+        optionalDependencies?: Record<string, string>;
+        peerDependencies?: Record<string, string>;
+      };
+      await mkdir(join(destination, '..'), { recursive: true });
+      await cp(source, destination, { recursive: true });
+      copied.add(name);
+      for (const dependency of Object.keys({
+        ...manifest.dependencies,
+        ...manifest.optionalDependencies,
+        ...manifest.peerDependencies,
+      })) {
+        queue.push(dependency);
+      }
+    } catch (error) {
+      if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error;
+    }
+  }
+}
 
 test('npm package contains runtime, snapshots, source contracts, and no workflow files', { timeout: 30_000 }, async () => {
   const { stdout } = await execFileAsync('npm', ['pack', '--dry-run', '--json', '--ignore-scripts'], {
@@ -35,60 +95,48 @@ test('npm package contains runtime, snapshots, source contracts, and no workflow
   assert([...paths].every(path => !path.startsWith('.github/workflows/')));
 });
 
-test('compiled semantics starts offline from a read-only installed package tree', async () => {
+test('packed MCP bin starts offline from a read-only installed package tree', { timeout: 60_000 }, async () => {
   const temp = await mkdtemp(join(tmpdir(), 'basecoat-installed-'));
   const packageRoot = join(temp, 'package');
-  const makeReadOnly = async (directory: string): Promise<void> => {
-    for (const entry of await readdir(directory, { withFileTypes: true })) {
-      const path = join(directory, entry.name);
-      if (entry.isDirectory()) {
-        await makeReadOnly(path);
-        await chmod(path, 0o555);
-      } else {
-        await chmod(path, 0o444);
-      }
-    }
-    await chmod(directory, 0o555);
-  };
-  const makeWritable = async (directory: string): Promise<void> => {
-    await chmod(directory, 0o755);
-    for (const entry of await readdir(directory, { withFileTypes: true })) {
-      const path = join(directory, entry.name);
-      if (entry.isDirectory()) {
-        await makeWritable(path);
-      } else {
-        await chmod(path, 0o644);
-      }
-    }
-  };
+  const hostRoot = join(temp, 'host-project');
+  let client: Client | undefined;
   try {
-    await mkdir(join(packageRoot, 'src', 'semantics'), { recursive: true });
-    await cp(join(process.cwd(), 'dist'), join(packageRoot, 'dist'), { recursive: true });
-    await cp(
-      join(process.cwd(), 'src', 'semantics', 'semantics.snapshot.json'),
-      join(packageRoot, 'src', 'semantics', 'semantics.snapshot.json'),
+    const { stdout } = await execFileAsync(
+      'npm',
+      ['pack', '--json', '--ignore-scripts', '--pack-destination', temp],
+      { cwd: process.cwd(), maxBuffer: 4 * 1024 * 1024 },
     );
-    await mkdir(join(packageRoot, 'node_modules'), { recursive: true });
-    await cp(
-      join(process.cwd(), 'node_modules', 'zod'),
-      join(packageRoot, 'node_modules', 'zod'),
-      { recursive: true },
-    );
-    await writeFile(join(packageRoot, 'package.json'), '{"type":"module"}\n');
+    const reports = JSON.parse(stdout) as Array<{ filename: string }>;
+    assert.equal(reports.length, 1);
+    await execFileAsync('tar', ['-xzf', join(temp, reports[0]!.filename), '-C', temp]);
+    await copyProductionDependencies(packageRoot);
+    await mkdir(hostRoot);
     await makeReadOnly(packageRoot);
 
-    const moduleUrl = pathToFileURL(join(packageRoot, 'dist', 'semantics', 'index.js')).href;
-    const offlineFixture = join(process.cwd(), 'tests', 'fixtures', 'offline.mjs');
-    const { stdout, stderr } = await execFileAsync(process.execPath, [
-      '--import',
-      offlineFixture,
-      '--input-type=module',
-      '--eval',
-      `const mod = await import(${JSON.stringify(moduleUrl)}); console.log(mod.defaultSemanticsStore.getRevision());`,
-    ], { cwd: packageRoot });
-    assert.match(stdout.trim(), /^[a-f0-9]{64}$/);
+    const transport = new StdioClientTransport({
+      command: process.execPath,
+      args: [
+        '--import',
+        offlineFixture,
+        join(packageRoot, 'dist', 'server', 'stdio.js'),
+        '--project-root',
+        hostRoot,
+      ],
+      cwd: hostRoot,
+      stderr: 'pipe',
+    });
+    let stderr = '';
+    transport.stderr?.on('data', (chunk: Buffer) => { stderr += chunk.toString(); });
+    client = new Client({ name: 'packed-package-contract-test', version: '1.0.0' });
+    await client.connect(transport);
+    assert.equal(client.getServerVersion()?.name, 'basecoat-ui-mcp');
+    assert.equal(client.getServerVersion()?.version, '1.1.0');
+    const { tools } = await client.listTools();
+    assert.equal(tools.length, 11);
+    assert(tools.some(tool => tool.name === 'validate_composition'));
     assert.equal(stderr, '');
   } finally {
+    await client?.close().catch(() => undefined);
     await makeWritable(packageRoot).catch(() => undefined);
     await rm(temp, { recursive: true, force: true });
   }

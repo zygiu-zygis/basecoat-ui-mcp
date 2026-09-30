@@ -46,7 +46,11 @@ The compiled entry can also be invoked directly:
 
 Published packages include prebuilt `dist/` and the immutable semantic snapshot
 under `src/semantics/`. Server startup reads that snapshot and does not write
-inside the installed package. A source checkout does not include `dist/`.
+inside the installed package. The package contract test builds first, creates
+and extracts an actual npm tarball, marks the extracted package tree read-only,
+starts its `dist/server/stdio.js` under a network tripwire, completes MCP
+initialize and tool-list requests, and closes the connection. A source checkout
+does not include `dist/`.
 
 ### From source
 
@@ -66,6 +70,9 @@ The configured root controls two things:
 
 - `DESIGN.md` is read from that directory by `basecoat://project/context`.
 - Persistent macro sessions are stored under `<project-root>/.basecoat/designer/`.
+- `.basecoat/rhythm.json` is an optional strict override. It must be a regular,
+  non-symlink file no larger than 65,536 UTF-8 bytes; missing or rejected files
+  leave the packaged profile unchanged.
 
 Only that exact directory is used. The server does not walk parent directories. Keep `.basecoat/` in the host project and back it up if design sessions are part of your workflow. The MCP server never writes host application source files.
 
@@ -204,19 +211,17 @@ registry. It does not refresh shadcn mappings or macro blocks.
 Install dependencies with `npm ci`, then run the focused checks:
 
 ```sh
-npm run typecheck
-npm run build
-npm run compile:semantics:check
-npm run compile:blocks:check
-npm run test
+npm run check
 npm pack --dry-run
 npm audit --omit=dev
 ```
 
-`npm run test` builds first and runs the Node test suite. `npm pack --dry-run`
-checks the package file allowlist without creating a tarball. `npm audit --omit=dev`
-checks production dependencies against the npm advisory database and therefore
-requires network access. Maintainers can
+`npm run check` type-checks, verifies both compiled snapshots, builds and runs
+the Node test suite, and checks the branch diff for whitespace errors. The test
+suite also exercises the packed read-only MCP bin offline. `npm pack --dry-run`
+checks the package file allowlist without retaining a tarball.
+`npm audit --omit=dev` checks production dependencies against the npm advisory
+database and therefore requires network access. Maintainers can
 verify the pinned Basecoat source with:
 
 ```sh

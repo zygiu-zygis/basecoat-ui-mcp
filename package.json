@@ -51,6 +51,7 @@
   "scripts": {
     "prepack": "npm run build",
     "build": "tsc -p tsconfig.json",
+    "check": "npm run typecheck && npm run compile:semantics:check && npm run compile:blocks:check && npm test && git diff --check origin/main",
     "start": "node dist/server/stdio.js",
     "test": "npm run build && node --import tsx --test tests/*.test.ts",
     "typecheck": "tsc -p tsconfig.check.json",

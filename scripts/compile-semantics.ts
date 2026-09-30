@@ -10,20 +10,20 @@ const CHECK_MODE = process.argv.includes('--check');
 
 async function main(): Promise<void> {
   console.log('Compiling semantic design system...');
-  
+
   const { registry, diagnostics } = compileSemantics(DEFAULT_SEMANTICS_INPUT);
-  
+
   // Report diagnostics
   const errors = diagnostics.filter(d => d.severity === 'error');
   const warnings = diagnostics.filter(d => d.severity === 'warning');
-  
+
   if (warnings.length > 0) {
     console.warn('\nWarnings:');
     for (const warning of warnings) {
       console.warn(`  ${warning.code}: ${warning.message}`);
     }
   }
-  
+
   if (errors.length > 0) {
     console.error('\nErrors:');
     for (const error of errors) {
@@ -31,23 +31,23 @@ async function main(): Promise<void> {
     }
     process.exit(1);
   }
-  
+
   console.log(`OK: Compilation successful (${warnings.length} warnings)`);
   console.log(`  Registry revision: ${registry.revision}`);
   console.log(`  Rhythm profiles: ${Object.keys(registry.rhythmProfiles).length}`);
   console.log(`  FSM recipes: ${Object.keys(registry.fsmRecipes).length}`);
   console.log(`  Aliases: ${Object.keys(registry.aliases).length}`);
-  
+
   // Write snapshot
   const snapshotPath = join(dirname(new URL(import.meta.url).pathname), '../src/semantics/semantics.snapshot.json');
-  
+
   if (CHECK_MODE) {
     // Check if existing snapshot matches
     if (existsSync(snapshotPath)) {
       const { readFileSync } = await import('node:fs');
       const existing = readFileSync(snapshotPath, 'utf8');
       const expectedContent = canonicalJson(registry);
-      
+
       if (existing.trim() === expectedContent.trim()) {
         console.log('OK: Existing snapshot is up to date');
         return;
@@ -60,17 +60,17 @@ async function main(): Promise<void> {
       process.exit(1);
     }
   }
-  
+
   // Ensure directory exists
   const dir = dirname(snapshotPath);
   if (!existsSync(dir)) {
     mkdirSync(dir, { recursive: true });
   }
-  
+
   // Write snapshot
   const content = canonicalJson(registry);
   writeFileSync(snapshotPath, content, 'utf8');
-  
+
   console.log(`OK: Snapshot written: ${snapshotPath}`);
 }
 

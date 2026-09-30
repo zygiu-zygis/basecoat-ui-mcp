@@ -16,7 +16,10 @@ Maintained by **Žygimantas Jasiulionis / Intellmedia**.
 - Added canonical record, alias, and revision verification for the packaged semantic snapshot.
 - Restored the `gap-12` major-section contract as `gap-rhythm-xl`.
 - Hardened immutable publication ordering around directory fsync without reporting a failed mutation after its final link is visible.
-- Verified read-only installed-package startup with an offline network tripwire.
+- Fixed HTML diagnostics to retain exact opening positions and report inner elements implicitly closed by mismatched nesting.
+- Bounded project rhythm overrides to 65,536 UTF-8 bytes and refuse symlinks or non-regular files before reading.
+- Verified the actual packed `dist/server/stdio.js` from a read-only extracted npm tarball with offline MCP initialize and tool-list requests.
+- Added `npm run check` for type-checking, both snapshot checks, tests, and branch whitespace validation.
 - The package remains at version 1.1.0. Release these changes as 1.2.0 after maintainer review.
 
 ## 1.1.0 - 2026-09-30

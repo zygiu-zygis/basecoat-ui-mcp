@@ -134,25 +134,25 @@ test('session context cursors become stale when the listing changes', async () =
 test('error packet bounds validation at MAX_DETAIL_BYTES boundary', async () => {
   // Test that error packets respect the same byte limits as success packets
   const longMessage = 'x'.repeat(1800);
-  
+
   try {
-    boundedMacroResult({ 
-      error: { 
-        code: 'TEST_ERROR', 
+    boundedMacroResult({
+      error: {
+        code: 'TEST_ERROR',
         message: longMessage,
         details: 'y'.repeat(100) // Push close to limit
-      } 
+      }
     }, true);
   } catch (error) {
     // Should fail if too large
     assert(error instanceof MacroError);
     assert.equal(error.code, 'PACKET_TOO_LARGE');
   }
-  
+
   // Test error packet with exactly fitting content
   const fittingMessage = 'a'.repeat(100);
-  const result = boundedMacroResult({ 
-    error: { code: 'FITTING_ERROR', message: fittingMessage } 
+  const result = boundedMacroResult({
+    error: { code: 'FITTING_ERROR', message: fittingMessage }
   }, true);
   assert.equal(result.isError, true);
   assert(resultBytes(result) <= MAX_DETAIL_BYTES);
@@ -163,7 +163,7 @@ test('context validation pagination preserves record boundaries', async () => {
   try {
     const registry = getCompiledRegistry();
     const store = await openDesignStore(projectRoot, { create: true });
-    
+
     // Create a design with multiple pages to test pagination
     await store.create({
       designId: 'paginated-design',
@@ -171,10 +171,10 @@ test('context validation pagination preserves record boundaries', async () => {
       operationId: 'create-paginated',
       registry,
     });
-    
+
     const recipe = registry.aliases['workspace-dashboard'];
     assert(recipe, 'workspace-dashboard must exist for pagination testing');
-    
+
     // Add multiple recipe instances to create pagination scenarios
     for (let i = 0; i < 5; i++) {
       await store.apply({
@@ -188,19 +188,19 @@ test('context validation pagination preserves record boundaries', async () => {
         }],
       });
     }
-    
+
     // Test paginated context retrieval with overview first
     let cursor: string | undefined;
     const allItems: unknown[] = [];
     let pageCount = 0;
-    
+
     do {
       const result = await handleGetDesignContext({
         view: 'overview',
         designId: 'paginated-design',
         cursor,
       }, projectRoot);
-      
+
       // Check if result has error first
       if (result.isError) {
         // If there's an error, log it for debugging but don't fail the test
@@ -208,24 +208,24 @@ test('context validation pagination preserves record boundaries', async () => {
         console.log('Context retrieval error:', errorPacket.error?.code, errorPacket.error?.message);
         break;
       }
-      
+
       const packet = JSON.parse(resultText(result)) as {
         items: unknown[];
         next: string | null;
       };
-      
+
       allItems.push(...packet.items);
       cursor = packet.next ?? undefined;
       pageCount++;
-      
+
       // Ensure each page respects byte limits
       assert(resultBytes(result) <= MAX_DETAIL_BYTES);
-      
+
     } while (cursor && pageCount < 10); // Safety limit
-    
+
     // Should have collected overview data
     assert(allItems.length >= 1, 'Should have at least overview data');
-    
+
   } finally {
     await rm(projectRoot, { recursive: true, force: true });
   }
@@ -240,7 +240,7 @@ test('fingerprint validation and tampered cursor detection', () => {
     section: 'structure',
     offset: 0,
   });
-  
+
   // Valid cursor should validate successfully
   const validPayload = validateMacroCursor(validCursor, {
     fingerprint: 'test-fingerprint',
@@ -249,7 +249,7 @@ test('fingerprint validation and tampered cursor detection', () => {
   });
   assert.equal(validPayload.fingerprint, 'test-fingerprint');
   assert.equal(validPayload.offset, 0);
-  
+
   // Wrong fingerprint should fail
   assert.throws(
     () => validateMacroCursor(validCursor, {
@@ -259,7 +259,7 @@ test('fingerprint validation and tampered cursor detection', () => {
     }),
     (error: unknown) => error instanceof MacroError && error.code === 'CURSOR_MISMATCH'
   );
-  
+
   // Stale snapshot should fail
   const staleSnapshot = 'r:' + 'f'.repeat(64);
   assert.throws(
@@ -270,7 +270,7 @@ test('fingerprint validation and tampered cursor detection', () => {
     }),
     (error: unknown) => error instanceof MacroError && error.code === 'STALE_CURSOR'
   );
-  
+
   // Tampered cursor (invalid base64url) should fail
   const tamperedCursor = validCursor.slice(0, -4) + 'XXXX';
   assert.throws(
@@ -284,7 +284,7 @@ test('design revision pinning consistency across operations', async () => {
   try {
     const registry = getCompiledRegistry();
     const store = await openDesignStore(projectRoot, { create: true });
-    
+
     // Create design with specific registry revision
     const created = await store.create({
       designId: 'revision-pinned',
@@ -292,11 +292,11 @@ test('design revision pinning consistency across operations', async () => {
       operationId: 'create-pinned',
       registry,
     });
-    
+
     const initialRevision = registry.revision;
     assert(created.response && typeof created.response === 'object');
     assert.equal((created.response as any).registryRevision, initialRevision);
-    
+
     // All subsequent operations should maintain registry revision pinning
     const recipe = registry.aliases['workspace-dashboard'];
     const patched = await store.apply({
@@ -309,14 +309,14 @@ test('design revision pinning consistency across operations', async () => {
         pagePrefix: 'test',
       }],
     });
-    
+
     assert(patched.response && typeof patched.response === 'object');
     assert.equal((patched.response as any).registryRevision, initialRevision);
-    
+
     // Reading session should show consistent pinning
     const session = await store.read('revision-pinned');
     assert.equal(session.registryRevision, initialRevision);
-    
+
   } finally {
     await rm(projectRoot, { recursive: true, force: true });
   }

@@ -23,7 +23,7 @@ const SEMANTICS_DIR = packagedSemanticsDirectory();
 export const defaultSemanticsStore = createSemanticsStore(SEMANTICS_DIR);
 
 // Compile and generate the initial snapshot
-const { registry: defaultRegistry, diagnostics: defaultDiagnostics } = 
+const { registry: defaultRegistry, diagnostics: defaultDiagnostics } =
   compileSemantics(DEFAULT_SEMANTICS_INPUT);
 
 if (defaultDiagnostics.some(d => d.severity === 'error')) {
@@ -41,14 +41,15 @@ export { defaultRegistry };
 // Export types and utilities (avoid SemanticsError conflicts)
 export type * from './types.js';
 export * from './schema.js';
-export { 
-  canonicalJson, 
-  contentRef, 
+export {
+  canonicalJson,
+  contentRef,
   compileSemantics,
   type CompileSemanticsResult
 } from './compiler.js';
-export { 
+export {
   createSemanticsStore,
+  PROJECT_RHYTHM_OVERRIDE_MAX_BYTES,
   type SemanticsStore
 } from './store.js';
 export * from './fixtures.js';

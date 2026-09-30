@@ -1,6 +1,15 @@
 // Author & maintainer: Žygimantas Jasiulionis / Intellmedia.
 // Immutable semantics registry store with content-addressed snapshots.
-import { readFileSync, existsSync } from 'node:fs';
+import {
+  closeSync,
+  constants,
+  existsSync,
+  fstatSync,
+  lstatSync,
+  openSync,
+  readFileSync,
+  readSync,
+} from 'node:fs';
 import { join } from 'node:path';
 import { compileSemantics, contentRef } from './compiler.js';
 import { compiledSemanticsRegistrySchema } from './schema.js';
@@ -12,6 +21,48 @@ import type {
 } from './types.js';
 import { projectRhythmOverrideSchema } from './schema.js';
 
+export const PROJECT_RHYTHM_OVERRIDE_MAX_BYTES = 65_536;
+
+function readProjectRhythmOverride(path: string): string | null {
+  let pathStat;
+  try {
+    pathStat = lstatSync(path);
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === 'ENOENT') return null;
+    throw error;
+  }
+  if (pathStat.isSymbolicLink() || !pathStat.isFile()) return null;
+
+  let descriptor: number | undefined;
+  try {
+    descriptor = openSync(
+      path,
+      constants.O_RDONLY | constants.O_NOFOLLOW | constants.O_NONBLOCK,
+    );
+    const fileStat = fstatSync(descriptor);
+    if (
+      !fileStat.isFile()
+      || fileStat.dev !== pathStat.dev
+      || fileStat.ino !== pathStat.ino
+      || fileStat.size > PROJECT_RHYTHM_OVERRIDE_MAX_BYTES
+    ) {
+      return null;
+    }
+
+    const content = Buffer.alloc(PROJECT_RHYTHM_OVERRIDE_MAX_BYTES + 1);
+    let length = 0;
+    while (length < content.length) {
+      const bytesRead = readSync(descriptor, content, length, content.length - length, null);
+      if (bytesRead === 0) break;
+      length += bytesRead;
+    }
+    if (length > PROJECT_RHYTHM_OVERRIDE_MAX_BYTES) return null;
+    return content.toString('utf8', 0, length);
+  } finally {
+    if (descriptor !== undefined) closeSync(descriptor);
+  }
+}
+
 export class SemanticsError extends Error {
   constructor(public readonly code: string, message: string) {
     super(message);
@@ -22,10 +73,10 @@ export class SemanticsError extends Error {
 export interface SemanticsStore {
   /** Get the compiled registry snapshot. */
   getRegistry(): CompiledSemanticsRegistry;
-  
+
   /** Get effective rhythm profile with project overrides applied. */
   getEffectiveRhythmProfile(profileId: Id, projectRoot?: string): CompiledRhythmProfile;
-  
+
   /** Get the current registry revision. */
   getRevision(): Ref;
 }
@@ -51,10 +102,10 @@ export class FileSemanticsStore implements SemanticsStore {
     try {
       const content = readFileSync(this.snapshotPath, 'utf8');
       const parsed = JSON.parse(content);
-      
+
       // Validate snapshot schema
       const validatedRegistry = compiledSemanticsRegistrySchema.parse(parsed);
-      
+
       for (const [ref, profile] of Object.entries(validatedRegistry.rhythmProfiles)) {
         if (contentRef(profile) !== ref) {
           throw new SemanticsError('RECORD_REF_MISMATCH', `Rhythm profile record key does not match content: ${profile.id}`);
@@ -83,7 +134,7 @@ export class FileSemanticsStore implements SemanticsStore {
           .sort()
           .map(id => [id, validatedRegistry.aliases[id]]),
       });
-      
+
       if (expectedRevision !== validatedRegistry.revision) {
         throw new SemanticsError(
           'REVISION_MISMATCH',
@@ -115,7 +166,7 @@ export class FileSemanticsStore implements SemanticsStore {
   getEffectiveRhythmProfile(profileId: Id, projectRoot?: string): CompiledRhythmProfile {
     const registry = this.getRegistry();
     const profileRef = registry.aliases[profileId];
-    
+
     if (!profileRef) {
       throw new SemanticsError('PROFILE_NOT_FOUND', `Rhythm profile not found: ${profileId}`);
     }
@@ -132,12 +183,9 @@ export class FileSemanticsStore implements SemanticsStore {
 
     // Try to load project override
     const overridePath = join(projectRoot, '.basecoat', 'rhythm.json');
-    if (!existsSync(overridePath)) {
-      return baseProfile;
-    }
-
     try {
-      const overrideContent = readFileSync(overridePath, 'utf8');
+      const overrideContent = readProjectRhythmOverride(overridePath);
+      if (overrideContent === null) return baseProfile;
       const overrideData = JSON.parse(overrideContent);
       const override = projectRhythmOverrideSchema.parse(overrideData);
 
@@ -158,7 +206,7 @@ export class FileSemanticsStore implements SemanticsStore {
 
         // Create mapping ID set for overrides
         const overrideIds = new Set(overrideMappingsForFamily.map(m => m.id));
-        
+
         // Keep base mappings not overridden, add override mappings
         const effectiveMappings = [
           ...family.mappings.filter(mapping => !overrideIds.has(mapping.id)),

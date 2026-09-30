@@ -486,11 +486,11 @@ test('missing pinned snapshots fail gracefully with STALE_CURSOR', async () => {
       operationId: 'op-create',
       registry,
     });
-    
+
     // Remove the pinned registry to simulate missing snapshot
     const registryPath = join(store.getDesignerRoot(), 'registries', `${registry.revision}.json`);
     await unlink(registryPath);
-    
+
     // Reading with missing pinned registry should fail
     await assert.rejects(
       () => store.loadRegistry(registry.revision),
@@ -502,7 +502,7 @@ test('missing pinned snapshots fail gracefully with STALE_CURSOR', async () => {
 test('registry revision pinning survives concurrent operations', async () => {
   await withProject(async (projectRoot, registry) => {
     const store = await openFilesystemDesignStore(projectRoot, { create: true });
-    
+
     // Create a design session with the registry
     await store.create({
       designId: 'session-pin-test',
@@ -510,16 +510,16 @@ test('registry revision pinning survives concurrent operations', async () => {
       operationId: 'op-create',
       registry,
     });
-    
+
     // Simulate concurrent registry access by creating multiple stores that will pin the registry
     const promises = Array.from({ length: 5 }, async (_, i) => {
       const concurrentStore = await openFilesystemDesignStore(projectRoot, { create: false });
       return concurrentStore.loadRegistry(registry.revision);
     });
-    
+
     // All should succeed without conflicts
     const results = await Promise.all(promises);
-    
+
     // All results should be identical
     for (const loaded of results) {
       assert.equal(loaded.revision, registry.revision);
@@ -536,10 +536,10 @@ test('legal explicit null precedence in decisions', async () => {
     type: 'null',
     allowPageOverride: true,
   };
-  
+
   await withProject(async (projectRoot) => {
     const store = await openDesignStore(projectRoot, { create: true });
-    
+
     // Create with explicit null decision
     await store.create({
       designId: 'null-test',
@@ -548,10 +548,10 @@ test('legal explicit null precedence in decisions', async () => {
       registry: nullRegistry,
       decisions: { nullableFlag: null },
     });
-    
+
     const session = await store.read('null-test');
     assert.strictEqual(session.projectDecisions.nullableFlag, null);
-    
+
     // Apply patch with explicit null at page level
     const recipe = nullRegistry.aliases['leaf-recipe']!;
     await store.apply({
@@ -569,7 +569,7 @@ test('legal explicit null precedence in decisions', async () => {
         },
       ],
     });
-    
+
     const updated = await store.read('null-test');
     assert.strictEqual(updated.pages['null-home']?.decisions.nullableFlag, null);
   });
@@ -578,7 +578,7 @@ test('legal explicit null precedence in decisions', async () => {
 test('deterministic next-step tie resolution', async () => {
   await withProject(async (projectRoot, registry) => {
     const store = await openDesignStore(projectRoot, { create: true });
-    
+
     // Create multiple designs with similar characteristics to test tie-breaking
     const designs = ['tie-a', 'tie-b', 'tie-c'];
     for (const designId of designs) {
@@ -589,7 +589,7 @@ test('deterministic next-step tie resolution', async () => {
         registry,
       });
     }
-    
+
     // Get context for each design - results should be deterministic
     const contexts = [];
     for (const designId of designs) {
@@ -600,7 +600,7 @@ test('deterministic next-step tie resolution', async () => {
         status: 'empty' as const,
       });
     }
-    
+
     // Sort should be deterministic by design ID
     contexts.sort((a, b) => a.designId.localeCompare(b.designId));
     assert.deepEqual(
@@ -654,16 +654,16 @@ test('replay protection uses a genuine child-process race', async () => {
 test('auth entry resolution with prefixed operations', async () => {
   await withProject(async (projectRoot, registry) => {
     const store = await openDesignStore(projectRoot, { create: true });
-    
+
     await store.create({
       designId: 'auth-prefix-test',
       profile: registry.aliases['store-profile']!,
       operationId: 'create-auth',
       registry,
     });
-    
+
     const recipe = registry.aliases['leaf-recipe']!;
-    
+
     // Apply operations with deterministic prefixing
     await store.apply({
       designId: 'auth-prefix-test',
@@ -673,7 +673,7 @@ test('auth entry resolution with prefixed operations', async () => {
         { op: 'instantiate_recipe', recipe, pagePrefix: 'alpha' },
       ],
     });
-    
+
     await store.apply({
       designId: 'auth-prefix-test',
       expectedRevision: 1,
@@ -682,15 +682,15 @@ test('auth entry resolution with prefixed operations', async () => {
         { op: 'instantiate_recipe', recipe, pagePrefix: 'beta' },
       ],
     });
-    
+
     const session = await store.read('auth-prefix-test');
-    
+
     // Verify prefixed pages exist with correct structure
     assert('alpha-home' in session.pages);
     assert('beta-home' in session.pages);
     assert.equal(session.pages['alpha-home']?.recipe, recipe);
     assert.equal(session.pages['beta-home']?.recipe, recipe);
-    
+
     // Operation IDs should be resolvable in receipts
     assert('prefix-alpha' in session.receipts);
     assert('prefix-beta' in session.receipts);

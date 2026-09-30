@@ -432,22 +432,22 @@ test('canonical hash stability across serialization variations', () => {
   const data1 = { z: 'last', a: 'first', m: 'middle' };
   const data2 = { a: 'first', m: 'middle', z: 'last' };
   const data3 = { m: 'middle', z: 'last', a: 'first' };
-  
+
   const hash1 = contentRef(data1);
   const hash2 = contentRef(data2);
   const hash3 = contentRef(data3);
-  
+
   assert.equal(hash1, hash2);
   assert.equal(hash2, hash3);
   assert.equal(hash1.length, 64); // SHA-256 hex length
-  
+
   // Test with arrays (order should be preserved)
   const arrayData1 = { items: [1, 2, 3] };
   const arrayData2 = { items: [3, 2, 1] };
-  
+
   const arrayHash1 = contentRef(arrayData1);
   const arrayHash2 = contentRef(arrayData2);
-  
+
   assert.notEqual(arrayHash1, arrayHash2, 'Array order should affect hash');
 });
 
@@ -456,14 +456,14 @@ test('packet boundary enforcement with multibyte characters and edge cases', () 
   const multibyte = '界界界界界'; // Each character is 3 bytes in UTF-8
   const fourByte = '𐍈𐍈𐍈𐍈𐍈'; // Each character is 4 bytes in UTF-8
   const mixed = `test-${multibyte}-${fourByte}`;
-  
+
   const cursorFactory = createCursorFactory({
     v: 1,
     fingerprint: 'boundary-test',
     snapshot: 'r:' + '0'.repeat(64),
     section: 'structure',
   });
-  
+
   // Test with records containing multibyte content
   const records = [
     { id: 'ascii', content: 'simple-ascii-content' },
@@ -471,7 +471,7 @@ test('packet boundary enforcement with multibyte characters and edge cases', () 
     { id: 'four-byte', content: fourByte.repeat(5) },
     { id: 'mixed', content: mixed.repeat(3) },
   ];
-  
+
   try {
     const result = pageRecords(
       records,
@@ -479,15 +479,15 @@ test('packet boundary enforcement with multibyte characters and edge cases', () 
       { kind: 'test', section: 'boundary' },
       cursorFactory,
     );
-    
+
     assert(resultBytes(result) <= MAX_DETAIL_BYTES);
-    
+
     const parsed = JSON.parse((result.content[0] as { text: string }).text);
     assert(Array.isArray(parsed.items));
-    
+
     // Should include at least the first record
     assert(parsed.items.length >= 1);
-    
+
   } catch (error) {
     if (error instanceof MacroError && error.code === 'ATOM_TOO_LARGE') {
       // Expected if single record exceeds budget
@@ -502,23 +502,23 @@ test('registry validation detects hash mismatches and reference integrity', () =
   // Create a registry with intentionally corrupted content refs
   const validBlock = leafBlock('valid-test');
   const { registry } = compileRegistry(inputWith([validBlock]));
-  
+
   // Tamper with block content while keeping the original ref
   const blockRef = registry.aliases['valid-test']!;
   const tamperedRegistry = structuredClone(registry);
   tamperedRegistry.blocks[blockRef]!.description = 'TAMPERED CONTENT';
-  
+
   // Validation should detect the hash mismatch
   const diagnostics = validateRegistry(tamperedRegistry);
   assert(
     diagnostics.some(d => d.code === 'HASH_MISMATCH' && d.severity === 'error'),
     'Should detect hash mismatch in tampered registry'
   );
-  
+
   // Test dangling alias detection
   const danglingRegistry = structuredClone(registry);
   danglingRegistry.aliases['dangling'] = 'f'.repeat(64);
-  
+
   const danglingDiagnostics = validateRegistry(danglingRegistry);
   assert(
     danglingDiagnostics.some(d => d.code === 'DANGLING_ALIAS'),
@@ -530,37 +530,37 @@ test('fragment packet budget enforcement prevents truncation', () => {
   // Test that oversized fragments fail cleanly without silent truncation
   const maxEmmet = 'x'.repeat(LIMITS.emmetMax - 1); // Just under limit
   const overEmmet = 'x'.repeat(LIMITS.emmetMax + 100); // Over limit
-  
+
   // Valid block should compile successfully
   const validBlock = leafBlock('max-valid', {
     fragments: [{ id: 'max-valid-root', emmet: maxEmmet }],
     root: 'max-valid-root',
     layout: { frameRef: 'max-valid-root' },
   });
-  
+
   const validResult = compileRegistry(inputWith([validBlock]));
   assert.equal(
     validResult.diagnostics.filter(d => d.severity === 'error').length,
     0,
     'Valid max-size block should compile'
   );
-  
+
   // Oversized block should fail
   const oversizedBlock = leafBlock('over-sized', {
     fragments: [{ id: 'over-sized-root', emmet: overEmmet }],
     root: 'over-sized-root',
     layout: { frameRef: 'over-sized-root' },
   });
-  
+
   const oversizedResult = compileRegistry(inputWith([oversizedBlock]));
   const atomErrors = oversizedResult.diagnostics.filter(d => d.code === 'ATOM_TOO_LARGE');
-  
+
   if (atomErrors.length > 0) {
     assert.equal(atomErrors[0]!.severity, 'error');
     // Block should not be included in final registry
     assert.equal(oversizedResult.registry.aliases['over-sized'], undefined);
   }
-  
+
   // Verify original emmet content was not truncated during validation
   assert.equal(overEmmet.length, LIMITS.emmetMax + 100);
 });
@@ -571,29 +571,29 @@ test('dependency cycle detection in complex graphs', () => {
   const blockB = leafBlock('cycle-b', { dependencyBlockIds: ['cycle-c'] });
   const blockC = leafBlock('cycle-c', { dependencyBlockIds: ['cycle-a'] }); // Creates cycle
   const blockD = leafBlock('cycle-d', { dependencyBlockIds: ['cycle-b'] }); // Depends on cycle
-  
+
   const result = compileRegistry(inputWith([blockA, blockB, blockC, blockD]));
-  
+
   const cycleErrors = result.diagnostics.filter(d => d.code === 'DEPENDENCY_CYCLE');
   assert(cycleErrors.length > 0, 'Should detect dependency cycle');
-  
+
   // Blocks involved in cycles should not be compiled
-  const hasErrorBlocks = ['cycle-a', 'cycle-b', 'cycle-c'].some(id => 
+  const hasErrorBlocks = ['cycle-a', 'cycle-b', 'cycle-c'].some(id =>
     result.registry.aliases[id] !== undefined
   );
   assert.equal(hasErrorBlocks, false, 'Cycle participants should be excluded from registry');
-  
+
   // Independent block should still be rejected if it depends on cycle participants
   assert.equal(result.registry.aliases['cycle-d'], undefined, 'Dependents of failed blocks should also fail');
 });
 
 test('provenance tracking preserves source integrity across compilation', () => {
-  const sourceHashes = { 
-    primary: 'a'.repeat(64), 
+  const sourceHashes = {
+    primary: 'a'.repeat(64),
     secondary: 'b'.repeat(64),
     mapping: 'c'.repeat(64),
   };
-  
+
   const block = leafBlock('provenance-test', {
     provenance: {
       origin: 'adapted',
@@ -603,12 +603,12 @@ test('provenance tracking preserves source integrity across compilation', () => 
       upstreamItem: 'test-item-v1.2.3',
     },
   });
-  
+
   const { registry, diagnostics } = compileRegistry(inputWith([block]));
   assert.equal(diagnostics.filter(d => d.severity === 'error').length, 0);
-  
+
   const compiledBlock = registry.blocks[registry.aliases['provenance-test']!]!;
-  
+
   // Provenance should be preserved exactly
   assert.equal(compiledBlock.provenance.origin, 'adapted');
   assert.equal(compiledBlock.provenance.sourceKind, 'local-shadcn-registry-item');
@@ -621,17 +621,17 @@ test('registry revision calculation determinism', () => {
   // Registry revision should be deterministic based on content, not compilation order
   const blocksA = [leafBlock('alpha'), leafBlock('beta'), leafBlock('gamma')];
   const blocksB = [leafBlock('gamma'), leafBlock('alpha'), leafBlock('beta')]; // Different order
-  
+
   const registryA = compileRegistry(inputWith(blocksA));
   const registryB = compileRegistry(inputWith(blocksB));
-  
+
   // Both should have identical revisions despite different input order
   assert.equal(registryA.registry.revision, registryB.registry.revision);
   assert.deepEqual(
     Object.keys(registryA.registry.blocks).sort(),
     Object.keys(registryB.registry.blocks).sort()
   );
-  
+
   // Verify revision calculation includes all components
   const expectedComponents = {
     blocks: Object.keys(registryA.registry.blocks).sort(),
@@ -642,7 +642,7 @@ test('registry revision calculation determinism', () => {
       .sort()
       .map(id => [id, registryA.registry.aliases[id]]),
   };
-  
+
   const calculatedRevision = contentRef(expectedComponents);
   assert.equal(registryA.registry.revision, calculatedRevision);
 });

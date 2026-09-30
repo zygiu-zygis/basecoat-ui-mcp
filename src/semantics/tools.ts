@@ -117,10 +117,10 @@ export async function handleGetRhythmRules(
     ) {
       throw new MacroError('NOT_FOUND', `Unknown rhythm family: ${familyFilter}`);
     }
-    
+
     // Collect all rhythm rule entries
     const allEntries: RhythmRuleEntry[] = [];
-    
+
     const effectiveProfiles = Object.values(registry.rhythmProfiles)
       .map(profile => {
         const effective = defaultSemanticsStore.getEffectiveRhythmProfile(profile.id, projectRoot);
@@ -131,10 +131,10 @@ export async function handleGetRhythmRules(
 
     for (const { ref, profile } of effectiveProfiles) {
       if (profileFilter && profile.id !== profileFilter) continue;
-      
+
       for (const family of profile.families) {
         if (familyFilter && family.id !== familyFilter) continue;
-        
+
         for (const mapping of family.mappings) {
           allEntries.push({
             profileId: profile.id,
@@ -152,10 +152,10 @@ export async function handleGetRhythmRules(
     allEntries.sort((a, b) => {
       const profileCmp = a.profileId.localeCompare(b.profileId);
       if (profileCmp !== 0) return profileCmp;
-      
+
       const familyCmp = a.familyId.localeCompare(b.familyId);
       if (familyCmp !== 0) return familyCmp;
-      
+
       return a.mapping.id.localeCompare(b.mapping.id);
     });
 
@@ -213,13 +213,13 @@ export async function handleGetFsmRecipe(
     if (recipeFilter && !Object.values(registry.fsmRecipes).some(recipe => recipe.id === recipeFilter)) {
       throw new MacroError('NOT_FOUND', `Unknown FSM recipe: ${recipeFilter}`);
     }
-    
+
     // Collect all FSM recipe entries
     const allEntries: FsmRecipeEntry[] = [];
-    
+
     for (const [ref, recipe] of Object.entries(registry.fsmRecipes)) {
       if (recipeFilter && recipe.id !== recipeFilter) continue;
-      
+
       const sections = [
         { name: 'states', items: recipe.states },
         { name: 'events', items: recipe.events },
@@ -230,7 +230,7 @@ export async function handleGetFsmRecipe(
 
       for (const section of sections) {
         if (sectionFilter && section.name !== sectionFilter) continue;
-        
+
         for (const item of section.items) {
           allEntries.push({
             recipeId: recipe.id,
@@ -247,10 +247,10 @@ export async function handleGetFsmRecipe(
     allEntries.sort((a, b) => {
       const recipeCmp = a.recipeId.localeCompare(b.recipeId);
       if (recipeCmp !== 0) return recipeCmp;
-      
+
       const sectionCmp = a.section.localeCompare(b.section);
       if (sectionCmp !== 0) return sectionCmp;
-      
+
       const aId = typeof a.item === 'object' && a.item !== null && 'id' in a.item
         ? String(a.item.id)
         : '';

@@ -27,6 +27,8 @@ development-only.
 The package-facing commands are:
 
 - `npm run build` - compile `src/` to `dist/`.
+- `npm run check` - type-check, verify both compiled snapshots, build and test,
+  then check the complete working tree against `origin/main` for whitespace errors.
 - `npm run start` - run the compiled stdio server.
 - `npm run typecheck` - type-check with `tsconfig.check.json`.
 - `npm run test` - build, then run `tests/*.test.ts` with Node's test runner.
@@ -58,7 +60,7 @@ The semantic registry provides compiled rhythm profiles and FSM recipes from `sr
 
 Rhythm profiles keep a semantic ID separate from its approved Tailwind utility. The ID is design metadata; the utility is executable class text. FSM recipes define states, events, transitions, guards, and metadata-only actions. They are not runtime implementations.
 
-Both semantic tools use content-addressed refs, bounded pagination, and immutable snapshots like macro tools. The loader verifies every record key against its canonical content hash, checks alias targets and identities, then verifies the registry revision. Project-local rhythm overrides at `<projectRoot>/.basecoat/rhythm.json` produce an effective profile ref and revision without mutating the packaged snapshot. Changed overrides invalidate prior cursors.
+Both semantic tools use content-addressed refs, bounded pagination, and immutable snapshots like macro tools. The loader verifies every record key against its canonical content hash, checks alias targets and identities, then verifies the registry revision. Project-local rhythm overrides at `<projectRoot>/.basecoat/rhythm.json` produce an effective profile ref and revision without mutating the packaged snapshot. Overrides are limited to 65,536 UTF-8 bytes and are read only after symlink and regular-file checks. Missing, unsafe, oversized, malformed, or schema-invalid overrides leave the packaged profile unchanged. Changed valid overrides invalidate prior cursors.
 
 ## Package boundary
 
@@ -67,6 +69,12 @@ because `prepack` runs `npm run build`, and the `basecoat-ui-mcp` bin points at
 `dist/server/stdio.js`. The `files` allowlist still ships `src/`, scripts,
 tests, and documentation for source inspection. Cloned checkouts must run
 `npm run build` before `npm start`.
+
+The package contract test runs after the suite build, creates and extracts an
+actual npm tarball, copies the already-installed production dependency closure,
+marks the extracted package tree read-only, and starts the extracted
+`dist/server/stdio.js` with a network tripwire. It completes MCP initialize and
+tool-list requests before closing the stdio transport.
 
 ## Registry vs tools vs design resources
 

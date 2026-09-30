@@ -236,15 +236,15 @@ function compileRhythmProfile(
   authoring: AuthoringRhythmProfile,
 ): { ref: Ref; profile: CompiledRhythmProfile; diagnostics: SemanticsDiagnostic[] } {
   const diagnostics: SemanticsDiagnostic[] = [];
-  
+
   // Validate authoring schema
   const parsedAuthoring = authoringRhythmProfileSchema.safeParse(authoring);
   if (!parsedAuthoring.success) {
-    const schemaErrors = parsedAuthoring.error.issues.map(i => 
+    const schemaErrors = parsedAuthoring.error.issues.map(i =>
       `${i.path.join('.')}: ${i.message}`
     ).join('; ');
     diagnostics.push(diagnostic('SCHEMA_INVALID', schemaErrors, { id: authoring.id }));
-    
+
     // Return minimal valid structure for error case
     const errorProfile: CompiledRhythmProfile = {
       schemaVersion: 1,
@@ -257,13 +257,13 @@ function compileRhythmProfile(
   }
 
   const validated = parsedAuthoring.data;
-  
+
   // Check for required family types
   const requiredFamilies = ['spacing', 'typography'];
   for (const requiredFamily of requiredFamilies) {
     if (!validated.families.some(f => f.id === requiredFamily)) {
-      diagnostics.push(warning('MISSING_FAMILY', 
-        `Profile ${validated.id} missing recommended family: ${requiredFamily}`, 
+      diagnostics.push(warning('MISSING_FAMILY',
+        `Profile ${validated.id} missing recommended family: ${requiredFamily}`,
         { id: validated.id }
       ));
     }
@@ -292,11 +292,11 @@ function compileRhythmProfile(
 
   // Generate rhythm text
   compiled.rhythmText = generateRhythmText(compiled);
-  
+
   // Validate compiled schema
   const parsedCompiled = compiledRhythmProfileSchema.safeParse(compiled);
   if (!parsedCompiled.success) {
-    diagnostics.push(diagnostic('COMPILATION_FAILED', 
+    diagnostics.push(diagnostic('COMPILATION_FAILED',
       `Failed to compile rhythm profile: ${parsedCompiled.error.issues.map(i => i.message).join('; ')}`,
       { id: validated.id }
     ));
@@ -314,11 +314,11 @@ function compileFsmRecipe(
   // Validate authoring schema
   const parsedAuthoring = authoringFsmRecipeSchema.safeParse(authoring);
   if (!parsedAuthoring.success) {
-    const schemaErrors = parsedAuthoring.error.issues.map(i => 
+    const schemaErrors = parsedAuthoring.error.issues.map(i =>
       `${i.path.join('.')}: ${i.message}`
     ).join('; ');
     diagnostics.push(diagnostic('SCHEMA_INVALID', schemaErrors, { id: authoring.id }));
-    
+
     // Return minimal valid structure for error case
     const errorRecipe: CompiledFsmRecipe = {
       schemaVersion: 1,
@@ -344,7 +344,7 @@ function compileFsmRecipe(
   // Check for unreachable states
   const stateIds = new Set(validated.states.map(s => s.id));
   const reachableStates = new Set(initialStates);
-  
+
   // Simple reachability: follow transitions from initial states
   let changed = true;
   while (changed) {
@@ -356,10 +356,10 @@ function compileFsmRecipe(
       }
     }
   }
-  
+
   for (const stateId of stateIds) {
     if (!reachableStates.has(stateId)) {
-      diagnostics.push(warning('UNREACHABLE_STATE', 
+      diagnostics.push(warning('UNREACHABLE_STATE',
         `State ${stateId} is not reachable from any initial state`,
         { id: validated.id }
       ));
@@ -375,7 +375,7 @@ function compileFsmRecipe(
     }
     transitionKeys.get(key)!.push(transition.id);
   }
-  
+
   for (const [key, transitionIds] of transitionKeys) {
     if (transitionIds.length > 1) {
       diagnostics.push(diagnostic('NONDETERMINISTIC_TRANSITION',
@@ -418,7 +418,7 @@ export interface CompileSemanticsResult {
 
 export function compileSemantics(input: AuthoringSemanticsInput): CompileSemanticsResult {
   const diagnostics: SemanticsDiagnostic[] = [];
-  
+
   // Validate input schema
   const parsedInput = authoringSemanticsInputSchema.safeParse(input);
   if (!parsedInput.success) {
@@ -460,7 +460,7 @@ export function compileSemantics(input: AuthoringSemanticsInput): CompileSemanti
   for (const authoringProfile of authoring.rhythmProfiles) {
     const { ref, profile, diagnostics: profileDiagnostics } = compileRhythmProfile(authoringProfile);
     diagnostics.push(...profileDiagnostics);
-    
+
     if (!profileDiagnostics.some(d => d.severity === 'error')) {
       rhythmProfiles[ref] = profile;
       aliases[profile.id] = ref;
@@ -471,7 +471,7 @@ export function compileSemantics(input: AuthoringSemanticsInput): CompileSemanti
   for (const authoringRecipe of authoring.fsmRecipes) {
     const { ref, recipe, diagnostics: recipeDiagnostics } = compileFsmRecipe(authoringRecipe);
     diagnostics.push(...recipeDiagnostics);
-    
+
     if (!recipeDiagnostics.some(d => d.severity === 'error')) {
       fsmRecipes[ref] = recipe;
       aliases[recipe.id] = ref;

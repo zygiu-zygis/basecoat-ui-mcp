@@ -325,6 +325,56 @@ describe('semantic structure bindings', () => {
 });
 
 describe('HTML parsing diagnostics', () => {
+  it('reports a multiline unclosed element at its opening position', () => {
+    const result = parseHtmlWithDiagnostics('<div>\n<span>');
+    const span = result.diagnostics.find(diagnostic => diagnostic.message.includes('<span>'));
+    assert.equal(span?.line, 2);
+    assert.equal(span?.column, 1);
+  });
+
+  it('reports inner elements implicitly closed by mismatched nesting', () => {
+    const result = parseHtmlWithDiagnostics('<div><span></div>');
+    assert.deepEqual(
+      result.diagnostics.map(diagnostic => [diagnostic.code, diagnostic.message]),
+      [['unclosed-tag', 'Unclosed tag <span> before closing </div>']],
+    );
+  });
+
+  it('reports every element left unclosed at end of input', () => {
+    const result = parseHtmlWithDiagnostics('<main>\n<section>\n<p>');
+    assert.deepEqual(
+      result.diagnostics.map(diagnostic => [
+        diagnostic.message,
+        diagnostic.line,
+        diagnostic.column,
+      ]),
+      [
+        ['Unclosed tag <main>', 1, 1],
+        ['Unclosed tag <section>', 2, 1],
+        ['Unclosed tag <p>', 3, 1],
+      ],
+    );
+  });
+
+  it('retains Astro lines while bounding quoted and dynamic attributes', () => {
+    const result = parseHtmlWithDiagnostics(`---
+const preview = '<aside data-example="ignored">';
+---
+<section title="a > b" data-state={active ? "x \\"quoted\\"" : \`y > z\`}>
+<span></section>`);
+    assert.deepEqual(result.nodes.map(node => node.tag), ['section', 'span']);
+    assert.equal(result.nodes[0]?.attrs.title, 'a > b');
+    assert.equal(result.nodes[0]?.dynamic, true);
+    assert.deepEqual(
+      result.diagnostics.map(diagnostic => [
+        diagnostic.code,
+        diagnostic.line,
+        diagnostic.column,
+      ]),
+      [['unclosed-tag', 5, 1]],
+    );
+  });
+
   it('reports unclosed tags with position information', () => {
     const result = parseHtmlWithDiagnostics('<div><p>Text');
     assert.equal(result.nodes.length, 2);

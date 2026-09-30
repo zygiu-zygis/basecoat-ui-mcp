@@ -32,7 +32,7 @@ export function parseHtml(code: string): HtmlNode[] {
   return parseHtmlWithDiagnostics(code).nodes;
 }
 
-/** 
+/**
  * Parse HTML with detailed diagnostics for malformed input.
  * Returns both nodes and diagnostic information including line/column positions.
  * This is a bounded static tree parser, not a full AST or browser DOM implementation.
@@ -41,6 +41,7 @@ export function parseHtmlWithDiagnostics(code: string): ParseResult {
   const nodes: HtmlNode[] = [];
   const diagnostics: ParseDiagnostic[] = [];
   const stack: number[] = [];
+  const nodeOffsets: number[] = [];
   let cursor = 0;
   if (/^\uFEFF?---\s*\r?\n/.test(code)) {
     const end = /^---\s*$/gm;
@@ -54,7 +55,7 @@ export function parseHtmlWithDiagnostics(code: string): ParseResult {
     const lastNewline = beforeIndex.lastIndexOf('\n');
     return lastNewline === -1 ? index + 1 : index - lastNewline;
   };
-  
+
   const addDiagnostic = (code: string, severity: 'error' | 'warning', message: string, position: number) => {
     diagnostics.push({
       code,
@@ -95,10 +96,20 @@ export function parseHtmlWithDiagnostics(code: string): ParseResult {
       const tag = closing[1]!.toLowerCase();
       let found = false;
       for (let i = stack.length - 1; i >= 0; i--) {
-        if (nodes[stack[i]!]!.tag === tag) { 
-          stack.length = i; 
+        if (nodes[stack[i]!]!.tag === tag) {
+          for (let unclosed = stack.length - 1; unclosed > i; unclosed--) {
+            const nodeIndex = stack[unclosed]!;
+            const node = nodes[nodeIndex]!;
+            addDiagnostic(
+              'unclosed-tag',
+              'warning',
+              `Unclosed tag <${node.tag}> before closing </${tag}>`,
+              nodeOffsets[nodeIndex]!,
+            );
+          }
+          stack.length = i;
           found = true;
-          break; 
+          break;
         }
       }
       if (!found) {
@@ -155,6 +166,7 @@ export function parseHtmlWithDiagnostics(code: string): ParseResult {
     }
     const node: HtmlNode = { tag, attrs, classes: (attrs.class ?? '').split(/\s+/).filter(Boolean), parent: stack.at(-1) ?? null, index: nodes.length, line: lineAt(start), column: columnAt(start), dynamic };
     nodes.push(node);
+    nodeOffsets.push(start);
     if (tag === 'script' || tag === 'style') {
       const close = new RegExp('</\\s*' + tag + '\\s*>', 'ig');
       close.lastIndex = cursor;
@@ -163,15 +175,13 @@ export function parseHtmlWithDiagnostics(code: string): ParseResult {
       cursor = match ? close.lastIndex : code.length;
     } else if (!VOID.has(tag) && !/\/\s*$/.test(raw)) stack.push(node.index);
   }
-  
+
   // Report unclosed tags
   for (const nodeIndex of stack) {
     const node = nodes[nodeIndex]!;
-    // Use the node's original position (stored in line/column) and calculate position
-    const nodePosition = code.split('\n').slice(0, node.line - 1).join('\n').length + node.column - 1;
-    addDiagnostic('unclosed-tag', 'warning', `Unclosed tag <${node.tag}>`, nodePosition);
+    addDiagnostic('unclosed-tag', 'warning', `Unclosed tag <${node.tag}>`, nodeOffsets[nodeIndex]!);
   }
-  
+
   return { nodes, diagnostics };
 }
 

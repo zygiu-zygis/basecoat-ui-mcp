@@ -162,7 +162,7 @@ export function validateComposition(code: string, options: ValidationOptions = {
   const imported = new Set(importOrder);
   // A literal script src identifies an actual script, unlike a URL in prose or comments.
   for (const script of scripts) if (script.attrs.src) imported.add(script.attrs.src);
-  
+
   // Initialize semantic validation if profile is specified
   let semanticMappings: SemanticContext | null = null;
   if (options.semanticProfile) {
@@ -212,7 +212,7 @@ export function validateComposition(code: string, options: ValidationOptions = {
         if ((!SPACING.has(value!) || !!negative) && !allowedAuto) report('spacing-rhythm', 'warning', `Use 0, 2, 4, 6 or 12 spacing steps; replace ${token}. Margin auto is allowed for alignment.`, node.line);
       }
       if (/^(?:bg-(?:gradient|linear|radial|conic)(?:-|$)|bg-\[.*gradient\(|(?:from|via|to)-)/.test(token)) report('random-gradient', 'warning', `Remove decorative gradient utility ${token}; use a neutral surface and hierarchy.`, node.line);
-      
+
       // Semantic validation: check for hardcoded utilities that have semantic equivalents
       if (semanticMappings) {
         const semanticUtility = semanticMappings.byToken.get(token);
