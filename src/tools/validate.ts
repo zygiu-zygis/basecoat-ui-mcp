@@ -9,6 +9,7 @@ export interface CompositionIssue {
   severity: 'error' | 'warning';
   message: string;
   line: number;
+  repair?: string;
 }
 
 /** Options for composition validation. */
@@ -31,6 +32,11 @@ const BASECOAT_CLASSES = new Set(registry.upstream.css_classes);
 const TAILWIND_OVERLAP = /^(?:table-(?:auto|fixed|caption|cell|column|column-group|footer-group|header-group|row|row-group)|select-(?:auto|all|none|text)|field-sizing-(?:content|fixed))$/;
 // Reserve Basecoat component namespaces; unrelated project and Tailwind classes are allowed.
 const COMPONENT_FAMILY = /^(?:ui-(?:card|button|input|dialog|tabs|table|select|textarea|badge|alert)(?:-[\w-]+)?|(?:btn|card|dialog|tabs|alert|alert-dialog|avatar|badge|breadcrumb|button-group|chart|combobox|command|drawer|dropdown-menu|empty|field|input|item|kbd|popover|progress|select|sidebar|skeleton|table|textarea|toast|toaster)-[\w-]+)$/;
+const SEMANTIC_TOKEN = /^(?:p-density-|gap-rhythm-|text-(?:heading-|body$|muted$)|bg-surface-|border-subtle$)/;
+const SAFE_ANCHOR = /^[a-z][a-z0-9-]*$/;
+const TYPOGRAPHY_UTILITY = /^text-(?:xs|sm|base|lg|xl|[2-9]xl)$/;
+const COLOR_UTILITY = /^(?:bg|border|text)-(?!xs$|sm$|base$|lg$|xl$|[2-9]xl$)[a-z][\w-]*$/;
+const ARBITRARY_COLOR = /^(?:bg|border|text|from|via|to)-\[(?:#|rgba?\(|hsla?\(|oklch\(|lab\(|lch\(|color:|var\(--)/i;
 
 function importedModule(value: string): string | undefined {
   const bare = /^basecoat-css\/([\w-]+)(?:\.min)?(?:\.js)?$/.exec(value);
@@ -54,60 +60,34 @@ function isPrimary(node: HtmlNode): boolean {
 }
 
 /** Get semantic token mappings for validation. */
-function getSemanticMappings(profileId?: Id, projectRoot?: string) {
+interface SemanticContext {
+  byUtility: Map<string, string>;
+  tokenIds: Set<string>;
+}
+
+function getSemanticMappings(profileId?: Id, projectRoot?: string): SemanticContext | null {
   if (!profileId) return null;
-  
-  try {
-    const profile = defaultSemanticsStore.getEffectiveRhythmProfile(profileId, projectRoot);
-    const mappings = new Map<string, string>();
-    
-    // Collect all semantic token mappings
-    for (const family of profile.families) {
-      for (const mapping of family.mappings) {
-        mappings.set(mapping.value, mapping.id);
-      }
-    }
-    
-    return mappings;
-  } catch (error) {
-    return null;
-  }
+  const profile = defaultSemanticsStore.getEffectiveRhythmProfile(profileId, projectRoot);
+  const mappings = profile.families
+    .flatMap(family => family.mappings)
+    .sort((a, b) => a.id.localeCompare(b.id));
+  return {
+    byUtility: new Map(mappings.map(mapping => [mapping.value, mapping.id])),
+    tokenIds: new Set(mappings.map(mapping => mapping.id)),
+  };
 }
 
 /** Check if a utility class has a semantic equivalent. */
-function checkSemanticViolation(token: string, semanticMappings: Map<string, string> | null): string | null {
+function checkSemanticViolation(token: string, semanticMappings: SemanticContext | null): { message: string; repair: string } | null {
   if (!semanticMappings) return null;
-  
-  // Check for direct mapping
-  if (semanticMappings.has(token)) {
-    return `Consider using semantic token '${semanticMappings.get(token)}' instead of hardcoded '${token}'`;
+  if (semanticMappings.tokenIds.has(token)) return null;
+  const direct = semanticMappings.byUtility.get(token);
+  if (direct) {
+    return {
+      message: `Use semantic token '${direct}' instead of hardcoded '${token}'`,
+      repair: `Replace '${token}' with '${direct}'.`,
+    };
   }
-  
-  // Check for spacing patterns that might have semantic equivalents
-  const spacing = /^(-?)(gap(?:-[xy])?|space-[xy]|[mp][trblxyse]?)-(.+)$/.exec(token);
-  if (spacing) {
-    const [, negative, family, value] = spacing;
-    if (!negative) {
-      // Look for semantic spacing tokens with same utility pattern
-      const semanticSpacing = Array.from(semanticMappings.entries()).find(([utility, _]) => 
-        utility.startsWith(family!) && utility.endsWith(value!)
-      );
-      if (semanticSpacing) {
-        return `Consider using semantic token '${semanticSpacing[1]}' instead of hardcoded '${token}'`;
-      }
-    }
-  }
-  
-  // Check for color/surface patterns
-  if (/^(?:bg-|text-|border-)/.test(token)) {
-    const semanticColor = Array.from(semanticMappings.entries()).find(([utility, _]) => 
-      utility === token
-    );
-    if (semanticColor) {
-      return `Consider using semantic token '${semanticColor[1]}' instead of hardcoded '${token}'`;
-    }
-  }
-  
   return null;
 }
 
@@ -116,14 +96,20 @@ export function validateComposition(code: string, options: ValidationOptions = {
   let truncated = false;
   let hasErrors = false;
   let droppedErrors = 0;
-  const report = (rule: string, severity: CompositionIssue['severity'], message: string, line: number) => {
+  const report = (rule: string, severity: CompositionIssue['severity'], message: string, line: number, repair?: string) => {
     if (severity === 'error') hasErrors = true;
     if (issues.length >= ISSUE_CAP) {
       truncated = true;
       if (severity === 'error') droppedErrors++;
       return;
     }
-    issues.push({ rule, severity, message: message.slice(0, 240), line });
+    issues.push({
+      rule,
+      severity,
+      message: message.slice(0, 240),
+      line,
+      ...(repair ? { repair: repair.slice(0, 240) } : {}),
+    });
   };
   if (Buffer.byteLength(code, 'utf8') > 65_536) {
     report('input-size', 'error', 'Code exceeds the 64 KiB UTF-8 limit. Validate a smaller component.', 1);
@@ -137,7 +123,20 @@ export function validateComposition(code: string, options: ValidationOptions = {
   for (const script of scripts) if (script.attrs.src) imported.add(script.attrs.src);
   
   // Initialize semantic validation if profile is specified
-  const semanticMappings = getSemanticMappings(options.semanticProfile, options.projectRoot);
+  let semanticMappings: SemanticContext | null = null;
+  if (options.semanticProfile) {
+    try {
+      semanticMappings = getSemanticMappings(options.semanticProfile, options.projectRoot);
+    } catch {
+      report(
+        'semantic-profile-invalid',
+        'error',
+        `Unknown or invalid semantic profile '${options.semanticProfile}'.`,
+        1,
+        'Use a compiled rhythm profile returned by get_rhythm_rules.',
+      );
+    }
+  }
   const hasImport = (name: string) => [...imported].some(value => importedModule(value) === name);
   const bundle = hasImport('all');
   const required = new Map<string, number>();
@@ -177,8 +176,56 @@ export function validateComposition(code: string, options: ValidationOptions = {
       if (semanticMappings) {
         const semanticViolation = checkSemanticViolation(token, semanticMappings);
         if (semanticViolation) {
-          report('semantic-token-available', 'warning', semanticViolation, node.line);
+          report('semantic-token-available', 'warning', semanticViolation.message, node.line, semanticViolation.repair);
         }
+        if (SEMANTIC_TOKEN.test(token) && !semanticMappings.tokenIds.has(token)) {
+          report(
+            'semantic-token-invalid',
+            'error',
+            `Semantic token '${token}' is not defined by profile '${options.semanticProfile}'.`,
+            node.line,
+            'Use an exact token ID returned by get_rhythm_rules.',
+          );
+        }
+        const hardcodedSpacing = semanticMappings.tokenIds.has(token)
+          ? null
+          : /^-?(?:gap(?:-[xy])?|space-[xy]|[mp][trblxyse]?)-(.+)$/.exec(token);
+        if (hardcodedSpacing && hardcodedSpacing[1] !== '0' && hardcodedSpacing[1] !== 'auto' && !semanticMappings.byUtility.has(token)) {
+          report(
+            'semantic-hardcoded-spacing',
+            'warning',
+            `Hardcoded spacing utility '${token}' is outside the selected semantic profile.`,
+            node.line,
+            'Choose a spacing or density token returned by get_rhythm_rules.',
+          );
+        }
+        if (TYPOGRAPHY_UTILITY.test(token) && !semanticMappings.tokenIds.has(token) && !semanticMappings.byUtility.has(token)) {
+          report(
+            'semantic-hardcoded-typography',
+            'warning',
+            `Hardcoded typography utility '${token}' is outside the selected semantic profile.`,
+            node.line,
+            'Choose a typography token returned by get_rhythm_rules.',
+          );
+        }
+        if (COLOR_UTILITY.test(token) && !semanticMappings.tokenIds.has(token) && !semanticMappings.byUtility.has(token) && !/-(?:transparent|current|inherit)$/.test(token)) {
+          report(
+            'semantic-hardcoded-color',
+            'warning',
+            `Hardcoded color utility '${token}' is outside the selected semantic profile.`,
+            node.line,
+            'Choose a surface or border token returned by get_rhythm_rules.',
+          );
+        }
+      }
+      if (ARBITRARY_COLOR.test(token)) {
+        report(
+          'arbitrary-color',
+          'error',
+          `Arbitrary color utility '${token}' bypasses the approved theme.`,
+          node.line,
+          'Replace it with a semantic surface, text, or border token.',
+        );
       }
     }
     if (classes.includes('btn')) {
@@ -195,6 +242,54 @@ export function validateComposition(code: string, options: ValidationOptions = {
     for (const component of ['tabs', 'accordion', 'select', 'combobox', 'dropdown-menu', 'popover', 'sidebar', 'drawer', 'command', 'toast', 'range']) {
       const isRangeInput = component === 'range' && node.tag === 'input' && node.attrs.type?.toLowerCase() === 'range';
       if ((classes.includes(component) || isRangeInput) && !(component === 'select' && node.tag === 'select') && !required.has(component)) required.set(component, node.line);
+    }
+  }
+  const mains = nodes.filter(node => node.tag === 'main');
+  const primaryHeadings = nodes.filter(node => node.tag === 'h1');
+  if (mains.length > 1) {
+    report('duplicate-main-landmark', 'error', `Found ${mains.length} main landmarks; exactly one is allowed.`, mains[1]!.line, 'Keep one main element and convert the others to sections.');
+  }
+  if (primaryHeadings.length > 1) {
+    report('duplicate-primary-heading', 'error', `Found ${primaryHeadings.length} h1 elements; exactly one is allowed.`, primaryHeadings[1]!.line, 'Keep one h1 and demote later headings to h2.');
+  }
+  const header = nodes.find(node => node.tag === 'header');
+  const main = mains[0];
+  const footer = nodes.find(node => node.tag === 'footer');
+  if (header && main && header.index > main.index) {
+    report('structural-order', 'error', 'Header appears after main in source order.', header.line, 'Move header before main.');
+  }
+  if (footer && main && footer.index < main.index) {
+    report('structural-order', 'error', 'Footer appears before main in source order.', footer.line, 'Move footer after main.');
+  }
+  const anchors = new Map<string, HtmlNode>();
+  for (const node of nodes) {
+    const anchor = node.attrs['data-macro-anchor'];
+    if (anchor === undefined) continue;
+    if (!SAFE_ANCHOR.test(anchor)) {
+      report('macro-anchor-invalid', 'error', `Invalid macro anchor '${anchor}'.`, node.line, 'Use a lowercase ASCII ID such as data-macro-anchor="content-main".');
+    } else if (anchors.has(anchor)) {
+      report('macro-anchor-duplicate', 'error', `Duplicate macro anchor '${anchor}'.`, node.line, 'Give every macro anchor a unique ID.');
+    } else {
+      anchors.set(anchor, node);
+    }
+  }
+  const semanticsRegistry = defaultSemanticsStore.getRegistry();
+  for (const node of nodes) {
+    const recipeId = node.attrs['data-fsm-recipe'];
+    const stateId = node.attrs['data-fsm-state'];
+    if (stateId !== undefined && recipeId === undefined) {
+      report('fsm-binding-missing', 'error', 'data-fsm-state requires data-fsm-recipe on the same element.', node.line, 'Bind both the recipe and one of its declared states.');
+      continue;
+    }
+    if (recipeId === undefined) continue;
+    const recipeRef = semanticsRegistry.aliases[recipeId];
+    const recipe = recipeRef ? semanticsRegistry.fsmRecipes[recipeRef] : undefined;
+    if (!recipe) {
+      report('fsm-recipe-invalid', 'error', `Unknown FSM recipe '${recipeId}'.`, node.line, 'Use a recipe ID returned by get_fsm_recipe.');
+    } else if (stateId === undefined) {
+      report('fsm-state-missing', 'error', `FSM recipe '${recipeId}' has no bound data-fsm-state.`, node.line, `Set data-fsm-state="${recipe.initialStates[0]}".`);
+    } else if (!recipe.states.some(state => state.id === stateId)) {
+      report('fsm-state-invalid', 'error', `State '${stateId}' is not declared by FSM recipe '${recipeId}'.`, node.line, `Use one of: ${recipe.states.map(state => state.id).sort().join(', ')}.`);
     }
   }
   for (const [parent, buttons] of primaryByParent) {

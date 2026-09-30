@@ -8,6 +8,15 @@ const rules = (code: string) => validateComposition(code).issues.map(issue => is
 const semanticRules = (code: string) => validateComposition(code, { semanticProfile: 'default' }).issues.map(issue => issue.rule);
 
 describe('HTML lexer', () => {
+  it('parses ASCII, non-emoji Unicode, quotes, and escaped dynamic expressions', () => {
+    const nodes = parseHtml('<div title="ASCII" data-label="Žodis"><span title={condition ? "a \\"quote\\"" : \'b\'}>Tekstas</span></div>');
+    assert.equal(nodes[0]!.attrs.title, 'ASCII');
+    assert.equal(nodes[0]!.attrs['data-label'], 'Žodis');
+    assert.equal(nodes[1]!.dynamic, true);
+    assert.equal(nodes[0]!.line, 1);
+    assert.equal(nodes[0]!.column, 1);
+  });
+
   it('ignores comments, frontmatter, and script/style markup strings', () => {
     const code = `---
 const example = '<div class="card">';
@@ -232,17 +241,35 @@ describe('semantic validation', () => {
     assert(semanticRules('<div class="gap-2"></div>').includes('semantic-token-available'));
     assert(semanticRules('<div class="gap-4"></div>').includes('semantic-token-available'));
     assert(semanticRules('<div class="p-2"></div>').includes('semantic-token-available'));
+    const result = validateComposition('<div class="gap-2"></div>', { semanticProfile: 'default' });
+    assert.equal(result.issues.find(issue => issue.rule === 'semantic-token-available')?.repair, "Replace 'gap-2' with 'gap-rhythm-sm'.");
   });
 
   it('suggests semantic tokens for hardcoded background utilities', () => {
     assert(semanticRules('<div class="bg-background"></div>').includes('semantic-token-available'));
     assert(semanticRules('<div class="bg-card"></div>').includes('semantic-token-available'));
-    assert(semanticRules('<div class="text-foreground"></div>').includes('semantic-token-available'));
+    assert(semanticRules('<div class="border-border"></div>').includes('semantic-token-available'));
   });
 
-  it('does not suggest semantic tokens for unsupported utilities', () => {
+  it('reports profile-aware unsupported spacing, colors, and typography', () => {
     assert(!semanticRules('<div class="gap-8"></div>').includes('semantic-token-available'));
-    assert(!semanticRules('<div class="bg-red-500"></div>').includes('semantic-token-available'));
+    const found = semanticRules('<div class="gap-8 bg-red-500 text-lg"></div>');
+    assert(found.includes('semantic-hardcoded-spacing'));
+    assert(found.includes('semantic-hardcoded-color'));
+    assert(found.includes('semantic-hardcoded-typography'));
+  });
+
+  it('accepts semantic token identities and approved structural exceptions', () => {
+    const found = semanticRules('<div class="gap-rhythm-sm p-density-base bg-surface-primary text-body border-subtle m-0 mx-auto bg-transparent"></div>');
+    assert(!found.includes('semantic-token-invalid'));
+    assert(!found.includes('semantic-hardcoded-spacing'));
+    assert(!found.includes('semantic-hardcoded-color'));
+  });
+
+  it('rejects invalid semantic identities and arbitrary colors', () => {
+    const found = semanticRules('<div class="gap-rhythm-xl bg-[#123456] text-[oklch(50%_0.2_20)]"></div>');
+    assert(found.includes('semantic-token-invalid'));
+    assert.equal(found.filter(rule => rule === 'arbitrary-color').length, 2);
   });
 
   it('preserves existing validation when semantic profile is not specified', () => {
@@ -253,7 +280,32 @@ describe('semantic validation', () => {
 
   it('works with invalid semantic profile gracefully', () => {
     const result = validateComposition('<div class="gap-2"></div>', { semanticProfile: 'nonexistent' });
-    assert(!result.issues.some(issue => issue.rule === 'semantic-token-available'));
+    assert.equal(result.valid, false);
+    assert(result.issues.some(issue => issue.rule === 'semantic-profile-invalid'));
+  });
+});
+
+describe('semantic structure bindings', () => {
+  it('rejects duplicate landmarks and invalid structural order', () => {
+    const found = rules('<main><h1>A</h1></main><header>Late</header><main><h1>B</h1></main><footer>End</footer>');
+    assert(found.includes('duplicate-main-landmark'));
+    assert(found.includes('duplicate-primary-heading'));
+    assert(found.includes('structural-order'));
+  });
+
+  it('validates unique safe macro anchors', () => {
+    const found = rules('<div data-macro-anchor="Bad Anchor"></div><div data-macro-anchor="content"></div><div data-macro-anchor="content"></div>');
+    assert(found.includes('macro-anchor-invalid'));
+    assert(found.includes('macro-anchor-duplicate'));
+  });
+
+  it('validates explicitly bound FSM recipes and states only', () => {
+    assert.deepEqual(rules('<dialog data-state="open"></dialog>'), []);
+    assert(rules('<dialog data-fsm-state="open"></dialog>').includes('fsm-binding-missing'));
+    assert(rules('<dialog data-fsm-recipe="missing" data-fsm-state="open"></dialog>').includes('fsm-recipe-invalid'));
+    assert(rules('<dialog data-fsm-recipe="dialog"></dialog>').includes('fsm-state-missing'));
+    assert(rules('<dialog data-fsm-recipe="dialog" data-fsm-state="unknown"></dialog>').includes('fsm-state-invalid'));
+    assert(!rules('<dialog data-fsm-recipe="dialog" data-fsm-state="open"></dialog>').some(rule => rule.startsWith('fsm-')));
   });
 });
 
@@ -275,12 +327,17 @@ describe('HTML parsing diagnostics', () => {
   });
 
   it('includes line and column information in diagnostics', () => {
-    const result = parseHtmlWithDiagnostics('line 1\n<div\nline 3</div>');
-    const diagnostic = result.diagnostics.find(d => d.code === 'unclosed-tag');
-    if (diagnostic) {
-      assert(diagnostic.line >= 1);
-      assert(diagnostic.column >= 1);
-    }
+    const result = parseHtmlWithDiagnostics('line 1\n  </span>');
+    const diagnostic = result.diagnostics.find(d => d.code === 'unmatched-closing-tag');
+    assert.equal(diagnostic?.line, 2);
+    assert.equal(diagnostic?.column, 3);
+  });
+
+  it('reports malformed quoted input at its source location', () => {
+    const result = parseHtmlWithDiagnostics('first\n<div title="unterminated>');
+    assert.equal(result.diagnostics[0]?.code, 'unclosed-tag');
+    assert.equal(result.diagnostics[0]?.line, 2);
+    assert.equal(result.diagnostics[0]?.column, 1);
   });
 
   it('handles well-formed HTML without diagnostics', () => {

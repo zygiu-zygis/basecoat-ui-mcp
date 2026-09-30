@@ -25,6 +25,12 @@ import {
   searchMacroBlocksInputShape,
   validateDesignInputShape,
 } from '../macros/tools.js';
+import {
+  getFsmRecipeInputShape,
+  getRhythmRulesInputShape,
+  handleGetFsmRecipe,
+  handleGetRhythmRules,
+} from '../semantics/tools.js';
 
 const READ_ANNOTATIONS = {
   readOnlyHint: true,
@@ -45,7 +51,9 @@ const MACRO_INSTRUCTIONS =
   'Macro-first workflow: begin_design (pin profile) → search_macro_blocks / get_macro_block → ' +
   'apply_design_patch (expectedRevision + unique operationId) → get_design_context → ' +
   'validate_design → implement leaves via search_components / get_component_details → ' +
-  'validate_composition on generated source. Use explicit design IDs; list sessions when unknown. ' +
+  'get_rhythm_rules / get_fsm_recipe → validate_composition on generated source. ' +
+  'Follow pagination cursors and pass the chosen semanticProfile to source validation. ' +
+  'Use explicit design IDs; list sessions when unknown. ' +
   'Compose leaves in this order: content hierarchy, layout, component selection, spacing, typography, final composition. ' +
   'Read basecoat://design/rhythm and basecoat://project/context. Search returns summaries; request details only for selected IDs. ' +
   'Read basecoat://integration/astro for production setup. All runtime data is offline. ' +
@@ -79,8 +87,12 @@ export function createServer(projectRoot = process.cwd()) {
   });
 
   server.registerTool('validate_composition', {
-    description: 'Statically check HTML/Astro source for Basecoat migration errors, missing scripts, nested cards, spacing and hierarchy issues. Include layout imports. Pass `code` or alias `html` (not both with different values). Unknown input keys are ignored. Does not render or evaluate dynamic code.',
-    inputSchema: { code: z.string().max(65_536).optional(), html: z.string().max(65_536).optional() },
+    description: 'Statically check HTML/Astro source for Basecoat migration errors, semantic rhythm, FSM bindings, missing scripts, nested cards, spacing and hierarchy issues. Pass `code` or alias `html` and optionally a semanticProfile. Does not render or evaluate dynamic code.',
+    inputSchema: {
+      code: z.string().max(65_536).optional(),
+      html: z.string().max(65_536).optional(),
+      semanticProfile: z.string().max(64).optional(),
+    },
     annotations: READ_ANNOTATIONS,
   }, input => {
     const { code, html } = input;
@@ -90,7 +102,10 @@ export function createServer(projectRoot = process.cwd()) {
     if (code !== undefined && html !== undefined && code !== html) {
       return { ...jsonResult({ error: 'code and html differ; pass one field or matching values.' }), isError: true };
     }
-    return jsonResult(validateComposition(code ?? html!));
+    return jsonResult(validateComposition(code ?? html!, {
+      semanticProfile: input.semanticProfile,
+      projectRoot,
+    }));
   });
 
   server.registerTool('search_macro_blocks', {
@@ -128,6 +143,18 @@ export function createServer(projectRoot = process.cwd()) {
     inputSchema: validateDesignInputShape,
     annotations: READ_ANNOTATIONS,
   }, input => handleValidateDesign(input, projectRoot));
+
+  server.registerTool('get_rhythm_rules', {
+    description: 'Read a compiled semantic rhythm profile by family. Results are content-addressed, deterministic, and cursor-paginated.',
+    inputSchema: getRhythmRulesInputShape,
+    annotations: READ_ANNOTATIONS,
+  }, input => handleGetRhythmRules(input));
+
+  server.registerTool('get_fsm_recipe', {
+    description: 'Read finite FSM states, events, guards, actions, or transitions. Recipes are structural metadata, not executable runtime code.',
+    inputSchema: getFsmRecipeInputShape,
+    annotations: READ_ANNOTATIONS,
+  }, input => handleGetFsmRecipe(input));
 
   server.registerResource('design-rhythm', 'basecoat://design/rhythm', {
     description: 'Content hierarchy, spatial rhythm, density, typography, and composition constraints.', mimeType: 'text/markdown',

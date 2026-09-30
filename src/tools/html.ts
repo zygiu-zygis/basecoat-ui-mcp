@@ -101,7 +101,7 @@ export function parseHtmlWithDiagnostics(code: string): ParseResult {
           break; 
         }
       }
-      if (!found && stack.length > 0) {
+      if (!found) {
         addDiagnostic('unmatched-closing-tag', 'warning', `Closing tag </${tag}> has no matching opening tag`, start);
       }
       continue;

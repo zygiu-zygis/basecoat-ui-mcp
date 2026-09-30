@@ -105,6 +105,17 @@ export async function handleGetRhythmRules(
   try {
     const registry = defaultRegistry;
     const { profile: profileFilter, family: familyFilter, limit, cursor } = input;
+    if (profileFilter && !Object.values(registry.rhythmProfiles).some(profile => profile.id === profileFilter)) {
+      throw new MacroError('NOT_FOUND', `Unknown rhythm profile: ${profileFilter}`);
+    }
+    if (
+      familyFilter &&
+      !Object.values(registry.rhythmProfiles).some(
+        profile => (!profileFilter || profile.id === profileFilter) && profile.families.some(family => family.id === familyFilter),
+      )
+    ) {
+      throw new MacroError('NOT_FOUND', `Unknown rhythm family: ${familyFilter}`);
+    }
     
     // Collect all rhythm rule entries
     const allEntries: RhythmRuleEntry[] = [];
@@ -189,6 +200,9 @@ export async function handleGetFsmRecipe(
   try {
     const registry = defaultRegistry;
     const { recipe: recipeFilter, section: sectionFilter, limit, cursor } = input;
+    if (recipeFilter && !Object.values(registry.fsmRecipes).some(recipe => recipe.id === recipeFilter)) {
+      throw new MacroError('NOT_FOUND', `Unknown FSM recipe: ${recipeFilter}`);
+    }
     
     // Collect all FSM recipe entries
     const allEntries: FsmRecipeEntry[] = [];
@@ -227,8 +241,12 @@ export async function handleGetFsmRecipe(
       const sectionCmp = a.section.localeCompare(b.section);
       if (sectionCmp !== 0) return sectionCmp;
       
-      const aId = (a.item as any)?.id ?? '';
-      const bId = (b.item as any)?.id ?? '';
+      const aId = typeof a.item === 'object' && a.item !== null && 'id' in a.item
+        ? String(a.item.id)
+        : '';
+      const bId = typeof b.item === 'object' && b.item !== null && 'id' in b.item
+        ? String(b.item.id)
+        : '';
       return aId.localeCompare(bId);
     });
 

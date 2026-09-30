@@ -106,7 +106,7 @@ A dashboard page can follow this sequence:
 ```text
 get_design_context(view="sessions")
 begin_design(designId="admin", profile="app-default", operationId="begin-admin")
-get_rhythm_rules(profile="app-default", family="density")
+get_rhythm_rules(profile="default", family="density")
 search_macro_blocks(q="shell", limit=8)
 apply_design_patch(
   designId="admin",
@@ -204,6 +204,7 @@ Install dependencies with `npm ci`, then run the focused checks:
 ```sh
 npm run typecheck
 npm run build
+npm run compile:semantics:check
 npm run compile:blocks:check
 npm run test
 npm pack --dry-run
@@ -227,7 +228,8 @@ The sync command is the only network boundary. Macro authoring changes require
 1. Create a focused branch from the default branch.
 2. Keep component templates, macro contracts, and documentation aligned with
    checked-in source.
-3. Run `npm run typecheck`, `npm run compile:blocks:check`, and `npm run test`.
+3. Run `npm run typecheck`, `npm run compile:semantics:check`,
+   `npm run compile:blocks:check`, and `npm run test`.
 4. Run `npm pack --dry-run` when package contents or metadata change.
 5. Describe behavior changes, bounded-output effects, and any required host
    application work in the pull request.

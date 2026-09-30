@@ -194,10 +194,7 @@ export class FileSemanticsStore implements SemanticsStore {
       // Apply overrides: replace mappings with same ID, keep others
       const effectiveFamilies = baseProfile.families.map(family => {
         const overrideMappingsForFamily = override.overrideMappings.filter(
-          mapping => {
-            // Simple heuristic: override mappings that start with family ID prefix
-            return mapping.id.startsWith(`${family.id}-`);
-          }
+          mapping => family.mappings.some(baseMapping => baseMapping.id === mapping.id),
         );
 
         if (overrideMappingsForFamily.length === 0) {

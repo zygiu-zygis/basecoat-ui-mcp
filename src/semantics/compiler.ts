@@ -111,7 +111,7 @@ keyboard path, labels, narrow-screen behavior, and empty/error states.
   if (spacingFamily) {
     text += 'Use the semantic spacing tokens from this profile:\n';
     for (const mapping of spacingFamily.mappings) {
-      text += `- ${mapping.value}: ${mapping.description}\n`;
+      text += `- ${mapping.id} -> ${mapping.value}: ${mapping.description}\n`;
     }
     text += '\n';
   } else {
@@ -152,7 +152,7 @@ introducing new tokens.
   if (typographyFamily) {
     text += 'Use semantic typography tokens from this profile:\n';
     for (const mapping of typographyFamily.mappings) {
-      text += `- ${mapping.value}: ${mapping.description}\n`;
+      text += `- ${mapping.id} -> ${mapping.value}: ${mapping.description}\n`;
     }
     text += '\n';
   } else {

@@ -17,44 +17,19 @@ export const DEFAULT_RHYTHM_PROFILE: AuthoringRhythmProfile = {
       description: 'Semantic spacing tokens for consistent layout rhythm.',
       mappings: [
         {
-          id: 'spacing-tight',
+          id: 'gap-rhythm-sm',
           value: 'gap-2',
           description: 'Label/control relationships, inline icon/text groups, compact actions (0.5rem)',
         },
         {
-          id: 'spacing-normal',
+          id: 'gap-rhythm-md',
           value: 'gap-4',
           description: 'Neighboring fields, rows of related controls, local content groups (1rem)',
         },
         {
-          id: 'spacing-loose',
+          id: 'gap-rhythm-lg',
           value: 'gap-6',
           description: 'Section heading to content or separation of meaningful local groups (1.5rem)',
-        },
-        {
-          id: 'spacing-section',
-          value: 'gap-12',
-          description: 'Major page sections with distinct purposes (3rem)',
-        },
-        {
-          id: 'padding-tight',
-          value: 'p-2',
-          description: 'Compact padding for dense layouts',
-        },
-        {
-          id: 'padding-normal',
-          value: 'p-4',
-          description: 'Standard padding for controls and content areas',
-        },
-        {
-          id: 'padding-loose',
-          value: 'p-6',
-          description: 'Generous padding for prominent sections',
-        },
-        {
-          id: 'margin-auto',
-          value: 'mx-auto',
-          description: 'Auto horizontal margin for centering containers',
         },
       ],
     },
@@ -63,19 +38,14 @@ export const DEFAULT_RHYTHM_PROFILE: AuthoringRhythmProfile = {
       description: 'Semantic typography tokens for visual hierarchy.',
       mappings: [
         {
-          id: 'text-page-title',
+          id: 'text-heading-1',
           value: 'text-3xl',
           description: 'Page title (h1) - primary heading',
         },
         {
-          id: 'text-section-title',
+          id: 'text-heading-2',
           value: 'text-xl',
           description: 'Section title (h2) - major sections',
-        },
-        {
-          id: 'text-subsection-title',
-          value: 'text-lg',
-          description: 'Subsection title (h3) - minor sections',
         },
         {
           id: 'text-body',
@@ -83,29 +53,9 @@ export const DEFAULT_RHYTHM_PROFILE: AuthoringRhythmProfile = {
           description: 'Body text - default readable content',
         },
         {
-          id: 'text-caption',
+          id: 'text-muted',
           value: 'text-sm',
-          description: 'Caption text - supporting metadata and labels',
-        },
-        {
-          id: 'text-fine-print',
-          value: 'text-xs',
-          description: 'Fine print - secondary information',
-        },
-        {
-          id: 'font-normal',
-          value: 'font-normal',
-          description: 'Normal font weight for body text',
-        },
-        {
-          id: 'font-medium',
-          value: 'font-medium',
-          description: 'Medium font weight for emphasis',
-        },
-        {
-          id: 'font-semibold',
-          value: 'font-semibold',
-          description: 'Semibold font weight for headings',
+          description: 'Muted supporting text and metadata',
         },
       ],
     },
@@ -114,39 +64,14 @@ export const DEFAULT_RHYTHM_PROFILE: AuthoringRhythmProfile = {
       description: 'Semantic surface and background tokens.',
       mappings: [
         {
-          id: 'bg-page',
+          id: 'bg-surface-primary',
           value: 'bg-background',
           description: 'Page background - base canvas',
         },
         {
-          id: 'bg-card',
+          id: 'bg-surface-secondary',
           value: 'bg-card',
           description: 'Card background - elevated content',
-        },
-        {
-          id: 'bg-muted',
-          value: 'bg-muted',
-          description: 'Muted background - secondary areas',
-        },
-        {
-          id: 'bg-accent',
-          value: 'bg-accent',
-          description: 'Accent background - highlights',
-        },
-        {
-          id: 'text-primary',
-          value: 'text-foreground',
-          description: 'Primary text color',
-        },
-        {
-          id: 'text-secondary',
-          value: 'text-muted-foreground',
-          description: 'Secondary text color',
-        },
-        {
-          id: 'text-accent',
-          value: 'text-accent-foreground',
-          description: 'Accent text color',
         },
       ],
     },
@@ -155,29 +80,9 @@ export const DEFAULT_RHYTHM_PROFILE: AuthoringRhythmProfile = {
       description: 'Semantic border and divider tokens.',
       mappings: [
         {
-          id: 'border-default',
-          value: 'border',
-          description: 'Default border - standard dividers',
-        },
-        {
-          id: 'border-muted',
-          value: 'border-muted',
+          id: 'border-subtle',
+          value: 'border-border',
           description: 'Muted border - subtle dividers',
-        },
-        {
-          id: 'border-accent',
-          value: 'border-accent',
-          description: 'Accent border - emphasis',
-        },
-        {
-          id: 'rounded-default',
-          value: 'rounded-md',
-          description: 'Default border radius',
-        },
-        {
-          id: 'rounded-full',
-          value: 'rounded-full',
-          description: 'Full border radius for circular elements',
         },
       ],
     },
@@ -186,19 +91,14 @@ export const DEFAULT_RHYTHM_PROFILE: AuthoringRhythmProfile = {
       description: 'Density variants for different contexts.',
       mappings: [
         {
-          id: 'density-compact',
-          value: 'space-y-1',
-          description: 'Compact vertical spacing for dense data',
+          id: 'p-density-base',
+          value: 'p-4',
+          description: 'Base padding density for readable content',
         },
         {
-          id: 'density-normal',
-          value: 'space-y-4',
-          description: 'Normal vertical spacing for readable content',
-        },
-        {
-          id: 'density-comfortable',
-          value: 'space-y-6',
-          description: 'Comfortable vertical spacing for promotional content',
+          id: 'p-density-compact',
+          value: 'p-2',
+          description: 'Compact padding density for data-rich content',
         },
       ],
     },

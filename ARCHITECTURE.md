@@ -30,6 +30,8 @@ The package-facing commands are:
 - `npm run start` - run the compiled stdio server.
 - `npm run typecheck` - type-check with `tsconfig.check.json`.
 - `npm run test` - build, then run `tests/*.test.ts` with Node's test runner.
+- `npm run compile:semantics` and `npm run compile:semantics:check` - write or
+  verify the compiled semantic snapshot.
 - `npm run compile:blocks` and `npm run compile:blocks:check` - write or verify
   the compiled macro snapshot.
 - `npm run import:blocks` - import local authoring inputs.
@@ -58,7 +60,11 @@ Both semantic tools use content-addressed refs, bounded pagination, and immutabl
 
 ## Package boundary
 
-Git omits generated `dist/`. Published npm tarballs include prebuilt `dist/` because `prepublishOnly` runs `npm run build`, and the `basecoat-ui-mcp` bin points at `dist/server/stdio.js`. The `files` allowlist still ships `src/`, scripts, tests, and documentation for source inspection. Cloned checkouts must run `npm run build` before `npm start`.
+Git omits generated `dist/`. Published npm tarballs include prebuilt `dist/`
+because `prepack` runs `npm run build`, and the `basecoat-ui-mcp` bin points at
+`dist/server/stdio.js`. The `files` allowlist still ships `src/`, scripts,
+tests, and documentation for source inspection. Cloned checkouts must run
+`npm run build` before `npm start`.
 
 ## Registry vs tools vs design resources
 
@@ -226,6 +232,7 @@ Recommended local checks:
 ```sh
 npm run typecheck
 npm run build
+npm run compile:semantics:check
 npm run compile:blocks:check
 npm run test
 npm pack --dry-run

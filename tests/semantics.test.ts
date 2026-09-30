@@ -3,7 +3,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert';
 import { join, dirname } from 'node:path';
-import { existsSync, mkdirSync, rmSync } from 'node:fs';
+import { existsSync, mkdirSync, rmSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import {
   compileSemantics,
@@ -11,6 +11,7 @@ import {
   DEFAULT_SEMANTICS_INPUT,
   DEFAULT_RHYTHM_PROFILE,
   DIALOG_FSM_RECIPE,
+  authoringFsmRecipeSchema,
   contentRef,
 } from '../src/semantics/index.js';
 
@@ -24,6 +25,7 @@ test('semantic registry compilation produces stable content-addressable results'
   assert.strictEqual(registry1.revision, registry2.revision);
   assert.strictEqual(JSON.stringify(registry1), JSON.stringify(registry2));
   assert.strictEqual(diagnostics1.length, diagnostics2.length);
+  assert.deepEqual(diagnostics1, []);
   
   // Should have expected structure
   assert.strictEqual(Object.keys(registry1.rhythmProfiles).length, 1);
@@ -39,6 +41,25 @@ test('semantic registry compilation produces stable content-addressable results'
   assert(rhythmProfile.rhythmText.includes('# Basecoat composition guide'));
   assert(rhythmProfile.rhythmText.includes('gap-2'));
   assert(rhythmProfile.rhythmText.includes('gap-4'));
+  const semanticIds = new Set(rhythmProfile.families.flatMap(family => family.mappings.map(mapping => mapping.id)));
+  assert.deepEqual(
+    [...semanticIds].sort(),
+    [
+      'bg-surface-primary',
+      'bg-surface-secondary',
+      'border-subtle',
+      'gap-rhythm-lg',
+      'gap-rhythm-md',
+      'gap-rhythm-sm',
+      'p-density-base',
+      'p-density-compact',
+      'text-body',
+      'text-heading-1',
+      'text-heading-2',
+      'text-muted',
+    ],
+  );
+  assert(!semanticIds.has('spacing-tight'));
 });
 
 test('FSM recipe compilation validates state machine structure', () => {
@@ -110,7 +131,28 @@ test('semantics store provides effective rhythm profiles with project overrides'
     // Should have spacing family
     const spacingFamily = baseProfile.families.find(f => f.id === 'spacing');
     assert(spacingFamily);
-    assert(spacingFamily.mappings.length >= 4);
+    assert.deepEqual(spacingFamily.mappings.map(mapping => mapping.id), [
+      'gap-rhythm-sm',
+      'gap-rhythm-md',
+      'gap-rhythm-lg',
+    ]);
+
+    const overrideDir = join(testDir, '.basecoat');
+    mkdirSync(overrideDir, { recursive: true });
+    writeFileSync(join(overrideDir, 'rhythm.json'), JSON.stringify({
+      schemaVersion: 1,
+      baseProfile: 'default',
+      overrideMappings: [{
+        id: 'gap-rhythm-sm',
+        value: 'gap-3',
+        description: 'Project-specific small gap',
+      }],
+    }));
+    const effective = store.getEffectiveRhythmProfile('default', testDir);
+    assert.equal(
+      effective.families.find(family => family.id === 'spacing')?.mappings.find(mapping => mapping.id === 'gap-rhythm-sm')?.value,
+      'gap-3',
+    );
     
     // Registry should be accessible
     const registry = store.getRegistry();
@@ -155,6 +197,49 @@ test('invalid FSM recipes produce compilation errors', () => {
   assert(errors.some(e => e.code === 'NONDETERMINISTIC_TRANSITION'));
 });
 
+test('FSM schema rejects duplicate identities and invalid graph references', () => {
+  const cases = [
+    { ...DIALOG_FSM_RECIPE, states: [...DIALOG_FSM_RECIPE.states, DIALOG_FSM_RECIPE.states[0]!] },
+    { ...DIALOG_FSM_RECIPE, events: [...DIALOG_FSM_RECIPE.events, DIALOG_FSM_RECIPE.events[0]!] },
+    { ...DIALOG_FSM_RECIPE, transitions: [...DIALOG_FSM_RECIPE.transitions, DIALOG_FSM_RECIPE.transitions[0]!] },
+    { ...DIALOG_FSM_RECIPE, states: DIALOG_FSM_RECIPE.states.map(state => ({ ...state, initial: true })) },
+    {
+      ...DIALOG_FSM_RECIPE,
+      transitions: DIALOG_FSM_RECIPE.transitions.map((transition, index) =>
+        index === 0 ? { ...transition, to: 'missing-state' } : transition),
+    },
+    {
+      ...DIALOG_FSM_RECIPE,
+      states: [...DIALOG_FSM_RECIPE.states, { id: 'orphan', description: 'Unreachable state' }],
+    },
+  ];
+  for (const candidate of cases) {
+    assert.equal(authoringFsmRecipeSchema.safeParse(candidate).success, false);
+  }
+});
+
+test('FSM terminal states cannot transition and actions remain finite metadata', () => {
+  const terminalSource = {
+    ...DIALOG_FSM_RECIPE,
+    states: DIALOG_FSM_RECIPE.states.map(state => state.id === 'open' ? { ...state, terminal: true } : state),
+  };
+  assert.equal(authoringFsmRecipeSchema.safeParse(terminalSource).success, false);
+  assert.equal(
+    authoringFsmRecipeSchema.safeParse({
+      ...DIALOG_FSM_RECIPE,
+      actions: [{ id: 'run-code', description: 'Invalid executable action', execute: 'alert(1)' }],
+    }).success,
+    false,
+  );
+  assert.equal(
+    authoringFsmRecipeSchema.safeParse({
+      ...DIALOG_FSM_RECIPE,
+      actions: [{ id: 'nested', description: 'Invalid nested metadata', metadata: { payload: { code: 'x' } } }],
+    }).success,
+    false,
+  );
+});
+
 test('content refs are deterministic and collision-resistant', () => {
   const testValues = [
     { a: 1, b: 2 },
@@ -197,6 +282,8 @@ test('semantic rhythm text generation preserves core guidance', () => {
   
   // Should include spacing guidance derived from semantic tokens
   assert(profile.rhythmText.includes('semantic spacing'));
+  assert(profile.rhythmText.includes('gap-rhythm-sm -> gap-2'));
+  assert(profile.rhythmText.includes('text-heading-1 -> text-3xl'));
   assert(profile.rhythmText.includes('gap-2'));
   assert(profile.rhythmText.includes('gap-4'));
   

@@ -272,10 +272,10 @@ export const authoringFsmRecipeSchema = z
 
     // Check for at least one initial state
     const initialStates = recipe.states.filter(s => s.initial);
-    if (initialStates.length === 0) {
+    if (initialStates.length !== 1) {
       ctx.addIssue({
         code: 'custom',
-        message: 'FSM must have at least one initial state',
+        message: 'FSM must have exactly one initial state',
         path: ['states'],
       });
     }
@@ -291,6 +291,40 @@ export const authoringFsmRecipeSchema = z
         });
       }
       seenTransitionIds.add(transition.id);
+    }
+
+    const terminalIds = new Set(recipe.states.filter(state => state.terminal).map(state => state.id));
+    for (const [index, transition] of recipe.transitions.entries()) {
+      if (terminalIds.has(transition.from)) {
+        ctx.addIssue({
+          code: 'custom',
+          message: `Terminal state must not have outgoing transitions: ${transition.from}`,
+          path: ['transitions', index, 'from'],
+        });
+      }
+    }
+
+    if (initialStates.length === 1) {
+      const reachable = new Set<string>([initialStates[0]!.id]);
+      let changed = true;
+      while (changed) {
+        changed = false;
+        for (const transition of recipe.transitions) {
+          if (reachable.has(transition.from) && stateIds.has(transition.to) && !reachable.has(transition.to)) {
+            reachable.add(transition.to);
+            changed = true;
+          }
+        }
+      }
+      for (const [index, state] of recipe.states.entries()) {
+        if (!reachable.has(state.id)) {
+          ctx.addIssue({
+            code: 'custom',
+            message: `State is unreachable from the initial state: ${state.id}`,
+            path: ['states', index, 'id'],
+          });
+        }
+      }
     }
   });
 

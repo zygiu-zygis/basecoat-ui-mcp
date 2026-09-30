@@ -1,8 +1,10 @@
 // Author and maintainer: Žygimantas Jasiulionis / Intellmedia.
 import assert from 'node:assert/strict';
+import { fork } from 'node:child_process';
 import { mkdtemp, readFile, readdir, rm, unlink, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import test from 'node:test';
 import { compileRegistry } from '../src/macros/compiler.js';
 import { MacroError } from '../src/macros/packets.js';
@@ -560,49 +562,44 @@ test('deterministic next-step tie resolution', async () => {
   });
 });
 
-test('replay protection with true cross-process simulation', async () => {
+test('replay protection uses a genuine child-process race', async () => {
   await withProject(async (projectRoot, registry) => {
-    // Simulate cross-process by opening separate store instances
-    const storeA = await openFilesystemDesignStore(projectRoot, { create: true });
-    const storeB = await openFilesystemDesignStore(projectRoot, { create: false });
-    
-    // Process A creates session
-    await storeA.create({
+    const store = await openFilesystemDesignStore(projectRoot, { create: true });
+    await store.create({
       designId: 'cross-process',
       profile: registry.aliases['store-profile']!,
       operationId: 'op-create',
       registry,
     });
-    
     const recipe = registry.aliases['leaf-recipe']!;
-    const operation = {
-      designId: 'cross-process' as const,
-      expectedRevision: 0,
-      operationId: 'op-concurrent',
-      operations: [{ op: 'instantiate_recipe' as const, recipe, pagePrefix: 'proc' }],
-    };
-    
-    // Both processes try same operation concurrently
-    const [resultA, resultB] = await Promise.allSettled([
-      storeA.apply(operation),
-      storeB.apply(operation),
-    ]);
-    
-    // One should succeed, one should get identical replay receipt
-    assert.equal(resultA.status, 'fulfilled');
-    assert.equal(resultB.status, 'fulfilled');
-    
-    if (resultA.status === 'fulfilled' && resultB.status === 'fulfilled') {
-      // Both should return identical receipts due to idempotent replay
-      assert.deepEqual(resultA.value, resultB.value);
-      assert.equal(resultA.value.revision, 1);
+    const fixture = fileURLToPath(new URL('./fixtures/store-race.mjs', import.meta.url));
+    const children = [fork(fixture, [projectRoot, recipe]), fork(fixture, [projectRoot, recipe])];
+    try {
+      const outcomes = children.map(child => new Promise<unknown>((resolve, reject) => {
+        child.on('error', reject);
+        child.on('message', message => {
+          const packet = message as {
+            type?: string;
+            receipt?: unknown;
+            code?: unknown;
+            message?: unknown;
+          };
+          if (message && typeof message === 'object' && 'type' in message && message.type === 'ready') {
+            child.send({ type: 'go' });
+          } else if (message && typeof message === 'object' && 'type' in message && message.type === 'result') {
+            resolve(packet.receipt);
+          } else if (message && typeof message === 'object' && 'type' in message && message.type === 'error') {
+            reject(new Error(`${String(packet.code)}: ${String(packet.message)}`));
+          }
+        });
+      }));
+      const [resultA, resultB] = await Promise.all(outcomes);
+      assert.deepEqual(resultA, resultB);
+      assert.equal((resultA as { revision: number }).revision, 1);
+      assert.equal((await store.read('cross-process')).revision, 1);
+    } finally {
+      for (const child of children) child.kill();
     }
-    
-    // Final state should be consistent
-    const finalA = await storeA.read('cross-process');
-    const finalB = await storeB.read('cross-process');
-    assert.deepEqual(finalA, finalB);
-    assert.equal(finalA.revision, 1);
   });
 });
 
