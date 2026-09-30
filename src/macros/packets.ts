@@ -49,7 +49,7 @@ export function pageRecords<T>(
   start: number,
   header: Record<string, unknown>,
   cursorFor: (offset: number) => string,
-  options: { maxItems?: number } = {},
+  options: { maxItems?: number; maxBytes?: number } = {},
 ): CallToolResult {
   if (
     !Number.isSafeInteger(start) ||
@@ -59,6 +59,7 @@ export function pageRecords<T>(
     throw new MacroError('INVALID_CURSOR');
   }
   const maxItems = options.maxItems ?? records.length;
+  const byteLimit = options.maxBytes ?? MAX_DETAIL_BYTES;
   if (
     !Number.isSafeInteger(maxItems) ||
     maxItems < 0 ||
@@ -73,7 +74,7 @@ export function pageRecords<T>(
     items,
     next: start < records.length ? cursorFor(start) : null,
   });
-  if (resultBytes(best) > MAX_DETAIL_BYTES) {
+  if (resultBytes(best) > byteLimit) {
     throw new MacroError('HEADER_TOO_LARGE');
   }
   let end = start;
@@ -87,7 +88,7 @@ export function pageRecords<T>(
           ? cursorFor(end + 1)
           : null,
     });
-    if (resultBytes(candidate) > MAX_DETAIL_BYTES) {
+    if (resultBytes(candidate) > byteLimit) {
       break;
     }
     items.push(records[end]!);

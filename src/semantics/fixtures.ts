@@ -107,6 +107,27 @@ export const DEFAULT_RHYTHM_PROFILE: AuthoringRhythmProfile = {
         },
       ],
     },
+    {
+      id: 'layout',
+      description: 'Semantic layout containers, tracks, and aspect ratios.',
+      mappings: [
+        {
+          id: 'container-max-w',
+          value: 'max-w-7xl',
+          description: 'Standard page container max-width',
+        },
+        {
+          id: 'container-prose-max-w',
+          value: 'max-w-prose',
+          description: 'Readable prose / article container max-width',
+        },
+        {
+          id: 'aspect-video-ratio',
+          value: 'aspect-video',
+          description: 'Standard 16:9 widescreen video / hero aspect ratio',
+        },
+      ],
+    },
   ],
 };
 

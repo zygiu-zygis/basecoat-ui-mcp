@@ -77,6 +77,20 @@ export function getBlock(
   const ref = resolveAlias(registry, idOrRef);
   const block = registry.blocks[ref];
   if (!block) {
+    const recipe = registry.recipes[ref];
+    if (recipe) {
+      const rootBlockId = recipeRootBlockId(registry, recipe);
+      throw new MacroError(
+        'EXPECTED_BLOCK_GOT_RECIPE',
+        `Resolved '${idOrRef}' to recipe '${recipe.id}', not a block. Instantiate the recipe or fetch its root block${rootBlockId ? ` '${rootBlockId}'` : ''}.`,
+        {
+          recipeId: recipe.id,
+          recipeRef: ref,
+          entryPage: recipe.entryPage,
+          ...(rootBlockId ? { rootBlockId } : {}),
+        },
+      );
+    }
     throw new MacroError('UNKNOWN_BLOCK', `Unknown macro block: ${idOrRef}`);
   }
   return block;
@@ -259,20 +273,18 @@ export interface SearchMacroHit {
   id: Id;
   role: string;
   family: Id;
-  description: string;
-  tags: string[];
 }
 
-function scoreHit(hit: SearchMacroHit, tokens: string[]): number {
+function scoreMacroBlock(block: MacroBlock, tokens: string[]): number {
   if (tokens.length === 0) return 1;
-  const hay = [hit.id, hit.role, hit.family, hit.description, ...hit.tags]
+  const hay = [block.id, block.role, block.family, block.description, ...block.tags]
     .join(' ')
     .toLowerCase();
   let score = 0;
   for (const token of tokens) {
-    if (hit.id === token) score += 8;
-    else if (hit.id.includes(token)) score += 4;
-    else if (hit.role === token) score += 3;
+    if (block.id === token) score += 8;
+    else if (block.id.includes(token)) score += 4;
+    else if (block.role === token) score += 3;
     else if (hay.includes(token)) score += 1;
   }
   return score;
@@ -288,30 +300,32 @@ export function searchMacroBlocks(
     .split(/[^a-z0-9-]+/)
     .filter(Boolean);
 
-  const hits: SearchMacroHit[] = [];
+  const candidates: Array<{ hit: SearchMacroHit; score: number }> = [];
   for (const [ref, block] of Object.entries(registry.blocks)) {
     if (query.role && block.role !== query.role) continue;
     if (query.roles && query.roles.length > 0 && !query.roles.includes(block.role)) continue;
     if (query.family && block.family !== query.family) continue;
     if (query.tag && !block.tags.includes(query.tag)) continue;
-    const hit: SearchMacroHit = {
-      ref,
-      id: block.id,
-      role: block.role,
-      family: block.family,
-      description: block.description,
-      tags: [...block.tags],
-    };
-    const score = scoreHit(hit, tokens);
+    const score = scoreMacroBlock(block, tokens);
     if (tokens.length > 0 && score <= 0) continue;
-    hits.push(hit);
+    candidates.push({
+      hit: {
+        ref,
+        id: block.id,
+        role: block.role,
+        family: block.family,
+      },
+      score,
+    });
   }
 
-  hits.sort((a, b) => {
-    const scoreDiff = scoreHit(b, tokens) - scoreHit(a, tokens);
+  candidates.sort((a, b) => {
+    const scoreDiff = b.score - a.score;
     if (scoreDiff !== 0) return scoreDiff;
-    return a.id < b.id ? -1 : a.id > b.id ? 1 : 0;
+    return a.hit.id < b.hit.id ? -1 : a.hit.id > b.hit.id ? 1 : 0;
   });
+
+  const hits: SearchMacroHit[] = candidates.map(c => c.hit);
 
   const snapshot = registrySnapshotId(registry.revision);
   const fingerprint = compactFingerprint([

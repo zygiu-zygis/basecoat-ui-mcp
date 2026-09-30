@@ -58,10 +58,16 @@ await import("basecoat-css/popover");`;
 });
 
 describe('composition validation', () => {
-  it('detects cards nested through intermediate containers', () => {
+  it('detects cards nested through intermediate containers as warnings', () => {
     const result = validateComposition('<div class="card"><section><div class="card"></div></section></div>');
-    assert.equal(result.valid, false);
-    assert(result.issues.some(issue => issue.rule === 'nested-cards'));
+    assert.equal(result.valid, true);
+    assert(result.issues.some(issue => issue.rule === 'nested-cards' && issue.severity === 'warning'));
+  });
+
+  it('allows subcards marked with data-variant="subcard" or card-compact', () => {
+    assert.deepEqual(rules('<div class="card"><div class="card card-compact"></div></div>'), []);
+    assert.deepEqual(rules('<div class="card"><div class="card" data-variant="subcard"></div></div>'), []);
+    assert.deepEqual(rules('<div class="card"><div class="card subcard"></div></div>'), []);
   });
 
   it('allows cards inside an approved canvas host', () => {

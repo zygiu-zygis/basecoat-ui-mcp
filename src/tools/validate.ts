@@ -6,7 +6,7 @@ import type { Id } from '../semantics/types.js';
 
 export interface CompositionIssue {
   rule: string;
-  severity: 'error' | 'warning';
+  severity: 'error' | 'warning' | 'info';
   message: string;
   line: number;
   column?: number;
@@ -35,6 +35,7 @@ const MICRO_SPACING = new Set(['1', '1.5', '2.5', '3', '5']);
 const VARIANTS = new Set(['default', 'primary', 'secondary', 'outline', 'ghost', 'destructive', 'link']);
 const ITEM_ANATOMY_CLASSES = new Set([
   'item-title', 'item-description', 'item-media', 'item-content', 'item-actions', 'item-header',
+  'card-compact', 'subcard',
 ]);
 const ISSUE_CAP = 24;
 const SIZES = new Set(['xs', 'default', 'sm', 'lg', 'icon', 'icon-xs', 'icon-sm', 'icon-lg']);
@@ -167,7 +168,22 @@ export function validateComposition(code: string, options: ValidationOptions = {
     if (issues.length >= ISSUE_CAP) {
       truncated = true;
       if (severity === 'error') droppedErrors++;
-      return;
+      if (severity !== 'info') {
+        let infoIdx = -1;
+        for (let idx = issues.length - 1; idx >= 0; idx--) {
+          if (issues[idx]!.severity === 'info') {
+            infoIdx = idx;
+            break;
+          }
+        }
+        if (infoIdx !== -1) {
+          issues.splice(infoIdx, 1);
+        } else {
+          return;
+        }
+      } else {
+        return;
+      }
     }
     issues.push({
       rule,
@@ -231,18 +247,33 @@ export function validateComposition(code: string, options: ValidationOptions = {
     if (node.dynamic) report('dynamic-attributes', 'warning', 'Dynamic attributes cannot be checked completely; inspect their rendered classes and states.', node.line);
     const classes = node.classes.map(utility);
     if (classes.includes('card') || classes.includes('ui-card')) {
-      let parent = node.parent;
-      while (parent !== null) {
-        const ancestor = nodes[parent]!;
-        const isCanvas =
-          ancestor.attrs['data-role'] === 'canvas' || ancestor.attrs['data-macro'] === 'canvas';
-        if (
-          !isCanvas &&
-          ancestor.classes.some(value => ['card', 'ui-card'].includes(utility(value)))
-        ) {
-          report('nested-cards', 'error', 'Cards inside cards are forbidden. Use a flat section, list or divider for the inner group.', node.line); break;
+      const isSubcard =
+        node.attrs['data-variant'] === 'subcard' ||
+        node.attrs['variant'] === 'subcard' ||
+        node.attrs['data-role'] === 'subcard' ||
+        classes.includes('card-compact') ||
+        classes.includes('subcard');
+      if (!isSubcard) {
+        let parent = node.parent;
+        while (parent !== null) {
+          const ancestor = nodes[parent]!;
+          const isCanvas =
+            ancestor.attrs['data-role'] === 'canvas' || ancestor.attrs['data-macro'] === 'canvas';
+          if (
+            !isCanvas &&
+            ancestor.classes.some(value => ['card', 'ui-card'].includes(utility(value)))
+          ) {
+            report(
+              'nested-cards',
+              'warning',
+              'Cards inside cards are discouraged. Use a flat section, list or divider, or mark with data-variant="subcard" or card-compact.',
+              node.line,
+              'Add data-variant="subcard", class "card-compact", or replace inner card with a section/divider.',
+            );
+            break;
+          }
+          parent = ancestor.parent;
         }
-        parent = ancestor.parent;
       }
     }
     for (const token of classes) {
@@ -251,19 +282,20 @@ export function validateComposition(code: string, options: ValidationOptions = {
       if (spacing) {
         const [, negative, family, value] = spacing;
         const allowedAuto = family!.startsWith('m') && value === 'auto' && !negative;
-        const microSuppressed =
+        const microAllowed =
           densityProfile === 'compact' &&
           !negative &&
-          MICRO_SPACING.has(value!) &&
-          isMicroChromeContext(node, nodes);
-        if ((!spacingSteps.has(value!) || !!negative) && !allowedAuto && !microSuppressed) {
-          const allowed = [...spacingSteps].join(', ');
-          report(
-            'spacing-rhythm',
-            'warning',
-            `Use ${allowed} spacing steps; replace ${token}. Margin auto is allowed for alignment.`,
-            node.line,
-          );
+          MICRO_SPACING.has(value!);
+        if ((!spacingSteps.has(value!) || !!negative) && !allowedAuto && !microAllowed) {
+          if (!semanticMappings) {
+            const allowed = [...spacingSteps].join(', ');
+            report(
+              'spacing-rhythm',
+              'warning',
+              `Use ${allowed} spacing steps; replace ${token}. Margin auto is allowed for alignment.`,
+              node.line,
+            );
+          }
         }
       }
       if (/^(?:bg-(?:gradient|linear|radial|conic)(?:-|$)|bg-\[.*gradient\(|(?:from|via|to)-)/.test(token)) report('random-gradient', 'warning', `Remove decorative gradient utility ${token}; use a neutral surface and hierarchy.`, node.line);
@@ -286,7 +318,7 @@ export function validateComposition(code: string, options: ValidationOptions = {
         if (semanticViolation) {
           report(
             'semantic-token-available',
-            'warning',
+            'info',
             semanticViolation.message,
             node.line,
             semanticViolation.repair,
@@ -309,13 +341,18 @@ export function validateComposition(code: string, options: ValidationOptions = {
           ? null
           : /^-?(?:gap(?:-[xy])?|space-[xy]|[mp][trblxyse]?)-(.+)$/.exec(token);
         if (hardcodedSpacing && hardcodedSpacing[1] !== '0' && hardcodedSpacing[1] !== 'auto' && !semanticMappings.byUtility.has(token)) {
-          report(
-            'semantic-hardcoded-spacing',
-            'warning',
-            `Hardcoded spacing utility '${token}' is outside the selected semantic profile.`,
-            node.line,
-            'Choose a spacing or density mapping from get_rhythm_rules and apply its approved utility.',
-          );
+          const val = hardcodedSpacing[1]!;
+          const isMicroCompact = densityProfile === 'compact' && MICRO_SPACING.has(val);
+          if (!isMicroCompact) {
+            const allowed = [...spacingSteps].join(', ');
+            report(
+              'semantic-hardcoded-spacing',
+              'warning',
+              `Hardcoded spacing utility '${token}' is outside the selected semantic profile '${options.semanticProfile}'. Use approved steps (${allowed}) from get_rhythm_rules.`,
+              node.line,
+              'Choose a spacing or density mapping from get_rhythm_rules and apply its approved utility.',
+            );
+          }
         }
         if (TYPOGRAPHY_UTILITY.test(token) && !semanticMappings.byToken.has(token) && !semanticMappings.byUtility.has(token)) {
           report(

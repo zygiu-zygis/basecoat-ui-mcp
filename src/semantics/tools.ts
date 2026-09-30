@@ -109,6 +109,7 @@ export async function handleGetRhythmRules(
     const FAMILY_ALIASES: Record<string, string> = {
       surface: 'surfaces',
       border: 'borders',
+      layouts: 'layout',
     };
     if (familyFilter && FAMILY_ALIASES[familyFilter]) {
       familyFilter = FAMILY_ALIASES[familyFilter];

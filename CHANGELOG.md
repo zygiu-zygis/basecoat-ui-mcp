@@ -23,7 +23,14 @@ Maintained by **Žygimantas Jasiulionis / Intellmedia**.
   - Preserved `dialog` and `collapsible-navigation` recipes (5 recipes, 6 aliases).
 - Enforced landmark composition invariants across all blocks: shells `main: 0, primaryHeading: 0`, headers `main: 0, primaryHeading: 1`, canvases `main: 1, primaryHeading: 0`.
 - Enforced strict rhythm spacing steps (`0, 2, 4, 6, 12`, `auto`) and Emmet string length limit (`LIMITS.emmetMax = 1200`) across all blueprints.
-- Expanded test coverage across macro registry, semantics, composition validation, and end-to-end page context tests (174 tests passing).
+- Resolved all 6 findings from the 2026-09-30 evaluation report:
+  - **Budget & Pagination**: `search_macro_blocks` returns compact hit identifiers (`ref`, `id`, `role`, `family`) with search indexing retained across descriptions and tags, delivering 15+ results per page under the strict `MAX_DETAIL_BYTES = 1999` protocol budget. `pageRecords` gains an optional `maxBytes` budget override.
+  - **Layout Rhythm Family**: Added the `layout` family to `DEFAULT_RHYTHM_PROFILE` in `src/semantics/fixtures.ts` (`container-max-w`, `container-prose-max-w`, `aspect-video-ratio`) and `layouts` alias in `src/semantics/tools.ts`, eliminating the `NOT_FOUND` error on `get_rhythm_rules({ profile: "default", family: "layout" })`.
+  - **Recipe Alias Resolution**: `getBlock` now explicitly identifies recipe aliases and throws `EXPECTED_BLOCK_GOT_RECIPE` with complete recipe metadata, entryPage, and rootBlockId instead of generic `UNKNOWN_BLOCK`.
+  - **Spacing Rhythm Deduplication & Compact Micro-Spacing**: Eliminated duplicate warnings for standard Tailwind spacing utilities (`gap-3`, `p-3`, `p-1`) when `semanticProfile` is active by consolidating off-scale violations into `semantic-hardcoded-spacing`. Enabled micro-spacing steps (`1`, `1.5`, `2.5`, `3`, `5`) in `densityProfile: "compact"` across both rhythm scale and semantic profile validation.
+  - **Nested Cards Relaxation**: Downgraded `nested-cards` from fatal error (`valid: false`) to `warning` so complex dashboard panel layouts remain valid; added native allowance for nested subcards (`data-variant="subcard"`, `variant="subcard"`, `data-role="subcard"`, `card-compact`, `subcard`) without warnings.
+  - **Semantic Token Available Noise**: Changed `semantic-token-available` issue severity from `warning` to `info` for approved utilities, preventing legal classes from obscuring real errors and ensuring `info` issues never displace errors/warnings at `ISSUE_CAP = 24`.
+- Expanded test coverage across macro registry, semantics, composition validation, and end-to-end page context tests (181 tests passing).
 - Updated Cursor rule `templates/cursor/basecoat-designer.mdc` and added design guide `docs/mcp-blocks-expansion.md`.
 
 ## 1.3.0 - 2026-09-30

@@ -47,9 +47,12 @@ test('semantic registry compilation produces stable content-addressable results'
   assert.deepEqual(
     [...semanticIds].sort(),
     [
+      'aspect-video-ratio',
       'bg-surface-primary',
       'bg-surface-secondary',
       'border-subtle',
+      'container-max-w',
+      'container-prose-max-w',
       'gap-rhythm-lg',
       'gap-rhythm-md',
       'gap-rhythm-sm',

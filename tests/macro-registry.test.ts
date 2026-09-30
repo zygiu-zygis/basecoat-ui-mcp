@@ -403,19 +403,20 @@ test('macro block search paginates at complete record boundaries', () => {
   const { registry, diagnostics } = compileRegistry(inputWith(blocks));
   assert.equal(diagnostics.filter(d => d.severity === 'error').length, 0);
 
-  const collected: Array<{ id: string; description: string }> = [];
+  const collected: Array<{ id: string; role: string; family: string }> = [];
   let cursor: string | undefined;
   do {
     const result = searchMacroBlocks(registry, { limit: 32, cursor });
     assert(resultBytes(result) <= MAX_DETAIL_BYTES);
     const packet = JSON.parse((result.content[0] as { text: string }).text) as {
-      items: Array<{ id: string; description: string }>;
+      items: Array<{ id: string; role: string; family: string }>;
       next: string | null;
       total: number;
     };
     assert.equal(packet.total, blocks.length);
     for (const item of packet.items) {
-      assert.equal(item.description.length, LIMITS.descriptionMax);
+      assert(item.id.startsWith('search-'));
+      assert.equal(item.role, 'page');
     }
     collected.push(...packet.items);
     cursor = packet.next ?? undefined;

@@ -43,7 +43,7 @@ test('offline stdio initializes and serves the bounded, project-scoped MCP surfa
   try {
     await client.connect(transport);
     assert.equal(client.getServerVersion()?.name, 'basecoat-ui-mcp');
-    assert.equal(client.getServerVersion()?.version, '1.3.0');
+    assert.equal(client.getServerVersion()?.version, '1.4.0');
     assert.match(client.getInstructions() ?? '', /content hierarchy.*layout.*component selection/i);
     assert.match(client.getInstructions() ?? '', /offline/i);
     assert.match(client.getInstructions() ?? '', /begin_design/i);
