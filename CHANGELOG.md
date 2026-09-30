@@ -2,9 +2,7 @@
 
 Maintained by **Žygimantas Jasiulionis / Intellmedia**.
 
-## Unreleased
-
-### Recommended 1.2.0 - Semantic protocol hardening
+## 1.2.0 - 2026-09-30
 
 - Added independent compiled semantic registry with rhythm profiles and FSM recipes under `src/semantics/`.
 - Added two new read-only semantic tools: `get_rhythm_rules` for spacing, typography, surfaces, borders, and layout patterns; `get_fsm_recipe` for interaction states, events, transitions, guards, and actions.
@@ -25,7 +23,6 @@ Maintained by **Žygimantas Jasiulionis / Intellmedia**.
 - Expanded packed read-only offline package evidence to exercise semantic and macro calls and assert writes stay under the configured project root.
 - Added a manual `benchmarks/runtime.bench.ts` harness (not part of `npm test`).
 - Added `npm run check` for type-checking, both snapshot checks, tests, and branch whitespace validation.
-- The package remains at version 1.1.0. Release these changes as 1.2.0 after maintainer review.
 
 ## 1.1.0 - 2026-09-30
 
