@@ -82,7 +82,7 @@ test('oversized details fail closed instead of returning broken JSON', () => {
   const oversized = structuredClone(registry);
   oversized.details.dialog!.markup_template = '<div>' + '界'.repeat(1000) + '</div>';
   assert.throws(() => getComponentDetails('dialog', 'astro', oversized), /1999/);
-  assert.throws(() => assertDetailBudget({ text: '😀'.repeat(600) }), /1999/);
+  assert.throws(() => assertDetailBudget({ text: '𐍈'.repeat(600) }), /1999/);
   assert.throws(() => getComponentDetails('__proto__', 'astro'), /Unknown/);
 });
 

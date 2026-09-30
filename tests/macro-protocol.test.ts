@@ -38,11 +38,11 @@ function measure(result: unknown): number {
   return Buffer.byteLength(JSON.stringify(result), 'utf8');
 }
 
-test('boundedMacroResult packet envelope covers ASCII, multibyte, emoji, quotes, and isError bytes', () => {
+test('boundedMacroResult packet envelope covers ASCII, multibyte, four-byte, quotes, and isError bytes', () => {
   const samples = [
     { label: 'ascii', value: 'hello-world' },
     { label: 'multibyte', value: '界界界' },
-    { label: 'emoji', value: '🚀✨' },
+    { label: 'four-byte', value: '𐍈𐍈' },
     { label: 'quotes', value: 'say "hi" and \'bye\'' },
   ];
   for (const sample of samples) {

@@ -2054,7 +2054,7 @@
         ],
         "js": []
       },
-      "markup_template": "<div class=\"input-group\">\n  <input type=\"text\" placeholder=\"Search...\" />\n  <span data-align=\"start\" aria-hidden=\"true\">⌕</span>\n  <span data-align=\"end\">12 results</span>\n</div>",
+      "markup_template": "<div class=\"input-group\">\n  <input type=\"text\" placeholder=\"Search...\" />\n  <span data-align=\"start\" aria-hidden=\"true\">Search</span>\n  <span data-align=\"end\">12 results</span>\n</div>",
       "composition_rules": "Native input/textarea/select stay borderless children. data-align=\"start|end\" places addons; data-orientation=\"vertical\" uses header/footer rows. Wrong: wrap the control outside input-group or omit aria-hidden on decorative icons."
     },
     "item": {
@@ -2241,8 +2241,8 @@
           "basecoat-css/basecoat"
         ]
       },
-      "markup_template": "<button type=\"button\" aria-label=\"Toggle dark mode\" data-tooltip=\"Toggle dark mode\" data-side=\"bottom\" onclick=\"window.basecoat.theme.toggle()\" class=\"btn\" data-variant=\"outline\" data-size=\"icon\">\n  <span class=\"hidden dark:block\">☀</span>\n  <span class=\"block dark:hidden\">☾</span>\n</button>",
-      "composition_rules": "Requires basecoat runtime for window.basecoat.theme.toggle(). Pair sun/moon icons with dark:hidden/dark:block. Add inline pre-CSS themeMode script to avoid flash. Wrong: import basecoat-css/all or a nonexistent theme-switcher module."
+      "markup_template": "<button type=\"button\" aria-label=\"Toggle dark mode\" data-tooltip=\"Toggle dark mode\" data-side=\"bottom\" onclick=\"window.basecoat.theme.toggle()\" class=\"btn\" data-variant=\"outline\" data-size=\"icon\">\n  <span class=\"hidden dark:block\" aria-hidden=\"true\">L</span>\n  <span class=\"block dark:hidden\" aria-hidden=\"true\">D</span>\n</button>",
+      "composition_rules": "Requires basecoat runtime for window.basecoat.theme.toggle(). Pair the light/dark text markers with dark:hidden/dark:block and keep them aria-hidden. Add inline pre-CSS themeMode script to avoid flash. Wrong: import basecoat-css/all or a nonexistent theme-switcher module."
     },
     "toast": {
       "dependencies": {

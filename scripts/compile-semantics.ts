@@ -32,7 +32,7 @@ async function main(): Promise<void> {
     process.exit(1);
   }
   
-  console.log(`✓ Compilation successful (${warnings.length} warnings)`);
+  console.log(`OK: Compilation successful (${warnings.length} warnings)`);
   console.log(`  Registry revision: ${registry.revision}`);
   console.log(`  Rhythm profiles: ${Object.keys(registry.rhythmProfiles).length}`);
   console.log(`  FSM recipes: ${Object.keys(registry.fsmRecipes).length}`);
@@ -49,14 +49,14 @@ async function main(): Promise<void> {
       const expectedContent = canonicalJson(registry);
       
       if (existing.trim() === expectedContent.trim()) {
-        console.log('✓ Existing snapshot is up to date');
+        console.log('OK: Existing snapshot is up to date');
         return;
       } else {
-        console.error('✗ Snapshot is outdated, run without --check to update');
+        console.error('ERROR: Snapshot is outdated, run without --check to update');
         process.exit(1);
       }
     } else {
-      console.error('✗ Snapshot does not exist, run without --check to create');
+      console.error('ERROR: Snapshot does not exist, run without --check to create');
       process.exit(1);
     }
   }
@@ -71,7 +71,7 @@ async function main(): Promise<void> {
   const content = canonicalJson(registry);
   writeFileSync(snapshotPath, content, 'utf8');
   
-  console.log(`✓ Snapshot written: ${snapshotPath}`);
+  console.log(`OK: Snapshot written: ${snapshotPath}`);
 }
 
 main().catch(error => {

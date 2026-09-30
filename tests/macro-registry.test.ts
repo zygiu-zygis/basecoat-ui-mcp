@@ -454,8 +454,8 @@ test('canonical hash stability across serialization variations', () => {
 test('packet boundary enforcement with multibyte characters and edge cases', () => {
   // Test packet boundaries with various character encodings
   const multibyte = '界界界界界'; // Each character is 3 bytes in UTF-8
-  const emoji = '🚀✨🎉🔥💎'; // Each emoji is 4 bytes in UTF-8
-  const mixed = `test-${multibyte}-${emoji}`;
+  const fourByte = '𐍈𐍈𐍈𐍈𐍈'; // Each character is 4 bytes in UTF-8
+  const mixed = `test-${multibyte}-${fourByte}`;
   
   const cursorFactory = createCursorFactory({
     v: 1,
@@ -468,7 +468,7 @@ test('packet boundary enforcement with multibyte characters and edge cases', () 
   const records = [
     { id: 'ascii', content: 'simple-ascii-content' },
     { id: 'multibyte', content: multibyte.repeat(10) },
-    { id: 'emoji', content: emoji.repeat(5) },
+    { id: 'four-byte', content: fourByte.repeat(5) },
     { id: 'mixed', content: mixed.repeat(3) },
   ];
   

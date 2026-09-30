@@ -216,7 +216,8 @@ run during server startup or MCP requests.
 
 ## Development guidelines
 
-**No emoji in code or documentation.** The project maintains a strictly professional, text-based approach throughout all source files, documentation, comments, commit messages, and user-facing content. Use descriptive text instead of emoji for clarity and consistency.
+Do not use emoji in tracked project files, including code, documentation, tests,
+logs, templates, generated snapshots, and comments. Use ASCII text instead.
 
 ## Verification
 
