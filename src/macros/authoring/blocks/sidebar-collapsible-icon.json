@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "id": "sidebar-collapsible-icon",
+  "role": "navigation",
+  "family": "layout",
+  "description": "Icon-collapsed rail sidebar navigation with badge indicators, tooltip-ready targets, and workspace switcher.",
+  "tags": ["navigation", "sidebar", "collapsible-icon", "rail"],
+  "root": "rail-root",
+  "fragments": [
+    {
+      "id": "rail-root",
+      "emmet": "aside.sidebar.w-16.flex.flex-col.items-center.gap-4.border-r.py-4[data-slot=sidebar-host][data-component=sidebar][data-fsm-recipe=navigation][data-fsm-state=collapsed]>button.btn.p-2[data-variant=ghost][data-slot=workspace-switcher]{Logo}+nav.flex.flex-col.gap-2.flex-1[aria-label=IconNavigation]>a.btn.p-2[data-variant=ghost][aria-label=Dashboard]{D}+a.btn.p-2.relative[data-variant=ghost][aria-label=Alerts]{A+span.badge.p-0[data-variant=destructive]{3}}+a.btn.p-2[data-variant=ghost][aria-label=Settings]{S}^div.mt-auto[data-slot=user-footer]>button.btn.p-2[data-variant=ghost]{U}"
+    }
+  ],
+  "mounts": [],
+  "slots": [
+    {
+      "id": "workspace-switcher",
+      "at": { "fragment": "rail-root", "name": "workspace-switcher" },
+      "accepts": ["action"],
+      "min": 0,
+      "max": 1
+    },
+    {
+      "id": "user-footer",
+      "at": { "fragment": "rail-root", "name": "user-footer" },
+      "accepts": ["action"],
+      "min": 0,
+      "max": 1
+    }
+  ],
+  "ports": [
+    {
+      "id": "nav-toggle-in",
+      "at": { "fragment": "rail-root", "name": "rail-root" },
+      "direction": "in",
+      "kind": "control",
+      "contract": "nav-toggle",
+      "minLinks": 0,
+      "maxLinks": 1,
+      "scope": "shell"
+    }
+  ],
+  "componentRefs": ["sidebar", "button", "badge"],
+  "ruleRefs": [],
+  "dependencyBlockIds": [],
+  "layout": { "frameRef": "rail-root" },
+  "landmarks": { "main": 0, "primaryHeading": 0 },
+  "provenance": {
+    "origin": "authored",
+    "sourceHashes": {},
+    "mappingVersion": "1.0.0"
+  }
+}

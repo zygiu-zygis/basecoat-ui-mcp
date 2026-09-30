@@ -360,8 +360,11 @@ describe('semantic structure bindings', () => {
     assert(rules('<dialog data-fsm-state="open"></dialog>').includes('fsm-binding-missing'));
     assert(rules('<dialog data-fsm-recipe="missing" data-fsm-state="open"></dialog>').includes('fsm-recipe-invalid'));
     assert(rules('<dialog data-fsm-recipe="dialog"></dialog>').includes('fsm-state-missing'));
-    assert(rules('<dialog data-fsm-recipe="dialog" data-fsm-state="unknown"></dialog>').includes('fsm-state-invalid'));
     assert(!rules('<dialog data-fsm-recipe="dialog" data-fsm-state="open"></dialog>').some(rule => rule.startsWith('fsm-')));
+    assert(!rules('<aside data-fsm-recipe="navigation" data-fsm-state="expanded"></aside>').some(rule => rule.startsWith('fsm-')));
+    assert(!rules('<form data-fsm-recipe="auth-flow" data-fsm-state="idle"></form>').some(rule => rule.startsWith('fsm-')));
+    assert(!rules('<div data-fsm-recipe="tabs" data-fsm-state="active"></div>').some(rule => rule.startsWith('fsm-')));
+    assert(rules('<div data-fsm-recipe="tabs" data-fsm-state="invalid-state"></div>').includes('fsm-state-invalid'));
   });
 });
 

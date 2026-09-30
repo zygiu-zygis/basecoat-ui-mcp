@@ -101,12 +101,27 @@ The macro layer is this project's curated, project-specific composition system f
 
 Design sessions persist under `<project-root>/.basecoat/designer/`. Registry revisions are content-addressed; a session keeps using its pinned revision even after the package snapshot changes. Design snapshots use the form `d:<designId>@<revision>`.
 
+Curated block blueprints:
+- **Shells & Navigation**: `app-shell`, `sidebar-dashboard-shell`, `sidebar-inset-shell`, `sidebar-collapsible-icon`, `sidebar-mobile-flyout`, `page-header`.
+- **Authentication**: `auth-sign-in`, `auth-sign-up`, `auth-split-screen`.
+- **Application & Workspace**: `dashboard-workspace`, `dashboard-main`, `dashboard-activity`, `settings-workspace`, `data-table-detail-layout`, `detail-drawer-panel`.
+- **Forms & Data**: `form-section`, `data-filters`, `data-records`, `data-pagination`.
+- **Marketing, Content & Utility**: `pricing-tiers`, `newsletter-waitlist`, `empty-state`, `error-boundary`, `svg-area-chart`, `segmented-toggle`.
+
+Multi-block recipes:
+- `workspace-dashboard` - full analytics dashboard (KPI cards, activity chart, records table).
+- `workspace-settings` - application shell with navigation, header, and settings workspace tabs.
+- `workspace-detail` - data table workspace with slide-over detail inspection drawer.
+- `auth-flow` - bidirectional authentication flow between sign-in and sign-up cards.
+- `auth-split-flow` - split-screen auth frame pairing sign-in and sign-up with hero media.
+- `marketing-pricing` - 3-tier pricing table paired with newsletter/waitlist banner.
+
 ### Semantic tools
 
 The semantic layer provides compiled rhythm profiles and finite state machine recipes:
 
 7. `get_rhythm_rules` - access approved spacing, typography, surfaces, borders, and layout patterns by profile and family filters.
-8. `get_fsm_recipe` - read interaction states, events, transitions, guards, and actions for dialogs, navigation, and behavioral patterns.
+8. `get_fsm_recipe` - read interaction states, events, transitions, guards, and actions for `dialog`, `navigation` (`collapsible-navigation`), `auth-flow`, and `tabs`.
 
 Semantic tools use the same bounded pagination as macro tools. Each rhythm record keeps the semantic token ID separate from its approved Tailwind utility. Put the utility in `class`; keep the semantic ID in design metadata and agent reasoning. Project overrides from `<project-root>/.basecoat/rhythm.json` are reflected in an effective content ref and revision. FSM recipes are structural metadata, not runtime implementations.
 

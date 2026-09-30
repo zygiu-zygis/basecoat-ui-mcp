@@ -1,0 +1,76 @@
+{
+  "schemaVersion": 1,
+  "id": "workspace-settings",
+  "kind": "page",
+  "profile": "app-default",
+  "entryPage": "settings",
+  "routeLinks": [],
+  "pages": [
+    {
+      "id": "settings",
+      "route": "/settings",
+      "recipe": "workspace-settings",
+      "root": "shell",
+      "status": "plan-ready",
+      "decisions": { "density": "compact" },
+      "nodes": {
+        "shell": {
+          "id": "shell",
+          "block": "app-shell",
+          "bindings": {}
+        },
+        "nav": {
+          "id": "nav",
+          "block": "sidebar-dashboard-shell",
+          "parent": { "node": "shell", "slot": "navigation", "order": 0 },
+          "bindings": {}
+        },
+        "header": {
+          "id": "header",
+          "block": "page-header",
+          "parent": { "node": "shell", "slot": "header", "order": 0 },
+          "bindings": {}
+        },
+        "content": {
+          "id": "content",
+          "block": "settings-workspace",
+          "parent": { "node": "shell", "slot": "content", "order": 0 },
+          "bindings": {}
+        }
+      },
+      "connections": [
+        {
+          "id": "shell-to-canvas",
+          "relation": "controls",
+          "from": { "node": "shell", "port": "main-region" },
+          "to": { "node": "content", "port": "main-in" }
+        },
+        {
+          "id": "header-to-nav",
+          "relation": "controls",
+          "from": { "node": "header", "port": "nav-toggle-out" },
+          "to": { "node": "nav", "port": "nav-toggle-in" }
+        }
+      ],
+      "rules": [
+        {
+          "id": "settings-shell-frame",
+          "type": "same-frame",
+          "nodes": ["header", "content"]
+        },
+        {
+          "id": "settings-same-shell",
+          "type": "same-shell",
+          "nodes": ["nav", "header", "content"]
+        },
+        {
+          "id": "settings-shell-gutter",
+          "type": "single-owner",
+          "boundary": "shell-root",
+          "property": "gutter",
+          "nodes": ["shell"]
+        }
+      ]
+    }
+  ]
+}

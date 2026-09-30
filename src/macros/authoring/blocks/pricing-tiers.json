@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "id": "pricing-tiers",
+  "role": "pricing",
+  "family": "marketing",
+  "description": "Three-tier pricing table featuring Free, Pro (popular), and Enterprise plans with feature checklists and CTAs.",
+  "tags": ["pricing", "marketing", "tiers", "subscription"],
+  "root": "pricing-root",
+  "fragments": [
+    {
+      "id": "pricing-root",
+      "emmet": "section.flex.flex-col.items-center.gap-6.p-6.lg:p-12[data-role=canvas][data-macro=canvas]>div.text-center>h1.text-3xl.font-bold{Simple pricing}+p.text-muted{Choose the best plan for your team.}^div.grid.grid-cols-1.gap-6.md:grid-cols-3.w-full.max-w-6xl>div.card.p-6.flex.flex-col.justify-between>div.flex.flex-col.gap-4>h3.text-xl.font-semibold{Starter}+span.text-3xl.font-bold{Free}+ul.space-y-2.text-sm.text-muted>li{3 members}+li{Core analytics}+li{Community support}^^button.btn.w-full[data-variant=outline]{Get Started}^div.card.p-6.flex.flex-col.justify-between.relative>span.badge.absolute.top-2.right-2[data-variant=secondary]{Popular}+div.flex.flex-col.gap-4>h3.text-xl.font-semibold{Pro}+span.text-3xl.font-bold{29/mo}+ul.space-y-2.text-sm.text-muted>li{Unlimited members}+li{Advanced analytics}+li{Priority support}^^button.btn.w-full[data-variant=primary]{Upgrade to Pro}^div.card.p-6.flex.flex-col.justify-between>div.flex.flex-col.gap-4>h3.text-xl.font-semibold{Enterprise}+span.text-3xl.font-bold{Custom}+ul.space-y-2.text-sm.text-muted>li{Custom SLAs}+li{Dedicated cluster}+li{24/7 support}^^button.btn.w-full[data-variant=outline]{Contact Sales}"
+    }
+  ],
+  "mounts": [],
+  "slots": [],
+  "ports": [],
+  "componentRefs": ["card", "badge", "button"],
+  "ruleRefs": [],
+  "dependencyBlockIds": [],
+  "layout": { "frameRef": "pricing-root" },
+  "landmarks": { "main": 1, "primaryHeading": 1 },
+  "provenance": {
+    "origin": "authored",
+    "sourceHashes": {},
+    "mappingVersion": "1.0.0"
+  }
+}

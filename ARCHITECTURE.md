@@ -58,7 +58,7 @@ by MCP itself. Design sessions persist under
 
 The semantic registry provides compiled rhythm profiles and FSM recipes from `src/semantics/semantics.snapshot.json`. Runtime startup reads this packaged snapshot from the source package layout, including when execution begins in `dist/`. It never creates or rewrites package files. Only the explicit `compile:semantics` authoring command writes the snapshot.
 
-Rhythm profiles keep a semantic ID separate from its approved Tailwind utility. The ID is design metadata; the utility is executable class text. FSM recipes define states, events, transitions, guards, and metadata-only actions. They are not runtime implementations.
+Rhythm profiles keep a semantic ID separate from its approved Tailwind utility. The ID is design metadata; the utility is executable class text. FSM recipes define states, events, transitions, guards, and metadata-only actions. They are not runtime implementations. The packaged semantic snapshot provides recipes for `dialog`, `navigation` (alias `collapsible-navigation`), `auth-flow`, and `tabs`, covering modal dialog lifecycles, collapsible/rail/mobile navigation states, authentication form workflows, and tab panel activation.
 
 Both semantic tools use content-addressed refs, bounded pagination, and immutable snapshots like macro tools. The loader verifies every record key against its canonical content hash, checks alias targets and identities, then verifies the registry revision. Project-local rhythm overrides at `<projectRoot>/.basecoat/rhythm.json` produce an effective profile ref and revision without mutating the packaged snapshot. Overrides are limited to 65,536 UTF-8 bytes. The loader refuses a symlinked `.basecoat` directory, a symlinked or non-regular override file, paths that resolve outside the project root, and oversized or schema-invalid content. Matching override IDs replace base mappings in place and keep the packaged mapping order. Missing or rejected overrides leave the packaged profile unchanged. Changed valid overrides invalidate prior cursors.
 
@@ -168,6 +168,27 @@ begin_design
 not one of the six macro tools.
 
 Consumer rule template: `templates/cursor/basecoat-designer.mdc` (copy into a host project's `.cursor/rules`; the server never writes consumer app sources).
+
+### Block blueprints and recipes
+
+The compiled macro registry (`src/macros/registry.snapshot.json`) provides curated block blueprints across core application workflows:
+
+- **Shells & Navigation**: `app-shell`, `sidebar-dashboard-shell`, `sidebar-inset-shell`, `sidebar-collapsible-icon`, `sidebar-mobile-flyout`, `page-header`.
+- **Authentication**: `auth-sign-in`, `auth-sign-up`, `auth-split-screen`.
+- **Application & Workspace Canvases**: `dashboard-workspace`, `dashboard-main`, `dashboard-activity`, `settings-workspace`, `data-table-detail-layout`, `detail-drawer-panel`.
+- **Forms & Data**: `form-section`, `data-filters`, `data-records`, `data-pagination`.
+- **Marketing, Content & Utility**: `pricing-tiers`, `newsletter-waitlist`, `empty-state`, `error-boundary`, `svg-area-chart`, `segmented-toggle`.
+
+Multi-block and multi-page recipes wire these blocks into cohesive design graphs:
+
+- `workspace-dashboard`: Shell, dashboard sidebar, header, KPIs, activity chart, and data records.
+- `workspace-settings`: Inset shell, sidebar navigation, header, and settings workspace tabs.
+- `workspace-detail`: Inset shell, header, filter toolbar, records table, pagination, and slide-over detail drawer.
+- `auth-flow`: Bidirectional authentication flow between sign-in and sign-up cards.
+- `auth-split-flow`: Split-screen auth frame pairing sign-in and sign-up with branded hero media.
+- `marketing-pricing`: 3-tier pricing table paired with newsletter/waitlist banner.
+
+Composition rules enforce page-level landmark invariants (`main: 1, primaryHeading: 1` per complete page), frame alignment for `same-frame` layout rules (`layout.frameRef`), and strict spacing rhythm (`0, 2, 4, 6, 12` steps or `auto`).
 
 ## Host project context
 

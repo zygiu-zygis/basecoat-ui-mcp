@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "id": "auth-split-screen",
+  "role": "auth-frame",
+  "family": "auth",
+  "description": "Split-screen auth layout featuring a form container pane on one side and a branded hero media pane on the other.",
+  "tags": ["auth", "split-screen", "hero", "layout"],
+  "root": "split-root",
+  "fragments": [
+    {
+      "id": "split-root",
+      "emmet": "div.grid.min-h-screen.lg:grid-cols-2[data-slot=auth-split-root]>div.flex.flex-col.justify-between.p-6.lg:p-12>div.flex.items-center.gap-2>span.font-semibold{Acme Inc}^div.mx-auto.w-full.max-w-sm.p-6[data-slot=form]+div.text-center.text-sm.text-muted{By clicking continue, you agree to our Terms of Service}^^div.relative.hidden.h-full.flex-col.justify-between.bg-muted.p-12.text-white.lg:flex[data-slot=media]>div.font-semibold{Acme Inc}+blockquote.space-y-2>p.text-lg{This library has completely transformed how we build and ship apps.}+footer.text-sm.text-muted{Sofia Davis, Lead Architect}"
+    }
+  ],
+  "mounts": [],
+  "slots": [
+    {
+      "id": "form",
+      "at": { "fragment": "split-root", "name": "form" },
+      "accepts": ["page", "form"],
+      "min": 1,
+      "max": 1
+    }
+  ],
+  "ports": [],
+  "componentRefs": ["card", "button"],
+  "ruleRefs": [],
+  "dependencyBlockIds": [],
+  "layout": { "frameRef": "split-root" },
+  "landmarks": { "main": 0, "primaryHeading": 0 },
+  "provenance": {
+    "origin": "authored",
+    "sourceHashes": {},
+    "mappingVersion": "1.0.0"
+  }
+}

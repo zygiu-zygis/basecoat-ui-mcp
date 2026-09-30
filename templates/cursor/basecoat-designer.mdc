@@ -20,8 +20,9 @@ Use this workflow when creating or modifying a Basecoat page with
    (`overview` or `next`).
 
 4. Select or resume an approved page or flow recipe such as
-   `workspace-dashboard`, `auth-flow`, or `data-records`. Create the session
-   with `begin_design`; change shared decisions with
+   `workspace-dashboard`, `workspace-settings`, `workspace-detail`,
+   `auth-flow`, `auth-split-flow`, `marketing-pricing`, or `data-records`.
+   Create the session with `begin_design`; change shared decisions with
    `apply_design_patch` using a `set_decision` operation.
 
 5. Make structural changes through `apply_design_patch`, always using the
@@ -39,9 +40,11 @@ Use this workflow when creating or modifying a Basecoat page with
    its separate approved utility in application `class` attributes. A token ID
    is not itself a Tailwind class. Optional host overrides live at
    `.basecoat/rhythm.json` inside the project root only. Use `get_fsm_recipe`
-   for structural states, transitions, guards, and metadata-only actions.
-   Follow every `next` cursor from either tool. Bind source explicitly with
-   matching `data-fsm-recipe` and `data-fsm-state` attributes.
+   for structural states, transitions, guards, and metadata-only actions
+   (available recipes: `dialog`, `collapsible-navigation`, `navigation`,
+   `auth-flow`, `tabs`). Follow every `next` cursor from either tool. Bind
+   source explicitly with matching `data-fsm-recipe` and `data-fsm-state`
+   attributes.
 
 8. Expand the approved static fragments in the host application. Preserve
    named slots, instance boundaries, ordering, and declared connections.

@@ -988,3 +988,48 @@ test('packaged workspace-dashboard recipe holds metrics, activity, and records i
     report.diagnostics.map(d => `${d.code}:${d.message}`).join('; '),
   );
 });
+
+test('packaged workspace-settings, workspace-detail, marketing-pricing, and auth-split-flow validate cleanly', () => {
+  const registry = loadCompiledRegistry();
+
+  for (const recipeAlias of [
+    'workspace-settings',
+    'workspace-detail',
+    'marketing-pricing',
+    'auth-split-flow',
+  ] as const) {
+    const recipeRef = registry.aliases[recipeAlias];
+    assert(recipeRef, `Recipe ${recipeAlias} must be aliased`);
+    const recipe = registry.recipes[recipeRef]!;
+    assert(recipe, `Recipe ${recipeAlias} must exist`);
+
+    const pagesRecord: Record<string, PagePlan> = {};
+    for (const page of recipe.pages) {
+      pagesRecord[page.id] = page;
+    }
+
+    const session: DesignSession = {
+      schemaVersion: 1,
+      id: `eval-${recipeAlias}`,
+      projectKey: 'p'.repeat(64),
+      revision: 1,
+      registryRevision: registry.revision,
+      profile: registry.aliases['app-default']!,
+      projectDecisions: { density: 'compact', 'auth-brand': 'Acme' },
+      pages: pagesRecord,
+      routeLinks: recipe.routeLinks,
+      checkpoints: [],
+      receipts: {},
+    };
+
+    for (const page of recipe.pages) {
+      const report = validatePage(page, session, registry, 'complete');
+      const errors = report.diagnostics.filter(d => d.severity === 'error');
+      assert.equal(
+        errors.length,
+        0,
+        `Page ${page.id} in ${recipeAlias} had errors: ${errors.map(d => `${d.code}:${d.message}`).join('; ')}`,
+      );
+    }
+  }
+});

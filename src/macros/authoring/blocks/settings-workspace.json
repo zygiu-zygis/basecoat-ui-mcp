@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "id": "settings-workspace",
+  "role": "workspace",
+  "family": "workspace",
+  "description": "Settings workspace with tabbed navigation, form field cards, notification toggles, and save action footer.",
+  "tags": ["settings", "tabs", "form", "workspace"],
+  "root": "content-frame",
+  "fragments": [
+    {
+      "id": "content-frame",
+      "emmet": "section.flex.flex-col.gap-6.p-6[data-role=canvas][data-macro=canvas]>div.flex.flex-col.gap-2>h2.text-2xl.font-bold{Settings}+p.text-sm.text-muted{Manage your account preferences and notifications.}^div.tabs[data-fsm-recipe=tabs][data-fsm-state=active]>nav.flex.gap-4.border-b[role=tablist]>button.btn.border-b-2[role=tab][aria-selected=true]{General}+button.btn[role=tab][aria-selected=false]{Profile}+button.btn[role=tab][aria-selected=false]{Notifications}^div[role=tabpanel].flex.flex-col.gap-6.mt-6[data-slot=general-panel]>div.card.p-6>div.flex.flex-col.gap-4>div[data-component=field]>label.label{Display Name}+input.input[type=text][value=Alex]^^div[data-component=field]>label.label{Email Address}+input.input[type=email][value=alex@example.com]^^div.flex.items-center.justify-between>div>span.font-medium{Email Notifications}+p.text-sm.text-muted{Receive product updates via email}^input.switch[type=checkbox][checked]^^div.flex.justify-end.gap-2.mt-4>button.btn[data-variant=outline]{Cancel}+button.btn[data-variant=primary]{Save Changes}"
+    }
+  ],
+  "mounts": [],
+  "slots": [],
+  "ports": [
+    {
+      "id": "main-in",
+      "at": { "fragment": "content-frame", "name": "content-frame" },
+      "direction": "in",
+      "kind": "region",
+      "contract": "main",
+      "minLinks": 0,
+      "maxLinks": 1,
+      "scope": "shell"
+    }
+  ],
+  "componentRefs": ["tabs", "card", "field", "input", "label", "switch", "button"],
+  "ruleRefs": [],
+  "dependencyBlockIds": [],
+  "layout": { "frameRef": "content-frame" },
+  "landmarks": { "main": 1, "primaryHeading": 0 },
+  "provenance": {
+    "origin": "authored",
+    "sourceHashes": {},
+    "mappingVersion": "1.0.0"
+  }
+}

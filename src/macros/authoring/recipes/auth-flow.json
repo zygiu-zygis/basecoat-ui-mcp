@@ -7,6 +7,16 @@
   "routeLinks": [
     {
       "fromPage": "sign-in",
+      "fromAnchor": { "fragment": "sign-in-root", "name": "signup" },
+      "toPage": "sign-up"
+    },
+    {
+      "fromPage": "sign-up",
+      "fromAnchor": { "fragment": "sign-up-root", "name": "signin" },
+      "toPage": "sign-in"
+    },
+    {
+      "fromPage": "sign-in",
       "fromAnchor": { "fragment": "sign-in-root", "name": "recover" },
       "toPage": "recovery"
     },
@@ -38,6 +48,23 @@
         "form": {
           "id": "form",
           "block": "auth-sign-in",
+          "bindings": {}
+        }
+      },
+      "connections": [],
+      "rules": []
+    },
+    {
+      "id": "sign-up",
+      "route": "/auth/sign-up",
+      "recipe": "auth-flow",
+      "root": "form",
+      "status": "plan-ready",
+      "decisions": { "auth-brand": "App" },
+      "nodes": {
+        "form": {
+          "id": "form",
+          "block": "auth-sign-up",
           "bindings": {}
         }
       },

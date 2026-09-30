@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "id": "newsletter-waitlist",
+  "role": "call-to-action",
+  "family": "marketing",
+  "description": "Marketing call-to-action banner for newsletter subscription or product launch waitlist with inline input.",
+  "tags": ["newsletter", "waitlist", "marketing", "cta"],
+  "root": "waitlist-root",
+  "fragments": [
+    {
+      "id": "waitlist-root",
+      "emmet": "div.card.p-6.lg:p-12.text-center.flex.flex-col.items-center.gap-4.bg-muted[data-component=card]>h2.text-2xl.font-bold{Stay updated on new releases}+p.text-muted.max-w-md{Join over 10,000 developers receiving our weekly engineering digest.}+form.flex.w-full.max-w-md.gap-2.mt-2>input.input.flex-1[type=email][placeholder=Enter your work email][required]+button.btn[data-variant=primary][type=submit]{Subscribe}^p.text-xs.text-muted{We respect your privacy. Unsubscribe at any time.}"
+    }
+  ],
+  "mounts": [],
+  "slots": [],
+  "ports": [],
+  "componentRefs": ["card", "input", "button"],
+  "ruleRefs": [],
+  "dependencyBlockIds": [],
+  "layout": { "frameRef": "waitlist-root" },
+  "landmarks": { "main": 0, "primaryHeading": 1 },
+  "provenance": {
+    "origin": "authored",
+    "sourceHashes": {},
+    "mappingVersion": "1.0.0"
+  }
+}

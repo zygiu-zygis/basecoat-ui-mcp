@@ -749,3 +749,76 @@ test('registry revision calculation determinism', () => {
   const calculatedRevision = contentRef(expectedComponents);
   assert.equal(registryA.registry.revision, calculatedRevision);
 });
+
+test('packaged registry exposes complete core shadcn blueprint blocks and recipes', () => {
+  const packaged = loadCompiledRegistry();
+
+  // Auth blocks
+  assert(packaged.aliases['auth-sign-in']);
+  assert(packaged.aliases['auth-sign-up']);
+  assert(packaged.aliases['auth-split-screen']);
+  const signUp = getBlock(packaged, 'auth-sign-up');
+  assert.equal(signUp.role, 'page');
+  assert.equal(signUp.family, 'auth');
+  assert(signUp.fragments[0]?.emmet.includes('data-fsm-recipe=auth-flow'));
+  assert(signUp.fragments[0]?.emmet.includes('GitHub'));
+  assert(signUp.fragments[0]?.emmet.includes('Google'));
+
+  const splitScreen = getBlock(packaged, 'auth-split-screen');
+  assert.equal(splitScreen.role, 'auth-frame');
+  assert.equal(splitScreen.slots[0]?.id, 'form');
+
+  // Sidebar variations
+  assert(packaged.aliases['sidebar-inset-shell']);
+  assert(packaged.aliases['sidebar-collapsible-icon']);
+  assert(packaged.aliases['sidebar-mobile-flyout']);
+  const insetShell = getBlock(packaged, 'sidebar-inset-shell');
+  assert.equal(insetShell.role, 'application-shell');
+  assert.deepEqual(insetShell.slots.map(s => s.id).sort(), ['content', 'header', 'navigation']);
+
+  const iconRail = getBlock(packaged, 'sidebar-collapsible-icon');
+  assert.equal(iconRail.role, 'navigation');
+  assert(iconRail.fragments[0]?.emmet.includes('data-fsm-state=collapsed'));
+
+  const mobileFlyout = getBlock(packaged, 'sidebar-mobile-flyout');
+  assert.equal(mobileFlyout.role, 'navigation');
+  assert(mobileFlyout.fragments[0]?.emmet.includes('data-fsm-state=mobile-open'));
+
+  // Workspace & Settings
+  assert(packaged.aliases['settings-workspace']);
+  assert(packaged.aliases['detail-drawer-panel']);
+  assert(packaged.aliases['form-section']);
+  assert(packaged.aliases['data-table-detail-layout']);
+  const settings = getBlock(packaged, 'settings-workspace');
+  assert.equal(settings.role, 'workspace');
+  assert(settings.fragments[0]?.emmet.includes('data-fsm-recipe=tabs'));
+
+  const drawer = getBlock(packaged, 'detail-drawer-panel');
+  assert.equal(drawer.role, 'details');
+  assert(drawer.fragments[0]?.emmet.includes('data-fsm-recipe=dialog'));
+
+  // Marketing & Auxiliary
+  assert(packaged.aliases['pricing-tiers']);
+  assert(packaged.aliases['newsletter-waitlist']);
+  assert(packaged.aliases['empty-state']);
+  assert(packaged.aliases['error-boundary']);
+  const pricing = getBlock(packaged, 'pricing-tiers');
+  assert.equal(pricing.role, 'pricing');
+  assert.equal(pricing.family, 'marketing');
+
+  const empty = getBlock(packaged, 'empty-state');
+  assert.equal(empty.role, 'empty');
+
+  const error = getBlock(packaged, 'error-boundary');
+  assert.equal(error.role, 'error');
+
+  // New recipes
+  assert(packaged.aliases['auth-split-flow']);
+  assert(packaged.aliases['workspace-settings']);
+  assert(packaged.aliases['marketing-pricing']);
+  assert(packaged.aliases['workspace-detail']);
+  assert(packaged.recipes[packaged.aliases['auth-split-flow']!]);
+  assert(packaged.recipes[packaged.aliases['workspace-settings']!]);
+  assert(packaged.recipes[packaged.aliases['marketing-pricing']!]);
+  assert(packaged.recipes[packaged.aliases['workspace-detail']!]);
+});

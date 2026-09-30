@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "id": "empty-state",
+  "role": "empty",
+  "family": "workspace",
+  "description": "Empty state placeholder container with title, explanatory description, and primary creation CTA.",
+  "tags": ["empty", "placeholder", "zero-state", "workspace"],
+  "root": "empty-root",
+  "fragments": [
+    {
+      "id": "empty-root",
+      "emmet": "div.flex.min-h-72.flex-col.items-center.justify-center.rounded-lg.border.border-dashed.p-6.text-center[data-component=empty]>div.flex.flex-col.items-center.gap-2.max-w-sm>h3.text-lg.font-semibold{No documents found}+p.text-sm.text-muted{You have not created any documents in this workspace yet. Get started by creating your first document.}+button.btn.mt-4[data-variant=primary][data-slot=create-action]{Create Document}"
+    }
+  ],
+  "mounts": [],
+  "slots": [
+    {
+      "id": "create-action",
+      "at": { "fragment": "empty-root", "name": "create-action" },
+      "accepts": ["action"],
+      "min": 0,
+      "max": 1
+    }
+  ],
+  "ports": [],
+  "componentRefs": ["empty", "button"],
+  "ruleRefs": [],
+  "dependencyBlockIds": [],
+  "layout": { "frameRef": "empty-root" },
+  "landmarks": { "main": 0, "primaryHeading": 0 },
+  "provenance": {
+    "origin": "authored",
+    "sourceHashes": {},
+    "mappingVersion": "1.0.0"
+  }
+}

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "revision": "ee5fa8d56415d6db8c92c8c63fc46735f2658bfd21808aae39b8cad5ffaf72dd",
+  "revision": "e9ed7afbb50ef560ed7c9d213f01c8b3342089d3ff2900a1eca562db7efd96ac",
   "blocks": {
     "67de989d195a092ab9f5f799c19e64909a8faf84cb2277271b2619d3f9a62fb3": {
       "schemaVersion": 1,
@@ -196,21 +196,23 @@
         "mappingVersion": "1.0.0"
       }
     },
-    "c2f9b936b85ceaaf489484411a43cbbe054caedebe652ea1d5f47a1f5dcdd2f8": {
+    "2707e4a25d2f99437d380b9ac7a44636882a812d8ba2b34494a9f369169d88c4": {
       "schemaVersion": 1,
       "id": "auth-sign-in",
       "role": "page",
       "family": "auth",
-      "description": "Sign-in card with email/password fields and submit action.",
+      "description": "Sign-in card with social OAuth providers, email/password fields, recovery link, and FSM auth recipe bindings.",
       "tags": [
         "auth",
-        "sign-in"
+        "sign-in",
+        "login",
+        "oauth"
       ],
       "root": "sign-in-root",
       "fragments": [
         {
           "id": "sign-in-root",
-          "emmet": "div.mx-auto.max-w-sm.p-6>div[data-component=card]>form.grid.gap-4>div[data-component=field][data-slot=email]+div[data-component=field][data-slot=password]+div[data-component=button][data-slot=submit]+a[data-slot=recover]{Forgot password?}"
+          "emmet": "div.mx-auto.max-w-sm.p-6[data-fsm-recipe=auth-flow][data-fsm-state=idle]>div.card.p-6[data-component=card]>div.flex.flex-col.gap-2.text-center>h1.text-2xl.font-semibold{Welcome back}+p.text-sm.text-muted{Enter your credentials to sign in to your account}^div.grid.gap-4.mt-6>div.grid.grid-cols-2.gap-2>button.btn[data-variant=outline]{GitHub}+button.btn[data-variant=outline]{Google}^^div.relative.text-center.text-sm.after:border-b>span.bg-card.px-2.relative.z-10.text-muted{Or continue with}^form.grid.gap-4>div[data-component=field][data-slot=email]>label.label{Email}+input.input[type=email][placeholder=name@example.com][required]^^div[data-component=field][data-slot=password]>div.flex.items-center.justify-between>label.label{Password}+a[data-slot=recover].text-sm.underline{Forgot password?}^input.input[type=password][required]^^button.btn[data-variant=primary][data-slot=submit][type=submit]{Sign In}^^p.text-center.text-sm.text-muted{Do not have an account? }+a[data-slot=signup].underline{Sign up}"
         }
       ],
       "mounts": [],
@@ -231,6 +233,106 @@
       "landmarks": {
         "main": 1,
         "primaryHeading": 1
+      },
+      "provenance": {
+        "origin": "authored",
+        "sourceHashes": {},
+        "mappingVersion": "1.1.0"
+      }
+    },
+    "6fec7f17de2d2c7e3f69e52109b87b0255d948f881a5e33a6f9f61be1d36a8f3": {
+      "schemaVersion": 1,
+      "id": "auth-sign-up",
+      "role": "page",
+      "family": "auth",
+      "description": "Sign-up card with name, email, password fields, terms agreement checkbox, social OAuth buttons, and login link.",
+      "tags": [
+        "auth",
+        "sign-up",
+        "register",
+        "oauth"
+      ],
+      "root": "sign-up-root",
+      "fragments": [
+        {
+          "id": "sign-up-root",
+          "emmet": "div.mx-auto.max-w-sm.p-6[data-fsm-recipe=auth-flow][data-fsm-state=idle]>div.card.p-6[data-component=card]>div.flex.flex-col.gap-2.text-center>h1.text-2xl.font-semibold{Create account}+p.text-sm.text-muted{Enter your info to create your account}^div.grid.gap-4.mt-6>div.grid.grid-cols-2.gap-2>button.btn[data-variant=outline]{GitHub}+button.btn[data-variant=outline]{Google}^^div.relative.text-center.text-sm.after:border-b>span.bg-card.px-2.relative.z-10.text-muted{Or continue with}^form.grid.gap-4>div[data-component=field][data-slot=name]>label.label{Full Name}+input.input[type=text][placeholder=Jane Doe][required]^^div[data-component=field][data-slot=email]>label.label{Email}+input.input[type=email][placeholder=name@example.com][required]^^div[data-component=field][data-slot=password]>label.label{Password}+input.input[type=password][required]^^div.flex.items-center.gap-2>input.checkbox[type=checkbox][id=terms][required]+label.text-sm[for=terms]{I agree to terms}^^button.btn[data-variant=primary][data-slot=submit][type=submit]{Sign Up}^^p.text-center.text-sm.text-muted{Already have an account? }+a[data-slot=signin].underline{Sign in}"
+        }
+      ],
+      "mounts": [],
+      "slots": [],
+      "ports": [],
+      "componentRefs": [
+        "card",
+        "field",
+        "input",
+        "label",
+        "button",
+        "checkbox"
+      ],
+      "ruleRefs": [],
+      "dependencyRefs": [],
+      "layout": {
+        "frameRef": "sign-up-root"
+      },
+      "landmarks": {
+        "main": 1,
+        "primaryHeading": 1
+      },
+      "provenance": {
+        "origin": "authored",
+        "sourceHashes": {},
+        "mappingVersion": "1.0.0"
+      }
+    },
+    "01b514d6afe398f6f3baf4fa2dee37baffdbec3051e684602ed0f05d48573d69": {
+      "schemaVersion": 1,
+      "id": "auth-split-screen",
+      "role": "auth-frame",
+      "family": "auth",
+      "description": "Split-screen auth layout featuring a form container pane on one side and a branded hero media pane on the other.",
+      "tags": [
+        "auth",
+        "split-screen",
+        "hero",
+        "layout"
+      ],
+      "root": "split-root",
+      "fragments": [
+        {
+          "id": "split-root",
+          "emmet": "div.grid.min-h-screen.lg:grid-cols-2[data-slot=auth-split-root]>div.flex.flex-col.justify-between.p-6.lg:p-12>div.flex.items-center.gap-2>span.font-semibold{Acme Inc}^div.mx-auto.w-full.max-w-sm.p-6[data-slot=form]+div.text-center.text-sm.text-muted{By clicking continue, you agree to our Terms of Service}^^div.relative.hidden.h-full.flex-col.justify-between.bg-muted.p-12.text-white.lg:flex[data-slot=media]>div.font-semibold{Acme Inc}+blockquote.space-y-2>p.text-lg{This library has completely transformed how we build and ship apps.}+footer.text-sm.text-muted{Sofia Davis, Lead Architect}"
+        }
+      ],
+      "mounts": [],
+      "slots": [
+        {
+          "id": "form",
+          "at": {
+            "fragment": "split-root",
+            "name": "form"
+          },
+          "accepts": [
+            "page",
+            "form"
+          ],
+          "min": 1,
+          "max": 1
+        }
+      ],
+      "ports": [],
+      "componentRefs": [
+        "card",
+        "button"
+      ],
+      "ruleRefs": [],
+      "dependencyRefs": [],
+      "layout": {
+        "frameRef": "split-root"
+      },
+      "landmarks": {
+        "main": 0,
+        "primaryHeading": 0
       },
       "provenance": {
         "origin": "authored",
@@ -550,6 +652,365 @@
         "mappingVersion": "1.0.0"
       }
     },
+    "1cb011c6a62e6e6c82caddc5015ba58ceba8217f226a2bfcd6b587467083cb8b": {
+      "schemaVersion": 1,
+      "id": "detail-drawer-panel",
+      "role": "details",
+      "family": "data",
+      "description": "Detail drawer panel modal for inspecting record properties, metadata, and status badges with close actions.",
+      "tags": [
+        "details",
+        "drawer",
+        "modal",
+        "inspector"
+      ],
+      "root": "detail-root",
+      "fragments": [
+        {
+          "id": "detail-root",
+          "emmet": "div.card.p-6.flex.flex-col.gap-4[data-component=drawer][data-fsm-recipe=dialog][data-fsm-state=open]>div.flex.items-center.justify-between.border-b.pb-4>div>h3.text-lg.font-semibold{Record Details}+p.text-sm.text-muted{Inspection metadata and timeline}^button.btn[data-variant=ghost][data-slot=close-button]{Close}^div.flex.flex-col.gap-4>div.flex.items-center.justify-between>span.text-sm.text-muted{Status}+span.badge[data-variant=secondary]{Active}^div.flex.items-center.justify-between>span.text-sm.text-muted{Owner}+span.text-sm{Jane Doe}^div.flex.items-center.justify-between>span.text-sm.text-muted{Last Updated}+span.text-sm{2 hours ago}^div.flex.flex-col.gap-2>span.text-sm.text-muted{Description}+p.text-sm{Comprehensive summary of the selected entity properties.}^^div.flex.justify-end.gap-2.border-t.pt-4>button.btn[data-variant=outline]{Dismiss}+button.btn[data-variant=primary]{Edit Record}"
+        }
+      ],
+      "mounts": [],
+      "slots": [
+        {
+          "id": "close-button",
+          "at": {
+            "fragment": "detail-root",
+            "name": "close-button"
+          },
+          "accepts": [
+            "action"
+          ],
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "ports": [
+        {
+          "id": "dataset-in",
+          "at": {
+            "fragment": "detail-root",
+            "name": "detail-root"
+          },
+          "direction": "in",
+          "kind": "data",
+          "contract": "dataset",
+          "minLinks": 0,
+          "maxLinks": 1,
+          "scope": "page"
+        }
+      ],
+      "componentRefs": [
+        "drawer",
+        "card",
+        "badge",
+        "button"
+      ],
+      "ruleRefs": [],
+      "dependencyRefs": [],
+      "layout": {
+        "frameRef": "detail-root"
+      },
+      "landmarks": {
+        "main": 0,
+        "primaryHeading": 0
+      },
+      "provenance": {
+        "origin": "authored",
+        "sourceHashes": {},
+        "mappingVersion": "1.0.0"
+      }
+    },
+    "a9bc442695665c5bc07aad5aa1f7491f3f97ea1efba629f4dfd0b8268031e210": {
+      "schemaVersion": 1,
+      "id": "data-table-detail-layout",
+      "role": "workspace",
+      "family": "data",
+      "description": "Data workspace layout hosting filters, table, pager, and side drawer inspector panel.",
+      "tags": [
+        "data",
+        "workspace",
+        "table",
+        "drawer",
+        "inspector"
+      ],
+      "root": "content-frame",
+      "fragments": [
+        {
+          "id": "content-frame",
+          "emmet": "section.flex.gap-6.p-6[data-role=canvas][data-macro=canvas]>div.flex.flex-1.flex-col.gap-4>div[data-slot=filters]+div[data-slot=table]+div[data-slot=pager]^^div.w-80[data-slot=detail]"
+        }
+      ],
+      "mounts": [],
+      "slots": [
+        {
+          "id": "filters",
+          "at": {
+            "fragment": "content-frame",
+            "name": "filters"
+          },
+          "accepts": [
+            "filters"
+          ],
+          "min": 1,
+          "max": 1
+        },
+        {
+          "id": "table",
+          "at": {
+            "fragment": "content-frame",
+            "name": "table"
+          },
+          "accepts": [
+            "table"
+          ],
+          "min": 1,
+          "max": 1
+        },
+        {
+          "id": "pager",
+          "at": {
+            "fragment": "content-frame",
+            "name": "pager"
+          },
+          "accepts": [
+            "pager"
+          ],
+          "min": 1,
+          "max": 1
+        },
+        {
+          "id": "detail",
+          "at": {
+            "fragment": "content-frame",
+            "name": "detail"
+          },
+          "accepts": [
+            "details"
+          ],
+          "min": 1,
+          "max": 1
+        }
+      ],
+      "ports": [
+        {
+          "id": "main-in",
+          "at": {
+            "fragment": "content-frame",
+            "name": "content-frame"
+          },
+          "direction": "in",
+          "kind": "region",
+          "contract": "main",
+          "minLinks": 0,
+          "maxLinks": 1,
+          "scope": "shell"
+        }
+      ],
+      "componentRefs": [],
+      "ruleRefs": [],
+      "dependencyRefs": [
+        "7b8a12c860ba038232b4973d25051b98867ca278cd0761541603f8516958265c",
+        "3cf92bf80520abe59ab18ec9ce3ff1714ab917a31d5eab9ac8cd7f913f47b0cd",
+        "8db430e806c397ae4259c221b7030e80e783f34c1f1c5002702020e1041a9296",
+        "1cb011c6a62e6e6c82caddc5015ba58ceba8217f226a2bfcd6b587467083cb8b"
+      ],
+      "layout": {
+        "frameRef": "content-frame"
+      },
+      "landmarks": {
+        "main": 1,
+        "primaryHeading": 0
+      },
+      "provenance": {
+        "origin": "authored",
+        "sourceHashes": {},
+        "mappingVersion": "1.0.0"
+      }
+    },
+    "b7c5de3a1cf828bda14e337119258c8613505b36c167633b347d1551367d10f5": {
+      "schemaVersion": 1,
+      "id": "empty-state",
+      "role": "empty",
+      "family": "workspace",
+      "description": "Empty state placeholder container with title, explanatory description, and primary creation CTA.",
+      "tags": [
+        "empty",
+        "placeholder",
+        "zero-state",
+        "workspace"
+      ],
+      "root": "empty-root",
+      "fragments": [
+        {
+          "id": "empty-root",
+          "emmet": "div.flex.min-h-72.flex-col.items-center.justify-center.rounded-lg.border.border-dashed.p-6.text-center[data-component=empty]>div.flex.flex-col.items-center.gap-2.max-w-sm>h3.text-lg.font-semibold{No documents found}+p.text-sm.text-muted{You have not created any documents in this workspace yet. Get started by creating your first document.}+button.btn.mt-4[data-variant=primary][data-slot=create-action]{Create Document}"
+        }
+      ],
+      "mounts": [],
+      "slots": [
+        {
+          "id": "create-action",
+          "at": {
+            "fragment": "empty-root",
+            "name": "create-action"
+          },
+          "accepts": [
+            "action"
+          ],
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "ports": [],
+      "componentRefs": [
+        "empty",
+        "button"
+      ],
+      "ruleRefs": [],
+      "dependencyRefs": [],
+      "layout": {
+        "frameRef": "empty-root"
+      },
+      "landmarks": {
+        "main": 0,
+        "primaryHeading": 0
+      },
+      "provenance": {
+        "origin": "authored",
+        "sourceHashes": {},
+        "mappingVersion": "1.0.0"
+      }
+    },
+    "47f6bc0a357930337589b78f8eb83051c2979498475f4154a38a8f9bb81764f7": {
+      "schemaVersion": 1,
+      "id": "error-boundary",
+      "role": "error",
+      "family": "feedback",
+      "description": "Error state display card for 404 not found or 500 runtime exceptions with navigation fallback actions.",
+      "tags": [
+        "error",
+        "404",
+        "500",
+        "feedback"
+      ],
+      "root": "error-root",
+      "fragments": [
+        {
+          "id": "error-root",
+          "emmet": "div.flex.min-h-96.flex-col.items-center.justify-center.p-6.text-center[data-component=alert]>div.flex.flex-col.items-center.gap-4.max-w-md>span.text-6xl.font-extrabold.text-muted{404}+h2.text-2xl.font-bold{Page not found}+p.text-sm.text-muted{Sorry, the page you are looking for does not exist or has been moved.}+div.flex.gap-2.mt-2>a.btn[data-variant=outline]{Go Back}+a.btn[data-variant=primary]{Return Home}"
+        }
+      ],
+      "mounts": [],
+      "slots": [],
+      "ports": [],
+      "componentRefs": [
+        "alert",
+        "button"
+      ],
+      "ruleRefs": [],
+      "dependencyRefs": [],
+      "layout": {
+        "frameRef": "error-root"
+      },
+      "landmarks": {
+        "main": 0,
+        "primaryHeading": 1
+      },
+      "provenance": {
+        "origin": "authored",
+        "sourceHashes": {},
+        "mappingVersion": "1.0.0"
+      }
+    },
+    "db0f381548cf79f10b2eb645ee1a4586b5eca810b8aa670849767271debd6bc3": {
+      "schemaVersion": 1,
+      "id": "form-section",
+      "role": "form",
+      "family": "form",
+      "description": "Multi-column form card with validation states, helper text, grid layout, fieldsets, and actions.",
+      "tags": [
+        "form",
+        "validation",
+        "fields",
+        "card"
+      ],
+      "root": "form-root",
+      "fragments": [
+        {
+          "id": "form-root",
+          "emmet": "div.card.p-6[data-component=card]>form.grid.gap-6>div.flex.flex-col.gap-2>h2.text-xl.font-semibold{Personal Information}+p.text-sm.text-muted{Update your contact and billing information.}^div.grid.grid-cols-1.gap-4.md:grid-cols-2>div[data-component=field]>label.label{First Name}+input.input[type=text][required]^^div[data-component=field]>label.label{Last Name}+input.input[type=text][required]^^div[data-component=field].md:col-span-2>label.label{Email Address}+input.input[type=email][aria-invalid=false][required]+p.text-sm.text-muted{We will send verification to this address.}^^div[data-component=field].md:col-span-2>label.label{Role}+select.select>option{Developer}+option{Designer}+option{Manager}^^^div.flex.justify-end.gap-2>button.btn[data-variant=outline]{Reset}+button.btn[data-variant=primary][type=submit]{Save Information}"
+        }
+      ],
+      "mounts": [],
+      "slots": [],
+      "ports": [],
+      "componentRefs": [
+        "card",
+        "field",
+        "input",
+        "label",
+        "select",
+        "button"
+      ],
+      "ruleRefs": [],
+      "dependencyRefs": [],
+      "layout": {
+        "frameRef": "form-root"
+      },
+      "landmarks": {
+        "main": 0,
+        "primaryHeading": 1
+      },
+      "provenance": {
+        "origin": "authored",
+        "sourceHashes": {},
+        "mappingVersion": "1.0.0"
+      }
+    },
+    "57a13cd223e2a23e2c4c7ec875cfba5eb5030f6bf587bd1170dbec4db33989e9": {
+      "schemaVersion": 1,
+      "id": "newsletter-waitlist",
+      "role": "call-to-action",
+      "family": "marketing",
+      "description": "Marketing call-to-action banner for newsletter subscription or product launch waitlist with inline input.",
+      "tags": [
+        "newsletter",
+        "waitlist",
+        "marketing",
+        "cta"
+      ],
+      "root": "waitlist-root",
+      "fragments": [
+        {
+          "id": "waitlist-root",
+          "emmet": "div.card.p-6.lg:p-12.text-center.flex.flex-col.items-center.gap-4.bg-muted[data-component=card]>h2.text-2xl.font-bold{Stay updated on new releases}+p.text-muted.max-w-md{Join over 10,000 developers receiving our weekly engineering digest.}+form.flex.w-full.max-w-md.gap-2.mt-2>input.input.flex-1[type=email][placeholder=Enter your work email][required]+button.btn[data-variant=primary][type=submit]{Subscribe}^p.text-xs.text-muted{We respect your privacy. Unsubscribe at any time.}"
+        }
+      ],
+      "mounts": [],
+      "slots": [],
+      "ports": [],
+      "componentRefs": [
+        "card",
+        "input",
+        "button"
+      ],
+      "ruleRefs": [],
+      "dependencyRefs": [],
+      "layout": {
+        "frameRef": "waitlist-root"
+      },
+      "landmarks": {
+        "main": 0,
+        "primaryHeading": 1
+      },
+      "provenance": {
+        "origin": "authored",
+        "sourceHashes": {},
+        "mappingVersion": "1.0.0"
+      }
+    },
     "dbfae20d1ef27d597a119b019dfc9444fb0ae3800016076fc4271830b9565caf": {
       "schemaVersion": 1,
       "id": "page-header",
@@ -616,6 +1077,48 @@
         "mappingVersion": "1.0.0"
       }
     },
+    "5857b53433f74071b407f98b96554ac99c6515031ff21a63f252cc9f3874cd96": {
+      "schemaVersion": 1,
+      "id": "pricing-tiers",
+      "role": "pricing",
+      "family": "marketing",
+      "description": "Three-tier pricing table featuring Free, Pro (popular), and Enterprise plans with feature checklists and CTAs.",
+      "tags": [
+        "pricing",
+        "marketing",
+        "tiers",
+        "subscription"
+      ],
+      "root": "pricing-root",
+      "fragments": [
+        {
+          "id": "pricing-root",
+          "emmet": "section.flex.flex-col.items-center.gap-6.p-6.lg:p-12[data-role=canvas][data-macro=canvas]>div.text-center>h1.text-3xl.font-bold{Simple pricing}+p.text-muted{Choose the best plan for your team.}^div.grid.grid-cols-1.gap-6.md:grid-cols-3.w-full.max-w-6xl>div.card.p-6.flex.flex-col.justify-between>div.flex.flex-col.gap-4>h3.text-xl.font-semibold{Starter}+span.text-3xl.font-bold{Free}+ul.space-y-2.text-sm.text-muted>li{3 members}+li{Core analytics}+li{Community support}^^button.btn.w-full[data-variant=outline]{Get Started}^div.card.p-6.flex.flex-col.justify-between.relative>span.badge.absolute.top-2.right-2[data-variant=secondary]{Popular}+div.flex.flex-col.gap-4>h3.text-xl.font-semibold{Pro}+span.text-3xl.font-bold{29/mo}+ul.space-y-2.text-sm.text-muted>li{Unlimited members}+li{Advanced analytics}+li{Priority support}^^button.btn.w-full[data-variant=primary]{Upgrade to Pro}^div.card.p-6.flex.flex-col.justify-between>div.flex.flex-col.gap-4>h3.text-xl.font-semibold{Enterprise}+span.text-3xl.font-bold{Custom}+ul.space-y-2.text-sm.text-muted>li{Custom SLAs}+li{Dedicated cluster}+li{24/7 support}^^button.btn.w-full[data-variant=outline]{Contact Sales}"
+        }
+      ],
+      "mounts": [],
+      "slots": [],
+      "ports": [],
+      "componentRefs": [
+        "card",
+        "badge",
+        "button"
+      ],
+      "ruleRefs": [],
+      "dependencyRefs": [],
+      "layout": {
+        "frameRef": "pricing-root"
+      },
+      "landmarks": {
+        "main": 1,
+        "primaryHeading": 1
+      },
+      "provenance": {
+        "origin": "authored",
+        "sourceHashes": {},
+        "mappingVersion": "1.0.0"
+      }
+    },
     "ff35aa4378cbabb98ebb0fc43c4f1fdf7f5ad94601078c1490f721c940a4fc5c": {
       "schemaVersion": 1,
       "id": "segmented-toggle",
@@ -661,6 +1164,147 @@
       "dependencyRefs": [],
       "layout": {
         "frameRef": "toggle-root"
+      },
+      "landmarks": {
+        "main": 0,
+        "primaryHeading": 0
+      },
+      "provenance": {
+        "origin": "authored",
+        "sourceHashes": {},
+        "mappingVersion": "1.0.0"
+      }
+    },
+    "5307b337028dfb9f6fe1ece8975ad6a6857d3fe9fc1b41d1df2c28c709dc8cc8": {
+      "schemaVersion": 1,
+      "id": "settings-workspace",
+      "role": "workspace",
+      "family": "workspace",
+      "description": "Settings workspace with tabbed navigation, form field cards, notification toggles, and save action footer.",
+      "tags": [
+        "settings",
+        "tabs",
+        "form",
+        "workspace"
+      ],
+      "root": "content-frame",
+      "fragments": [
+        {
+          "id": "content-frame",
+          "emmet": "section.flex.flex-col.gap-6.p-6[data-role=canvas][data-macro=canvas]>div.flex.flex-col.gap-2>h2.text-2xl.font-bold{Settings}+p.text-sm.text-muted{Manage your account preferences and notifications.}^div.tabs[data-fsm-recipe=tabs][data-fsm-state=active]>nav.flex.gap-4.border-b[role=tablist]>button.btn.border-b-2[role=tab][aria-selected=true]{General}+button.btn[role=tab][aria-selected=false]{Profile}+button.btn[role=tab][aria-selected=false]{Notifications}^div[role=tabpanel].flex.flex-col.gap-6.mt-6[data-slot=general-panel]>div.card.p-6>div.flex.flex-col.gap-4>div[data-component=field]>label.label{Display Name}+input.input[type=text][value=Alex]^^div[data-component=field]>label.label{Email Address}+input.input[type=email][value=alex@example.com]^^div.flex.items-center.justify-between>div>span.font-medium{Email Notifications}+p.text-sm.text-muted{Receive product updates via email}^input.switch[type=checkbox][checked]^^div.flex.justify-end.gap-2.mt-4>button.btn[data-variant=outline]{Cancel}+button.btn[data-variant=primary]{Save Changes}"
+        }
+      ],
+      "mounts": [],
+      "slots": [],
+      "ports": [
+        {
+          "id": "main-in",
+          "at": {
+            "fragment": "content-frame",
+            "name": "content-frame"
+          },
+          "direction": "in",
+          "kind": "region",
+          "contract": "main",
+          "minLinks": 0,
+          "maxLinks": 1,
+          "scope": "shell"
+        }
+      ],
+      "componentRefs": [
+        "tabs",
+        "card",
+        "field",
+        "input",
+        "label",
+        "switch",
+        "button"
+      ],
+      "ruleRefs": [],
+      "dependencyRefs": [],
+      "layout": {
+        "frameRef": "content-frame"
+      },
+      "landmarks": {
+        "main": 1,
+        "primaryHeading": 0
+      },
+      "provenance": {
+        "origin": "authored",
+        "sourceHashes": {},
+        "mappingVersion": "1.0.0"
+      }
+    },
+    "8a79b7ec1e26b7522a1d32d85d3d5c0a924b1ab21c32252b5d3207eefd0e5274": {
+      "schemaVersion": 1,
+      "id": "sidebar-collapsible-icon",
+      "role": "navigation",
+      "family": "layout",
+      "description": "Icon-collapsed rail sidebar navigation with badge indicators, tooltip-ready targets, and workspace switcher.",
+      "tags": [
+        "navigation",
+        "sidebar",
+        "collapsible-icon",
+        "rail"
+      ],
+      "root": "rail-root",
+      "fragments": [
+        {
+          "id": "rail-root",
+          "emmet": "aside.sidebar.w-16.flex.flex-col.items-center.gap-4.border-r.py-4[data-slot=sidebar-host][data-component=sidebar][data-fsm-recipe=navigation][data-fsm-state=collapsed]>button.btn.p-2[data-variant=ghost][data-slot=workspace-switcher]{Logo}+nav.flex.flex-col.gap-2.flex-1[aria-label=IconNavigation]>a.btn.p-2[data-variant=ghost][aria-label=Dashboard]{D}+a.btn.p-2.relative[data-variant=ghost][aria-label=Alerts]{A+span.badge.p-0[data-variant=destructive]{3}}+a.btn.p-2[data-variant=ghost][aria-label=Settings]{S}^div.mt-auto[data-slot=user-footer]>button.btn.p-2[data-variant=ghost]{U}"
+        }
+      ],
+      "mounts": [],
+      "slots": [
+        {
+          "id": "workspace-switcher",
+          "at": {
+            "fragment": "rail-root",
+            "name": "workspace-switcher"
+          },
+          "accepts": [
+            "action"
+          ],
+          "min": 0,
+          "max": 1
+        },
+        {
+          "id": "user-footer",
+          "at": {
+            "fragment": "rail-root",
+            "name": "user-footer"
+          },
+          "accepts": [
+            "action"
+          ],
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "ports": [
+        {
+          "id": "nav-toggle-in",
+          "at": {
+            "fragment": "rail-root",
+            "name": "rail-root"
+          },
+          "direction": "in",
+          "kind": "control",
+          "contract": "nav-toggle",
+          "minLinks": 0,
+          "maxLinks": 1,
+          "scope": "shell"
+        }
+      ],
+      "componentRefs": [
+        "sidebar",
+        "button",
+        "badge"
+      ],
+      "ruleRefs": [],
+      "dependencyRefs": [],
+      "layout": {
+        "frameRef": "rail-root"
       },
       "landmarks": {
         "main": 0,
@@ -765,6 +1409,183 @@
       "dependencyRefs": [],
       "layout": {
         "frameRef": "nav-root"
+      },
+      "landmarks": {
+        "main": 0,
+        "primaryHeading": 0
+      },
+      "provenance": {
+        "origin": "authored",
+        "sourceHashes": {},
+        "mappingVersion": "1.0.0"
+      }
+    },
+    "036d12c586a0dacff01c67cc745856d2eb02092f9ce096c44336f3034a8fe71d": {
+      "schemaVersion": 1,
+      "id": "sidebar-inset-shell",
+      "role": "application-shell",
+      "family": "layout",
+      "description": "Inset sidebar shell layout where the main canvas area is inset with rounded corners, a top breadcrumb bar, and navigation controls.",
+      "tags": [
+        "shell",
+        "sidebar",
+        "inset",
+        "workspace"
+      ],
+      "root": "shell-root",
+      "fragments": [
+        {
+          "id": "shell-root",
+          "emmet": "div.flex.min-h-screen.w-full[data-slot=shell-root]>aside.sidebar[data-slot=navigation][data-component=sidebar][data-side=left][data-initial-open=true]>div.flex.flex-col.gap-4.p-4>div[data-slot=brand]{Workspace}+nav[aria-label=Main]>ul.space-y-2>li>a{Overview}^^div.mt-auto[data-slot=user]{User}^^div.flex.flex-1.flex-col.p-2>div.flex.flex-1.flex-col.rounded-lg.border.bg-background[data-slot=inset-canvas]>header.flex.h-12.items-center.gap-2.border-b.px-4[data-slot=header]+main.flex-1.overflow-auto.p-4[data-slot=content]"
+        }
+      ],
+      "mounts": [],
+      "slots": [
+        {
+          "id": "navigation",
+          "at": {
+            "fragment": "shell-root",
+            "name": "navigation"
+          },
+          "accepts": [
+            "navigation"
+          ],
+          "min": 1,
+          "max": 1
+        },
+        {
+          "id": "header",
+          "at": {
+            "fragment": "shell-root",
+            "name": "header"
+          },
+          "accepts": [
+            "header"
+          ],
+          "min": 1,
+          "max": 1
+        },
+        {
+          "id": "content",
+          "at": {
+            "fragment": "shell-root",
+            "name": "content"
+          },
+          "accepts": [
+            "dashboard",
+            "workspace",
+            "table"
+          ],
+          "min": 1,
+          "max": 1
+        }
+      ],
+      "ports": [
+        {
+          "id": "main-region",
+          "at": {
+            "fragment": "shell-root",
+            "name": "content"
+          },
+          "direction": "out",
+          "kind": "region",
+          "contract": "main",
+          "minLinks": 0,
+          "maxLinks": 1,
+          "scope": "shell"
+        }
+      ],
+      "componentRefs": [
+        "sidebar",
+        "breadcrumb",
+        "button"
+      ],
+      "ruleRefs": [],
+      "dependencyRefs": [],
+      "layout": {
+        "frameRef": "shell-root",
+        "gutterBoundary": "shell-root",
+        "scrollBoundary": "shell-root"
+      },
+      "landmarks": {
+        "main": 1,
+        "primaryHeading": 0
+      },
+      "provenance": {
+        "origin": "authored",
+        "sourceHashes": {},
+        "mappingVersion": "1.0.0"
+      }
+    },
+    "b2f95030c433acc594d2dd8ce1a1bdf20f2410e9e646a83803103d17806d85fb": {
+      "schemaVersion": 1,
+      "id": "sidebar-mobile-flyout",
+      "role": "navigation",
+      "family": "layout",
+      "description": "Mobile drawer flyout navigation sheet with backdrop overlay, close trigger, and grouped menu items.",
+      "tags": [
+        "navigation",
+        "sidebar",
+        "drawer",
+        "mobile-flyout"
+      ],
+      "root": "flyout-root",
+      "fragments": [
+        {
+          "id": "flyout-root",
+          "emmet": "div.fixed.inset-0.z-50.bg-black-80.md:hidden[data-slot=mobile-flyout-backdrop][data-fsm-recipe=navigation][data-fsm-state=mobile-open]>div.fixed.inset-y-0.left-0.w-72.bg-background.p-6.shadow-lg.flex.flex-col.gap-4[data-slot=drawer-panel]>div.flex.items-center.justify-between.border-b.pb-4>span.font-semibold{Navigation}+button.btn[data-variant=ghost][data-slot=close-trigger]{Close}^nav.flex.flex-col.gap-2[aria-label=MobileMenu]>a.p-2.rounded-md{Home}+a.p-2.rounded-md{Projects}+a.p-2.rounded-md{Settings}^div.mt-auto.border-t.pt-4[data-slot=user-footer]>span.text-sm.text-muted{Signed in as user}"
+        }
+      ],
+      "mounts": [],
+      "slots": [
+        {
+          "id": "close-trigger",
+          "at": {
+            "fragment": "flyout-root",
+            "name": "close-trigger"
+          },
+          "accepts": [
+            "action"
+          ],
+          "min": 0,
+          "max": 1
+        },
+        {
+          "id": "user-footer",
+          "at": {
+            "fragment": "flyout-root",
+            "name": "user-footer"
+          },
+          "accepts": [
+            "action"
+          ],
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "ports": [
+        {
+          "id": "nav-toggle-in",
+          "at": {
+            "fragment": "flyout-root",
+            "name": "flyout-root"
+          },
+          "direction": "in",
+          "kind": "control",
+          "contract": "nav-toggle",
+          "minLinks": 0,
+          "maxLinks": 1,
+          "scope": "shell"
+        }
+      ],
+      "componentRefs": [
+        "drawer",
+        "button"
+      ],
+      "ruleRefs": [],
+      "dependencyRefs": [],
+      "layout": {
+        "frameRef": "flyout-root"
       },
       "landmarks": {
         "main": 0,
@@ -1058,7 +1879,7 @@
     }
   },
   "recipes": {
-    "4f66c309904c41fb1df4074d96dbac5ea28bb22038506fa904e82c77040757e7": {
+    "9bf7cdd02ccaa4b26cfa92274aeeb6be1b1583793f349c97ebe5fa96baebd528": {
       "schemaVersion": 1,
       "id": "auth-flow",
       "kind": "flow",
@@ -1067,12 +1888,31 @@
         {
           "id": "sign-in",
           "route": "/auth/sign-in",
-          "recipe": "4f66c309904c41fb1df4074d96dbac5ea28bb22038506fa904e82c77040757e7",
+          "recipe": "9bf7cdd02ccaa4b26cfa92274aeeb6be1b1583793f349c97ebe5fa96baebd528",
           "root": "form",
           "nodes": {
             "form": {
               "id": "form",
-              "block": "c2f9b936b85ceaaf489484411a43cbbe054caedebe652ea1d5f47a1f5dcdd2f8",
+              "block": "2707e4a25d2f99437d380b9ac7a44636882a812d8ba2b34494a9f369169d88c4",
+              "bindings": {}
+            }
+          },
+          "connections": [],
+          "rules": [],
+          "decisions": {
+            "auth-brand": "App"
+          },
+          "status": "plan-ready"
+        },
+        {
+          "id": "sign-up",
+          "route": "/auth/sign-up",
+          "recipe": "9bf7cdd02ccaa4b26cfa92274aeeb6be1b1583793f349c97ebe5fa96baebd528",
+          "root": "form",
+          "nodes": {
+            "form": {
+              "id": "form",
+              "block": "6fec7f17de2d2c7e3f69e52109b87b0255d948f881a5e33a6f9f61be1d36a8f3",
               "bindings": {}
             }
           },
@@ -1086,7 +1926,7 @@
         {
           "id": "recovery",
           "route": "/auth/recovery",
-          "recipe": "4f66c309904c41fb1df4074d96dbac5ea28bb22038506fa904e82c77040757e7",
+          "recipe": "9bf7cdd02ccaa4b26cfa92274aeeb6be1b1583793f349c97ebe5fa96baebd528",
           "root": "form",
           "nodes": {
             "form": {
@@ -1103,7 +1943,7 @@
         {
           "id": "reset",
           "route": "/auth/reset",
-          "recipe": "4f66c309904c41fb1df4074d96dbac5ea28bb22038506fa904e82c77040757e7",
+          "recipe": "9bf7cdd02ccaa4b26cfa92274aeeb6be1b1583793f349c97ebe5fa96baebd528",
           "root": "form",
           "nodes": {
             "form": {
@@ -1120,6 +1960,22 @@
       ],
       "entryPage": "sign-in",
       "routeLinks": [
+        {
+          "fromPage": "sign-in",
+          "fromAnchor": {
+            "fragment": "sign-in-root",
+            "name": "signup"
+          },
+          "toPage": "sign-up"
+        },
+        {
+          "fromPage": "sign-up",
+          "fromAnchor": {
+            "fragment": "sign-up-root",
+            "name": "signin"
+          },
+          "toPage": "sign-in"
+        },
         {
           "fromPage": "sign-in",
           "fromAnchor": {
@@ -1149,6 +2005,91 @@
           "fromAnchor": {
             "fragment": "reset-root",
             "name": "submit"
+          },
+          "toPage": "sign-in"
+        }
+      ]
+    },
+    "d929b9d4d54a7db7284e7478f596db39e8bbe05d7240555409b24eba33347b58": {
+      "schemaVersion": 1,
+      "id": "auth-split-flow",
+      "kind": "flow",
+      "profile": "efcf2f3e93ee5b4730cff4a6d760833299d19ca480be4b16424ae24a810e6057",
+      "pages": [
+        {
+          "id": "sign-in",
+          "route": "/auth/split/sign-in",
+          "recipe": "d929b9d4d54a7db7284e7478f596db39e8bbe05d7240555409b24eba33347b58",
+          "root": "split",
+          "nodes": {
+            "split": {
+              "id": "split",
+              "block": "01b514d6afe398f6f3baf4fa2dee37baffdbec3051e684602ed0f05d48573d69",
+              "bindings": {}
+            },
+            "form": {
+              "id": "form",
+              "block": "2707e4a25d2f99437d380b9ac7a44636882a812d8ba2b34494a9f369169d88c4",
+              "parent": {
+                "node": "split",
+                "slot": "form",
+                "order": 0
+              },
+              "bindings": {}
+            }
+          },
+          "connections": [],
+          "rules": [],
+          "decisions": {
+            "auth-brand": "Acme"
+          },
+          "status": "plan-ready"
+        },
+        {
+          "id": "sign-up",
+          "route": "/auth/split/sign-up",
+          "recipe": "d929b9d4d54a7db7284e7478f596db39e8bbe05d7240555409b24eba33347b58",
+          "root": "split",
+          "nodes": {
+            "split": {
+              "id": "split",
+              "block": "01b514d6afe398f6f3baf4fa2dee37baffdbec3051e684602ed0f05d48573d69",
+              "bindings": {}
+            },
+            "form": {
+              "id": "form",
+              "block": "6fec7f17de2d2c7e3f69e52109b87b0255d948f881a5e33a6f9f61be1d36a8f3",
+              "parent": {
+                "node": "split",
+                "slot": "form",
+                "order": 0
+              },
+              "bindings": {}
+            }
+          },
+          "connections": [],
+          "rules": [],
+          "decisions": {
+            "auth-brand": "Acme"
+          },
+          "status": "plan-ready"
+        }
+      ],
+      "entryPage": "sign-in",
+      "routeLinks": [
+        {
+          "fromPage": "sign-in",
+          "fromAnchor": {
+            "fragment": "sign-in-root",
+            "name": "signup"
+          },
+          "toPage": "sign-up"
+        },
+        {
+          "fromPage": "sign-up",
+          "fromAnchor": {
+            "fragment": "sign-up-root",
+            "name": "signin"
           },
           "toPage": "sign-in"
         }
@@ -1326,6 +2267,35 @@
         }
       ],
       "entryPage": "records",
+      "routeLinks": []
+    },
+    "190c51eac23911ad817903da7f9390216eaf783c13737cef654a3096cc54aa56": {
+      "schemaVersion": 1,
+      "id": "marketing-pricing",
+      "kind": "page",
+      "profile": "efcf2f3e93ee5b4730cff4a6d760833299d19ca480be4b16424ae24a810e6057",
+      "pages": [
+        {
+          "id": "pricing",
+          "route": "/pricing",
+          "recipe": "190c51eac23911ad817903da7f9390216eaf783c13737cef654a3096cc54aa56",
+          "root": "canvas",
+          "nodes": {
+            "canvas": {
+              "id": "canvas",
+              "block": "5857b53433f74071b407f98b96554ac99c6515031ff21a63f252cc9f3874cd96",
+              "bindings": {}
+            }
+          },
+          "connections": [],
+          "rules": [],
+          "decisions": {
+            "density": "comfortable"
+          },
+          "status": "plan-ready"
+        }
+      ],
+      "entryPage": "pricing",
       "routeLinks": []
     },
     "b20f7e5d9f0b7e7000753009adc81e84e4a1ad61e6be439c34e241d9c37bbbd9": {
@@ -1560,6 +2530,323 @@
       ],
       "entryPage": "dashboard",
       "routeLinks": []
+    },
+    "a990d1a3c5dcbab18565b1b3e80d55788ed73de69912b8567cf5a6c290b69c9a": {
+      "schemaVersion": 1,
+      "id": "workspace-detail",
+      "kind": "page",
+      "profile": "efcf2f3e93ee5b4730cff4a6d760833299d19ca480be4b16424ae24a810e6057",
+      "pages": [
+        {
+          "id": "detail",
+          "route": "/workspace/detail",
+          "recipe": "a990d1a3c5dcbab18565b1b3e80d55788ed73de69912b8567cf5a6c290b69c9a",
+          "root": "shell",
+          "nodes": {
+            "shell": {
+              "id": "shell",
+              "block": "67de989d195a092ab9f5f799c19e64909a8faf84cb2277271b2619d3f9a62fb3",
+              "bindings": {}
+            },
+            "nav": {
+              "id": "nav",
+              "block": "6245b44b5b79b16b6a7ba5cc61c9246a0330ddac6d2021ac374c2671cf61c14f",
+              "parent": {
+                "node": "shell",
+                "slot": "navigation",
+                "order": 0
+              },
+              "bindings": {}
+            },
+            "header": {
+              "id": "header",
+              "block": "dbfae20d1ef27d597a119b019dfc9444fb0ae3800016076fc4271830b9565caf",
+              "parent": {
+                "node": "shell",
+                "slot": "header",
+                "order": 0
+              },
+              "bindings": {}
+            },
+            "canvas": {
+              "id": "canvas",
+              "block": "a9bc442695665c5bc07aad5aa1f7491f3f97ea1efba629f4dfd0b8268031e210",
+              "parent": {
+                "node": "shell",
+                "slot": "content",
+                "order": 0
+              },
+              "bindings": {}
+            },
+            "filters": {
+              "id": "filters",
+              "block": "7b8a12c860ba038232b4973d25051b98867ca278cd0761541603f8516958265c",
+              "parent": {
+                "node": "canvas",
+                "slot": "filters",
+                "order": 0
+              },
+              "bindings": {
+                "data-context": "records-dataset"
+              }
+            },
+            "table": {
+              "id": "table",
+              "block": "3cf92bf80520abe59ab18ec9ce3ff1714ab917a31d5eab9ac8cd7f913f47b0cd",
+              "parent": {
+                "node": "canvas",
+                "slot": "table",
+                "order": 0
+              },
+              "bindings": {
+                "data-context": "records-dataset"
+              }
+            },
+            "pager": {
+              "id": "pager",
+              "block": "8db430e806c397ae4259c221b7030e80e783f34c1f1c5002702020e1041a9296",
+              "parent": {
+                "node": "canvas",
+                "slot": "pager",
+                "order": 0
+              },
+              "bindings": {
+                "data-context": "records-dataset"
+              }
+            },
+            "detail": {
+              "id": "detail",
+              "block": "1cb011c6a62e6e6c82caddc5015ba58ceba8217f226a2bfcd6b587467083cb8b",
+              "parent": {
+                "node": "canvas",
+                "slot": "detail",
+                "order": 0
+              },
+              "bindings": {
+                "data-context": "records-dataset"
+              }
+            }
+          },
+          "connections": [
+            {
+              "id": "shell-to-canvas",
+              "relation": "controls",
+              "from": {
+                "node": "shell",
+                "port": "main-region"
+              },
+              "to": {
+                "node": "canvas",
+                "port": "main-in"
+              }
+            },
+            {
+              "id": "header-to-nav",
+              "relation": "controls",
+              "from": {
+                "node": "header",
+                "port": "nav-toggle-out"
+              },
+              "to": {
+                "node": "nav",
+                "port": "nav-toggle-in"
+              }
+            },
+            {
+              "id": "filters-to-table",
+              "relation": "data",
+              "from": {
+                "node": "filters",
+                "port": "dataset-out"
+              },
+              "to": {
+                "node": "table",
+                "port": "dataset-in"
+              }
+            },
+            {
+              "id": "filters-to-pager",
+              "relation": "data",
+              "from": {
+                "node": "filters",
+                "port": "dataset-out"
+              },
+              "to": {
+                "node": "pager",
+                "port": "dataset-in"
+              }
+            },
+            {
+              "id": "filters-to-detail",
+              "relation": "data",
+              "from": {
+                "node": "filters",
+                "port": "dataset-out"
+              },
+              "to": {
+                "node": "detail",
+                "port": "dataset-in"
+              }
+            }
+          ],
+          "rules": [
+            {
+              "id": "detail-shell-frame",
+              "type": "same-frame",
+              "nodes": [
+                "header",
+                "canvas"
+              ]
+            },
+            {
+              "id": "detail-same-shell",
+              "type": "same-shell",
+              "nodes": [
+                "nav",
+                "header",
+                "canvas"
+              ]
+            },
+            {
+              "id": "detail-shell-gutter",
+              "type": "single-owner",
+              "boundary": "shell-root",
+              "property": "gutter",
+              "nodes": [
+                "shell"
+              ]
+            },
+            {
+              "id": "detail-records-shared-data",
+              "type": "shared-data",
+              "binding": "records-dataset",
+              "nodes": [
+                "filters",
+                "table",
+                "pager",
+                "detail"
+              ]
+            }
+          ],
+          "decisions": {
+            "density": "compact"
+          },
+          "status": "plan-ready"
+        }
+      ],
+      "entryPage": "detail",
+      "routeLinks": []
+    },
+    "7a0ff5b84767f2edaf38f1b5512431b4a31dd1d983856f50ad55afe101025e42": {
+      "schemaVersion": 1,
+      "id": "workspace-settings",
+      "kind": "page",
+      "profile": "efcf2f3e93ee5b4730cff4a6d760833299d19ca480be4b16424ae24a810e6057",
+      "pages": [
+        {
+          "id": "settings",
+          "route": "/settings",
+          "recipe": "7a0ff5b84767f2edaf38f1b5512431b4a31dd1d983856f50ad55afe101025e42",
+          "root": "shell",
+          "nodes": {
+            "shell": {
+              "id": "shell",
+              "block": "67de989d195a092ab9f5f799c19e64909a8faf84cb2277271b2619d3f9a62fb3",
+              "bindings": {}
+            },
+            "nav": {
+              "id": "nav",
+              "block": "6245b44b5b79b16b6a7ba5cc61c9246a0330ddac6d2021ac374c2671cf61c14f",
+              "parent": {
+                "node": "shell",
+                "slot": "navigation",
+                "order": 0
+              },
+              "bindings": {}
+            },
+            "header": {
+              "id": "header",
+              "block": "dbfae20d1ef27d597a119b019dfc9444fb0ae3800016076fc4271830b9565caf",
+              "parent": {
+                "node": "shell",
+                "slot": "header",
+                "order": 0
+              },
+              "bindings": {}
+            },
+            "content": {
+              "id": "content",
+              "block": "5307b337028dfb9f6fe1ece8975ad6a6857d3fe9fc1b41d1df2c28c709dc8cc8",
+              "parent": {
+                "node": "shell",
+                "slot": "content",
+                "order": 0
+              },
+              "bindings": {}
+            }
+          },
+          "connections": [
+            {
+              "id": "shell-to-canvas",
+              "relation": "controls",
+              "from": {
+                "node": "shell",
+                "port": "main-region"
+              },
+              "to": {
+                "node": "content",
+                "port": "main-in"
+              }
+            },
+            {
+              "id": "header-to-nav",
+              "relation": "controls",
+              "from": {
+                "node": "header",
+                "port": "nav-toggle-out"
+              },
+              "to": {
+                "node": "nav",
+                "port": "nav-toggle-in"
+              }
+            }
+          ],
+          "rules": [
+            {
+              "id": "settings-shell-frame",
+              "type": "same-frame",
+              "nodes": [
+                "header",
+                "content"
+              ]
+            },
+            {
+              "id": "settings-same-shell",
+              "type": "same-shell",
+              "nodes": [
+                "nav",
+                "header",
+                "content"
+              ]
+            },
+            {
+              "id": "settings-shell-gutter",
+              "type": "single-owner",
+              "boundary": "shell-root",
+              "property": "gutter",
+              "nodes": [
+                "shell"
+              ]
+            }
+          ],
+          "decisions": {
+            "density": "compact"
+          },
+          "status": "plan-ready"
+        }
+      ],
+      "entryPage": "settings",
+      "routeLinks": []
     }
   },
   "profiles": {
@@ -1643,21 +2930,38 @@
     "app-shell": "67de989d195a092ab9f5f799c19e64909a8faf84cb2277271b2619d3f9a62fb3",
     "auth-recovery": "44f07830cae181975863955bf469725b946855a8914e4cc6b63797bddf7f805d",
     "auth-reset": "a3f4265e047c061e5f009cd4cd2c5bb001701c29c3bcd655c67572d7468e0776",
-    "auth-sign-in": "c2f9b936b85ceaaf489484411a43cbbe054caedebe652ea1d5f47a1f5dcdd2f8",
+    "auth-sign-in": "2707e4a25d2f99437d380b9ac7a44636882a812d8ba2b34494a9f369169d88c4",
+    "auth-sign-up": "6fec7f17de2d2c7e3f69e52109b87b0255d948f881a5e33a6f9f61be1d36a8f3",
+    "auth-split-screen": "01b514d6afe398f6f3baf4fa2dee37baffdbec3051e684602ed0f05d48573d69",
     "dashboard-main": "dc633c7b5a31229b36eef74338791a30c9254446987fe1d4d7d3d726ee095d3d",
     "data-filters": "7b8a12c860ba038232b4973d25051b98867ca278cd0761541603f8516958265c",
     "data-pager": "8db430e806c397ae4259c221b7030e80e783f34c1f1c5002702020e1041a9296",
     "data-table": "3cf92bf80520abe59ab18ec9ce3ff1714ab917a31d5eab9ac8cd7f913f47b0cd",
     "data-workspace": "02273050b9b6ad5f887ec47b177f349c8330c3fdd6565df310743c773771a6f4",
+    "detail-drawer-panel": "1cb011c6a62e6e6c82caddc5015ba58ceba8217f226a2bfcd6b587467083cb8b",
+    "data-table-detail-layout": "a9bc442695665c5bc07aad5aa1f7491f3f97ea1efba629f4dfd0b8268031e210",
+    "empty-state": "b7c5de3a1cf828bda14e337119258c8613505b36c167633b347d1551367d10f5",
+    "error-boundary": "47f6bc0a357930337589b78f8eb83051c2979498475f4154a38a8f9bb81764f7",
+    "form-section": "db0f381548cf79f10b2eb645ee1a4586b5eca810b8aa670849767271debd6bc3",
+    "newsletter-waitlist": "57a13cd223e2a23e2c4c7ec875cfba5eb5030f6bf587bd1170dbec4db33989e9",
     "page-header": "dbfae20d1ef27d597a119b019dfc9444fb0ae3800016076fc4271830b9565caf",
+    "pricing-tiers": "5857b53433f74071b407f98b96554ac99c6515031ff21a63f252cc9f3874cd96",
     "segmented-toggle": "ff35aa4378cbabb98ebb0fc43c4f1fdf7f5ad94601078c1490f721c940a4fc5c",
+    "settings-workspace": "5307b337028dfb9f6fe1ece8975ad6a6857d3fe9fc1b41d1df2c28c709dc8cc8",
+    "sidebar-collapsible-icon": "8a79b7ec1e26b7522a1d32d85d3d5c0a924b1ab21c32252b5d3207eefd0e5274",
     "sidebar-dashboard-shell": "6245b44b5b79b16b6a7ba5cc61c9246a0330ddac6d2021ac374c2671cf61c14f",
+    "sidebar-inset-shell": "036d12c586a0dacff01c67cc745856d2eb02092f9ce096c44336f3034a8fe71d",
+    "sidebar-mobile-flyout": "b2f95030c433acc594d2dd8ce1a1bdf20f2410e9e646a83803103d17806d85fb",
     "sidebar-nav": "9625532a4f0d2a345eb368fbf7fa3fc77337782d5c6340c28f0d5df2d525ecd3",
     "svg-area-chart": "9882f38bc966b690f268ad7f962ea638b8598b812d167a5340c6ab29b70f8209",
     "dashboard-activity": "78a55115c554a664f0e6389e597539ce1938b5b12e796a4c81e149a29091908e",
     "dashboard-workspace": "1cc396b2660819c97d54e38c5ce12031f0e83213af29913ed178f0bb0a41fca8",
-    "auth-flow": "4f66c309904c41fb1df4074d96dbac5ea28bb22038506fa904e82c77040757e7",
+    "auth-flow": "9bf7cdd02ccaa4b26cfa92274aeeb6be1b1583793f349c97ebe5fa96baebd528",
+    "auth-split-flow": "d929b9d4d54a7db7284e7478f596db39e8bbe05d7240555409b24eba33347b58",
     "data-records": "3d80d26e292c4d72ce9adc5b816eb4b5e009b4361c0f74420e218e823d6658e0",
-    "workspace-dashboard": "b20f7e5d9f0b7e7000753009adc81e84e4a1ad61e6be439c34e241d9c37bbbd9"
+    "marketing-pricing": "190c51eac23911ad817903da7f9390216eaf783c13737cef654a3096cc54aa56",
+    "workspace-dashboard": "b20f7e5d9f0b7e7000753009adc81e84e4a1ad61e6be439c34e241d9c37bbbd9",
+    "workspace-detail": "a990d1a3c5dcbab18565b1b3e80d55788ed73de69912b8567cf5a6c290b69c9a",
+    "workspace-settings": "7a0ff5b84767f2edaf38f1b5512431b4a31dd1d983856f50ad55afe101025e42"
   }
 }

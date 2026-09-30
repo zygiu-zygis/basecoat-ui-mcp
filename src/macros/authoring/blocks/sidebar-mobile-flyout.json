@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "id": "sidebar-mobile-flyout",
+  "role": "navigation",
+  "family": "layout",
+  "description": "Mobile drawer flyout navigation sheet with backdrop overlay, close trigger, and grouped menu items.",
+  "tags": ["navigation", "sidebar", "drawer", "mobile-flyout"],
+  "root": "flyout-root",
+  "fragments": [
+    {
+      "id": "flyout-root",
+      "emmet": "div.fixed.inset-0.z-50.bg-black-80.md:hidden[data-slot=mobile-flyout-backdrop][data-fsm-recipe=navigation][data-fsm-state=mobile-open]>div.fixed.inset-y-0.left-0.w-72.bg-background.p-6.shadow-lg.flex.flex-col.gap-4[data-slot=drawer-panel]>div.flex.items-center.justify-between.border-b.pb-4>span.font-semibold{Navigation}+button.btn[data-variant=ghost][data-slot=close-trigger]{Close}^nav.flex.flex-col.gap-2[aria-label=MobileMenu]>a.p-2.rounded-md{Home}+a.p-2.rounded-md{Projects}+a.p-2.rounded-md{Settings}^div.mt-auto.border-t.pt-4[data-slot=user-footer]>span.text-sm.text-muted{Signed in as user}"
+    }
+  ],
+  "mounts": [],
+  "slots": [
+    {
+      "id": "close-trigger",
+      "at": { "fragment": "flyout-root", "name": "close-trigger" },
+      "accepts": ["action"],
+      "min": 0,
+      "max": 1
+    },
+    {
+      "id": "user-footer",
+      "at": { "fragment": "flyout-root", "name": "user-footer" },
+      "accepts": ["action"],
+      "min": 0,
+      "max": 1
+    }
+  ],
+  "ports": [
+    {
+      "id": "nav-toggle-in",
+      "at": { "fragment": "flyout-root", "name": "flyout-root" },
+      "direction": "in",
+      "kind": "control",
+      "contract": "nav-toggle",
+      "minLinks": 0,
+      "maxLinks": 1,
+      "scope": "shell"
+    }
+  ],
+  "componentRefs": ["drawer", "button"],
+  "ruleRefs": [],
+  "dependencyBlockIds": [],
+  "layout": { "frameRef": "flyout-root" },
+  "landmarks": { "main": 0, "primaryHeading": 0 },
+  "provenance": {
+    "origin": "authored",
+    "sourceHashes": {},
+    "mappingVersion": "1.0.0"
+  }
+}

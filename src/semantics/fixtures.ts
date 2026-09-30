@@ -393,9 +393,324 @@ export const COLLAPSIBLE_NAVIGATION_FSM_RECIPE: AuthoringFsmRecipe = {
   ],
 };
 
+/** Navigation and sidebar disclosure FSM recipe. */
+export const NAVIGATION_FSM_RECIPE: AuthoringFsmRecipe = {
+  schemaVersion: 1,
+  id: 'navigation',
+  description: 'Navigation and sidebar disclosure FSM recipe for collapsible desktop and mobile drawer navigation.',
+  states: [
+    {
+      id: 'expanded',
+      description: 'Navigation is expanded (visible in full sidebar format)',
+      initial: true,
+    },
+    {
+      id: 'collapsed',
+      description: 'Navigation is collapsed into an icon or compact rail format',
+    },
+    {
+      id: 'mobile-open',
+      description: 'Mobile flyout navigation drawer is open with backdrop',
+    },
+    {
+      id: 'mobile-closing',
+      description: 'Mobile flyout navigation is in the process of closing',
+    },
+  ],
+  events: [
+    {
+      id: 'toggle-collapse',
+      description: 'Toggle between expanded and collapsed sidebar',
+    },
+    {
+      id: 'open-mobile',
+      description: 'Open mobile flyout drawer',
+    },
+    {
+      id: 'close-mobile',
+      description: 'Close mobile flyout drawer',
+    },
+    {
+      id: 'animation-complete',
+      description: 'Animation finished',
+    },
+  ],
+  guards: [],
+  actions: [
+    {
+      id: 'update-aria-expanded',
+      description: 'Update aria-expanded attribute',
+      metadata: {
+        attribute: 'aria-expanded',
+        source: 'state',
+      },
+    },
+  ],
+  transitions: [
+    {
+      id: 'expand-to-collapse',
+      from: 'expanded',
+      to: 'collapsed',
+      event: 'toggle-collapse',
+      action: 'update-aria-expanded',
+    },
+    {
+      id: 'collapse-to-expand',
+      from: 'collapsed',
+      to: 'expanded',
+      event: 'toggle-collapse',
+      action: 'update-aria-expanded',
+    },
+    {
+      id: 'expand-to-mobile',
+      from: 'expanded',
+      to: 'mobile-open',
+      event: 'open-mobile',
+      action: 'update-aria-expanded',
+    },
+    {
+      id: 'collapse-to-mobile',
+      from: 'collapsed',
+      to: 'mobile-open',
+      event: 'open-mobile',
+      action: 'update-aria-expanded',
+    },
+    {
+      id: 'mobile-to-closing',
+      from: 'mobile-open',
+      to: 'mobile-closing',
+      event: 'close-mobile',
+      action: 'update-aria-expanded',
+    },
+    {
+      id: 'finish-mobile-closing',
+      from: 'mobile-closing',
+      to: 'expanded',
+      event: 'animation-complete',
+    },
+  ],
+};
+
+/** Authentication flow FSM recipe for login, signup, and recovery flows. */
+export const AUTH_FLOW_FSM_RECIPE: AuthoringFsmRecipe = {
+  schemaVersion: 1,
+  id: 'auth-flow',
+  description: 'Authentication flow FSM recipe for sign-in, sign-up, verification, recovery, and session lifecycle.',
+  states: [
+    {
+      id: 'idle',
+      description: 'Auth form is ready for user input',
+      initial: true,
+    },
+    {
+      id: 'submitting',
+      description: 'Auth request is being processed',
+    },
+    {
+      id: 'authenticated',
+      description: 'User has authenticated successfully',
+    },
+    {
+      id: 'error',
+      description: 'Authentication or validation error occurred',
+    },
+    {
+      id: 'recovery-requested',
+      description: 'Password recovery has been requested',
+    },
+    {
+      id: 'reset-required',
+      description: 'Password reset is required',
+    },
+  ],
+  events: [
+    {
+      id: 'submit',
+      description: 'User submits credentials',
+    },
+    {
+      id: 'auth-success',
+      description: 'Authentication succeeded',
+    },
+    {
+      id: 'auth-failure',
+      description: 'Authentication failed with error',
+    },
+    {
+      id: 'request-recovery',
+      description: 'User requested password recovery',
+    },
+    {
+      id: 'request-reset',
+      description: 'System requires password reset',
+    },
+    {
+      id: 'retry',
+      description: 'User retries after error',
+    },
+    {
+      id: 'sign-out',
+      description: 'Session ended',
+    },
+  ],
+  guards: [],
+  actions: [
+    {
+      id: 'record-auth-state',
+      description: 'Update authentication state indicator',
+      metadata: {
+        target: 'auth-container',
+      },
+    },
+  ],
+  transitions: [
+    {
+      id: 'idle-to-submitting',
+      from: 'idle',
+      to: 'submitting',
+      event: 'submit',
+      action: 'record-auth-state',
+    },
+    {
+      id: 'submitting-to-authenticated',
+      from: 'submitting',
+      to: 'authenticated',
+      event: 'auth-success',
+      action: 'record-auth-state',
+    },
+    {
+      id: 'submitting-to-error',
+      from: 'submitting',
+      to: 'error',
+      event: 'auth-failure',
+      action: 'record-auth-state',
+    },
+    {
+      id: 'error-to-idle',
+      from: 'error',
+      to: 'idle',
+      event: 'retry',
+    },
+    {
+      id: 'idle-to-recovery',
+      from: 'idle',
+      to: 'recovery-requested',
+      event: 'request-recovery',
+    },
+    {
+      id: 'recovery-to-idle',
+      from: 'recovery-requested',
+      to: 'idle',
+      event: 'retry',
+    },
+    {
+      id: 'idle-to-reset',
+      from: 'idle',
+      to: 'reset-required',
+      event: 'request-reset',
+    },
+    {
+      id: 'reset-to-idle',
+      from: 'reset-required',
+      to: 'idle',
+      event: 'retry',
+    },
+    {
+      id: 'authenticated-to-idle',
+      from: 'authenticated',
+      to: 'idle',
+      event: 'sign-out',
+    },
+  ],
+};
+
+/** Tabs panel switching FSM recipe. */
+export const TABS_FSM_RECIPE: AuthoringFsmRecipe = {
+  schemaVersion: 1,
+  id: 'tabs',
+  description: 'Tabs FSM recipe for peer panel switching and keyboard selection.',
+  states: [
+    {
+      id: 'active',
+      description: 'A tab is currently selected and its panel is visible',
+      initial: true,
+    },
+    {
+      id: 'switching',
+      description: 'Tab selection is transitioning or updating panel',
+    },
+    {
+      id: 'inactive',
+      description: 'Tabs container is blurred or inactive',
+    },
+  ],
+  events: [
+    {
+      id: 'select-tab',
+      description: 'User selects a tab',
+    },
+    {
+      id: 'tab-switched',
+      description: 'Panel update complete',
+    },
+    {
+      id: 'blur',
+      description: 'Focus leaves the tabs container',
+    },
+    {
+      id: 'focus',
+      description: 'Focus enters the tabs container',
+    },
+  ],
+  guards: [],
+  actions: [
+    {
+      id: 'update-tab-aria',
+      description: 'Update aria-selected and hidden attributes',
+      metadata: {
+        target: 'tab-list',
+      },
+    },
+  ],
+  transitions: [
+    {
+      id: 'active-to-switching',
+      from: 'active',
+      to: 'switching',
+      event: 'select-tab',
+      action: 'update-tab-aria',
+    },
+    {
+      id: 'switching-to-active',
+      from: 'switching',
+      to: 'active',
+      event: 'tab-switched',
+      action: 'update-tab-aria',
+    },
+    {
+      id: 'active-to-inactive',
+      from: 'active',
+      to: 'inactive',
+      event: 'blur',
+    },
+    {
+      id: 'inactive-to-active',
+      from: 'inactive',
+      to: 'active',
+      event: 'focus',
+    },
+  ],
+};
+
 /** Complete authored semantics input with default fixtures. */
 export const DEFAULT_SEMANTICS_INPUT: AuthoringSemanticsInput = {
   schemaVersion: 1,
   rhythmProfiles: [DEFAULT_RHYTHM_PROFILE],
-  fsmRecipes: [DIALOG_FSM_RECIPE, COLLAPSIBLE_NAVIGATION_FSM_RECIPE],
+  fsmRecipes: [
+    DIALOG_FSM_RECIPE,
+    COLLAPSIBLE_NAVIGATION_FSM_RECIPE,
+    NAVIGATION_FSM_RECIPE,
+    AUTH_FLOW_FSM_RECIPE,
+    TABS_FSM_RECIPE,
+  ],
 };

@@ -2,6 +2,30 @@
 
 Maintained by **Žygimantas Jasiulionis / Intellmedia**.
 
+## 1.4.0 - 2026-09-30
+
+- Expanded macro block registry with 14 new and updated block blueprints covering core shadcn UI blocks in Basecoat UI (Astro & Tailwind CSS 4):
+  - **Auth Blocks**: `auth-sign-in` (enhanced with GitHub/Google OAuth, divider, signup link, FSM binding), `auth-sign-up` (name, email, password, terms, OAuth), `auth-split-screen` (split-screen auth frame with left form slot and right branded hero media).
+  - **Sidebar Variations**: `sidebar-inset-shell` (inset app shell with header and content canvas slots), `sidebar-collapsible-icon` (icon rail navigation with badge slots), `sidebar-mobile-flyout` (mobile drawer/flyout with backdrop and close trigger).
+  - **Application & Workspace Blocks**: `settings-workspace` (profile/billing/notifications tabs and field cards), `detail-drawer-panel` (slide-over inspection drawer), `data-table-detail-layout` (data workspace hosting filters, table, pager, and slide-over detail drawer).
+  - **Marketing & Content Blocks**: `pricing-tiers` (3-tier pricing table with Starter, Pro with badge, Enterprise), `newsletter-waitlist` (marketing waitlist/newsletter banner), `empty-state` (dashed border placeholder with CTA slot), `error-boundary` (404/500 error display with action buttons).
+  - **Form Blocks**: `form-section` (multi-column form card with validation states, helper copy, grid layout, fieldsets).
+- Added 4 new multi-page and multi-block macro recipes in `src/macros/authoring/recipes/`:
+  - `auth-split-flow`: split-screen auth frame hosting `auth-sign-in` and `auth-sign-up`.
+  - `workspace-settings`: inset app shell, sidebar navigation, header, and settings workspace tabs.
+  - `workspace-detail`: data table layout with slide-over record inspection drawer.
+  - `marketing-pricing`: pricing tiers with waitlist/newsletter banner.
+  - Updated `auth-flow` with bidirectional routing between sign-in and sign-up.
+- Expanded semantic FSM recipes in `src/semantics/fixtures.ts`:
+  - Added `navigation` FSM recipe (`expanded`, `collapsed`, `mobile-open`, `mobile-closing`).
+  - Added `auth-flow` FSM recipe (`idle`, `submitting`, `authenticated`, `error`, `recovery-requested`, `reset-required`).
+  - Added `tabs` FSM recipe (`active`, `switching`, `inactive`).
+  - Preserved `dialog` and `collapsible-navigation` recipes (5 recipes, 6 aliases).
+- Enforced landmark composition invariants across all blocks: shells `main: 0, primaryHeading: 0`, headers `main: 0, primaryHeading: 1`, canvases `main: 1, primaryHeading: 0`.
+- Enforced strict rhythm spacing steps (`0, 2, 4, 6, 12`, `auto`) and Emmet string length limit (`LIMITS.emmetMax = 1200`) across all blueprints.
+- Expanded test coverage across macro registry, semantics, composition validation, and end-to-end page context tests (174 tests passing).
+- Updated Cursor rule `templates/cursor/basecoat-designer.mdc` and added design guide `docs/mcp-blocks-expansion.md`.
+
 ## 1.3.0 - 2026-09-30
 
 - Documented offline dashboard MCP evaluation vs https://ui.shadcn.com/examples/dashboard in `docs/mcp-dashboard-eval.md`. Local disposable consumer probe lives at `tests/fixtures/offline-dashboard/` (gitignored; not for GitHub).

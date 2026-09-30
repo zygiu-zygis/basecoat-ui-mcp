@@ -1,0 +1,124 @@
+{
+  "schemaVersion": 1,
+  "id": "workspace-detail",
+  "kind": "page",
+  "profile": "app-default",
+  "entryPage": "detail",
+  "routeLinks": [],
+  "pages": [
+    {
+      "id": "detail",
+      "route": "/workspace/detail",
+      "recipe": "workspace-detail",
+      "root": "shell",
+      "status": "plan-ready",
+      "decisions": { "density": "compact" },
+      "nodes": {
+        "shell": {
+          "id": "shell",
+          "block": "app-shell",
+          "bindings": {}
+        },
+        "nav": {
+          "id": "nav",
+          "block": "sidebar-dashboard-shell",
+          "parent": { "node": "shell", "slot": "navigation", "order": 0 },
+          "bindings": {}
+        },
+        "header": {
+          "id": "header",
+          "block": "page-header",
+          "parent": { "node": "shell", "slot": "header", "order": 0 },
+          "bindings": {}
+        },
+        "canvas": {
+          "id": "canvas",
+          "block": "data-table-detail-layout",
+          "parent": { "node": "shell", "slot": "content", "order": 0 },
+          "bindings": {}
+        },
+        "filters": {
+          "id": "filters",
+          "block": "data-filters",
+          "parent": { "node": "canvas", "slot": "filters", "order": 0 },
+          "bindings": { "data-context": "records-dataset" }
+        },
+        "table": {
+          "id": "table",
+          "block": "data-table",
+          "parent": { "node": "canvas", "slot": "table", "order": 0 },
+          "bindings": { "data-context": "records-dataset" }
+        },
+        "pager": {
+          "id": "pager",
+          "block": "data-pager",
+          "parent": { "node": "canvas", "slot": "pager", "order": 0 },
+          "bindings": { "data-context": "records-dataset" }
+        },
+        "detail": {
+          "id": "detail",
+          "block": "detail-drawer-panel",
+          "parent": { "node": "canvas", "slot": "detail", "order": 0 },
+          "bindings": { "data-context": "records-dataset" }
+        }
+      },
+      "connections": [
+        {
+          "id": "shell-to-canvas",
+          "relation": "controls",
+          "from": { "node": "shell", "port": "main-region" },
+          "to": { "node": "canvas", "port": "main-in" }
+        },
+        {
+          "id": "header-to-nav",
+          "relation": "controls",
+          "from": { "node": "header", "port": "nav-toggle-out" },
+          "to": { "node": "nav", "port": "nav-toggle-in" }
+        },
+        {
+          "id": "filters-to-table",
+          "relation": "data",
+          "from": { "node": "filters", "port": "dataset-out" },
+          "to": { "node": "table", "port": "dataset-in" }
+        },
+        {
+          "id": "filters-to-pager",
+          "relation": "data",
+          "from": { "node": "filters", "port": "dataset-out" },
+          "to": { "node": "pager", "port": "dataset-in" }
+        },
+        {
+          "id": "filters-to-detail",
+          "relation": "data",
+          "from": { "node": "filters", "port": "dataset-out" },
+          "to": { "node": "detail", "port": "dataset-in" }
+        }
+      ],
+      "rules": [
+        {
+          "id": "detail-shell-frame",
+          "type": "same-frame",
+          "nodes": ["header", "canvas"]
+        },
+        {
+          "id": "detail-same-shell",
+          "type": "same-shell",
+          "nodes": ["nav", "header", "canvas"]
+        },
+        {
+          "id": "detail-shell-gutter",
+          "type": "single-owner",
+          "boundary": "shell-root",
+          "property": "gutter",
+          "nodes": ["shell"]
+        },
+        {
+          "id": "detail-records-shared-data",
+          "type": "shared-data",
+          "binding": "records-dataset",
+          "nodes": ["filters", "table", "pager", "detail"]
+        }
+      ]
+    }
+  ]
+}

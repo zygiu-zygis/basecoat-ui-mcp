@@ -31,8 +31,8 @@ test('semantic registry compilation produces stable content-addressable results'
 
   // Should have expected structure
   assert.strictEqual(Object.keys(registry1.rhythmProfiles).length, 1);
-  assert.strictEqual(Object.keys(registry1.fsmRecipes).length, 2);
-  assert.strictEqual(Object.keys(registry1.aliases).length, 3); // default, dialog, collapsible-navigation
+  assert.strictEqual(Object.keys(registry1.fsmRecipes).length, 5);
+  assert.strictEqual(Object.keys(registry1.aliases).length, 6); // default, dialog, collapsible-navigation, navigation, auth-flow, tabs
 
   // Rhythm profile should generate text
   const rhythmProfileRef = registry1.aliases['default'];
@@ -85,6 +85,37 @@ test('FSM recipe compilation validates state machine structure', () => {
   assert(dialogFsm.states.length >= 4); // closed, opening, open, closing
   assert(dialogFsm.events.length >= 6);
   assert(dialogFsm.transitions.length >= 7);
+});
+
+test('navigation, auth-flow, and tabs FSM recipes compile correctly', () => {
+  const { registry, diagnostics } = compileSemantics(DEFAULT_SEMANTICS_INPUT);
+  assert.strictEqual(diagnostics.filter(d => d.severity === 'error').length, 0);
+
+  const navRef = registry.aliases['navigation'];
+  assert(navRef);
+  const navFsm = registry.fsmRecipes[navRef];
+  assert(navFsm);
+  assert.strictEqual(navFsm.id, 'navigation');
+  assert.deepEqual(navFsm.initialStates, ['expanded']);
+  assert(navFsm.states.some(s => s.id === 'collapsed'));
+  assert(navFsm.states.some(s => s.id === 'mobile-open'));
+
+  const authRef = registry.aliases['auth-flow'];
+  assert(authRef);
+  const authFsm = registry.fsmRecipes[authRef];
+  assert(authFsm);
+  assert.strictEqual(authFsm.id, 'auth-flow');
+  assert.deepEqual(authFsm.initialStates, ['idle']);
+  assert(authFsm.states.some(s => s.id === 'submitting'));
+  assert(authFsm.states.some(s => s.id === 'authenticated'));
+
+  const tabsRef = registry.aliases['tabs'];
+  assert(tabsRef);
+  const tabsFsm = registry.fsmRecipes[tabsRef];
+  assert(tabsFsm);
+  assert.strictEqual(tabsFsm.id, 'tabs');
+  assert.deepEqual(tabsFsm.initialStates, ['active']);
+  assert(tabsFsm.states.some(s => s.id === 'switching'));
 });
 
 test('rhythm profile content-addressable compilation', () => {
@@ -163,7 +194,7 @@ test('semantics store provides effective rhythm profiles with project overrides'
     // Registry should be accessible
     const registry = store.getRegistry();
     assert(registry.revision);
-    assert.strictEqual(Object.keys(registry.aliases).length, 3);
+    assert.strictEqual(Object.keys(registry.aliases).length, 6);
 
   } finally {
     // Cleanup
