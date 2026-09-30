@@ -4,6 +4,17 @@ Maintained by **Žygimantas Jasiulionis / Intellmedia**.
 
 ## Unreleased
 
+### 1.2.0 - Semantic design layers and enhanced validation
+
+- Added independent compiled semantic registry with rhythm profiles and FSM recipes under `src/semantics/`.
+- Added two new read-only semantic tools: `get_rhythm_rules` for spacing, typography, surfaces, borders, and layout patterns; `get_fsm_recipe` for interaction states, events, transitions, guards, and actions.
+- Enhanced `validate_composition` with bounded static-tree analysis, semantic rhythm validation, macro anchor checks, and FSM `data-state` diagnostics while preserving the existing API.
+- Added optional project-local rhythm profile overrides at `<projectRoot>/.basecoat/rhythm.json` without mutating the packaged snapshot.
+- Hardened macro subsystem with 21 additional tests covering cursor pagination, precedence, cross-process races, and immutable publication with directory `fsync`.
+- Extended validation to detect profile-forbidden hardcoded utilities, arbitrary colors, duplicate landmarks, and structural ordering issues.
+- Semantic tools use the same 1,999-byte bounded pagination as macro tools with content-addressed refs and deterministic cursors.
+- All semantic rhythm mappings target approved Tailwind v4 `@theme` declarations only; FSM recipes provide structural guidance without runtime implementations.
+
 ## 1.1.0 - 2026-09-30
 
 - Added six macro tools for curated block discovery, persistent project-scoped design sessions, context, atomic patches, and design validation.

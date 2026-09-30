@@ -57,6 +57,8 @@
     "sync": "node --import tsx scripts/sync.ts",
     "compile:blocks": "node --import tsx scripts/compile-blocks.ts",
     "compile:blocks:check": "node --import tsx scripts/compile-blocks.ts --check",
+    "compile:semantics": "node --import tsx scripts/compile-semantics.ts",
+    "compile:semantics:check": "node --import tsx scripts/compile-semantics.ts --check",
     "import:blocks": "node --import tsx scripts/import-blocks.ts"
   },
   "dependencies": {

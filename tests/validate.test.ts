@@ -1,10 +1,11 @@
 // Copyright Žygimantas Jasiulionis / Intellmedia.
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
-import { parseHtml, scriptImports } from '../src/tools/html.js';
+import { parseHtml, parseHtmlWithDiagnostics, scriptImports } from '../src/tools/html.js';
 import { validateComposition } from '../src/tools/validate.js';
 
 const rules = (code: string) => validateComposition(code).issues.map(issue => issue.rule);
+const semanticRules = (code: string) => validateComposition(code, { semanticProfile: 'default' }).issues.map(issue => issue.rule);
 
 describe('HTML lexer', () => {
   it('ignores comments, frontmatter, and script/style markup strings', () => {
@@ -223,5 +224,67 @@ describe('composition validation', () => {
     assert.equal(result.truncated, false);
     assert.match(result.limitations, /dynamic classes/);
     assert.match(result.limitations, /parent layout/);
+  });
+});
+
+describe('semantic validation', () => {
+  it('suggests semantic tokens for hardcoded spacing utilities', () => {
+    assert(semanticRules('<div class="gap-2"></div>').includes('semantic-token-available'));
+    assert(semanticRules('<div class="gap-4"></div>').includes('semantic-token-available'));
+    assert(semanticRules('<div class="p-2"></div>').includes('semantic-token-available'));
+  });
+
+  it('suggests semantic tokens for hardcoded background utilities', () => {
+    assert(semanticRules('<div class="bg-background"></div>').includes('semantic-token-available'));
+    assert(semanticRules('<div class="bg-card"></div>').includes('semantic-token-available'));
+    assert(semanticRules('<div class="text-foreground"></div>').includes('semantic-token-available'));
+  });
+
+  it('does not suggest semantic tokens for unsupported utilities', () => {
+    assert(!semanticRules('<div class="gap-8"></div>').includes('semantic-token-available'));
+    assert(!semanticRules('<div class="bg-red-500"></div>').includes('semantic-token-available'));
+  });
+
+  it('preserves existing validation when semantic profile is not specified', () => {
+    const regular = rules('<div class="gap-3"></div>');
+    const withoutProfile = validateComposition('<div class="gap-3"></div>').issues.map(i => i.rule);
+    assert.deepEqual(regular, withoutProfile);
+  });
+
+  it('works with invalid semantic profile gracefully', () => {
+    const result = validateComposition('<div class="gap-2"></div>', { semanticProfile: 'nonexistent' });
+    assert(!result.issues.some(issue => issue.rule === 'semantic-token-available'));
+  });
+});
+
+describe('HTML parsing diagnostics', () => {
+  it('reports unclosed tags with position information', () => {
+    const result = parseHtmlWithDiagnostics('<div><p>Text');
+    assert.equal(result.nodes.length, 2);
+    assert(result.diagnostics.some(d => d.code === 'unclosed-tag' && d.message.includes('<p>')));
+  });
+
+  it('reports unmatched closing tags', () => {
+    const result = parseHtmlWithDiagnostics('<div></span>');
+    assert(result.diagnostics.some(d => d.code === 'unmatched-closing-tag' && d.message.includes('span')));
+  });
+
+  it('reports invalid tag names', () => {
+    const result = parseHtmlWithDiagnostics('<123invalid>');
+    assert(result.diagnostics.some(d => d.code === 'invalid-tag-name'));
+  });
+
+  it('includes line and column information in diagnostics', () => {
+    const result = parseHtmlWithDiagnostics('line 1\n<div\nline 3</div>');
+    const diagnostic = result.diagnostics.find(d => d.code === 'unclosed-tag');
+    if (diagnostic) {
+      assert(diagnostic.line >= 1);
+      assert(diagnostic.column >= 1);
+    }
+  });
+
+  it('handles well-formed HTML without diagnostics', () => {
+    const result = parseHtmlWithDiagnostics('<div><p>Text</p></div>');
+    assert.equal(result.diagnostics.length, 0);
   });
 });

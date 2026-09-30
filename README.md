@@ -69,7 +69,7 @@ Only that exact directory is used. The server does not walk parent directories. 
 
 ## Basecoat MCP tools
 
-The server exposes three component tools and six macro tools. Every macro result is a bounded MCP packet of at most **1,999 UTF-8 bytes**. Larger result sets use cursors; responses are not sliced mid-JSON.
+The server exposes three component tools, six macro tools, and two semantic tools. Every macro and semantic result is a bounded MCP packet of at most **1,999 UTF-8 bytes**. Larger result sets use cursors; responses are not sliced mid-JSON.
 
 ### Component tools
 
@@ -90,6 +90,15 @@ The macro layer is this project's curated, project-specific composition system f
 
 Design sessions persist under `<project-root>/.basecoat/designer/`. Registry revisions are content-addressed; a session keeps using its pinned revision even after the package snapshot changes. Design snapshots use the form `d:<designId>@<revision>`.
 
+### Semantic tools
+
+The semantic layer provides compiled rhythm profiles and finite state machine recipes for consistent design patterns:
+
+7. `get_rhythm_rules` - access approved spacing, typography, surfaces, borders, and layout patterns by profile and family filters.
+8. `get_fsm_recipe` - read interaction states, events, transitions, guards, and actions for dialogs, navigation, and behavioral patterns.
+
+Semantic tools use the same bounded pagination as macro tools. Rhythm rules map to approved Tailwind v4 declarations, while FSM recipes provide structural guidance only - not runtime implementations.
+
 ### End-to-end example
 
 A dashboard page can follow this sequence:
@@ -97,6 +106,7 @@ A dashboard page can follow this sequence:
 ```text
 get_design_context(view="sessions")
 begin_design(designId="admin", profile="app-default", operationId="begin-admin")
+get_rhythm_rules(profile="app-default", family="density")
 search_macro_blocks(q="shell", limit=8)
 apply_design_patch(
   designId="admin",
@@ -108,6 +118,7 @@ apply_design_patch(
 )
 get_design_context(view="overview", designId="admin")
 get_macro_block(idOrRef="app-shell", section="structure", designId="admin")
+get_fsm_recipe(recipe="dialog", section="transitions")
 ```
 
 Implement the selected component leaves in the host project, then record completed regions with `apply_design_patch(record_written)`. Finish with `validate_design(mode="complete")` and `validate_composition` on the generated Astro or HTML source. After a conflict or restart, reread the session and use the returned revision and cursors.

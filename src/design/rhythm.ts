@@ -1,5 +1,14 @@
 // Author and maintainer: Žygimantas Jasiulionis / Intellmedia.
-export const RHYTHM = `# Basecoat composition guide
+import { defaultSemanticsStore } from '../semantics/index.js';
+
+// Get rhythm text from compiled semantic profile
+function getRhythmText(): string {
+  try {
+    const effectiveProfile = defaultSemanticsStore.getEffectiveRhythmProfile('default');
+    return effectiveProfile.rhythmText;
+  } catch (error) {
+    // Fallback to static content if semantics unavailable
+    return `# Basecoat composition guide
 
 Follow this sequence without skipping the content decision:
 Content Hierarchy -> Layout -> Component Selection -> Spacing -> Typography -> Final Composition.
@@ -119,3 +128,7 @@ Name the layout skeleton explicitly: one column, toolbar plus table, or sidebar
 plus content. On a working screen, put the task controls and relevant records
 at the start; a promotional hero must not push the work down.
 `;
+  }
+}
+
+export const RHYTHM = getRhythmText();

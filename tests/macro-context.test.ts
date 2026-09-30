@@ -758,3 +758,193 @@ test('context views and next-step priority surface shell obligations first', () 
   assert(step.priority <= 3, `expected shell/slot priority, got ${step.priority} ${step.code}`);
   assert.match(step.code, /SHELL_|SLOT_|LANDMARK_|MISSING_/);
 });
+
+test('validation pagination maintains diagnostic ordering and context boundaries', () => {
+  // Create valid blocks first, then create validation issues at page level
+  const validBlocks = Array.from({ length: 8 }, (_, i) =>
+    block({
+      id: `valid-${i}`,
+      role: 'page',
+      root: `root-${i}`,
+      fragments: [{ id: `root-${i}`, emmet: 'div' }],
+      slots: [{
+        id: `slot-${i}`,
+        at: { fragment: `root-${i}`, name: 'slot' }, // Valid fragment reference
+        accepts: ['page'],
+        min: 0,
+        max: 1,
+      }],
+    })
+  );
+  
+  // Compile blocks successfully
+  const registry = compileBlocks(validBlocks);
+  
+  // Create page with many nodes to generate runtime validation issues
+  const nodes: PagePlan['nodes'] = {};
+  for (let i = 0; i < 6; i++) {
+    nodes[`node-${i}`] = {
+      id: `node-${i}`,
+      block: ref(registry, `valid-${i}`),
+      bindings: {},
+      // Some nodes will have invalid parents to create validation issues
+      ...(i > 2 ? { parent: { node: 'missing-parent', slot: 'missing', order: 0 } } : {}),
+    };
+  }
+  
+  const problematicPage: PagePlan = {
+    id: 'validation-test',
+    route: '/validation',
+    recipe: contentRef({ id: 'validation-recipe' }),
+    root: 'node-0',
+    nodes,
+    // Add some invalid connections
+    connections: [
+      { id: 'bad-conn', relation: 'controls', from: { node: 'missing-from', port: 'x' }, to: { node: 'missing-to', port: 'y' } },
+    ],
+    rules: [],
+    decisions: {},
+    status: 'draft',
+  };
+  
+  const session = sessionFor(registry, problematicPage);
+  
+  // Test validation with pagination - now should have runtime validation issues
+  const report = validatePage(problematicPage, session, registry, 'draft');
+  
+  // Should have diagnostics from runtime validation
+  assert(report.diagnostics.length > 0, 'Should detect runtime validation issues');
+  
+  // Diagnostics should be ordered consistently (validation may reorder by severity/priority)
+  const codes = report.diagnostics.map(d => d.code);
+  const uniqueCodes = new Set(codes);
+  
+  // Should have multiple types of validation issues
+  assert(uniqueCodes.size > 3, 'Should have multiple validation issue types');
+  assert(codes.length >= uniqueCodes.size, 'Should have at least one instance of each issue type');
+  
+  // Test complete mode for stricter validation
+  const completeReport = validatePage(problematicPage, session, registry, 'complete');
+  assert(completeReport.errorCount >= report.errorCount);
+});
+
+test('cross-component decision inheritance with null precedence', () => {
+  const built = shellFixture({ persistentNav: true });
+  const { registry, page } = withStubRecipe(built.registry, built.page);
+  
+  // Test session with explicit null at project level
+  const session = sessionFor(registry, page, {
+    projectDecisions: { 
+      density: null, // Explicit null should take precedence over defaults
+    },
+  });
+  
+  // Validate decision resolution maintains null precedence
+  const report = validatePage(page, session, registry, 'draft');
+  
+  // Build decision context to verify null handling
+  const decisions = buildContextView(
+    session,
+    { view: 'decisions', designId: session.id },
+    registry,
+  );
+  
+  const densityDecision = decisions.find(record => 
+    record && typeof record === 'object' && 
+    'key' in record && record.key === 'density'
+  );
+  
+  assert(densityDecision, 'Should find density decision');
+  assert.equal((densityDecision as any).value, null, 'Explicit null should be preserved');
+  assert.equal((densityDecision as any).provenance, 'project');
+});
+
+test('deterministic next-step tie resolution with priority boundaries', () => {
+  // Create multiple pages with same-priority issues
+  const shellA = shellFixture({ includeContent: false, persistentNav: false });
+  const shellB = shellFixture({ includeContent: false, persistentNav: false });
+  
+  const sessionA = sessionFor(shellA.registry, shellA.page, { 
+    id: 'design-a',
+    pages: { 'page-a': { ...shellA.page, id: 'page-a' } },
+  });
+  const sessionB = sessionFor(shellB.registry, shellB.page, { 
+    id: 'design-b',
+    pages: { 'page-b': { ...shellB.page, id: 'page-b' } },
+  });
+  
+  // Both should have similar priority issues
+  const stepA = selectNextStep(sessionA, shellA.registry);
+  const stepB = selectNextStep(sessionB, shellB.registry);
+  
+  // With identical constraints, steps should be deterministic
+  assert.equal(stepA.priority, stepB.priority);
+  assert.equal(stepA.code, stepB.code);
+  
+  // Priority should be shell-level (highest priority)
+  assert(stepA.priority <= 3, 'Shell obligations should have highest priority');
+});
+
+test('auth reachability validation with complex flow graphs', () => {
+  const authBlocks = [
+    block({ id: 'sign-in', role: 'auth-frame', family: 'auth', root: 'signin-root', 
+           fragments: [{ id: 'signin-root', emmet: 'form.signin' }] }),
+    block({ id: 'recovery', role: 'auth-frame', family: 'auth', root: 'recovery-root', 
+           fragments: [{ id: 'recovery-root', emmet: 'form.recovery' }] }),
+    block({ id: 'verify', role: 'auth-frame', family: 'auth', root: 'verify-root', 
+           fragments: [{ id: 'verify-root', emmet: 'form.verify' }] }),
+  ];
+  
+  const registry = compileBlocks(authBlocks);
+  
+  const flowPages: Record<string, PagePlan> = {
+    'signin': {
+      id: 'signin',
+      route: '/auth/signin',
+      recipe: contentRef({ id: 'auth-flow' }),
+      root: 'form',
+      nodes: { form: { id: 'form', block: ref(registry, 'sign-in'), bindings: {} } },
+      connections: [],
+      rules: [],
+      decisions: {},
+      status: 'draft',
+    },
+    'recovery': {
+      id: 'recovery',
+      route: '/auth/recovery',
+      recipe: contentRef({ id: 'auth-flow' }),
+      root: 'form',
+      nodes: { form: { id: 'form', block: ref(registry, 'recovery'), bindings: {} } },
+      connections: [],
+      rules: [],
+      decisions: {},
+      status: 'draft',
+    },
+    'verify': {
+      id: 'verify',
+      route: '/auth/verify',
+      recipe: contentRef({ id: 'auth-flow' }),
+      root: 'form',
+      nodes: { form: { id: 'form', block: ref(registry, 'verify'), bindings: {} } },
+      connections: [],
+      rules: [],
+      decisions: {},
+      status: 'draft',
+    },
+  };
+  
+  const flowSession = sessionFor(registry, flowPages.signin!, {
+    pages: flowPages,
+    routeLinks: [
+      { fromPage: 'signin', fromAnchor: { fragment: 'sign-in-root', name: 'recovery' }, toPage: 'recovery' },
+      // Missing link to verify page creates unreachable state
+    ],
+  });
+  
+  // Validation should detect unreachable auth pages
+  const report = validateDesign(flowSession, registry, 'complete');
+  
+  const unreachable = report.diagnostics.filter(d => d.code === 'AUTH_PAGE_UNREACHABLE');
+  assert(unreachable.length > 0, 'Should detect unreachable auth pages');
+  assert(unreachable.some(d => d.page === 'verify'), 'Verify page should be unreachable');
+});

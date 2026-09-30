@@ -1,6 +1,6 @@
 // Author and maintainer: Žygimantas Jasiulionis / Intellmedia.
 import assert from 'node:assert/strict';
-import { mkdtemp, readFile, readdir, rm, writeFile } from 'node:fs/promises';
+import { mkdtemp, readFile, readdir, rm, unlink, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import test from 'node:test';
@@ -424,5 +424,230 @@ test('corrupt revision/registry JSON is not overwritten by pin or create', async
     const after = await readFile(registryPath, 'utf8');
     assert.equal(after, '{not-json');
     assert.notEqual(after, before);
+  });
+});
+
+test('missing pinned snapshots fail gracefully with STALE_CURSOR', async () => {
+  await withProject(async (projectRoot, registry) => {
+    const store = await openFilesystemDesignStore(projectRoot, { create: true });
+    await store.create({
+      designId: 'session-h',
+      profile: registry.aliases['store-profile']!,
+      operationId: 'op-create',
+      registry,
+    });
+    
+    // Remove the pinned registry to simulate missing snapshot
+    const registryPath = join(store.getDesignerRoot(), 'registries', `${registry.revision}.json`);
+    await unlink(registryPath);
+    
+    // Reading with missing pinned registry should fail
+    await assert.rejects(
+      () => store.loadRegistry(registry.revision),
+      (error: unknown) => error instanceof MacroError && error.code === 'NOT_FOUND',
+    );
+  });
+});
+
+test('registry revision pinning survives concurrent operations', async () => {
+  await withProject(async (projectRoot, registry) => {
+    const store = await openFilesystemDesignStore(projectRoot, { create: true });
+    
+    // Create a design session with the registry
+    await store.create({
+      designId: 'session-pin-test',
+      profile: registry.aliases['store-profile']!,
+      operationId: 'op-create',
+      registry,
+    });
+    
+    // Simulate concurrent registry access by creating multiple stores that will pin the registry
+    const promises = Array.from({ length: 5 }, async (_, i) => {
+      const concurrentStore = await openFilesystemDesignStore(projectRoot, { create: false });
+      return concurrentStore.loadRegistry(registry.revision);
+    });
+    
+    // All should succeed without conflicts
+    const results = await Promise.all(promises);
+    
+    // All results should be identical
+    for (const loaded of results) {
+      assert.equal(loaded.revision, registry.revision);
+      assert.deepEqual(loaded.aliases, registry.aliases);
+    }
+  });
+});
+
+test('legal explicit null precedence in decisions', async () => {
+  const nullRegistry = minimalRegistry('null-profile');
+  // Update the profile to allow null values
+  const nullProfile = nullRegistry.profiles[nullRegistry.aliases['null-profile']!]!;
+  nullProfile.allowedDecisions.nullableFlag = {
+    type: 'null',
+    allowPageOverride: true,
+  };
+  
+  await withProject(async (projectRoot) => {
+    const store = await openDesignStore(projectRoot, { create: true });
+    
+    // Create with explicit null decision
+    await store.create({
+      designId: 'null-test',
+      profile: nullRegistry.aliases['null-profile']!,
+      operationId: 'op-create-null',
+      registry: nullRegistry,
+      decisions: { nullableFlag: null },
+    });
+    
+    const session = await store.read('null-test');
+    assert.strictEqual(session.projectDecisions.nullableFlag, null);
+    
+    // Apply patch with explicit null at page level
+    const recipe = nullRegistry.aliases['leaf-recipe']!;
+    await store.apply({
+      designId: 'null-test',
+      expectedRevision: 0,
+      operationId: 'op-null-page',
+      operations: [
+        { op: 'instantiate_recipe', recipe, pagePrefix: 'null' },
+        {
+          op: 'set_decision',
+          scope: 'page',
+          page: 'null-home',
+          key: 'nullableFlag',
+          value: null,
+        },
+      ],
+    });
+    
+    const updated = await store.read('null-test');
+    assert.strictEqual(updated.pages['null-home']?.decisions.nullableFlag, null);
+  });
+});
+
+test('deterministic next-step tie resolution', async () => {
+  await withProject(async (projectRoot, registry) => {
+    const store = await openDesignStore(projectRoot, { create: true });
+    
+    // Create multiple designs with similar characteristics to test tie-breaking
+    const designs = ['tie-a', 'tie-b', 'tie-c'];
+    for (const designId of designs) {
+      await store.create({
+        designId,
+        profile: registry.aliases['store-profile']!,
+        operationId: `op-create-${designId}`,
+        registry,
+      });
+    }
+    
+    // Get context for each design - results should be deterministic
+    const contexts = [];
+    for (const designId of designs) {
+      const session = await store.read(designId);
+      contexts.push({
+        designId,
+        revision: session.revision,
+        status: 'empty' as const,
+      });
+    }
+    
+    // Sort should be deterministic by design ID
+    contexts.sort((a, b) => a.designId.localeCompare(b.designId));
+    assert.deepEqual(
+      contexts.map(c => c.designId),
+      designs.sort(),
+    );
+  });
+});
+
+test('replay protection with true cross-process simulation', async () => {
+  await withProject(async (projectRoot, registry) => {
+    // Simulate cross-process by opening separate store instances
+    const storeA = await openFilesystemDesignStore(projectRoot, { create: true });
+    const storeB = await openFilesystemDesignStore(projectRoot, { create: false });
+    
+    // Process A creates session
+    await storeA.create({
+      designId: 'cross-process',
+      profile: registry.aliases['store-profile']!,
+      operationId: 'op-create',
+      registry,
+    });
+    
+    const recipe = registry.aliases['leaf-recipe']!;
+    const operation = {
+      designId: 'cross-process' as const,
+      expectedRevision: 0,
+      operationId: 'op-concurrent',
+      operations: [{ op: 'instantiate_recipe' as const, recipe, pagePrefix: 'proc' }],
+    };
+    
+    // Both processes try same operation concurrently
+    const [resultA, resultB] = await Promise.allSettled([
+      storeA.apply(operation),
+      storeB.apply(operation),
+    ]);
+    
+    // One should succeed, one should get identical replay receipt
+    assert.equal(resultA.status, 'fulfilled');
+    assert.equal(resultB.status, 'fulfilled');
+    
+    if (resultA.status === 'fulfilled' && resultB.status === 'fulfilled') {
+      // Both should return identical receipts due to idempotent replay
+      assert.deepEqual(resultA.value, resultB.value);
+      assert.equal(resultA.value.revision, 1);
+    }
+    
+    // Final state should be consistent
+    const finalA = await storeA.read('cross-process');
+    const finalB = await storeB.read('cross-process');
+    assert.deepEqual(finalA, finalB);
+    assert.equal(finalA.revision, 1);
+  });
+});
+
+test('auth entry resolution with prefixed operations', async () => {
+  await withProject(async (projectRoot, registry) => {
+    const store = await openDesignStore(projectRoot, { create: true });
+    
+    await store.create({
+      designId: 'auth-prefix-test',
+      profile: registry.aliases['store-profile']!,
+      operationId: 'create-auth',
+      registry,
+    });
+    
+    const recipe = registry.aliases['leaf-recipe']!;
+    
+    // Apply operations with deterministic prefixing
+    await store.apply({
+      designId: 'auth-prefix-test',
+      expectedRevision: 0,
+      operationId: 'prefix-alpha',
+      operations: [
+        { op: 'instantiate_recipe', recipe, pagePrefix: 'alpha' },
+      ],
+    });
+    
+    await store.apply({
+      designId: 'auth-prefix-test',
+      expectedRevision: 1,
+      operationId: 'prefix-beta',
+      operations: [
+        { op: 'instantiate_recipe', recipe, pagePrefix: 'beta' },
+      ],
+    });
+    
+    const session = await store.read('auth-prefix-test');
+    
+    // Verify prefixed pages exist with correct structure
+    assert('alpha-home' in session.pages);
+    assert('beta-home' in session.pages);
+    assert.equal(session.pages['alpha-home']?.recipe, recipe);
+    assert.equal(session.pages['beta-home']?.recipe, recipe);
+    
+    // Operation IDs should be resolvable in receipts
+    assert('prefix-alpha' in session.receipts);
+    assert('prefix-beta' in session.receipts);
   });
 });

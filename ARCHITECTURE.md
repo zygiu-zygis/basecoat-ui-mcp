@@ -35,10 +35,11 @@ The package-facing commands are:
 - `npm run import:blocks` - import local authoring inputs.
 - `npm run sync` - maintainer-only pinned upstream refresh.
 
-The runtime registers nine tools:
+The runtime registers eleven tools:
 
 - Component tools: `search_components`, `get_component_details`, and `validate_composition`.
 - Macro tools: `search_macro_blocks`, `get_macro_block`, `begin_design`, `get_design_context`, `apply_design_patch`, and `validate_design`.
+- Semantic tools: `get_rhythm_rules` and `get_fsm_recipe`.
 
 It also registers exactly three resources: `basecoat://design/rhythm`,
 `basecoat://integration/astro`, and `basecoat://project/context`.
@@ -48,6 +49,12 @@ Macro layout contracts are project-specific blueprints compiled into
 by MCP itself. Design sessions persist under
 `<projectRoot>/.basecoat/designer/` with a content-addressed registry revision
 (`r:<hash>`) and immutable design snapshots (`d:<designId>@<revision>`).
+
+## Semantic boundaries and compilation
+
+The semantic registry provides compiled rhythm profiles and FSM recipes from `src/semantics/semantics.snapshot.json`. Rhythm profiles map IDs to approved Tailwind v4 `@theme` declarations and utilities, organized by families like density, gaps, typography, surfaces, and borders. FSM recipes define strict states, events, transitions, guards, and actions for structural patterns - not runtime implementations.
+
+Both semantic tools use content-addressed refs, bounded pagination, and immutable snapshots like macro tools. The registry supports optional project-local rhythm overrides at `<projectRoot>/.basecoat/rhythm.json` without mutating the packaged snapshot. Semantic compilation uses deterministic SHA-256 fingerprints and fails closed on invalid inputs or oversized results.
 
 ## Package boundary
 
@@ -90,6 +97,7 @@ This keeps tool output deterministic and bounded. Upstream demo pages are refere
 | --- | --- | --- |
 | `get_component_details` JSON (full MCP content wrapper) | 1,999 UTF-8 bytes | Tool error; no truncation |
 | Macro tool results (full `CallToolResult`, including `isError`) | 1,999 UTF-8 bytes | Domain error (`PACKET_TOO_LARGE` / pagination); no truncation |
+| Semantic tool results (`get_rhythm_rules`, `get_fsm_recipe`) | 1,999 UTF-8 bytes | Domain error (`PACKET_TOO_LARGE` / pagination); no truncation |
 | `search_components` | 8 summaries, schema-bounded fields | N/A |
 | `validate_composition` input | 65,536 UTF-8 bytes | Error issue |
 | `validate_composition` output | 24 issues max | `truncated: true`, `errorsOmitted` when capped errors were dropped |
@@ -205,6 +213,10 @@ run during server startup or MCP requests.
 ## Validation scope
 
 `validate_composition` lexes HTML structure and script imports. It checks nested cards, legacy class families, button variants, missing controllers, spacing tokens, centered layouts, and `basecoat-css/all`. It does not execute scripts, resolve app modules, or certify accessibility or visual design.
+
+## Development guidelines
+
+**No emoji in code or documentation.** The project maintains a strictly professional, text-based approach throughout all source files, documentation, comments, commit messages, and user-facing content. Use descriptive text instead of emoji for clarity and consistency.
 
 ## Verification
 

@@ -1,4 +1,13 @@
 // Copyright Žygimantas Jasiulionis / Intellmedia.
+
+export interface ParseDiagnostic {
+  code: string;
+  severity: 'error' | 'warning';
+  message: string;
+  line: number;
+  column: number;
+}
+
 export interface HtmlNode {
   tag: string;
   attrs: Record<string, string>;
@@ -6,15 +15,31 @@ export interface HtmlNode {
   parent: number | null;
   index: number;
   line: number;
+  column: number;
   dynamic: boolean;
   content?: string;
+}
+
+export interface ParseResult {
+  nodes: HtmlNode[];
+  diagnostics: ParseDiagnostic[];
 }
 
 const VOID = new Set('area base br col embed hr img input link meta param source track wbr'.split(' '));
 
 /** A bounded HTML lexer, not an Astro compiler or browser DOM implementation. */
 export function parseHtml(code: string): HtmlNode[] {
+  return parseHtmlWithDiagnostics(code).nodes;
+}
+
+/** 
+ * Parse HTML with detailed diagnostics for malformed input.
+ * Returns both nodes and diagnostic information including line/column positions.
+ * This is a bounded static tree parser, not a full AST or browser DOM implementation.
+ */
+export function parseHtmlWithDiagnostics(code: string): ParseResult {
   const nodes: HtmlNode[] = [];
+  const diagnostics: ParseDiagnostic[] = [];
   const stack: number[] = [];
   let cursor = 0;
   if (/^\uFEFF?---\s*\r?\n/.test(code)) {
@@ -24,6 +49,21 @@ export function parseHtml(code: string): HtmlNode[] {
     if (match) cursor = match.index + match[0].length;
   }
   const lineAt = (index: number) => code.slice(0, index).split('\n').length;
+  const columnAt = (index: number) => {
+    const beforeIndex = code.slice(0, index);
+    const lastNewline = beforeIndex.lastIndexOf('\n');
+    return lastNewline === -1 ? index + 1 : index - lastNewline;
+  };
+  
+  const addDiagnostic = (code: string, severity: 'error' | 'warning', message: string, position: number) => {
+    diagnostics.push({
+      code,
+      severity,
+      message,
+      line: lineAt(position),
+      column: columnAt(position),
+    });
+  };
   while (cursor < code.length) {
     const start = code.indexOf('<', cursor);
     if (start < 0) break;
@@ -44,19 +84,33 @@ export function parseHtml(code: string): HtmlNode[] {
       else if (char === '}') braces = Math.max(0, braces - 1);
       else if (char === '>' && !braces) break;
     }
-    if (end >= code.length) break;
+    if (end >= code.length) {
+      addDiagnostic('unclosed-tag', 'warning', 'Unclosed tag found at end of input', start);
+      break;
+    }
     const raw = code.slice(start + 1, end);
     cursor = end + 1;
     const closing = /^\s*\/\s*([\w:-]+)/.exec(raw);
     if (closing) {
       const tag = closing[1]!.toLowerCase();
+      let found = false;
       for (let i = stack.length - 1; i >= 0; i--) {
-        if (nodes[stack[i]!]!.tag === tag) { stack.length = i; break; }
+        if (nodes[stack[i]!]!.tag === tag) { 
+          stack.length = i; 
+          found = true;
+          break; 
+        }
+      }
+      if (!found && stack.length > 0) {
+        addDiagnostic('unmatched-closing-tag', 'warning', `Closing tag </${tag}> has no matching opening tag`, start);
       }
       continue;
     }
     const opening = /^\s*([a-zA-Z][\w:.-]*)/.exec(raw);
-    if (!opening) continue;
+    if (!opening) {
+      addDiagnostic('invalid-tag-name', 'warning', 'Invalid or malformed tag name', start);
+      continue;
+    }
     const tag = opening[1]!.toLowerCase();
     const attrs: Record<string, string> = Object.create(null) as Record<string, string>;
     let dynamic = false;
@@ -99,7 +153,7 @@ export function parseHtml(code: string): HtmlNode[] {
       }
       attrs[key] = value;
     }
-    const node: HtmlNode = { tag, attrs, classes: (attrs.class ?? '').split(/\s+/).filter(Boolean), parent: stack.at(-1) ?? null, index: nodes.length, line: lineAt(start), dynamic };
+    const node: HtmlNode = { tag, attrs, classes: (attrs.class ?? '').split(/\s+/).filter(Boolean), parent: stack.at(-1) ?? null, index: nodes.length, line: lineAt(start), column: columnAt(start), dynamic };
     nodes.push(node);
     if (tag === 'script' || tag === 'style') {
       const close = new RegExp('</\\s*' + tag + '\\s*>', 'ig');
@@ -109,7 +163,16 @@ export function parseHtml(code: string): HtmlNode[] {
       cursor = match ? close.lastIndex : code.length;
     } else if (!VOID.has(tag) && !/\/\s*$/.test(raw)) stack.push(node.index);
   }
-  return nodes;
+  
+  // Report unclosed tags
+  for (const nodeIndex of stack) {
+    const node = nodes[nodeIndex]!;
+    // Use the node's original position (stored in line/column) and calculate position
+    const nodePosition = code.split('\n').slice(0, node.line - 1).join('\n').length + node.column - 1;
+    addDiagnostic('unclosed-tag', 'warning', `Unclosed tag <${node.tag}>`, nodePosition);
+  }
+  
+  return { nodes, diagnostics };
 }
 
 /** Extract actual literal import declarations/calls while ignoring strings and comments. */

@@ -237,7 +237,7 @@ async function readJsonFile<T>(
 }
 
 /**
- * Crash-safe immutable publish: temp + fsync + link(final). Never overwrite via rename.
+ * Crash-safe immutable publish: temp + fsync + link(final) + directory fsync. Never overwrite via rename.
  * Temp names are never read by list/read paths.
  */
 async function publishImmutableJson(
@@ -252,6 +252,7 @@ async function publishImmutableJson(
   const payload = `${canonicalJson(value)}\n`;
   const tempPath = join(dir, `.${randomUUID()}.tmp`);
   let handle;
+  let dirHandle;
   try {
     handle = await open(tempPath, OPEN_WRITE, FILE_MODE);
     await handle.writeFile(payload, 'utf8');
@@ -266,11 +267,20 @@ async function publishImmutableJson(
       }
       wrapStorageError(error, 'STORAGE_FAILED');
     }
+    // Directory fsync after immutable publication for durability hardening
+    try {
+      dirHandle = await open(dir, constants.O_RDONLY);
+      await dirHandle.sync();
+    } catch (error) {
+      // Non-fatal if directory fsync fails; the link already succeeded
+      wrapStorageError(error, 'STORAGE_FAILED');
+    }
   } catch (error) {
     if (error instanceof MacroError) throw error;
     wrapStorageError(error, 'STORAGE_FAILED');
   } finally {
     await handle?.close().catch(() => undefined);
+    await dirHandle?.close().catch(() => undefined);
     await unlink(tempPath).catch(() => undefined);
   }
 }

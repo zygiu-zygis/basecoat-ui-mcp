@@ -28,27 +28,32 @@ Use this workflow when creating or modifying a Basecoat page with
    `rules`, and referenced blueprint sections with `get_macro_block`. Follow
    `next` cursors until the required section is complete.
 
-6. Expand the approved static fragments in the host application. Preserve
+6. For semantic consistency, use `get_rhythm_rules` to access approved
+   spacing, typography, and layout patterns. Filter by profile and family
+   as needed. Use `get_fsm_recipe` for interaction states, transitions,
+   and behavioral patterns in dialogs or navigation components.
+
+7. Expand the approved static fragments in the host application. Preserve
    named slots, instance boundaries, ordering, and declared connections.
    The server does not write application source files.
 
-7. Use `search_components` and `get_component_details` only for selected
+8. Use `search_components` and `get_component_details` only for selected
    component leaves. Keep OAuth, captcha, session, credential, data, and
    other runtime behavior in the host application.
 
-8. Record completed regions as client-reported checkpoints with
+9. Record completed regions as client-reported checkpoints with
    `apply_design_patch` and a `record_written` operation tied to the current
    plan digest.
 
-9. After a conflict or restart, reread context. Do not continue from an
-   assumed stale layout. A changed registry or design revision invalidates old
-   cursors.
+10. After a conflict or restart, reread context. Do not continue from an
+    assumed stale layout. A changed registry or design revision invalidates old
+    cursors.
 
-10. Validate the complete graph with `validate_design` in `complete` mode.
+11. Validate the complete graph with `validate_design` in `complete` mode.
     Compare generated source with that graph, then run
     `validate_composition` on the generated application source.
 
-11. Report remaining obligations explicitly. A graph marked `plan-ready` is
+12. Report remaining obligations explicitly. A graph marked `plan-ready` is
     not proof of rendered correctness, runtime behavior, or accessibility.
 
 Layout contracts come from this project's pinned macro registry via MCP tools.

@@ -1,12 +1,22 @@
 // Copyright Žygimantas Jasiulionis / Intellmedia.
 import { parseHtml, scriptImports, type HtmlNode } from './html.js';
 import { registry } from '../registry/index.js';
+import { defaultSemanticsStore } from '../semantics/index.js';
+import type { Id } from '../semantics/types.js';
 
 export interface CompositionIssue {
   rule: string;
   severity: 'error' | 'warning';
   message: string;
   line: number;
+}
+
+/** Options for composition validation. */
+export interface ValidationOptions {
+  /** Semantic rhythm profile ID to validate against (e.g., 'default'). */
+  semanticProfile?: Id;
+  /** Project root path for rhythm overrides. */
+  projectRoot?: string;
 }
 
 const LIMITATIONS = 'Static HTML/Astro heuristic: cannot resolve dynamic classes, imported layouts, external scripts, CSS overrides or runtime DOM. Missing imports may be supplied by a parent layout. This is not an accessibility or browser conformance audit.';
@@ -43,7 +53,65 @@ function isPrimary(node: HtmlNode): boolean {
   return node.classes.includes('btn-primary') || (node.classes.includes('btn') && (!node.attrs['data-variant'] || ['default', 'primary'].includes(node.attrs['data-variant']!)));
 }
 
-export function validateComposition(code: string) {
+/** Get semantic token mappings for validation. */
+function getSemanticMappings(profileId?: Id, projectRoot?: string) {
+  if (!profileId) return null;
+  
+  try {
+    const profile = defaultSemanticsStore.getEffectiveRhythmProfile(profileId, projectRoot);
+    const mappings = new Map<string, string>();
+    
+    // Collect all semantic token mappings
+    for (const family of profile.families) {
+      for (const mapping of family.mappings) {
+        mappings.set(mapping.value, mapping.id);
+      }
+    }
+    
+    return mappings;
+  } catch (error) {
+    return null;
+  }
+}
+
+/** Check if a utility class has a semantic equivalent. */
+function checkSemanticViolation(token: string, semanticMappings: Map<string, string> | null): string | null {
+  if (!semanticMappings) return null;
+  
+  // Check for direct mapping
+  if (semanticMappings.has(token)) {
+    return `Consider using semantic token '${semanticMappings.get(token)}' instead of hardcoded '${token}'`;
+  }
+  
+  // Check for spacing patterns that might have semantic equivalents
+  const spacing = /^(-?)(gap(?:-[xy])?|space-[xy]|[mp][trblxyse]?)-(.+)$/.exec(token);
+  if (spacing) {
+    const [, negative, family, value] = spacing;
+    if (!negative) {
+      // Look for semantic spacing tokens with same utility pattern
+      const semanticSpacing = Array.from(semanticMappings.entries()).find(([utility, _]) => 
+        utility.startsWith(family!) && utility.endsWith(value!)
+      );
+      if (semanticSpacing) {
+        return `Consider using semantic token '${semanticSpacing[1]}' instead of hardcoded '${token}'`;
+      }
+    }
+  }
+  
+  // Check for color/surface patterns
+  if (/^(?:bg-|text-|border-)/.test(token)) {
+    const semanticColor = Array.from(semanticMappings.entries()).find(([utility, _]) => 
+      utility === token
+    );
+    if (semanticColor) {
+      return `Consider using semantic token '${semanticColor[1]}' instead of hardcoded '${token}'`;
+    }
+  }
+  
+  return null;
+}
+
+export function validateComposition(code: string, options: ValidationOptions = {}) {
   const issues: CompositionIssue[] = [];
   let truncated = false;
   let hasErrors = false;
@@ -67,6 +135,9 @@ export function validateComposition(code: string) {
   const imported = new Set(importOrder);
   // A literal script src identifies an actual script, unlike a URL in prose or comments.
   for (const script of scripts) if (script.attrs.src) imported.add(script.attrs.src);
+  
+  // Initialize semantic validation if profile is specified
+  const semanticMappings = getSemanticMappings(options.semanticProfile, options.projectRoot);
   const hasImport = (name: string) => [...imported].some(value => importedModule(value) === name);
   const bundle = hasImport('all');
   const required = new Map<string, number>();
@@ -101,6 +172,14 @@ export function validateComposition(code: string) {
         if ((!SPACING.has(value!) || !!negative) && !allowedAuto) report('spacing-rhythm', 'warning', `Use 0, 2, 4, 6 or 12 spacing steps; replace ${token}. Margin auto is allowed for alignment.`, node.line);
       }
       if (/^(?:bg-(?:gradient|linear|radial|conic)(?:-|$)|bg-\[.*gradient\(|(?:from|via|to)-)/.test(token)) report('random-gradient', 'warning', `Remove decorative gradient utility ${token}; use a neutral surface and hierarchy.`, node.line);
+      
+      // Semantic validation: check for hardcoded utilities that have semantic equivalents
+      if (semanticMappings) {
+        const semanticViolation = checkSemanticViolation(token, semanticMappings);
+        if (semanticViolation) {
+          report('semantic-token-available', 'warning', semanticViolation, node.line);
+        }
+      }
     }
     if (classes.includes('btn')) {
       const variant = node.attrs['data-variant'];
