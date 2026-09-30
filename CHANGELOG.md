@@ -4,6 +4,13 @@ Maintained by **Žygimantas Jasiulionis / Intellmedia**.
 
 ## Unreleased
 
+## 1.1.0 - 2026-09-30
+
+- Added six macro tools for curated block discovery, persistent project-scoped design sessions, context, atomic patches, and design validation.
+- Added immutable registry snapshots, deterministic pagination, and bounded macro packets that fail closed when results exceed the response budget.
+- Added an offline importer for reviewed local shadcn registry items with dependency and provenance checks.
+- Documented the macro contracts and added registry, session, protocol, importer, and packet test coverage.
+
 ## 1.0.3 - 2026-09-27
 
 - MCP server `version` now matches `package.json` (was hardcoded `1.0.0`).
