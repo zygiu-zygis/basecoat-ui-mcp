@@ -62,9 +62,9 @@ Use this workflow when creating or modifying a Basecoat page with
 12. Validate the complete graph with `validate_design` in `complete` mode.
     Compare generated source with that graph, then run
     `validate_composition` on the generated application source with the
-    selected `semanticProfile`. Resolve parser diagnostics, invalid mappings,
-    arbitrary colors, duplicate page landmarks, macro anchors, structural
-    order, and FSM bindings.
+    selected `semanticProfile` and `densityProfile` (e.g., `compact` for dense dashboards).
+    Resolve parser diagnostics, invalid mappings, arbitrary colors, duplicate
+    page landmarks, macro anchors, structural order, and FSM bindings.
 
 13. Report remaining obligations explicitly. A graph marked `plan-ready` is
     not proof of rendered correctness, runtime behavior, accessibility, or

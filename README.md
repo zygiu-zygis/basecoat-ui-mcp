@@ -86,7 +86,7 @@ The server exposes three component tools, six macro tools, and two semantic tool
 
 - `search_components` returns up to 8 compact `{id, name, intent}` summaries and never returns markup. `intent` and `query` are optional; an empty search returns an empty list.
 - `get_component_details` returns one Astro or HTML template with dependencies and composition guidance. Oversized entries fail closed. `theme-toggle` resolves to `theme-switcher`.
-- `validate_composition` statically checks up to **65,536 UTF-8 bytes** of HTML or Astro source and returns at most 24 issues. Pass `code` or `html`. It does not render, execute, resolve application modules, or certify accessibility.
+- `validate_composition` statically checks up to **256 KiB** (262,144 UTF-8 bytes) of HTML or Astro source and returns at most 24 issues. Pass `code` or `html`, and optional `semanticProfile` or `densityProfile` (comfortable|compact). It does not render, execute, resolve application modules, or certify accessibility.
 
 ### Macro tools
 

@@ -130,7 +130,7 @@ test('packed MCP bin starts offline from a read-only installed package tree', { 
     client = new Client({ name: 'packed-package-contract-test', version: '1.0.0' });
     await client.connect(transport);
     assert.equal(client.getServerVersion()?.name, 'basecoat-ui-mcp');
-    assert.equal(client.getServerVersion()?.version, '1.2.0');
+    assert.equal(client.getServerVersion()?.version, '1.3.0');
     const { tools } = await client.listTools();
     const toolNames = tools.map(tool => tool.name).sort();
     assert.deepEqual(toolNames, [

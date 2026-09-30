@@ -118,7 +118,7 @@ This keeps tool output deterministic and bounded. Upstream demo pages are refere
 | Macro tool results (full `CallToolResult`, including `isError`) | 1,999 UTF-8 bytes | Domain error (`PACKET_TOO_LARGE` / pagination) for reads; committed mutations acknowledge with optional `truncated: true` instead of hiding the commit |
 | Semantic tool results (`get_rhythm_rules`, `get_fsm_recipe`) | 1,999 UTF-8 bytes | Domain error (`PACKET_TOO_LARGE` / pagination); no truncation |
 | `search_components` | 8 summaries, schema-bounded fields | N/A |
-| `validate_composition` input | 65,536 UTF-8 bytes | Error issue |
+| `validate_composition` input | 256 KiB (262,144 UTF-8 bytes) | Error issue |
 | `validate_composition` output | 24 issues max | `truncated: true`, `errorsOmitted` when capped errors were dropped |
 | `DESIGN.md` read | 6,000 UTF-8 bytes emitted | Truncate on last newline or `. ` boundary inside cap |
 

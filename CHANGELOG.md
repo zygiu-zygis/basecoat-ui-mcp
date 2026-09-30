@@ -2,7 +2,7 @@
 
 Maintained by **Žygimantas Jasiulionis / Intellmedia**.
 
-## Unreleased
+## 1.3.0 - 2026-09-30
 
 - Documented offline dashboard MCP evaluation vs https://ui.shadcn.com/examples/dashboard in `docs/mcp-dashboard-eval.md`. Local disposable consumer probe lives at `tests/fixtures/offline-dashboard/` (gitignored; not for GitHub).
 - Decision rejection messages now list allowed profile keys (`begin_design` / `set_decision`).
