@@ -60,7 +60,7 @@ The semantic registry provides compiled rhythm profiles and FSM recipes from `sr
 
 Rhythm profiles keep a semantic ID separate from its approved Tailwind utility. The ID is design metadata; the utility is executable class text. FSM recipes define states, events, transitions, guards, and metadata-only actions. They are not runtime implementations.
 
-Both semantic tools use content-addressed refs, bounded pagination, and immutable snapshots like macro tools. The loader verifies every record key against its canonical content hash, checks alias targets and identities, then verifies the registry revision. Project-local rhythm overrides at `<projectRoot>/.basecoat/rhythm.json` produce an effective profile ref and revision without mutating the packaged snapshot. Overrides are limited to 65,536 UTF-8 bytes and are read only after symlink and regular-file checks. Missing, unsafe, oversized, malformed, or schema-invalid overrides leave the packaged profile unchanged. Changed valid overrides invalidate prior cursors.
+Both semantic tools use content-addressed refs, bounded pagination, and immutable snapshots like macro tools. The loader verifies every record key against its canonical content hash, checks alias targets and identities, then verifies the registry revision. Project-local rhythm overrides at `<projectRoot>/.basecoat/rhythm.json` produce an effective profile ref and revision without mutating the packaged snapshot. Overrides are limited to 65,536 UTF-8 bytes. The loader refuses a symlinked `.basecoat` directory, a symlinked or non-regular override file, paths that resolve outside the project root, and oversized or schema-invalid content. Matching override IDs replace base mappings in place and keep the packaged mapping order. Missing or rejected overrides leave the packaged profile unchanged. Changed valid overrides invalidate prior cursors.
 
 ## Package boundary
 
@@ -73,8 +73,11 @@ tests, and documentation for source inspection. Cloned checkouts must run
 The package contract test runs after the suite build, creates and extracts an
 actual npm tarball, copies the already-installed production dependency closure,
 marks the extracted package tree read-only, and starts the extracted
-`dist/server/stdio.js` with a network tripwire. It completes MCP initialize and
-tool-list requests before closing the stdio transport.
+`dist/server/stdio.js` with a network tripwire. It completes MCP initialize,
+lists all eleven tools and three resource URIs, and exercises
+`get_rhythm_rules`, `get_fsm_recipe`, `begin_design`, and `validate_composition`
+before asserting that designer writes land only under the configured project
+root.
 
 ## Registry vs tools vs design resources
 
@@ -112,7 +115,7 @@ This keeps tool output deterministic and bounded. Upstream demo pages are refere
 | Surface | Cap | On exceed |
 | --- | --- | --- |
 | `get_component_details` JSON (full MCP content wrapper) | 1,999 UTF-8 bytes | Tool error; no truncation |
-| Macro tool results (full `CallToolResult`, including `isError`) | 1,999 UTF-8 bytes | Domain error (`PACKET_TOO_LARGE` / pagination); no truncation |
+| Macro tool results (full `CallToolResult`, including `isError`) | 1,999 UTF-8 bytes | Domain error (`PACKET_TOO_LARGE` / pagination) for reads; committed mutations acknowledge with optional `truncated: true` instead of hiding the commit |
 | Semantic tool results (`get_rhythm_rules`, `get_fsm_recipe`) | 1,999 UTF-8 bytes | Domain error (`PACKET_TOO_LARGE` / pagination); no truncation |
 | `search_components` | 8 summaries, schema-bounded fields | N/A |
 | `validate_composition` input | 65,536 UTF-8 bytes | Error issue |
@@ -137,10 +140,14 @@ project-scoped filesystem sessions:
 2. `get_macro_block` pages a block's manifest, structure, slots, ports, rules,
    dependencies, or provenance.
 3. `begin_design` creates a session and pins the selected profile and registry.
+   Pinned registry files are re-validated with content-hash integrity on load.
 4. `get_design_context` reads `sessions`, `overview`, `decisions`, `graph`,
    `rules`, `focus`, or `next`.
 5. `apply_design_patch` applies atomic graph operations using
-   `expectedRevision` and an idempotent `operationId`.
+   `expectedRevision` and an idempotent `operationId`. After a successful
+   commit, the tool always returns a success acknowledgement; oversized
+   optional fields such as validation reports may be omitted with
+   `truncated: true`.
 6. `validate_design` validates a draft or complete graph and pages diagnostics.
 
 One supported flow is:

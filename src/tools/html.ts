@@ -27,6 +27,30 @@ export interface ParseResult {
 
 const VOID = new Set('area base br col embed hr img input link meta param source track wbr'.split(' '));
 
+/** Precompute newline offsets so line/column lookup stays O(log lines) per position. */
+function buildLineStarts(code: string): number[] {
+  const starts = [0];
+  for (let i = 0; i < code.length; i++) {
+    if (code.charCodeAt(i) === 10 /* \n */) starts.push(i + 1);
+  }
+  return starts;
+}
+
+function lineAt(lineStarts: readonly number[], index: number): number {
+  let low = 0;
+  let high = lineStarts.length - 1;
+  while (low <= high) {
+    const mid = (low + high) >> 1;
+    if (lineStarts[mid]! <= index) low = mid + 1;
+    else high = mid - 1;
+  }
+  return high + 1;
+}
+
+function columnAt(lineStarts: readonly number[], index: number, line: number): number {
+  return index - lineStarts[line - 1]! + 1;
+}
+
 /** A bounded HTML lexer, not an Astro compiler or browser DOM implementation. */
 export function parseHtml(code: string): HtmlNode[] {
   return parseHtmlWithDiagnostics(code).nodes;
@@ -42,6 +66,7 @@ export function parseHtmlWithDiagnostics(code: string): ParseResult {
   const diagnostics: ParseDiagnostic[] = [];
   const stack: number[] = [];
   const nodeOffsets: number[] = [];
+  const lineStarts = buildLineStarts(code);
   let cursor = 0;
   if (/^\uFEFF?---\s*\r?\n/.test(code)) {
     const end = /^---\s*$/gm;
@@ -49,20 +74,15 @@ export function parseHtmlWithDiagnostics(code: string): ParseResult {
     const match = end.exec(code);
     if (match) cursor = match.index + match[0].length;
   }
-  const lineAt = (index: number) => code.slice(0, index).split('\n').length;
-  const columnAt = (index: number) => {
-    const beforeIndex = code.slice(0, index);
-    const lastNewline = beforeIndex.lastIndexOf('\n');
-    return lastNewline === -1 ? index + 1 : index - lastNewline;
-  };
 
   const addDiagnostic = (code: string, severity: 'error' | 'warning', message: string, position: number) => {
+    const line = lineAt(lineStarts, position);
     diagnostics.push({
       code,
       severity,
       message,
-      line: lineAt(position),
-      column: columnAt(position),
+      line,
+      column: columnAt(lineStarts, position, line),
     });
   };
   while (cursor < code.length) {
@@ -164,7 +184,17 @@ export function parseHtmlWithDiagnostics(code: string): ParseResult {
       }
       attrs[key] = value;
     }
-    const node: HtmlNode = { tag, attrs, classes: (attrs.class ?? '').split(/\s+/).filter(Boolean), parent: stack.at(-1) ?? null, index: nodes.length, line: lineAt(start), column: columnAt(start), dynamic };
+    const line = lineAt(lineStarts, start);
+    const node: HtmlNode = {
+      tag,
+      attrs,
+      classes: (attrs.class ?? '').split(/\s+/).filter(Boolean),
+      parent: stack.at(-1) ?? null,
+      index: nodes.length,
+      line,
+      column: columnAt(lineStarts, start, line),
+      dynamic,
+    };
     nodes.push(node);
     nodeOffsets.push(start);
     if (tag === 'script' || tag === 'style') {

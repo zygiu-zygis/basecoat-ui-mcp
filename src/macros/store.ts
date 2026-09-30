@@ -23,6 +23,7 @@ import {
 } from 'node:fs/promises';
 import type { FileHandle } from 'node:fs/promises';
 import { dirname, join, resolve, sep } from 'node:path';
+import { validateRegistry } from './compiler.js';
 import { MacroError } from './packets.js';
 import {
   applyDesignPatchInputSchema,
@@ -1019,6 +1020,14 @@ export class FilesystemDesignStore implements DesignStore {
     );
     if (registry.revision !== revision) {
       throw new MacroError('CORRUPT_SNAPSHOT', 'Registry revision does not match path');
+    }
+    const integrity = validateRegistry(registry);
+    const hard = integrity.find(diagnostic => diagnostic.severity === 'error');
+    if (hard) {
+      throw new MacroError(
+        'CORRUPT_SNAPSHOT',
+        hard.message || `Pinned registry failed integrity check: ${hard.code}`,
+      );
     }
     return registry;
   }

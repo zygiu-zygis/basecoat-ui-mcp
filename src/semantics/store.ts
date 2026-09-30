@@ -9,8 +9,9 @@ import {
   openSync,
   readFileSync,
   readSync,
+  realpathSync,
 } from 'node:fs';
-import { join } from 'node:path';
+import { join, resolve, sep } from 'node:path';
 import { compileSemantics, contentRef } from './compiler.js';
 import { compiledSemanticsRegistrySchema } from './schema.js';
 import type {
@@ -23,7 +24,28 @@ import { projectRhythmOverrideSchema } from './schema.js';
 
 export const PROJECT_RHYTHM_OVERRIDE_MAX_BYTES = 65_536;
 
-function readProjectRhythmOverride(path: string): string | null {
+function isInsideRoot(rootReal: string, candidateReal: string): boolean {
+  return candidateReal === rootReal || candidateReal.startsWith(rootReal + sep);
+}
+
+function readProjectRhythmOverride(projectRoot: string, path: string): string | null {
+  let rootReal: string;
+  try {
+    rootReal = realpathSync(projectRoot);
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === 'ENOENT') return null;
+    throw error;
+  }
+
+  const overrideDir = join(projectRoot, '.basecoat');
+  try {
+    const dirStat = lstatSync(overrideDir);
+    if (dirStat.isSymbolicLink() || !dirStat.isDirectory()) return null;
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === 'ENOENT') return null;
+    throw error;
+  }
+
   let pathStat;
   try {
     pathStat = lstatSync(path);
@@ -48,6 +70,15 @@ function readProjectRhythmOverride(path: string): string | null {
     ) {
       return null;
     }
+
+    let fileReal: string;
+    try {
+      fileReal = realpathSync(path);
+    } catch {
+      return null;
+    }
+    if (!isInsideRoot(rootReal, fileReal)) return null;
+    if (resolve(fileReal) !== fileReal) return null;
 
     const content = Buffer.alloc(PROJECT_RHYTHM_OVERRIDE_MAX_BYTES + 1);
     let length = 0;
@@ -184,7 +215,7 @@ export class FileSemanticsStore implements SemanticsStore {
     // Try to load project override
     const overridePath = join(projectRoot, '.basecoat', 'rhythm.json');
     try {
-      const overrideContent = readProjectRhythmOverride(overridePath);
+      const overrideContent = readProjectRhythmOverride(projectRoot, overridePath);
       if (overrideContent === null) return baseProfile;
       const overrideData = JSON.parse(overrideContent);
       const override = projectRhythmOverrideSchema.parse(overrideData);
@@ -194,24 +225,21 @@ export class FileSemanticsStore implements SemanticsStore {
         return baseProfile;
       }
 
-      // Apply overrides: replace mappings with same ID, keep others
+      // Apply overrides: replace mappings with the same ID in place, keep base order.
       const effectiveFamilies = baseProfile.families.map(family => {
-        const overrideMappingsForFamily = override.overrideMappings.filter(
-          mapping => family.mappings.some(baseMapping => baseMapping.id === mapping.id),
+        const overrideById = new Map(
+          override.overrideMappings
+            .filter(mapping => family.mappings.some(baseMapping => baseMapping.id === mapping.id))
+            .map(mapping => [mapping.id, mapping]),
         );
 
-        if (overrideMappingsForFamily.length === 0) {
+        if (overrideById.size === 0) {
           return family;
         }
 
-        // Create mapping ID set for overrides
-        const overrideIds = new Set(overrideMappingsForFamily.map(m => m.id));
-
-        // Keep base mappings not overridden, add override mappings
-        const effectiveMappings = [
-          ...family.mappings.filter(mapping => !overrideIds.has(mapping.id)),
-          ...overrideMappingsForFamily,
-        ];
+        const effectiveMappings = family.mappings.map(
+          mapping => overrideById.get(mapping.id) ?? mapping,
+        );
 
         return {
           ...family,

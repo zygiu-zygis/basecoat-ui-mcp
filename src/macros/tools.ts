@@ -40,6 +40,7 @@ import type {
   DesignPatchOp,
   DesignSession,
   Id,
+  MutationReceipt,
   Ref,
   Scalar,
 } from './types.js';
@@ -53,6 +54,58 @@ function clip(message: string): string {
 
 function compactFingerprint(parts: string[]): string {
   return createHash('sha256').update(parts.join('\0'), 'utf8').digest('hex').slice(0, 32);
+}
+
+/**
+ * Acknowledge a committed mutation without allowing PACKET_TOO_LARGE to hide it.
+ * Oversized optional payload (for example validation reports) is omitted first;
+ * a minimal revision receipt is always returned when the mutation already landed.
+ */
+function acknowledgeMutation(
+  kind: 'begin_design' | 'apply_design_patch',
+  receipt: MutationReceipt,
+): CallToolResult {
+  const base = {
+    v: 1 as const,
+    kind,
+    designId: receipt.designId,
+    revision: receipt.revision,
+    operationId: receipt.operationId,
+  };
+  try {
+    return boundedMacroResult({
+      ...base,
+      ...receipt.response,
+    });
+  } catch (error) {
+    if (!(error instanceof MacroError) || error.code !== 'PACKET_TOO_LARGE') {
+      throw error;
+    }
+  }
+
+  const { validation: _validation, ...rest } = receipt.response;
+  try {
+    return boundedMacroResult({
+      ...base,
+      ...rest,
+      truncated: true,
+    });
+  } catch (error) {
+    if (!(error instanceof MacroError) || error.code !== 'PACKET_TOO_LARGE') {
+      throw error;
+    }
+  }
+
+  return boundedMacroResult({
+    ...base,
+    ...(typeof receipt.response.snapshot === 'string'
+      ? { snapshot: receipt.response.snapshot }
+      : {}),
+    ...(typeof receipt.response.registryRevision === 'string'
+      ? { registryRevision: receipt.response.registryRevision }
+      : {}),
+    truncated: true,
+  });
 }
 
 export function macroErrorResult(
@@ -401,14 +454,7 @@ export async function handleBeginDesign(
       decisions,
     });
 
-    return boundedMacroResult({
-      v: 1,
-      kind: 'begin_design',
-      designId: receipt.designId,
-      revision: receipt.revision,
-      operationId: receipt.operationId,
-      ...receipt.response,
-    });
+    return acknowledgeMutation('begin_design', receipt);
   } catch (error) {
     return macroErrorResult(error);
   }
@@ -568,14 +614,7 @@ export async function handleApplyDesignPatch(
         operationId,
         operations,
       });
-      return boundedMacroResult({
-        v: 1,
-        kind: 'apply_design_patch',
-        designId: receipt.designId,
-        revision: receipt.revision,
-        operationId: receipt.operationId,
-        ...receipt.response,
-      });
+      return acknowledgeMutation('apply_design_patch', receipt);
     } catch (error) {
       if (error instanceof MacroError && error.code === 'REVISION_CONFLICT') {
         return macroErrorResult(error, {

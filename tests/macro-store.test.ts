@@ -29,7 +29,10 @@ const PROVENANCE: Provenance = {
   mappingVersion: '1.0.0',
 };
 
-function minimalRegistry(profileId = 'store-profile'): CompiledMacroRegistry {
+function minimalRegistry(
+  profileId = 'store-profile',
+  extraDecisions: DesignProfile['allowedDecisions'] = {},
+): CompiledMacroRegistry {
   const profile: DesignProfile = {
     schemaVersion: 1,
     id: profileId,
@@ -41,8 +44,9 @@ function minimalRegistry(profileId = 'store-profile'): CompiledMacroRegistry {
         allowPageOverride: true,
         defaultValue: 'comfortable',
       },
+      ...extraDecisions,
     },
-    sharedDecisionKeys: ['density'],
+    sharedDecisionKeys: ['density', ...Object.keys(extraDecisions)],
   };
   const leaf: AuthoringMacroBlock = {
     schemaVersion: 1,
@@ -529,13 +533,12 @@ test('registry revision pinning survives concurrent operations', async () => {
 });
 
 test('legal explicit null precedence in decisions', async () => {
-  const nullRegistry = minimalRegistry('null-profile');
-  // Update the profile to allow null values
-  const nullProfile = nullRegistry.profiles[nullRegistry.aliases['null-profile']!]!;
-  nullProfile.allowedDecisions.nullableFlag = {
-    type: 'null',
-    allowPageOverride: true,
-  };
+  const nullRegistry = minimalRegistry('null-profile', {
+    nullableFlag: {
+      type: 'null',
+      allowPageOverride: true,
+    },
+  });
 
   await withProject(async (projectRoot) => {
     const store = await openDesignStore(projectRoot, { create: true });

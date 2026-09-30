@@ -2,7 +2,7 @@
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.zygiu-zygis/basecoat-ui-mcp",
   "title": "Basecoat UI MCP",
-  "description": "Offline stdio MCP for Basecoat UI templates, composition guidance, and static validation.",
+  "description": "Offline stdio MCP for Basecoat UI templates, macro design sessions, semantic rhythm/FSM metadata, and static validation.",
   "websiteUrl": "https://github.com/zygiu-zygis/basecoat-ui-mcp",
   "repository": {
     "url": "https://github.com/zygiu-zygis/basecoat-ui-mcp",

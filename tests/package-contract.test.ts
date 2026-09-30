@@ -132,8 +132,74 @@ test('packed MCP bin starts offline from a read-only installed package tree', { 
     assert.equal(client.getServerVersion()?.name, 'basecoat-ui-mcp');
     assert.equal(client.getServerVersion()?.version, '1.1.0');
     const { tools } = await client.listTools();
-    assert.equal(tools.length, 11);
-    assert(tools.some(tool => tool.name === 'validate_composition'));
+    const toolNames = tools.map(tool => tool.name).sort();
+    assert.deepEqual(toolNames, [
+      'apply_design_patch',
+      'begin_design',
+      'get_component_details',
+      'get_design_context',
+      'get_fsm_recipe',
+      'get_macro_block',
+      'get_rhythm_rules',
+      'search_components',
+      'search_macro_blocks',
+      'validate_composition',
+      'validate_design',
+    ]);
+    for (const tool of tools) {
+      assert(tool.annotations, `${tool.name} missing annotations`);
+      assert.equal(tool.annotations?.openWorldHint, false, `${tool.name} must stay closed-world`);
+    }
+
+    const { resources } = await client.listResources();
+    assert.deepEqual(
+      resources.map(resource => resource.uri).sort(),
+      [
+        'basecoat://design/rhythm',
+        'basecoat://integration/astro',
+        'basecoat://project/context',
+      ],
+    );
+
+    const rhythm = await client.callTool({
+      name: 'get_rhythm_rules',
+      arguments: { profile: 'default', family: 'spacing', limit: 1 },
+    });
+    assert.notEqual(rhythm.isError, true);
+    assert(Buffer.byteLength(JSON.stringify(rhythm), 'utf8') <= 1999);
+
+    const fsm = await client.callTool({
+      name: 'get_fsm_recipe',
+      arguments: { recipe: 'dialog', section: 'states', limit: 1 },
+    });
+    assert.notEqual(fsm.isError, true);
+    assert(Buffer.byteLength(JSON.stringify(fsm), 'utf8') <= 1999);
+
+    const begin = await client.callTool({
+      name: 'begin_design',
+      arguments: {
+        designId: 'packed-smoke',
+        profile: 'app-default',
+        operationId: 'op-packed-begin',
+      },
+    });
+    assert.notEqual(begin.isError, true);
+    assert(Buffer.byteLength(JSON.stringify(begin), 'utf8') <= 1999);
+
+    const validate = await client.callTool({
+      name: 'validate_composition',
+      arguments: {
+        code: '<main class="p-4"><h1>Packed</h1></main>',
+        semanticProfile: 'default',
+      },
+    });
+    assert.notEqual(validate.isError, true);
+
+    const packageEntries = await readdir(packageRoot);
+    assert(!packageEntries.includes('.basecoat'), 'installed package tree must stay free of designer writes');
+    const hostEntries = await readdir(hostRoot);
+    assert(hostEntries.includes('.basecoat'), 'mutations must write only under the configured project root');
+
     assert.equal(stderr, '');
   } finally {
     await client?.close().catch(() => undefined);

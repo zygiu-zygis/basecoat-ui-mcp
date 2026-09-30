@@ -70,9 +70,11 @@ The configured root controls two things:
 
 - `DESIGN.md` is read from that directory by `basecoat://project/context`.
 - Persistent macro sessions are stored under `<project-root>/.basecoat/designer/`.
-- `.basecoat/rhythm.json` is an optional strict override. It must be a regular,
-  non-symlink file no larger than 65,536 UTF-8 bytes; missing or rejected files
-  leave the packaged profile unchanged.
+- `.basecoat/rhythm.json` is an optional strict override. It must live under a
+  real `.basecoat` directory inside the project root, be a regular non-symlink
+  file no larger than 65,536 UTF-8 bytes, and resolve inside that root; missing
+  or rejected files leave the packaged profile unchanged. Matching mapping IDs
+  replace in place and keep packaged order.
 
 Only that exact directory is used. The server does not walk parent directories. Keep `.basecoat/` in the host project and back it up if design sessions are part of your workflow. The MCP server never writes host application source files.
 
@@ -92,9 +94,9 @@ The macro layer is this project's curated, project-specific composition system f
 
 1. `search_macro_blocks` - find compatible blueprint blocks by query, role, family, or tag.
 2. `get_macro_block` - read a block section such as `manifest`, `structure`, `slots`, `ports`, `rules`, `dependencies`, or `provenance`.
-3. `begin_design` - create a persistent design session and pin its profile and registry revision.
+3. `begin_design` - create a persistent design session and pin its profile and registry revision. Pinned registries are hash-verified on load.
 4. `get_design_context` - read session lists or focused views such as `overview`, `graph`, `rules`, `focus`, and `next`.
-5. `apply_design_patch` - apply atomic graph changes with `expectedRevision` and an idempotent `operationId`.
+5. `apply_design_patch` - apply atomic graph changes with `expectedRevision` and an idempotent `operationId`. A committed mutation always returns a success acknowledgement; oversized optional payload may be omitted with `truncated: true`.
 6. `validate_design` - validate a draft or complete design graph and page its diagnostics.
 
 Design sessions persist under `<project-root>/.basecoat/designer/`. Registry revisions are content-addressed; a session keeps using its pinned revision even after the package snapshot changes. Design snapshots use the form `d:<designId>@<revision>`.
@@ -256,7 +258,10 @@ authoring are maintainer-reviewed changes, not server startup tasks.
   root. Parent directories and symlinks are not followed.
 - **A source checkout cannot start:** run `npm run build` before `npm start`.
 - **A macro result has a cursor:** request the next page with that cursor;
-  do not concatenate or parse partial JSON.
+  do not concatenate or parse partial JSON. Changed registry, design, or
+  effective rhythm revisions make prior cursors stale.
+- **An apply acknowledgement includes `truncated: true`:** the mutation
+  committed; reread context or validation tools for the omitted detail.
 - **An importer diagnostic mentions OAuth, captcha, or an unsupported
   dependency:** implement or resolve it in the host application or reviewed
   mapping. The importer does not guess runtime behavior.

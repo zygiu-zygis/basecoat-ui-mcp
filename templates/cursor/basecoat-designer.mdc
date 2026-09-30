@@ -25,7 +25,9 @@ Use this workflow when creating or modifying a Basecoat page with
    `apply_design_patch` using a `set_decision` operation.
 
 5. Make structural changes through `apply_design_patch`, always using the
-   current `expectedRevision` and a unique `operationId`.
+   current `expectedRevision` and a unique `operationId`. A successful commit
+   acknowledges with revision and `operationId`; if the packet includes
+   `truncated: true`, reread validation or context for omitted detail.
 
 6. Before implementing a region, read its focused context, applicable
    `rules`, and referenced blueprint sections with `get_macro_block`. Follow
@@ -35,11 +37,11 @@ Use this workflow when creating or modifying a Basecoat page with
    spacing, typography, and layout patterns. Filter by profile and family
    as needed. Keep each returned semantic token ID in design metadata and use
    its separate approved utility in application `class` attributes. A token ID
-   is not itself a Tailwind class. Use `get_fsm_recipe` for structural states,
-   transitions, guards, and metadata-only actions. Follow every `next` cursor
-   from either tool.
-   Bind source explicitly with matching `data-fsm-recipe` and
-   `data-fsm-state` attributes.
+   is not itself a Tailwind class. Optional host overrides live at
+   `.basecoat/rhythm.json` inside the project root only. Use `get_fsm_recipe`
+   for structural states, transitions, guards, and metadata-only actions.
+   Follow every `next` cursor from either tool. Bind source explicitly with
+   matching `data-fsm-recipe` and `data-fsm-state` attributes.
 
 8. Expand the approved static fragments in the host application. Preserve
    named slots, instance boundaries, ordering, and declared connections.

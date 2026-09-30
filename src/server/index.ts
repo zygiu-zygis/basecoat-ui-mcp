@@ -121,7 +121,7 @@ export function createServer(projectRoot = process.cwd()) {
   }, input => handleGetMacroBlock(input, projectRoot));
 
   server.registerTool('begin_design', {
-    description: 'Create a persistent design session under the host project root. Pass designId, profile (alias or ref), operationId, and optional decisions. Pins the packaged macro registry. Idempotent for the same operationId.',
+    description: 'Create a persistent design session under the host project root. Pass designId, profile (alias or ref), operationId, and optional decisions. Pins and hash-verifies the packaged macro registry. Idempotent for the same operationId. Oversized optional receipt fields may be omitted with truncated:true after commit.',
     inputSchema: beginDesignInputShape,
     annotations: MUTATION_ANNOTATIONS,
   }, input => handleBeginDesign(input, projectRoot));
@@ -133,7 +133,7 @@ export function createServer(projectRoot = process.cwd()) {
   }, input => handleGetDesignContext(input, projectRoot));
 
   server.registerTool('apply_design_patch', {
-    description: 'Apply one atomic list of design graph operations with expectedRevision and operationId. Replay with the same operationId returns the original receipt. Does not write application source files.',
+    description: 'Apply one atomic list of design graph operations with expectedRevision and operationId. Replay with the same operationId returns the original receipt. A committed mutation always acknowledges success; oversized optional fields may be omitted with truncated:true. Does not write application source files.',
     inputSchema: applyDesignPatchInputShape,
     annotations: MUTATION_ANNOTATIONS,
   }, input => handleApplyDesignPatch(input, projectRoot));
@@ -145,7 +145,7 @@ export function createServer(projectRoot = process.cwd()) {
   }, input => handleValidateDesign(input, projectRoot));
 
   server.registerTool('get_rhythm_rules', {
-    description: 'Read the effective semantic rhythm profile by family, including project-local overrides. Semantic IDs and approved implementation utilities are returned separately. Results are content-addressed and cursor-paginated.',
+    description: 'Read the effective semantic rhythm profile by family, including project-local overrides under a contained .basecoat/rhythm.json. Semantic IDs and approved implementation utilities are returned separately. Results are content-addressed and cursor-paginated; changed effective revisions invalidate prior cursors.',
     inputSchema: getRhythmRulesInputShape,
     annotations: READ_ANNOTATIONS,
   }, input => handleGetRhythmRules(input, projectRoot));

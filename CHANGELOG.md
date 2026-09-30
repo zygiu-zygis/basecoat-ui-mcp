@@ -17,8 +17,13 @@ Maintained by **Žygimantas Jasiulionis / Intellmedia**.
 - Restored the `gap-12` major-section contract as `gap-rhythm-xl`.
 - Hardened immutable publication ordering around directory fsync without reporting a failed mutation after its final link is visible.
 - Fixed HTML diagnostics to retain exact opening positions and report inner elements implicitly closed by mismatched nesting.
-- Bounded project rhythm overrides to 65,536 UTF-8 bytes and refuse symlinks or non-regular files before reading.
-- Verified the actual packed `dist/server/stdio.js` from a read-only extracted npm tarball with offline MCP initialize and tool-list requests.
+- Bounded project rhythm overrides to 65,536 UTF-8 bytes and refuse final-path symlinks, non-regular files, and parent-directory symlink escape before reading.
+- Preserve base rhythm mapping order when overrides replace matching IDs in place.
+- Committed `begin_design` / `apply_design_patch` mutations always return a success acknowledgement; oversized optional payload such as validation reports is omitted with `truncated: true` instead of surfacing `PACKET_TOO_LARGE` after commit.
+- Pinned macro registries verify content hashes via `validateRegistry` on load, not only schema and filename revision.
+- Accelerated HTML line/column lookup with precomputed newline offsets after measured superlinear cost on large inputs with many tags.
+- Expanded packed read-only offline package evidence to exercise semantic and macro calls and assert writes stay under the configured project root.
+- Added a manual `benchmarks/runtime.bench.ts` harness (not part of `npm test`).
 - Added `npm run check` for type-checking, both snapshot checks, tests, and branch whitespace validation.
 - The package remains at version 1.1.0. Release these changes as 1.2.0 after maintainer review.
 

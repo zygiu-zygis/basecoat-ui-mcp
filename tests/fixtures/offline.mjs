@@ -1,4 +1,5 @@
-// Network tripwire for the stdio protocol integration test.
+// Network tripwire for offline protocol and packed-package integration tests.
+import dns from 'node:dns';
 import http from 'node:http';
 import https from 'node:https';
 import net from 'node:net';
@@ -16,4 +17,19 @@ https.request = https.get = denied;
 net.connect = net.createConnection = denied;
 net.Socket.prototype.connect = denied;
 tls.connect = denied;
+dns.lookup = denied;
+dns.lookupService = denied;
+dns.resolve = denied;
+dns.resolve4 = denied;
+dns.resolve6 = denied;
+dns.resolveAny = denied;
+dns.resolveCname = denied;
+dns.resolveMx = denied;
+dns.resolveNaptr = denied;
+dns.resolveNs = denied;
+dns.resolvePtr = denied;
+dns.resolveSoa = denied;
+dns.resolveSrv = denied;
+dns.resolveTxt = denied;
+dns.reverse = denied;
 syncBuiltinESMExports();
