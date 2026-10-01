@@ -117,6 +117,81 @@ export function contentHash(value: unknown): Ref {
   return createHash('sha256').update(canonicalJson(value), 'utf8').digest('hex');
 }
 
+export function calculateNodePlanDigest(
+  session: DesignSession,
+  page: PagePlan,
+  nodeId: Id,
+): string {
+  const node = page.nodes[nodeId];
+  if (!node) {
+    throw new MacroError('HARD_VIOLATION', `Unknown node: ${nodeId}`);
+  }
+
+  const connections = page.connections
+    .filter(c => c.from.node === nodeId || c.to.node === nodeId)
+    .map(c => ({
+      id: c.id,
+      relation: c.relation,
+      from: { node: c.from.node, port: c.from.port },
+      to: { node: c.to.node, port: c.to.port },
+    }))
+    .sort((a, b) => a.id.localeCompare(b.id));
+
+  const children = Object.values(page.nodes)
+    .filter(n => n.parent?.node === nodeId)
+    .map(n => ({
+      id: n.id,
+      slot: n.parent!.slot,
+      order: n.parent!.order ?? 0,
+      block: n.block,
+    }))
+    .sort((a, b) => {
+      const slotCmp = a.slot.localeCompare(b.slot);
+      if (slotCmp !== 0) return slotCmp;
+      const orderCmp = a.order - b.order;
+      if (orderCmp !== 0) return orderCmp;
+      return a.id.localeCompare(b.id);
+    });
+
+  const rules = page.rules
+    .filter(r => r.nodes.includes(nodeId))
+    .map(r => ({
+      id: r.id,
+      type: r.type,
+      nodes: [...r.nodes].sort(),
+    }))
+    .sort((a, b) => a.id.localeCompare(b.id));
+
+  const decisions = {
+    ...session.projectDecisions,
+    ...page.decisions,
+  };
+
+  const payload = {
+    pageId: page.id,
+    route: page.route,
+    node: {
+      id: node.id,
+      block: node.block,
+      parent: node.parent
+        ? {
+            node: node.parent.node,
+            slot: node.parent.slot,
+            order: node.parent.order ?? 0,
+          }
+        : null,
+      bindings: node.bindings,
+    },
+    connections,
+    children,
+    rules,
+    decisions,
+  };
+
+  return contentHash(payload);
+}
+
+
 /**
  * Expected signature for Phase graph-validation (`src/macros/validate.ts`).
  * Store calls this for mark_plan_ready / complete checks when the module is present.
@@ -632,18 +707,40 @@ function applyRecordWritten(
   const page = session.pages[op.page];
   if (!page) throw new MacroError('HARD_VIOLATION', `Unknown page: ${op.page}`);
   if (!page.nodes[op.node]) throw new MacroError('HARD_VIOLATION', `Unknown node: ${op.node}`);
-  if (session.checkpoints.length >= LIMITS.checkpointsMax) {
-    throw new MacroError('HARD_VIOLATION', `At most ${LIMITS.checkpointsMax} checkpoints`);
+
+  const expectedDigest = calculateNodePlanDigest(session, page, op.node);
+  if (op.planDigest !== expectedDigest) {
+    throw new MacroError(
+      'HARD_VIOLATION',
+      `planDigest mismatch for node "${op.node}": expected "${expectedDigest}", received "${op.planDigest}"`,
+    );
   }
-  refSchema.parse(op.planDigest);
-  session.checkpoints.push({
-    page: op.page,
-    node: op.node,
-    sourcePath: op.sourcePath,
-    planDigest: op.planDigest,
-    reportedAtRevision: nextRevision,
-  });
+
+  const existingIndex = session.checkpoints.findIndex(
+    cp => cp.page === op.page && cp.node === op.node,
+  );
+  if (existingIndex >= 0) {
+    session.checkpoints[existingIndex] = {
+      page: op.page,
+      node: op.node,
+      sourcePath: op.sourcePath,
+      planDigest: op.planDigest,
+      reportedAtRevision: nextRevision,
+    };
+  } else {
+    if (session.checkpoints.length >= LIMITS.checkpointsMax) {
+      throw new MacroError('HARD_VIOLATION', `At most ${LIMITS.checkpointsMax} checkpoints`);
+    }
+    session.checkpoints.push({
+      page: op.page,
+      node: op.node,
+      sourcePath: op.sourcePath,
+      planDigest: op.planDigest,
+      reportedAtRevision: nextRevision,
+    });
+  }
 }
+
 
 function structuralFallbackValidate(
   session: DesignSession,

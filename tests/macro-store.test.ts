@@ -10,6 +10,7 @@ import { compileRegistry } from '../src/macros/compiler.js';
 import { MacroError } from '../src/macros/packets.js';
 import { getCompiledRegistry, loadCompiledRegistry } from '../src/macros/registry.js';
 import {
+  calculateNodePlanDigest,
   getPublicationDurabilityFailureCount,
   openDesignStore,
   openFilesystemDesignStore,
@@ -267,6 +268,8 @@ test('project decision changes demote affected pages and invalidate checkpoints'
       operationId: 'op-ready',
       operations: [{ op: 'mark_plan_ready', page: 'run-home' }],
     });
+    const currentSession = await store.read('session-decision');
+    const validDigest = calculateNodePlanDigest(currentSession, currentSession.pages['run-home']!, 'root');
     await store.apply({
       designId: 'session-decision',
       expectedRevision: 2,
@@ -277,7 +280,7 @@ test('project decision changes demote affected pages and invalidate checkpoints'
           page: 'run-home',
           node: 'root',
           sourcePath: 'src/pages/run-home.astro',
-          planDigest: registry.revision,
+          planDigest: validDigest,
         },
       ],
     });

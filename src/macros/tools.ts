@@ -186,7 +186,7 @@ function resolveProfileRef(
 /** Soft op schema: recipe/block may be human aliases; resolved before store apply. */
 const softIdOrRef = z.string().min(1).max(64);
 
-const softPatchOpSchema = z.discriminatedUnion('op', [
+export const softPatchOpSchema = z.discriminatedUnion('op', [
   z
     .object({
       op: z.literal('instantiate_recipe'),
@@ -591,7 +591,7 @@ export const applyDesignPatchInputShape = {
   designId: z.string().min(1).max(LIMITS.idMax),
   expectedRevision: z.number().int().min(0).max(LIMITS.revisionMax),
   operationId: z.string().min(1).max(LIMITS.idMax),
-  operations: z.array(z.record(z.string(), z.unknown())).min(1).max(LIMITS.operationsMax),
+  operations: z.array(softPatchOpSchema).min(1).max(LIMITS.operationsMax),
 };
 
 export async function handleApplyDesignPatch(

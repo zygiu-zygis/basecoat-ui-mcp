@@ -16,6 +16,8 @@ import type {
   SessionSummary,
 } from './types.js';
 import { validateDesign, validatePage } from './validate.js';
+import { calculateNodePlanDigest } from './store.js';
+
 
 function clip(message: string): string {
   return message.length <= LIMITS.messageMax ? message : message.slice(0, LIMITS.messageMax);
@@ -141,7 +143,7 @@ function overviewRecords(session: DesignSession, registry: CompiledMacroRegistry
       connectionCount: page.connections.length,
       ruleCount: page.rules.length,
     }));
-  return [
+  const records: ContextRecord[] = [
     {
       ...revisionHeader(session),
       kind: 'overview',
@@ -152,10 +154,23 @@ function overviewRecords(session: DesignSession, registry: CompiledMacroRegistry
       status: pageStatus(session.pages),
       checkpointCount: session.checkpoints.length,
       routeLinkCount: session.routeLinks.length,
-      pages,
     },
   ];
+  for (const page of pages) {
+    records.push({
+      ...revisionHeader(session),
+      kind: 'overview-page',
+      pageId: page.id,
+      route: page.route,
+      status: page.status,
+      nodeCount: page.nodeCount,
+      connectionCount: page.connectionCount,
+      ruleCount: page.ruleCount,
+    });
+  }
+  return records;
 }
+
 
 function graphRecords(session: DesignSession, request: ContextRequest): ContextRecord[] {
   const pages = Object.values(session.pages).sort((a, b) => a.id.localeCompare(b.id));
@@ -271,29 +286,60 @@ function focusRecords(
         scope: port.scope,
       })) ?? [];
 
-  return [
-    {
-      ...revisionHeader(session),
-      kind: 'focus',
-      pageId,
-      nodeId,
-      block: node.block,
-      role: block?.role ?? null,
-      ancestors: ancestorsOf(page, nodeId),
-      siblings: siblingsOf(page, nodeId),
-      parent: node.parent ?? null,
-      bindings: node.bindings,
-      requiredPorts,
-      connections: relatedConnections,
-      obligations: obligations.map(compactDiagnostic),
-      slots: block?.slots.map(slot => ({
-        id: slot.id,
-        accepts: slot.accepts,
-        min: slot.min,
-        max: slot.max,
-      })) ?? [],
-    },
-  ];
+  const compactObligations = obligations.map(compactDiagnostic);
+  const planDigest = calculateNodePlanDigest(session, page, nodeId);
+  const mainRecord: ContextRecord = {
+    ...revisionHeader(session),
+    kind: 'focus',
+    pageId,
+    nodeId,
+    planDigest,
+    block: node.block,
+    role: block?.role ?? null,
+    ancestors: ancestorsOf(page, nodeId),
+    siblings: siblingsOf(page, nodeId),
+    parent: node.parent ?? null,
+    bindings: node.bindings,
+    requiredPorts,
+    slots: block?.slots.map(slot => ({
+      id: slot.id,
+      accepts: slot.accepts,
+      min: slot.min,
+      max: slot.max,
+    })) ?? [],
+    connections: relatedConnections.length <= 4 ? relatedConnections : [],
+    obligations: compactObligations.length <= 4 ? compactObligations : [],
+    connectionCount: relatedConnections.length,
+    obligationCount: compactObligations.length,
+  };
+
+  const records: ContextRecord[] = [mainRecord];
+
+  if (relatedConnections.length > 4) {
+    for (const connection of relatedConnections) {
+      records.push({
+        ...revisionHeader(session),
+        kind: 'focus-connection',
+        pageId,
+        nodeId,
+        connection,
+      });
+    }
+  }
+
+  if (compactObligations.length > 4) {
+    for (const obligation of compactObligations) {
+      records.push({
+        ...revisionHeader(session),
+        kind: 'focus-obligation',
+        pageId,
+        nodeId,
+        obligation,
+      });
+    }
+  }
+
+  return records;
 }
 
 function compactDiagnostic(item: Diagnostic): ContextRecord {
@@ -314,11 +360,12 @@ function checkpointMissing(
   page: PagePlan,
   nodeId: Id,
 ): boolean {
+  const currentDigest = calculateNodePlanDigest(session, page, nodeId);
   return !session.checkpoints.some(
     checkpoint =>
       checkpoint.page === page.id &&
       checkpoint.node === nodeId &&
-      checkpoint.reportedAtRevision === session.revision,
+      checkpoint.planDigest === currentDigest,
   );
 }
 
@@ -468,7 +515,7 @@ export function selectNextStep(
       candidates.push({
         priority: 5,
         code: 'CHECKPOINT_MISSING',
-        message: clip(`Node "${node.id}" has no write checkpoint at revision ${session.revision}.`),
+        message: clip(`Node "${node.id}" has no valid write checkpoint for its current plan.`),
         page: page.id,
         node: node.id,
         suggestedOps: [
@@ -477,7 +524,7 @@ export function selectNextStep(
             page: page.id,
             node: node.id,
             sourcePath: `src/pages/${page.id}/${node.id}.astro`,
-            planDigest: session.registryRevision,
+            planDigest: calculateNodePlanDigest(session, page, node.id),
           },
         ],
       });

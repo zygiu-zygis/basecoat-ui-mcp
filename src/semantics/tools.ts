@@ -39,10 +39,7 @@ export const getFsmRecipeInputShape = {
 
 interface RhythmRuleEntry {
   profileId: string;
-  profileDescription: string;
-  profileRef: string;
   familyId: string;
-  familyDescription: string;
   mapping: SemanticMapping;
 }
 
@@ -128,6 +125,13 @@ export async function handleGetRhythmRules(
 
     // Collect all rhythm rule entries
     const allEntries: RhythmRuleEntry[] = [];
+    const descriptions: {
+      profiles: Record<string, string>;
+      families: Record<string, string>;
+    } = {
+      profiles: {},
+      families: {},
+    };
 
     const effectiveProfiles = Object.values(registry.rhythmProfiles)
       .map(profile => {
@@ -137,19 +141,18 @@ export async function handleGetRhythmRules(
       .sort((a, b) => a.profile.id.localeCompare(b.profile.id));
     const effectiveRevision = contentRef(effectiveProfiles.map(({ profile, ref }) => [profile.id, ref]));
 
-    for (const { ref, profile } of effectiveProfiles) {
+    for (const { profile } of effectiveProfiles) {
       if (profileFilter && profile.id !== profileFilter) continue;
+      descriptions.profiles[profile.id] = profile.description;
 
       for (const family of profile.families) {
         if (familyFilter && family.id !== familyFilter) continue;
+        descriptions.families[`${profile.id}:${family.id}`] = family.description;
 
         for (const mapping of family.mappings) {
           allEntries.push({
             profileId: profile.id,
-            profileDescription: profile.description,
-            profileRef: ref,
             familyId: family.id,
-            familyDescription: family.description,
             mapping,
           });
         }
@@ -200,6 +203,7 @@ export async function handleGetRhythmRules(
         effectiveRevision,
         ...(profileFilter ? { profileFilter } : {}),
         ...(familyFilter ? { familyFilter } : {}),
+        ...(start === 0 ? { descriptions } : {}),
       },
     };
 
