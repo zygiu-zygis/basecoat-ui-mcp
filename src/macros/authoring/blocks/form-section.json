@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "id": "form-section",
+  "role": "form",
+  "family": "form",
+  "description": "Multi-column form card with validation states, helper text, grid layout, fieldsets, and actions.",
+  "tags": ["form", "validation", "fields", "card"],
+  "root": "form-root",
+  "fragments": [
+    {
+      "id": "form-root",
+      "emmet": "div.card.p-6[data-component=card]>form.grid.gap-6>div.flex.flex-col.gap-2>h2.text-xl.font-semibold{Personal Information}+p.text-sm.text-muted{Update your contact and billing information.}^div.grid.grid-cols-1.gap-4.md:grid-cols-2>div[data-component=field]>label.label{First Name}+input.input[type=text][required]^^div[data-component=field]>label.label{Last Name}+input.input[type=text][required]^^div[data-component=field].md:col-span-2>label.label{Email Address}+input.input[type=email][aria-invalid=false][required]+p.text-sm.text-muted{We will send verification to this address.}^^div[data-component=field].md:col-span-2>label.label{Role}+select.select>option{Developer}+option{Designer}+option{Manager}^^^div.flex.justify-end.gap-2>button.btn[data-variant=outline]{Reset}+button.btn[data-variant=primary][type=submit]{Save Information}"
+    }
+  ],
+  "mounts": [],
+  "slots": [],
+  "ports": [],
+  "componentRefs": ["card", "field", "input", "label", "select", "button"],
+  "ruleRefs": [],
+  "dependencyBlockIds": [],
+  "layout": { "frameRef": "form-root" },
+  "landmarks": { "main": 0, "primaryHeading": 1 },
+  "provenance": {
+    "origin": "authored",
+    "sourceHashes": {},
+    "mappingVersion": "1.0.0"
+  }
+}

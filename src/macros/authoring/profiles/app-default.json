@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "id": "app-default",
+  "description": "Default application design profile for workspace shells, auth flows, and data pages.",
+  "allowedDecisions": {
+    "density": {
+      "type": "enum",
+      "values": ["comfortable", "compact"],
+      "allowPageOverride": true,
+      "defaultValue": "comfortable"
+    },
+    "nav-collapsed": {
+      "type": "boolean",
+      "allowPageOverride": false,
+      "defaultValue": false
+    },
+    "auth-brand": {
+      "type": "string",
+      "allowPageOverride": true,
+      "defaultValue": "App"
+    }
+  },
+  "sharedDecisionKeys": ["density", "nav-collapsed"]
+}

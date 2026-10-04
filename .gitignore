@@ -1,0 +1,27 @@
+node_modules/
+dist/
+.npm/
+*.tsbuildinfo
+*.tgz
+
+# Local disposable MCP consumer probe (do not publish / push)
+tests/fixtures/offline-dashboard/
+examples/offline-dashboard/
+
+# Environment and sensitive keys
+.env
+.env.*
+*.env
+*.pem
+*.key
+
+# Logs and debug
+*.log
+npm-debug.log*
+
+# OS / editor artifacts
+.DS_Store
+Thumbs.db
+
+# Scratch
+tmp/

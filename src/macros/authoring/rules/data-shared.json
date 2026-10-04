@@ -1,0 +1,6 @@
+{
+  "id": "data-shared",
+  "type": "shared-data",
+  "binding": "records-dataset",
+  "nodes": ["filters", "table", "pager"]
+}

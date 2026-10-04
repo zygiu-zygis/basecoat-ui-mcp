@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "id": "data-table",
+  "role": "table",
+  "family": "data",
+  "description": "Tabular results region wrapping the curated table component.",
+  "tags": ["data", "table"],
+  "root": "table-root",
+  "fragments": [
+    {
+      "id": "table-root",
+      "emmet": "div.overflow-auto.rounded-md.border>div[data-component=table]"
+    }
+  ],
+  "mounts": [],
+  "slots": [],
+  "ports": [
+    {
+      "id": "dataset-in",
+      "at": { "fragment": "table-root", "name": "table-root" },
+      "direction": "in",
+      "kind": "data",
+      "contract": "dataset",
+      "minLinks": 1,
+      "maxLinks": 1,
+      "scope": "page"
+    }
+  ],
+  "componentRefs": ["table"],
+  "ruleRefs": [],
+  "dependencyBlockIds": [],
+  "layout": { "frameRef": "table-root", "scrollBoundary": "table-root" },
+  "landmarks": { "main": 0, "primaryHeading": 0 },
+  "provenance": {
+    "origin": "authored",
+    "sourceHashes": {},
+    "mappingVersion": "1.0.0"
+  }
+}

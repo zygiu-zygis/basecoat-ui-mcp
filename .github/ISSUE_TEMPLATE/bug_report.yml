@@ -1,0 +1,19 @@
+name: Bug report
+description: Wrong template, validator false positive/negative, or protocol error
+labels: [bug]
+body:
+  - type: input
+    id: version
+    attributes: { label: Package version, placeholder: "1.6.0" }
+    validations: { required: true }
+  - type: input
+    id: client
+    attributes: { label: MCP client, placeholder: "Cursor / Claude Code / Antigravity / VS Code" }
+  - type: textarea
+    id: call
+    attributes: { label: Tool call and arguments, render: json }
+    validations: { required: true }
+  - type: textarea
+    id: actual
+    attributes: { label: Actual vs expected result }
+    validations: { required: true }

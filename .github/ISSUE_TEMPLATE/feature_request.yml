@@ -1,0 +1,11 @@
+name: Feature request
+description: Missing component, macro block, theming guidance, or validator rule
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes: { label: What did the agent get wrong or have to guess? }
+    validations: { required: true }
+  - type: textarea
+    id: proposal
+    attributes: { label: Proposed resource, tool output, or rule }

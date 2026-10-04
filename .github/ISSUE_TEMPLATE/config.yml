@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Basecoat UI (upstream components and CSS)
+    url: https://github.com/hunvreus/basecoat/issues
+    about: Report Basecoat CSS/JS bugs upstream.

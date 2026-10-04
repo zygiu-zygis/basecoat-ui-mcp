@@ -1,0 +1,161 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 640" width="1280" height="640" fill="none">
+  <!-- Fonts and Styles -->
+  <style>
+    .font-title { font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, sans-serif; font-weight: 800; font-size: 60px; fill: #ffffff; letter-spacing: -0.04em; }
+    .font-tagline { font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, sans-serif; font-weight: 500; font-size: 24px; fill: #f4f4f5; letter-spacing: -0.01em; }
+    .font-sub { font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, sans-serif; font-weight: 400; font-size: 16px; fill: #71717a; line-height: 1.5; }
+    .font-pill { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; font-weight: 600; fill: #a1a1aa; letter-spacing: 0.02em; }
+    .font-ui { font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, sans-serif; }
+  </style>
+
+  <!-- Deep black background (Linear / Vercel aesthetic) -->
+  <rect width="1280" height="640" fill="#08090a" />
+
+  <!-- Extremely subtle warm ambient light in corner (no cheap neon colors) -->
+  <radialGradient id="ambient" cx="20%" cy="20%" r="60%">
+    <stop offset="0%" stop-color="#ffffff" stop-opacity="0.03" />
+    <stop offset="100%" stop-color="#000000" stop-opacity="0" />
+  </radialGradient>
+  <rect width="1280" height="640" fill="url(#ambient)" />
+
+  <!-- Outer razor-thin border -->
+  <rect x="0.75" y="0.75" width="1278.5" height="638.5" rx="0" stroke="#1f2023" stroke-width="1.5" />
+
+  <!-- LEFT COLUMN: Typography & Value Proposition -->
+  <g transform="translate(80, 80)">
+    <!-- Brand Mark + Badge Header -->
+    <g transform="translate(0, 0)">
+      <!-- Logo icon -->
+      <rect width="52" height="52" rx="14" fill="#121316" stroke="#27272a" stroke-width="1.5" />
+      <path d="M 26 12 L 39 19 L 26 26 L 13 19 Z" fill="#fafafa" />
+      <path d="M 13 24 L 26 31 L 39 24" stroke="#a1a1aa" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+      <path d="M 13 29 L 26 36 L 39 29" stroke="#52525b" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+
+      <!-- Minimalist Pill Badge -->
+      <g transform="translate(68, 12)">
+        <rect width="138" height="28" rx="14" fill="#121316" stroke="#27272a" stroke-width="1" />
+        <circle cx="14" cy="14" r="3.5" fill="#10b981" />
+        <text x="26" y="18" class="font-pill">MCP SERVER</text>
+      </g>
+    </g>
+
+    <!-- Main Title -->
+    <text x="0" y="128" class="font-title">Basecoat UI</text>
+
+    <!-- Tagline (Human, direct, zero buzzwords) -->
+    <text x="0" y="180" class="font-tagline">shadcn/ui aesthetic without React.</text>
+    <text x="0" y="214" class="font-sub">Offline design system &amp; macro composition engine</text>
+    <text x="0" y="238" class="font-sub">for Cursor, Claude, Windsurf, and AI coding tools.</text>
+
+    <!-- Tech specs pills (Subtle, sleek, non-intrusive) -->
+    <g transform="translate(0, 290)">
+      <g transform="translate(0, 0)">
+        <rect width="130" height="32" rx="6" fill="#121316" stroke="#222326" stroke-width="1" />
+        <text x="14" y="20" class="font-pill" fill="#d4d4d8">41 Components</text>
+      </g>
+      <g transform="translate(142, 0)">
+        <rect width="146" height="32" rx="6" fill="#121316" stroke="#222326" stroke-width="1" />
+        <text x="14" y="20" class="font-pill" fill="#d4d4d8">24 Macro Blocks</text>
+      </g>
+      <g transform="translate(300, 0)">
+        <rect width="130" height="32" rx="6" fill="#121316" stroke="#222326" stroke-width="1" />
+        <text x="14" y="20" class="font-pill" fill="#d4d4d8">0KB Network</text>
+      </g>
+      <g transform="translate(442, 0)">
+        <rect width="120" height="32" rx="6" fill="#121316" stroke="#222326" stroke-width="1" />
+        <text x="14" y="20" class="font-pill" fill="#d4d4d8">Tailwind 4</text>
+      </g>
+    </g>
+
+    <!-- Target frameworks bar -->
+    <g transform="translate(0, 360)">
+      <text x="0" y="24" font-family="-apple-system, sans-serif" font-size="13" font-weight="500" fill="#52525b">TARGET ENVIRONMENTS</text>
+      <text x="0" y="48" font-family="-apple-system, sans-serif" font-size="15" font-weight="500" fill="#a1a1aa">Astro · Next.js · Express · Static HTML · Tailwind CSS 4</text>
+    </g>
+  </g>
+
+  <!-- RIGHT COLUMN: Elegant UI Component Canvas (Shows REAL design value) -->
+  <g transform="translate(680, 80)">
+    <!-- Window Frame -->
+    <rect width="520" height="440" rx="12" fill="#0d0e11" stroke="#222326" stroke-width="1.5" />
+
+    <!-- Window Header -->
+    <rect width="520" height="42" rx="12" fill="#121316" />
+    <path d="M 0 42 L 520 42" stroke="#222326" stroke-width="1" />
+    <!-- Traffic lights -->
+    <circle cx="24" cy="21" r="5" fill="#27272a" />
+    <circle cx="40" cy="21" r="5" fill="#27272a" />
+    <circle cx="56" cy="21" r="5" fill="#27272a" />
+    <text x="80" y="25" class="font-ui" font-size="12" fill="#71717a">app-shell.html — Basecoat UI</text>
+
+    <!-- UI Mockup Content -->
+    <g transform="translate(32, 64)">
+      <!-- Tab Bar Mockup -->
+      <g transform="translate(0, 0)">
+        <rect width="84" height="28" rx="6" fill="#27272a" />
+        <text x="16" y="19" class="font-ui" font-size="12" font-weight="600" fill="#fafafa">Dashboard</text>
+        <text x="108" y="19" class="font-ui" font-size="12" font-weight="400" fill="#71717a">Analytics</text>
+        <text x="186" y="19" class="font-ui" font-size="12" font-weight="400" fill="#71717a">Settings</text>
+      </g>
+
+      <!-- KPI Card 1 -->
+      <g transform="translate(0, 48)">
+        <rect width="216" height="88" rx="8" fill="#121316" stroke="#222326" stroke-width="1" />
+        <text x="16" y="28" class="font-ui" font-size="12" fill="#71717a">Total Revenue</text>
+        <text x="16" y="58" class="font-ui" font-size="22" font-weight="700" fill="#fafafa">$45,231.89</text>
+        <text x="16" y="76" class="font-ui" font-size="11" fill="#10b981">+20.1% from last month</text>
+      </g>
+
+      <!-- KPI Card 2 -->
+      <g transform="translate(236, 48)">
+        <rect width="220" height="88" rx="8" fill="#121316" stroke="#222326" stroke-width="1" />
+        <text x="16" y="28" class="font-ui" font-size="12" fill="#71717a">Active Sessions</text>
+        <text x="16" y="58" class="font-ui" font-size="22" font-weight="700" fill="#fafafa">+2,350</text>
+        <text x="16" y="76" class="font-ui" font-size="11" fill="#10b981">+180.1% since launch</text>
+      </g>
+
+      <!-- Search & Action Row -->
+      <g transform="translate(0, 156)">
+        <!-- Input field -->
+        <rect width="280" height="36" rx="6" fill="#121316" stroke="#27272a" stroke-width="1" />
+        <text x="14" y="23" class="font-ui" font-size="13" fill="#52525b">Filter components...</text>
+
+        <!-- Primary Button (shadcn style: white background, black text) -->
+        <rect x="296" width="160" height="36" rx="6" fill="#fafafa" />
+        <text x="334" y="23" class="font-ui" font-size="13" font-weight="600" fill="#09090b">+ New Design</text>
+      </g>
+
+      <!-- Table Row Preview -->
+      <g transform="translate(0, 212)">
+        <rect width="456" height="116" rx="8" fill="#121316" stroke="#222326" stroke-width="1" />
+
+        <!-- Header row -->
+        <rect width="456" height="32" rx="8" fill="#18191d" />
+        <text x="16" y="21" class="font-ui" font-size="11" font-weight="600" fill="#71717a">COMPONENT</text>
+        <text x="160" y="21" class="font-ui" font-size="11" font-weight="600" fill="#71717a">ROLE</text>
+        <text x="280" y="21" class="font-ui" font-size="11" font-weight="600" fill="#71717a">STATUS</text>
+        <text x="380" y="21" class="font-ui" font-size="11" font-weight="600" fill="#71717a">RUNTIME</text>
+
+        <!-- Item 1 -->
+        <text x="16" y="58" class="font-ui" font-size="12" font-weight="500" fill="#fafafa">app-shell</text>
+        <text x="160" y="58" class="font-ui" font-size="12" fill="#a1a1aa">macro/shell</text>
+        <rect x="280" y="46" width="60" height="18" rx="4" fill="#064e3b" />
+        <text x="288" y="59" class="font-ui" font-size="10" font-weight="600" fill="#34d399">Validated</text>
+        <text x="380" y="58" class="font-ui" font-size="12" fill="#71717a">0 KB</text>
+
+        <!-- Item 2 -->
+        <text x="16" y="94" class="font-ui" font-size="12" font-weight="500" fill="#fafafa">sidebar-inset</text>
+        <text x="160" y="94" class="font-ui" font-size="12" fill="#a1a1aa">macro/nav</text>
+        <rect x="280" y="82" width="60" height="18" rx="4" fill="#064e3b" />
+        <text x="288" y="95" class="font-ui" font-size="10" font-weight="600" fill="#34d399">Validated</text>
+        <text x="380" y="94" class="font-ui" font-size="12" fill="#71717a">0 KB</text>
+      </g>
+    </g>
+  </g>
+
+  <!-- Clean Bottom Attribution -->
+  <g transform="translate(80, 580)">
+    <text x="0" y="0" font-family="-apple-system, sans-serif" font-size="13" fill="#52525b">MIT License · Žygimantas Jasiulionis / Intellmedia</text>
+    <text x="1120" y="0" text-anchor="end" font-family="ui-monospace, monospace" font-size="13" fill="#71717a">github.com/zygiu-zygis/basecoat-ui-mcp</text>
+  </g>
+</svg>

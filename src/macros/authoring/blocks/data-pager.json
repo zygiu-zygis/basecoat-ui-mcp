@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "id": "data-pager",
+  "role": "pager",
+  "family": "data",
+  "description": "Result pager using button-group leaves (no curated pagination component).",
+  "tags": ["data", "pager"],
+  "root": "pager-root",
+  "fragments": [
+    {
+      "id": "pager-root",
+      "emmet": "div.flex.items-center.justify-between.gap-2>p.text-sm[data-slot=summary]+div[data-component=button-group][data-slot=controls]"
+    }
+  ],
+  "mounts": [],
+  "slots": [],
+  "ports": [
+    {
+      "id": "dataset-in",
+      "at": { "fragment": "pager-root", "name": "pager-root" },
+      "direction": "in",
+      "kind": "data",
+      "contract": "dataset",
+      "minLinks": 1,
+      "maxLinks": 1,
+      "scope": "page"
+    }
+  ],
+  "componentRefs": ["button-group", "button"],
+  "ruleRefs": [],
+  "dependencyBlockIds": [],
+  "layout": { "frameRef": "pager-root" },
+  "landmarks": { "main": 0, "primaryHeading": 0 },
+  "provenance": {
+    "origin": "authored",
+    "sourceHashes": {},
+    "mappingVersion": "1.0.0"
+  }
+}

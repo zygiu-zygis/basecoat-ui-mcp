@@ -1,0 +1,7 @@
+{
+  "id": "data-ordered",
+  "type": "ordered",
+  "parent": "workspace",
+  "slot": "body",
+  "nodes": ["filters", "table", "pager"]
+}

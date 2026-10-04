@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "id": "data-bulk-actions",
+  "role": "filters",
+  "family": "data",
+  "description": "Bulk actions bar for data tables, appearing when rows are selected.",
+  "tags": ["data", "actions", "bulk"],
+  "root": "bulk-actions-root",
+  "fragments": [
+    {
+      "id": "bulk-actions-root",
+      "emmet": "div.flex.items-center.justify-between.bg-muted.p-4.rounded-md>div.flex.items-center.gap-4[data-slot=selection-info]+div.flex.items-center.gap-2[data-slot=actions]"
+    }
+  ],
+  "mounts": [],
+  "slots": [
+    {
+      "id": "selection-info",
+      "at": { "fragment": "bulk-actions-root", "name": "selection-info" },
+      "accepts": ["text"],
+      "min": 1,
+      "max": 1
+    },
+    {
+      "id": "actions",
+      "at": { "fragment": "bulk-actions-root", "name": "actions" },
+      "accepts": ["button"],
+      "min": 1,
+      "max": 5
+    }
+  ],
+  "ports": [
+    {
+      "id": "actions-out",
+      "at": { "fragment": "bulk-actions-root", "name": "bulk-actions-root" },
+      "direction": "out",
+      "kind": "data",
+      "contract": "actions",
+      "minLinks": 1,
+      "maxLinks": 4,
+      "scope": "page"
+    }
+  ],
+  "componentRefs": ["button", "checkbox"],
+  "ruleRefs": [],
+  "dependencyBlockIds": [],
+  "layout": { "frameRef": "bulk-actions-root" },
+  "landmarks": { "main": 0, "primaryHeading": 0 },
+  "provenance": {
+    "origin": "authored",
+    "sourceHashes": {},
+    "mappingVersion": "1.0.0"
+  }
+}

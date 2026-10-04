@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "id": "detail-drawer-panel",
+  "role": "details",
+  "family": "data",
+  "description": "Detail drawer panel modal for inspecting record properties, metadata, and status badges with close actions.",
+  "tags": ["details", "drawer", "modal", "inspector"],
+  "root": "detail-root",
+  "fragments": [
+    {
+      "id": "detail-root",
+      "emmet": "div.card.p-6.flex.flex-col.gap-4[data-component=drawer][data-fsm-recipe=dialog][data-fsm-state=open]>div.flex.items-center.justify-between.border-b.pb-4>div>h3.text-lg.font-semibold{Record Details}+p.text-sm.text-muted{Inspection metadata and timeline}^button.btn[data-variant=ghost][data-slot=close-button]{Close}^div.flex.flex-col.gap-4>div.flex.items-center.justify-between>span.text-sm.text-muted{Status}+span.badge[data-variant=secondary]{Active}^div.flex.items-center.justify-between>span.text-sm.text-muted{Owner}+span.text-sm{Jane Doe}^div.flex.items-center.justify-between>span.text-sm.text-muted{Last Updated}+span.text-sm{2 hours ago}^div.flex.flex-col.gap-2>span.text-sm.text-muted{Description}+p.text-sm{Comprehensive summary of the selected entity properties.}^^div.flex.justify-end.gap-2.border-t.pt-4>button.btn[data-variant=outline]{Dismiss}+button.btn[data-variant=primary]{Edit Record}"
+    }
+  ],
+  "mounts": [],
+  "slots": [
+    {
+      "id": "close-button",
+      "at": { "fragment": "detail-root", "name": "close-button" },
+      "accepts": ["action"],
+      "min": 0,
+      "max": 1
+    }
+  ],
+  "ports": [
+    {
+      "id": "dataset-in",
+      "at": { "fragment": "detail-root", "name": "detail-root" },
+      "direction": "in",
+      "kind": "data",
+      "contract": "dataset",
+      "minLinks": 0,
+      "maxLinks": 1,
+      "scope": "page"
+    }
+  ],
+  "componentRefs": ["drawer", "card", "badge", "button"],
+  "ruleRefs": [],
+  "dependencyBlockIds": [],
+  "layout": { "frameRef": "detail-root" },
+  "landmarks": { "main": 0, "primaryHeading": 0 },
+  "provenance": {
+    "origin": "authored",
+    "sourceHashes": {},
+    "mappingVersion": "1.0.0"
+  }
+}

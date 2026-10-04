@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "id": "dashboard-activity",
+  "role": "activity",
+  "family": "workspace",
+  "description": "Dashboard visitors activity region with title, date-range controls, and chart mount.",
+  "tags": ["dashboard", "chart", "activity"],
+  "root": "activity-root",
+  "fragments": [
+    {
+      "id": "activity-root",
+      "emmet": "section.flex.flex-col.gap-4[data-slot=activity-panel]>(div.flex.items-center.justify-between.gap-4>h2.text-xl{Total Visitors}+div[data-slot=range])+div[data-component=chart][data-slot=chart]"
+    }
+  ],
+  "mounts": [],
+  "slots": [
+    {
+      "id": "range",
+      "at": { "fragment": "activity-root", "name": "range" },
+      "accepts": ["range-control"],
+      "min": 0,
+      "max": 1
+    },
+    {
+      "id": "chart",
+      "at": { "fragment": "activity-root", "name": "chart" },
+      "accepts": ["chart"],
+      "min": 0,
+      "max": 1
+    }
+  ],
+  "ports": [
+    {
+      "id": "activity-in",
+      "at": { "fragment": "activity-root", "name": "activity-root" },
+      "direction": "in",
+      "kind": "region",
+      "contract": "activity",
+      "minLinks": 0,
+      "maxLinks": 1,
+      "scope": "page"
+    }
+  ],
+  "componentRefs": ["chart"],
+  "ruleRefs": [],
+  "dependencyBlockIds": ["segmented-toggle", "svg-area-chart"],
+  "layout": { "frameRef": "activity-root" },
+  "landmarks": { "main": 0, "primaryHeading": 0 },
+  "provenance": {
+    "origin": "authored",
+    "sourceHashes": {},
+    "mappingVersion": "1.0.0"
+  }
+}

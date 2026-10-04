@@ -1,0 +1,65 @@
+{
+  "schemaVersion": 1,
+  "id": "sidebar-inset-shell",
+  "role": "application-shell",
+  "family": "layout",
+  "description": "Inset sidebar shell layout where the main canvas area is inset with rounded corners, a top breadcrumb bar, and navigation controls.",
+  "tags": ["shell", "sidebar", "inset", "workspace"],
+  "root": "shell-root",
+  "fragments": [
+    {
+      "id": "shell-root",
+      "emmet": "div.flex.min-h-screen.w-full[data-slot=shell-root]>aside.sidebar[data-slot=navigation][data-component=sidebar][data-side=left][data-initial-open=true]>div.flex.flex-col.gap-4.p-4>div[data-slot=brand]{Workspace}+nav[aria-label=Main]>ul.space-y-2>li>a{Overview}^^div.mt-auto[data-slot=user]{User}^^div.flex.flex-1.flex-col.p-2>div.flex.flex-1.flex-col.rounded-lg.border.bg-background[data-slot=inset-canvas]>header.flex.h-12.items-center.gap-2.border-b.px-4[data-slot=header]+main.flex-1.overflow-auto.p-4[data-slot=content]"
+    }
+  ],
+  "mounts": [],
+  "slots": [
+    {
+      "id": "navigation",
+      "at": { "fragment": "shell-root", "name": "navigation" },
+      "accepts": ["navigation"],
+      "min": 1,
+      "max": 1
+    },
+    {
+      "id": "header",
+      "at": { "fragment": "shell-root", "name": "header" },
+      "accepts": ["header"],
+      "min": 1,
+      "max": 1
+    },
+    {
+      "id": "content",
+      "at": { "fragment": "shell-root", "name": "content" },
+      "accepts": ["dashboard", "workspace", "table"],
+      "min": 1,
+      "max": 1
+    }
+  ],
+  "ports": [
+    {
+      "id": "main-region",
+      "at": { "fragment": "shell-root", "name": "content" },
+      "direction": "out",
+      "kind": "region",
+      "contract": "main",
+      "minLinks": 0,
+      "maxLinks": 1,
+      "scope": "shell"
+    }
+  ],
+  "componentRefs": ["sidebar", "breadcrumb", "button"],
+  "ruleRefs": [],
+  "dependencyBlockIds": [],
+  "layout": {
+    "frameRef": "shell-root",
+    "gutterBoundary": "shell-root",
+    "scrollBoundary": "shell-root"
+  },
+  "landmarks": { "main": 1, "primaryHeading": 0 },
+  "provenance": {
+    "origin": "authored",
+    "sourceHashes": {},
+    "mappingVersion": "1.0.0"
+  }
+}

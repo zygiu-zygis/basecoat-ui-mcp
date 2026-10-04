@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "id": "auth-sign-in",
+  "role": "page",
+  "family": "auth",
+  "description": "Sign-in card with social OAuth providers, email/password fields, recovery link, and FSM auth recipe bindings.",
+  "tags": ["auth", "sign-in", "login", "oauth"],
+  "root": "sign-in-root",
+  "fragments": [
+    {
+      "id": "sign-in-root",
+      "emmet": "div.mx-auto.max-w-sm.p-6[data-fsm-recipe=auth-flow][data-fsm-state=idle]>div.card.p-6[data-component=card]>div.flex.flex-col.gap-2.text-center>h1.text-2xl.font-semibold{Welcome back}+p.text-sm.text-muted{Enter your credentials to sign in to your account}^div.grid.gap-4.mt-6>div.grid.grid-cols-2.gap-2>button.btn[data-variant=outline]{GitHub}+button.btn[data-variant=outline]{Google}^^div.relative.text-center.text-sm.after:border-b>span.bg-card.px-2.relative.z-10.text-muted{Or continue with}^form.grid.gap-4>div[data-component=field][data-slot=email]>label.label{Email}+input.input[type=email][placeholder=name@example.com][required]^^div[data-component=field][data-slot=password]>div.flex.items-center.justify-between>label.label{Password}+a[data-slot=recover].text-sm.underline{Forgot password?}^input.input[type=password][required]^^button.btn[data-variant=primary][data-slot=submit][type=submit]{Sign In}^^p.text-center.text-sm.text-muted{Do not have an account? }+a[data-slot=signup].underline{Sign up}"
+    }
+  ],
+  "mounts": [],
+  "slots": [],
+  "ports": [],
+  "componentRefs": ["card", "field", "input", "label", "button"],
+  "ruleRefs": [],
+  "dependencyBlockIds": [],
+  "layout": { "frameRef": "sign-in-root" },
+  "landmarks": { "main": 1, "primaryHeading": 1 },
+  "provenance": {
+    "origin": "authored",
+    "sourceHashes": {},
+    "mappingVersion": "1.1.0"
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "entries": [
+    {
+      "upstream": "sidebar",
+      "resolution": { "kind": "component", "id": "sidebar" }
+    },
+    {
+      "upstream": "card",
+      "resolution": { "kind": "component", "id": "card" }
+    },
+    {
+      "upstream": "table",
+      "resolution": { "kind": "component", "id": "table" }
+    },
+    {
+      "upstream": "field",
+      "resolution": { "kind": "component", "id": "field" }
+    },
+    {
+      "upstream": "button",
+      "resolution": { "kind": "component", "id": "button" }
+    },
+    {
+      "upstream": "button-group",
+      "resolution": { "kind": "component", "id": "button-group" }
+    },
+    {
+      "upstream": "input",
+      "resolution": { "kind": "component", "id": "input" }
+    },
+    {
+      "upstream": "label",
+      "resolution": { "kind": "component", "id": "label" }
+    },
+    {
+      "upstream": "select",
+      "resolution": { "kind": "component", "id": "select" }
+    },
+    {
+      "upstream": "checkbox",
+      "resolution": { "kind": "component", "id": "checkbox" }
+    },
+    {
+      "upstream": "breadcrumb",
+      "resolution": { "kind": "component", "id": "breadcrumb" }
+    },
+    {
+      "upstream": "login-01",
+      "resolution": {
+        "kind": "unsupported",
+        "reason": "Full page demo; use authored auth-sign-in block instead"
+      }
+    }
+  ]
+}

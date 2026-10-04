@@ -1,0 +1,64 @@
+{
+  "schemaVersion": 1,
+  "id": "data-workspace",
+  "role": "workspace",
+  "family": "data",
+  "description": "Data workspace frame with ordered filters, table, and pager slots.",
+  "tags": ["data", "workspace", "table"],
+  "root": "content-frame",
+  "fragments": [
+    {
+      "id": "content-frame",
+      "emmet": "section.flex.flex-col.gap-4.p-4>div[data-slot=filters]+div[data-slot=table]+div[data-slot=pager]"
+    }
+  ],
+  "mounts": [],
+  "slots": [
+    {
+      "id": "filters",
+      "at": { "fragment": "content-frame", "name": "filters" },
+      "accepts": ["filters"],
+      "min": 1,
+      "max": 1
+    },
+    {
+      "id": "table",
+      "at": { "fragment": "content-frame", "name": "table" },
+      "accepts": ["table"],
+      "min": 1,
+      "max": 1
+    },
+    {
+      "id": "pager",
+      "at": { "fragment": "content-frame", "name": "pager" },
+      "accepts": ["pager"],
+      "min": 1,
+      "max": 1
+    }
+  ],
+  "ports": [
+    {
+      "id": "main-in",
+      "at": { "fragment": "content-frame", "name": "content-frame" },
+      "direction": "in",
+      "kind": "region",
+      "contract": "main",
+      "minLinks": 0,
+      "maxLinks": 1,
+      "scope": "shell"
+    }
+  ],
+  "componentRefs": [],
+  "ruleRefs": ["data-shared"],
+  "dependencyBlockIds": ["data-filters", "data-table", "data-pager"],
+  "layout": {
+    "frameRef": "content-frame",
+    "scrollBoundary": "content-frame"
+  },
+  "landmarks": { "main": 1, "primaryHeading": 0 },
+  "provenance": {
+    "origin": "authored",
+    "sourceHashes": {},
+    "mappingVersion": "1.0.0"
+  }
+}

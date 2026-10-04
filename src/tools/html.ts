@@ -1,0 +1,239 @@
+// Copyright Žygimantas Jasiulionis / Intellmedia.
+
+export interface ParseDiagnostic {
+  code: string;
+  severity: 'error' | 'warning';
+  message: string;
+  line: number;
+  column: number;
+}
+
+export interface HtmlNode {
+  tag: string;
+  attrs: Record<string, string>;
+  classes: string[];
+  parent: number | null;
+  index: number;
+  line: number;
+  column: number;
+  dynamic: boolean;
+  content?: string;
+}
+
+export interface ParseResult {
+  nodes: HtmlNode[];
+  diagnostics: ParseDiagnostic[];
+}
+
+const VOID = new Set('area base br col embed hr img input link meta param source track wbr'.split(' '));
+
+/** Precompute newline offsets so line/column lookup stays O(log lines) per position. */
+function buildLineStarts(code: string): number[] {
+  const starts = [0];
+  for (let i = 0; i < code.length; i++) {
+    if (code.charCodeAt(i) === 10 /* \n */) starts.push(i + 1);
+  }
+  return starts;
+}
+
+function lineAt(lineStarts: readonly number[], index: number): number {
+  let low = 0;
+  let high = lineStarts.length - 1;
+  while (low <= high) {
+    const mid = (low + high) >> 1;
+    if (lineStarts[mid]! <= index) low = mid + 1;
+    else high = mid - 1;
+  }
+  return high + 1;
+}
+
+function columnAt(lineStarts: readonly number[], index: number, line: number): number {
+  return index - lineStarts[line - 1]! + 1;
+}
+
+/** A bounded HTML lexer, not an Astro compiler or browser DOM implementation. */
+export function parseHtml(code: string): HtmlNode[] {
+  return parseHtmlWithDiagnostics(code).nodes;
+}
+
+/**
+ * Parse HTML with detailed diagnostics for malformed input.
+ * Returns both nodes and diagnostic information including line/column positions.
+ * This is a bounded static tree parser, not a full AST or browser DOM implementation.
+ */
+export function parseHtmlWithDiagnostics(code: string): ParseResult {
+  const nodes: HtmlNode[] = [];
+  const diagnostics: ParseDiagnostic[] = [];
+  const stack: number[] = [];
+  const nodeOffsets: number[] = [];
+  const lineStarts = buildLineStarts(code);
+  let cursor = 0;
+  if (/^\uFEFF?---\s*\r?\n/.test(code)) {
+    const end = /^---\s*$/gm;
+    end.lastIndex = code.indexOf('\n') + 1;
+    const match = end.exec(code);
+    if (match) cursor = match.index + match[0].length;
+  }
+
+  const addDiagnostic = (code: string, severity: 'error' | 'warning', message: string, position: number) => {
+    const line = lineAt(lineStarts, position);
+    diagnostics.push({
+      code,
+      severity,
+      message,
+      line,
+      column: columnAt(lineStarts, position, line),
+    });
+  };
+  while (cursor < code.length) {
+    const start = code.indexOf('<', cursor);
+    if (start < 0) break;
+    if (code.startsWith('<!--', start)) {
+      const end = code.indexOf('-->', start + 4);
+      cursor = end < 0 ? code.length : end + 3;
+      continue;
+    }
+    let end = start + 1;
+    let quote = '';
+    let braces = 0;
+    for (; end < code.length; end++) {
+      const char = code[end]!;
+      if (quote) {
+        if (char === quote && (!braces || code[end - 1] !== '\\')) quote = '';
+      } else if (char === '"' || char === "'" || (braces && char === '`')) quote = char;
+      else if (char === '{') braces++;
+      else if (char === '}') braces = Math.max(0, braces - 1);
+      else if (char === '>' && !braces) break;
+    }
+    if (end >= code.length) {
+      addDiagnostic('unclosed-tag', 'warning', 'Unclosed tag found at end of input', start);
+      break;
+    }
+    const raw = code.slice(start + 1, end);
+    cursor = end + 1;
+    const closing = /^\s*\/\s*([\w:-]+)/.exec(raw);
+    if (closing) {
+      const tag = closing[1]!.toLowerCase();
+      let found = false;
+      for (let i = stack.length - 1; i >= 0; i--) {
+        if (nodes[stack[i]!]!.tag === tag) {
+          for (let unclosed = stack.length - 1; unclosed > i; unclosed--) {
+            const nodeIndex = stack[unclosed]!;
+            const node = nodes[nodeIndex]!;
+            addDiagnostic(
+              'unclosed-tag',
+              'warning',
+              `Unclosed tag <${node.tag}> before closing </${tag}>`,
+              nodeOffsets[nodeIndex]!,
+            );
+          }
+          stack.length = i;
+          found = true;
+          break;
+        }
+      }
+      if (!found) {
+        addDiagnostic('unmatched-closing-tag', 'warning', `Closing tag </${tag}> has no matching opening tag`, start);
+      }
+      continue;
+    }
+    const opening = /^\s*([a-zA-Z][\w:.-]*)/.exec(raw);
+    if (!opening) {
+      addDiagnostic('invalid-tag-name', 'warning', 'Invalid or malformed tag name', start);
+      continue;
+    }
+    const tag = opening[1]!.toLowerCase();
+    const attrs: Record<string, string> = Object.create(null) as Record<string, string>;
+    let dynamic = false;
+    let at = opening[0].length;
+    while (at < raw.length) {
+      while (/\s|\//.test(raw[at] ?? '') && at < raw.length) at++;
+      if (at >= raw.length) break;
+      if (raw[at] === '{') {
+        dynamic = true;
+        let depth = 1; let q = ''; at++;
+        while (at < raw.length && depth) {
+          const c = raw[at++]!;
+          if (q) { if (c === q && raw[at - 2] !== '\\') q = ''; }
+          else if ('"\'`'.includes(c)) q = c;
+          else if (c === '{') depth++;
+          else if (c === '}') depth--;
+        }
+        continue;
+      }
+      const name = /^[^\s=/>]+/.exec(raw.slice(at));
+      if (!name) { at++; continue; }
+      const key = name[0].toLowerCase(); at += name[0].length;
+      while (/\s/.test(raw[at] ?? '') && at < raw.length) at++;
+      let value = '';
+      if (raw[at] === '=') {
+        at++;
+        while (/\s/.test(raw[at] ?? '') && at < raw.length) at++;
+        if (raw[at] === '"' || raw[at] === "'") {
+          const q = raw[at++]!; const valueStart = at;
+          while (at < raw.length && raw[at] !== q) at++;
+          value = raw.slice(valueStart, at); at++;
+        } else if (raw[at] === '{') {
+          dynamic = true;
+          // The next iteration skips the expression as a whole.
+          continue;
+        } else {
+          const match = /^[^\s>]+/.exec(raw.slice(at));
+          value = match?.[0] ?? ''; at += value.length;
+        }
+      }
+      attrs[key] = value;
+    }
+    const line = lineAt(lineStarts, start);
+    const node: HtmlNode = {
+      tag,
+      attrs,
+      classes: (attrs.class ?? '').split(/\s+/).filter(Boolean),
+      parent: stack.at(-1) ?? null,
+      index: nodes.length,
+      line,
+      column: columnAt(lineStarts, start, line),
+      dynamic,
+    };
+    nodes.push(node);
+    nodeOffsets.push(start);
+    if (tag === 'script' || tag === 'style') {
+      const close = new RegExp('</\\s*' + tag + '\\s*>', 'ig');
+      close.lastIndex = cursor;
+      const match = close.exec(code);
+      node.content = code.slice(cursor, match?.index ?? code.length);
+      cursor = match ? close.lastIndex : code.length;
+    } else if (!VOID.has(tag) && !/\/\s*$/.test(raw)) stack.push(node.index);
+  }
+
+  // Report unclosed tags
+  for (const nodeIndex of stack) {
+    const node = nodes[nodeIndex]!;
+    addDiagnostic('unclosed-tag', 'warning', `Unclosed tag <${node.tag}>`, nodeOffsets[nodeIndex]!);
+  }
+
+  return { nodes, diagnostics };
+}
+
+/** Extract actual literal import declarations/calls while ignoring strings and comments. */
+export function scriptImports(source: string): string[] {
+  const imports: string[] = [];
+  let at = 0;
+  while (at < source.length) {
+    if (source.startsWith('//', at)) { const end = source.indexOf('\n', at + 2); at = end < 0 ? source.length : end + 1; continue; }
+    if (source.startsWith('/*', at)) { const end = source.indexOf('*/', at + 2); at = end < 0 ? source.length : end + 2; continue; }
+    if ('"\'`'.includes(source[at]!)) {
+      const quote = source[at++]!;
+      while (at < source.length) { if (source[at++] === '\\') at++; else if (source[at - 1] === quote) break; }
+      continue;
+    }
+    if (source.startsWith('import', at) && !/[\w$.]/.test(source[at - 1] ?? '') && !/[\w$]/.test(source[at + 6] ?? '')) {
+      const rest = source.slice(at);
+      const match = /^import\s*(?:\(\s*)?(['"])([^'"\r\n]+)\1/.exec(rest)
+        ?? /^import\s+(?!type\b)[\w$*{},\s]+\sfrom\s*(['"])([^'"\r\n]+)\1/.exec(rest);
+      if (match) { imports.push(match[2]!); at += match[0].length; continue; }
+    }
+    at++;
+  }
+  return imports;
+}

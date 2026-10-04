@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "id": "auth-sign-up",
+  "role": "page",
+  "family": "auth",
+  "description": "Sign-up card with name, email, password fields, terms agreement checkbox, social OAuth buttons, and login link.",
+  "tags": ["auth", "sign-up", "register", "oauth"],
+  "root": "sign-up-root",
+  "fragments": [
+    {
+      "id": "sign-up-root",
+      "emmet": "div.mx-auto.max-w-sm.p-6[data-fsm-recipe=auth-flow][data-fsm-state=idle]>div.card.p-6[data-component=card]>div.flex.flex-col.gap-2.text-center>h1.text-2xl.font-semibold{Create account}+p.text-sm.text-muted{Enter your info to create your account}^div.grid.gap-4.mt-6>div.grid.grid-cols-2.gap-2>button.btn[data-variant=outline]{GitHub}+button.btn[data-variant=outline]{Google}^^div.relative.text-center.text-sm.after:border-b>span.bg-card.px-2.relative.z-10.text-muted{Or continue with}^form.grid.gap-4>div[data-component=field][data-slot=name]>label.label{Full Name}+input.input[type=text][placeholder=Jane Doe][required]^^div[data-component=field][data-slot=email]>label.label{Email}+input.input[type=email][placeholder=name@example.com][required]^^div[data-component=field][data-slot=password]>label.label{Password}+input.input[type=password][required]^^div.flex.items-center.gap-2>input.checkbox[type=checkbox][id=terms][required]+label.text-sm[for=terms]{I agree to terms}^^button.btn[data-variant=primary][data-slot=submit][type=submit]{Sign Up}^^p.text-center.text-sm.text-muted{Already have an account? }+a[data-slot=signin].underline{Sign in}"
+    }
+  ],
+  "mounts": [],
+  "slots": [],
+  "ports": [],
+  "componentRefs": ["card", "field", "input", "label", "button", "checkbox"],
+  "ruleRefs": [],
+  "dependencyBlockIds": [],
+  "layout": { "frameRef": "sign-up-root" },
+  "landmarks": { "main": 1, "primaryHeading": 1 },
+  "provenance": {
+    "origin": "authored",
+    "sourceHashes": {},
+    "mappingVersion": "1.0.0"
+  }
+}

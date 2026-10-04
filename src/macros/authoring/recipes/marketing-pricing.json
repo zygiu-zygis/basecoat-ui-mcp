@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "id": "marketing-pricing",
+  "kind": "page",
+  "profile": "app-default",
+  "entryPage": "pricing",
+  "routeLinks": [],
+  "pages": [
+    {
+      "id": "pricing",
+      "route": "/pricing",
+      "recipe": "marketing-pricing",
+      "root": "canvas",
+      "status": "plan-ready",
+      "decisions": { "density": "comfortable" },
+      "nodes": {
+        "canvas": {
+          "id": "canvas",
+          "block": "pricing-tiers",
+          "bindings": {}
+        }
+      },
+      "connections": [],
+      "rules": []
+    }
+  ]
+}

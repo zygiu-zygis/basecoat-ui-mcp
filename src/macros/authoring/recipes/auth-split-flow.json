@@ -1,0 +1,67 @@
+{
+  "schemaVersion": 1,
+  "id": "auth-split-flow",
+  "kind": "flow",
+  "profile": "app-default",
+  "entryPage": "sign-in",
+  "routeLinks": [
+    {
+      "fromPage": "sign-in",
+      "fromAnchor": { "fragment": "sign-in-root", "name": "signup" },
+      "toPage": "sign-up"
+    },
+    {
+      "fromPage": "sign-up",
+      "fromAnchor": { "fragment": "sign-up-root", "name": "signin" },
+      "toPage": "sign-in"
+    }
+  ],
+  "pages": [
+    {
+      "id": "sign-in",
+      "route": "/auth/split/sign-in",
+      "recipe": "auth-split-flow",
+      "root": "split",
+      "status": "plan-ready",
+      "decisions": { "auth-brand": "Acme" },
+      "nodes": {
+        "split": {
+          "id": "split",
+          "block": "auth-split-screen",
+          "bindings": {}
+        },
+        "form": {
+          "id": "form",
+          "block": "auth-sign-in",
+          "parent": { "node": "split", "slot": "form", "order": 0 },
+          "bindings": {}
+        }
+      },
+      "connections": [],
+      "rules": []
+    },
+    {
+      "id": "sign-up",
+      "route": "/auth/split/sign-up",
+      "recipe": "auth-split-flow",
+      "root": "split",
+      "status": "plan-ready",
+      "decisions": { "auth-brand": "Acme" },
+      "nodes": {
+        "split": {
+          "id": "split",
+          "block": "auth-split-screen",
+          "bindings": {}
+        },
+        "form": {
+          "id": "form",
+          "block": "auth-sign-up",
+          "parent": { "node": "split", "slot": "form", "order": 0 },
+          "bindings": {}
+        }
+      },
+      "connections": [],
+      "rules": []
+    }
+  ]
+}
