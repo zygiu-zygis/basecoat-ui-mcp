@@ -30,7 +30,6 @@ Never move a tag after npm publish; if a fix is needed post-publish, cut X.Y.Z+1
 Verify:
 ```bash
 npm view @intellmedia/basecoat-ui-mcp dist-tags
-curl -s "https://registry.modelcontextprotocol.io/v0/servers?search=basecoat-ui-mcp" | head -c 600
 ```
 npm must be published before the MCP Registry, which validates the npm
 package and its `mcpName`.

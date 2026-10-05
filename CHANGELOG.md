@@ -2,6 +2,10 @@
 
 Maintained by **Žygimantas Jasiulionis / Intellmedia**.
 
+## 1.6.3 - 2026-10-05
+
+- **Documentation & Registry Hygiene**: Removed broken/deprecated MCP Registry badge and external registry endpoint references from README and release runbooks, keeping clean authoritative npm and GitHub metadata.
+
 ## 1.6.2 - 2026-10-05
 
 - **Authentic Theme Switcher SVGs**: Upgraded `theme-switcher` component markup in the registry from text placeholders ("L"/"D") to authentic Lucide Sun and Moon SVGs (`lucide-sun`, `lucide-moon`) with `size-8`, `size-4`, and `aria-hidden="true"`, strictly fitting within the MCP 1999-byte budget (1816 bytes) while matching upstream basecoatui.com.
