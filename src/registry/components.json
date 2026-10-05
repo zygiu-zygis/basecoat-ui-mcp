@@ -2270,8 +2270,8 @@
           "basecoat-css/basecoat"
         ]
       },
-      "markup_template": "<button type=\"button\" aria-label=\"Toggle dark mode\" data-tooltip=\"Toggle dark mode\" data-side=\"bottom\" onclick=\"window.basecoat.theme.toggle()\" class=\"btn\" data-variant=\"outline\" data-size=\"icon\">\n  <span class=\"hidden dark:block\" aria-hidden=\"true\">L</span>\n  <span class=\"block dark:hidden\" aria-hidden=\"true\">D</span>\n</button>",
-      "composition_rules": "Requires basecoat runtime for window.basecoat.theme.toggle(). Pair the light/dark text markers with dark:hidden/dark:block and keep them aria-hidden. Add inline pre-CSS themeMode script to avoid flash. Wrong: import basecoat-css/all or a nonexistent theme-switcher module."
+      "markup_template": "<button type=\"button\" aria-label=\"Toggle dark mode\" data-tooltip=\"Toggle dark mode\" data-side=\"bottom\" onclick=\"window.basecoat.theme.toggle()\" class=\"btn size-8\" data-variant=\"outline\" data-size=\"icon\">\n  <span class=\"hidden dark:block\" aria-hidden=\"true\"><svg class=\"lucide lucide-sun size-4\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"12\" cy=\"12\" r=\"4\"/><path d=\"M12 2v2m0 16v2m-7.07-2.93 1.41-1.41m11.32-11.32 1.41-1.41M2 12h2m16 0h2m-2.93 7.07-1.41-1.41M6.34 6.34 4.93 4.93\"/></svg></span>\n  <span class=\"block dark:hidden\" aria-hidden=\"true\"><svg class=\"lucide lucide-moon size-4\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401\"/></svg></span>\n</button>",
+      "composition_rules": "Requires basecoat runtime for window.basecoat.theme.toggle(). Pair sun/moon SVGs with dark:hidden/dark:block. Add inline pre-CSS themeMode script to avoid flash. Wrong: import basecoat-css/all or a nonexistent theme-switcher module."
     },
     "toast": {
       "dependencies": {

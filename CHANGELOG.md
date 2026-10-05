@@ -2,6 +2,13 @@
 
 Maintained by **Žygimantas Jasiulionis / Intellmedia**.
 
+## 1.6.2 - 2026-10-05
+
+- **Authentic Theme Switcher SVGs**: Upgraded `theme-switcher` component markup in the registry from text placeholders ("L"/"D") to authentic Lucide Sun and Moon SVGs (`lucide-sun`, `lucide-moon`) with `size-8`, `size-4`, and `aria-hidden="true"`, strictly fitting within the MCP 1999-byte budget (1816 bytes) while matching upstream basecoatui.com.
+- **Basecoat Style Packs (Presets)**: Documented all 8 official Basecoat style families (`Vega`, `Nova`, `Maia`, `Lyra`, `Mira`, `Luma`, `Sera`, `Rhea`) in `basecoat://design/theming` and `basecoat://integration/frameworks`. Added the Header Control Cluster pattern (Style Variant Select + Theme Switcher) for effortless site design and theme switching.
+- **Cursor Designer Agent Update**: Updated `templates/cursor/basecoat-designer.mdc` to guide autonomous agents in selecting official style packs and placing paired header controls.
+- **Test Coverage Expansion**: Added `tests/style-presets-and-composition.test.ts` covering style packs contracts, theme-switcher accessibility and byte bounds, full website compositions (headers, sidebar dashboard shells), and theme strategy conflict detection (200 tests passing).
+
 ## 1.6.1 - 2026-10-05
 
 - **MCP Robustness**: Relaxed `get_macro_block` validation to allow `id` as an alias for `idOrRef` and default `section` to `manifest`, preventing agent errors when omitting parameters.

@@ -34,6 +34,41 @@ grep minified basecoat CSS in node_modules; the facts below are the contract.
 - Every server-rendered page (including login/error pages outside the app
   shell) must include the bootstrap, or it renders in the wrong mode.
 
+## Style Packs (Presets: Vega, Nova, Maia, Lyra, Mira, Luma, Sera, Rhea)
+Basecoat ships 8 distinct style packs matching shadcn/ui design families:
+- **Vega** (default): Standard shadcn/ui aesthetic (rounded-md buttons, rounded-xl shadow-sm cards, balanced padding).
+- **Nova**: Modern SaaS aesthetic (rounded-lg buttons, rounded-xl ring cards, compact vertical padding).
+- **Maia**: Playful, organic modern aesthetic (rounded-4xl pill buttons, rounded-2xl cards, open:bg-muted/50).
+- **Lyra**: High-density brutalist/technical aesthetic (rounded-none buttons/cards, text-xs typography, 1px rings).
+- **Mira**: Editorial compact typography (rounded-md text-xs/relaxed buttons, rounded-lg cards).
+- **Luma**: Soft modern aesthetic (rounded-4xl buttons, soft ring-foreground/5 cards).
+- **Sera**: Clean architectural/flat aesthetic (rounded-none uppercase font-semibold buttons, shadow-sm cards).
+- **Rhea**: Modern curved aesthetic (rounded-2xl buttons and cards).
+
+### CSS Selection (Static)
+Load one style pack directly in your application CSS after Tailwind:
+    @import "tailwindcss";
+    @import "basecoat-css/vega"; /* or basecoat-css/nova, basecoat-css/maia, basecoat-css/lyra, basecoat-css/mira, basecoat-css/luma, basecoat-css/sera, basecoat-css/rhea */
+
+### Header Control Cluster (Style Preset Select + Theme Toggle)
+Standard header action cluster (as seen on basecoatui.com):
+    <div class="flex items-center gap-2">
+      <select id="style-variant-select" class="select h-8 w-28 text-sm leading-none" aria-label="Style pack">
+        <option value="vega">Vega</option>
+        <option value="nova">Nova</option>
+        <option value="maia">Maia</option>
+        <option value="lyra">Lyra</option>
+        <option value="mira">Mira</option>
+        <option value="luma">Luma</option>
+        <option value="sera">Sera</option>
+        <option value="rhea">Rhea</option>
+      </select>
+      <button type="button" aria-label="Toggle dark mode" data-tooltip="Toggle dark mode" data-side="bottom" onclick="window.basecoat.theme.toggle()" class="btn size-8" data-variant="outline" data-size="icon">
+        <span class="hidden dark:block"><svg class="lucide lucide-sun size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2m-7.07-2.93 1.41-1.41m11.32-11.32 1.41-1.41M2 12h2m16 0h2m-2.93 7.07-1.41-1.41M6.34 6.34 4.93 4.93"/></svg></span>
+        <span class="block dark:hidden"><svg class="lucide lucide-moon size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"/></svg></span>
+      </button>
+    </div>
+
 ## Form controls
 - Use Basecoat control classes/elements (input, select, textarea,
   input[type=checkbox|radio], switch). Borders use --input, focus uses --ring.

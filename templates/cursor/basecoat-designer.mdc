@@ -14,10 +14,13 @@ Existing UI audit or restyle (no design session): read
 `basecoat://design/theming` and `basecoat://design/rhythm`, call
 `get_component_details` for each control you change, then run
 `validate_composition` on the rendered layout including `<head>` scripts and
-`<style>`. Keep one dark-mode strategy (`html.dark`) and one resolver
-(`window.basecoat.theme`, key `themeMode`). Verify light and dark screenshots
-with an OS dark preference and empty `localStorage`. Steps below are for new
-pages:
+`<style>`. Select an official Basecoat style pack in CSS (default
+`@import "basecoat-css/vega"`, or `nova`, `maia`, `lyra`, `mira`, `luma`, `sera`, `rhea`).
+Keep one dark-mode strategy (`html.dark`) and one resolver
+(`window.basecoat.theme`, key `themeMode`). For headers, pair `theme-switcher`
+(sun/moon SVG toggle) with the style variant selector. Verify light and dark
+screenshots with an OS dark preference and empty `localStorage`. Steps below are
+for new pages:
 
 1. Read `basecoat://design/rhythm` and `basecoat://project/context`. Read
    `basecoat://integration/frameworks` before production asset integration.

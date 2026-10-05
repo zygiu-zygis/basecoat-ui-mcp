@@ -19,13 +19,13 @@ astro.config.mjs:
 
 src/styles/global.css, in this order:
     @import "tailwindcss";
-    @import "basecoat-css/base";
+    @import "basecoat-css/vega"; /* Or chosen style pack: nova, maia, lyra, mira, luma, sera, rhea */
     /* Optional project tokens and overrides after Basecoat: */
     @import "./theme.css";
 
 Create theme.css or omit that last import. Basecoat must come after any stylesheet
 that emits Tailwind preflight. Do not load another full Tailwind reset afterward.
-Use "basecoat-css/base" for app CSS; keep project tokens and overrides in theme.css.
+Use a complete style bundle like "basecoat-css/vega" (or "basecoat-css/base" for headless); keep project tokens and overrides in theme.css.
 
 Import global CSS in the shared Astro layout frontmatter:
     ---
