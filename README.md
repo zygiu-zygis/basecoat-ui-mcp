@@ -254,8 +254,8 @@ operations and never occur from the MCP server.
 ## Basecoat design resources
 
 - `basecoat://design/rhythm` provides content hierarchy, spacing, typography, component-family, and structural composition rules.
-- `basecoat://design/theming` provides the Basecoat token contract, class-based dark mode via `window.basecoat.theme` (`themeMode` key), no-flash bootstrap, and form-control/autofill pitfalls. Read it before restyling or auditing an existing UI.
-- `basecoat://integration/frameworks` provides Astro, Next.js, Express, Vite, Tailwind CSS 4, selective Basecoat JavaScript, and native dialog setup.
+- `basecoat://design/theming` provides the Basecoat token contract, all 8 official style packs (Vega, Nova, Maia, Lyra, Mira, Luma, Sera, Rhea), class-based dark mode via `window.basecoat.theme` (`themeMode` key), no-flash bootstrap, and form-control/autofill pitfalls. Read it before restyling or auditing an existing UI.
+- `basecoat://integration/frameworks` provides Astro, Next.js, Express, Vite, Tailwind CSS 4 (including style pack imports like `@import "basecoat-css/vega";`), selective Basecoat JavaScript, and native dialog setup.
 - `basecoat://project/context` reads the configured host project's `DESIGN.md` on demand. Output is capped at **6,000 UTF-8 bytes** and truncates on a newline or sentence boundary when possible. Symlinks and non-regular files are refused.
 
 Recommended flow:
@@ -263,7 +263,7 @@ Recommended flow:
 1. Read the rhythm and project-context resources.
 2. Decide content hierarchy and layout.
 3. Search summaries, then request details only for selected components.
-4. Read the Astro integration resource when connecting production assets.
+4. Read the integration resource when connecting production assets.
 5. Validate the final source.
 
 ## Minimal HTML example
@@ -273,6 +273,27 @@ The host application supplies its compiled Tailwind and Basecoat stylesheet:
 ```html
 <link rel="stylesheet" href="/assets/basecoat.css">
 <button type="button" class="btn" data-variant="default">Save changes</button>
+```
+
+### Header Control Cluster (Style Preset Selector + Theme Switcher)
+
+```html
+<div class="flex items-center gap-2">
+  <select id="style-variant-select" class="select h-8 w-28 text-sm leading-none" aria-label="Style pack">
+    <option value="vega">Vega</option>
+    <option value="nova">Nova</option>
+    <option value="maia">Maia</option>
+    <option value="lyra">Lyra</option>
+    <option value="mira">Mira</option>
+    <option value="luma">Luma</option>
+    <option value="sera">Sera</option>
+    <option value="rhea">Rhea</option>
+  </select>
+  <button type="button" aria-label="Toggle dark mode" data-tooltip="Toggle dark mode" data-side="bottom" onclick="window.basecoat.theme.toggle()" class="btn size-8" data-variant="outline" data-size="icon">
+    <span class="hidden dark:block" aria-hidden="true"><svg class="lucide lucide-sun size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2m-7.07-2.93 1.41-1.41m11.32-11.32 1.41-1.41M2 12h2m16 0h2m-2.93 7.07-1.41-1.41M6.34 6.34 4.93 4.93"/></svg></span>
+    <span class="block dark:hidden" aria-hidden="true"><svg class="lucide lucide-moon size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"/></svg></span>
+  </button>
+</div>
 ```
 
 Basecoat 1.x uses `btn` with `data-variant` and `data-size`. Interactive components list the granular JavaScript modules the host must load.
