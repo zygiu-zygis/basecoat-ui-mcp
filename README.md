@@ -11,7 +11,6 @@
 
 <p align="center">
   <a href="https://www.npmjs.com/package/@intellmedia/basecoat-ui-mcp"><img src="https://img.shields.io/npm/v/@intellmedia/basecoat-ui-mcp?style=flat&color=3b82f6&logo=npm&label=npm" alt="npm version" /></a>
-  <a href="https://registry.modelcontextprotocol.io/v0/servers?search=basecoat-ui-mcp"><img src="https://img.shields.io/badge/MCP_Registry-io.github.zygiu--zygis%2Fbasecoat--ui--mcp-6366f1?style=flat&logo=buffer&logoColor=white" alt="MCP Registry" /></a>
   <a href="https://www.npmjs.com/package/@intellmedia/basecoat-ui-mcp"><img src="https://img.shields.io/npm/dm/@intellmedia/basecoat-ui-mcp?style=flat&color=10b981" alt="npm downloads" /></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-amber?style=flat" alt="MIT License" /></a>
   <img src="https://img.shields.io/badge/node-%3E%3D22.14-emerald?style=flat&logo=node.js&logoColor=white" alt="Node.js version" />
