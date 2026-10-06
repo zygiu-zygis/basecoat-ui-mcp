@@ -166,10 +166,10 @@ Design sessions persist under `<project-root>/.basecoat/designer/`. Registry rev
 
 Curated block blueprints:
 - **Shells & Navigation**: `app-shell`, `sidebar-dashboard-shell`, `sidebar-inset-shell`, `sidebar-collapsible-icon`, `sidebar-mobile-flyout`, `page-header`.
-- **Authentication**: `auth-sign-in`, `auth-sign-up`, `auth-split-screen`.
-- **Application & Workspace**: `dashboard-workspace`, `dashboard-main`, `dashboard-activity`, `settings-workspace`, `data-table-detail-layout`, `detail-drawer-panel`.
-- **Forms & Data**: `form-section`, `data-filters`, `data-records`, `data-pagination`.
-- **Marketing, Content & Utility**: `pricing-tiers`, `newsletter-waitlist`, `empty-state`, `error-boundary`, `svg-area-chart`, `segmented-toggle`.
+- **Authentication**: `auth-recovery`, `auth-reset`, `auth-sign-in`, `auth-sign-up`, `auth-split-screen`.
+- **Application & Workspace**: `dashboard-workspace`, `dashboard-main`, `dashboard-activity`, `data-workspace`, `data-table`, `data-table-detail-layout`, `detail-drawer-panel`, `product-detail-layout`, `settings-workspace`.
+- **Forms & Data**: `data-bulk-actions`, `data-filters`, `data-pager`, `form-section`.
+- **Navigation & Utility**: `sidebar-nav`, `empty-state`, `error-boundary`, `newsletter-waitlist`, `pricing-tiers`, `segmented-toggle`, `svg-area-chart`.
 
 Multi-block recipes:
 - `workspace-dashboard` - full analytics dashboard (KPI cards, activity chart, records table).
@@ -299,9 +299,11 @@ Basecoat 1.x uses `btn` with `data-variant` and `data-size`. Interactive compone
 
 ## Registry and exclusions
 
-The checked-in Basecoat 1.0.2 registry contains **41 curated templates**:
+The checked-in registry contains **41 searchable templates**: 39 curated from
+the Basecoat 1.0.2 upstream inventory and two MCP-only templates
+(`segmented-toggle` and `svg-area-chart`):
 
-`accordion`, `alert`, `alert-dialog`, `avatar`, `badge`, `breadcrumb`, `button`, `button-group`, `card`, `chart`, `checkbox`, `combobox`, `command`, `dialog`, `drawer`, `dropdown-menu`, `empty`, `field`, `input`, `input-group`, `item`, `kbd`, `label`, `native-select`, `popover`, `progress`, `radio-group`, `scroll-area`, `select`, `sidebar`, `skeleton`, `slider`, `switch`, `table`, `tabs`, `textarea`, `theme-switcher`, `toast`, `tooltip`
+`accordion`, `alert`, `alert-dialog`, `avatar`, `badge`, `breadcrumb`, `button`, `button-group`, `card`, `chart`, `checkbox`, `combobox`, `command`, `dialog`, `drawer`, `dropdown-menu`, `empty`, `field`, `input`, `input-group`, `item`, `kbd`, `label`, `native-select`, `popover`, `progress`, `radio-group`, `scroll-area`, `segmented-toggle`, `select`, `sidebar`, `skeleton`, `slider`, `svg-area-chart`, `switch`, `table`, `tabs`, `textarea`, `theme-switcher`, `toast`, `tooltip`
 
 The maintenance snapshot records 41 discovered upstream components. `pagination` and `spinner` remain excluded from search and details until manually curated. Slider uses `basecoat-css/range`, not a `slider` module.
 

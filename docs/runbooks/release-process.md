@@ -49,7 +49,7 @@ Following modern open-source best practices (Linear, Vercel, shadcn/ui):
    - No busy infographic banners, purple neon glows, or redundant text cards.
    - Use clean monochrome vector logo (`assets/logo.svg`, 64x64) without hyperlinks.
    - Restrained, informative tone: clear 2-line pitch without hype or buzzwords.
-   - Modern flat badges with official logos (npm, MCP Registry, downloads, MIT, Node, TS, 0KB Offline).
+   - Modern flat badges with official logos (npm, downloads, MIT, Node, TS, 0KB Offline).
 
 2. **Immediate client copy-paste DX:**
    - Provide direct setup snippets for leading AI coding clients:

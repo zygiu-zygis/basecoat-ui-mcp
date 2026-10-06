@@ -75,7 +75,7 @@ The package contract test runs after the suite build, creates and extracts an
 actual npm tarball, copies the already-installed production dependency closure,
 marks the extracted package tree read-only, and starts the extracted
 `dist/server/stdio.js` with a network tripwire. It completes MCP initialize,
-lists all eleven tools and three resource URIs, and exercises
+lists all eleven tools and four resource URIs, and exercises
 `get_rhythm_rules`, `get_fsm_recipe`, `begin_design`, and `validate_composition`
 before asserting that designer writes land only under the configured project
 root.
@@ -101,7 +101,11 @@ Search never returns markup. Details never participate in search scoring. Resour
 
 ## Curated templates vs discovered inventory
 
-The registry currently ships **41** curated index and detail pairs. Upstream sync discovers a broader set (41 components in the pinned snapshot, including `pagination` and `spinner` not present in the index).
+The registry currently ships **41** searchable index and detail pairs: 39
+curated from the Basecoat 1.0.2 upstream inventory plus two MCP-only templates,
+`segmented-toggle` and `svg-area-chart`. Upstream sync discovers 41 components
+in the pinned snapshot, including `pagination` and `spinner`, which are not
+present in the index.
 
 New upstream components are **not** auto-promoted into `index` or `details`. Sync updates `upstream.components`, variants, classes, and hashes while preserving curated templates. Promotion requires:
 
@@ -176,10 +180,10 @@ Consumer rule template: `templates/cursor/basecoat-designer.mdc` (copy into a ho
 The compiled macro registry (`src/macros/registry.snapshot.json`) provides curated block blueprints across core application workflows:
 
 - **Shells & Navigation**: `app-shell`, `sidebar-dashboard-shell`, `sidebar-inset-shell`, `sidebar-collapsible-icon`, `sidebar-mobile-flyout`, `page-header`.
-- **Authentication**: `auth-sign-in`, `auth-sign-up`, `auth-split-screen`.
-- **Application & Workspace Canvases**: `dashboard-workspace`, `dashboard-main`, `dashboard-activity`, `settings-workspace`, `data-table-detail-layout`, `detail-drawer-panel`.
-- **Forms & Data**: `form-section`, `data-filters`, `data-records`, `data-pagination`.
-- **Marketing, Content & Utility**: `pricing-tiers`, `newsletter-waitlist`, `empty-state`, `error-boundary`, `svg-area-chart`, `segmented-toggle`.
+- **Authentication**: `auth-recovery`, `auth-reset`, `auth-sign-in`, `auth-sign-up`, `auth-split-screen`.
+- **Application & Workspace Canvases**: `dashboard-workspace`, `dashboard-main`, `dashboard-activity`, `data-workspace`, `data-table`, `data-table-detail-layout`, `detail-drawer-panel`, `product-detail-layout`, `settings-workspace`.
+- **Forms & Data**: `data-bulk-actions`, `data-filters`, `data-pager`, `form-section`.
+- **Navigation & Utility**: `sidebar-nav`, `empty-state`, `error-boundary`, `newsletter-waitlist`, `pricing-tiers`, `segmented-toggle`, `svg-area-chart`.
 
 Multi-block and multi-page recipes wire these blocks into cohesive design graphs:
 
