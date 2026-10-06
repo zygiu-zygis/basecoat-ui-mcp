@@ -18,7 +18,7 @@
   <img src="https://img.shields.io/badge/Network-0KB_Offline-09090b?style=flat&logo=shield&logoColor=emerald" alt="Offline Safe" />
 </p>
 
-The server exposes a deterministic, offline registry for AI coding agents instead of requiring clients to scrape documentation. It runs over local stdio with **zero runtime network requests**, bounded **&lt; 2 KB** responses, and static AST validation. The host application remains responsible for rendering, data access, authentication, sessions, credentials, OAuth, captcha, and other runtime behavior.
+The server exposes a deterministic, offline registry for AI coding agents instead of requiring clients to scrape documentation. It runs over local stdio with **zero runtime network requests**, bounded **&lt; 2 KB** responses, and bounded static source validation. The host application remains responsible for rendering, data access, authentication, sessions, credentials, OAuth, captcha, and other runtime behavior.
 
 ## Install
 
