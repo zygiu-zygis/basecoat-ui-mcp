@@ -78,7 +78,8 @@
     "compile:blocks:check": "node --import tsx scripts/compile-blocks.ts --check",
     "compile:semantics": "node --import tsx scripts/compile-semantics.ts",
     "compile:semantics:check": "node --import tsx scripts/compile-semantics.ts --check",
-    "import:blocks": "node --import tsx scripts/import-blocks.ts"
+    "import:blocks": "node --import tsx scripts/import-blocks.ts",
+    "release:check": "node --import tsx scripts/release-check.ts"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "1.30.1",

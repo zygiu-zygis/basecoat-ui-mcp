@@ -41,6 +41,28 @@ and owner. Treat third-party directories as mirrors, not as authorities. Do
 not restore deprecated or broken registry links merely to make a checklist
 look complete.
 
+Use the local evidence generator to make this discovery repeatable:
+
+```bash
+npm run release:check -- --phase=pre-release --write=tmp/release-pre.json
+npm run release:check -- --phase=post-release --write=tmp/release-post.json
+```
+
+The JSON record is intentionally local-only. Each record contains `surface`,
+`authority`, `current`, `expected`, `correction`, `status`, and `verification`.
+The routine derives public surfaces from current package/server/README metadata,
+checks package/version/install/stdio transport/capability parity, and reports
+SEO copy gaps or duplicate keywords for human review. It also lists excluded
+search noise (badges, download counts, upstream references, and snippets) so
+those values cannot become accidental release authority. `inaccessible` means
+the surface still requires a manual platform check; it is not evidence of a
+match.
+
+The pre-release record is the approval baseline. The post-release record must
+repeat the same local parity checks and separately verify every approved public
+surface. Do not make the script perform network requests, publication, PR
+creation, or upstream/catalog edits.
+
 ## 2. Authority, correction order, and gates
 
 Use this correction order:

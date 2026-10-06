@@ -337,6 +337,23 @@ checks the package file allowlist without retaining a tarball.
 database and therefore requires network access. Maintainers can
 verify the pinned Basecoat source with:
 
+For release parity evidence, run the local-only routine before and after any
+approved publication:
+
+```sh
+npm run release:check -- --phase=pre-release --write=tmp/release-pre.json
+npm run release:check -- --phase=post-release --write=tmp/release-post.json
+```
+
+The routine discovers surfaces from current repository metadata, compares local
+authoritative values, and records `current`, `expected`, `correction`, `status`,
+and `verification`. It checks package identity, server manifest parity, stdio
+transport, advertised capabilities, install metadata, and restrained
+discoverability copy. It never performs network requests or external writes;
+GitHub, npm, the MCP Registry, and directory/catalog corrections remain
+explicitly approved manual actions. Do not treat badges, download counts,
+upstream references, or search-result snippets as release authority.
+
 ```sh
 npm run sync -- --ref <40-character-commit-sha> --check
 ```
