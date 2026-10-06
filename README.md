@@ -5,7 +5,7 @@
 <h1 align="center">Basecoat UI MCP</h1>
 
 <p align="center">
-  <strong>Offline Model Context Protocol server for Basecoat UI (shadcn/ui look without React).</strong><br>
+  <strong>Offline Model Context Protocol server for Basecoat UI (shadcn/ui look without bundling or requiring React).</strong><br>
   Curated templates, macro layouts, rhythm tokens, and static validation for Astro, Next.js, HTML, and Tailwind CSS 4.
 </p>
 
@@ -18,7 +18,7 @@
   <img src="https://img.shields.io/badge/Network-0KB_Offline-09090b?style=flat&logo=shield&logoColor=emerald" alt="Offline Safe" />
 </p>
 
-The server exposes a deterministic, offline registry for AI coding agents instead of requiring clients to scrape documentation. It runs over local stdio with **zero runtime network requests**, bounded **&lt; 2 KB** responses, and bounded static source validation. The host application remains responsible for rendering, data access, authentication, sessions, credentials, OAuth, captcha, and other runtime behavior.
+The server exposes a deterministic, offline registry for AI coding agents instead of requiring clients to scrape documentation. It runs over local stdio with **zero runtime network requests**, bounded **&lt; 2 KB** responses, and bounded lexical/heuristic static source validation. The host application remains responsible for rendering, data access, authentication, sessions, credentials, OAuth, captcha, and other runtime behavior.
 
 ## Install
 
@@ -177,6 +177,7 @@ Multi-block recipes:
 - `workspace-detail` - data table workspace with slide-over detail inspection drawer.
 - `auth-flow` - bidirectional authentication flow between sign-in and sign-up cards.
 - `auth-split-flow` - split-screen auth frame pairing sign-in and sign-up with hero media.
+- `data-records` - records page with filters, table, and pager.
 - `marketing-pricing` - 3-tier pricing table paired with newsletter/waitlist banner.
 
 ### Semantic tools

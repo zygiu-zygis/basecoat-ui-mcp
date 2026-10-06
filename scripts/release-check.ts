@@ -14,11 +14,33 @@ export type ReleasePhase = 'pre-release' | 'post-release';
 
 export interface ReleaseRecord {
   surface: string;
+  platform: string;
+  url: string;
+  owner: string;
   authority: string;
   current: string;
   expected: string;
   correction: string;
   status: ReleaseStatus;
+  observedIdentity: {
+    packageName?: string;
+    version?: string;
+    mcpName?: string;
+  };
+  expectedIdentity: {
+    packageName?: string;
+    version?: string;
+    mcpName?: string;
+  };
+  claims: {
+    capabilities: string[];
+    install: string;
+    transport: string;
+  };
+  approvalState: 'not-required' | 'required';
+  checkedAt: string;
+  evidence: string[];
+  nextAction: string;
   verification: string;
 }
 
@@ -80,8 +102,45 @@ function record(
   correction: string,
   status: ReleaseStatus,
   verification: string,
+  details: Partial<Pick<
+    ReleaseRecord,
+    | 'platform'
+    | 'url'
+    | 'owner'
+    | 'observedIdentity'
+    | 'expectedIdentity'
+    | 'claims'
+    | 'approvalState'
+    | 'evidence'
+    | 'nextAction'
+  >> = {},
+  checkedAt = new Date().toISOString(),
 ): ReleaseRecord {
-  return { surface, authority, current, expected, correction, status, verification };
+  return {
+    surface,
+    platform: details.platform ?? 'local repository',
+    url: details.url ?? '',
+    owner: details.owner ?? 'repository maintainer',
+    authority,
+    current,
+    expected,
+    correction,
+    status,
+    observedIdentity: details.observedIdentity ?? {},
+    expectedIdentity: details.expectedIdentity ?? {},
+    claims: details.claims ?? {
+      capabilities: [],
+      install: '',
+      transport: '',
+    },
+    approvalState: details.approvalState ?? 'not-required',
+    checkedAt,
+    evidence: details.evidence ?? [verification],
+    nextAction: details.nextAction ?? (status === 'match'
+      ? 'No action required.'
+      : correction),
+    verification,
+  };
 }
 
 function parityRecord(
@@ -100,6 +159,11 @@ function parityRecord(
     matches ? 'No correction required.' : 'Correct the local authoritative metadata before publication.',
     matches ? 'match' : 'stale',
     verification,
+    {
+      observedIdentity: { version: current },
+      expectedIdentity: { version: expected },
+      evidence: [verification, `${current} compared with ${expected}`],
+    },
   );
 }
 
@@ -118,6 +182,7 @@ export async function buildReleaseEvidence(
   const packageName = packageJson.name;
   const version = packageJson.version;
   const mcpName = packageJson.mcpName ?? '';
+  const checkedAt = new Date().toISOString();
   const packageFiles = packageJson.files ?? [];
   const records: ReleaseRecord[] = [
     parityRecord('server.json version', 'package.json.version', serverJson.version, version, 'JSON parity check'),
@@ -164,6 +229,19 @@ export async function buildReleaseEvidence(
       ? 'match'
       : 'stale',
     'package.json contract check',
+    {
+      platform: 'npm package metadata',
+      url: `https://www.npmjs.com/package/${packageName}`,
+      observedIdentity: { packageName, version, mcpName },
+      expectedIdentity: { packageName, version, mcpName },
+      claims: {
+        capabilities: requiredCapabilities,
+        install: 'bin basecoat-ui-mcp -> dist/server/stdio.js; dist and server.json packaged',
+        transport: 'stdio',
+      },
+      evidence: ['package.json bin and files allowlist'],
+    },
+    checkedAt,
   ));
 
   const scripts = Object.keys(packageJson.scripts ?? {}).sort();
@@ -177,6 +255,12 @@ export async function buildReleaseEvidence(
       : 'Add or repair the local verification scripts.',
     scripts.includes('check') && scripts.includes('test') ? 'match' : 'missing',
     'script inventory check',
+    {
+      platform: 'local repository',
+      evidence: ['package.json scripts'],
+      nextAction: 'Run the focused local verification commands.',
+    },
+    checkedAt,
   ));
 
   const capabilityText = await readFile(resolve(repositoryRoot, 'src/server/index.ts'), 'utf8');
@@ -189,6 +273,21 @@ export async function buildReleaseEvidence(
     missingCapabilities.length === 0 ? 'No correction required.' : 'Restore missing local capability registration/tests.',
     missingCapabilities.length === 0 ? 'match' : 'missing',
     'static registration check; runtime exercise remains npm run test',
+    {
+      platform: 'MCP server source',
+      observedIdentity: { packageName, version, mcpName },
+      expectedIdentity: { packageName, version, mcpName },
+      claims: {
+        capabilities: requiredCapabilities,
+        install: 'compiled package entry is tested separately',
+        transport: 'stdio',
+      },
+      evidence: ['src/server/index.ts capability registration'],
+      nextAction: missingCapabilities.length === 0
+        ? 'Exercise capabilities with the focused runtime test.'
+        : 'Restore missing capability registration and tests.',
+    },
+    checkedAt,
   ));
 
   const missingKeywords = requiredKeywords.filter(keyword => !(packageJson.keywords ?? []).includes(keyword));
@@ -204,6 +303,17 @@ export async function buildReleaseEvidence(
       : 'Improve useful terms and remove duplicates; do not add repetitive keywords.',
     missingKeywords.length === 0 && stuffing.length === 0 ? 'match' : 'manual correction needed',
     'keyword presence/duplicate check; human copy review required',
+    {
+      platform: 'npm and GitHub documentation',
+      url: packageJson.homepage ?? '',
+      observedIdentity: { packageName, version, mcpName },
+      expectedIdentity: { packageName, version, mcpName },
+      evidence: ['package.json keywords and README.md'],
+      nextAction: missingKeywords.length === 0 && stuffing.length === 0
+        ? 'Review wording manually before publication.'
+        : 'Correct missing or duplicate discoverability terms.',
+    },
+    checkedAt,
   ));
 
   const externalSurfaces = [
@@ -220,6 +330,22 @@ export async function buildReleaseEvidence(
       'Requires explicit approval and a maintainer-controlled platform action.',
       'inaccessible',
       'Not probed: this routine performs no network requests or external writes.',
+      {
+        platform: surface,
+        url: current.startsWith('http') ? current : '',
+        owner: 'maintainer-controlled external platform',
+        observedIdentity: {},
+        expectedIdentity: { packageName, version, mcpName },
+        claims: {
+          capabilities: requiredCapabilities,
+          install: `published ${packageName}@${version}`,
+          transport: 'stdio',
+        },
+        approvalState: 'required',
+        evidence: ['Local-only routine intentionally does not probe external surfaces.'],
+        nextAction: `Manually verify ${surface} after the approved publication action.`,
+      },
+      checkedAt,
     ));
   }
 

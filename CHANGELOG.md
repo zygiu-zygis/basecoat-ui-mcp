@@ -5,6 +5,7 @@ Maintained by **Žygimantas Jasiulionis / Intellmedia**.
 ## 1.6.3 - 2026-10-05
 
 - **Documentation & Registry Hygiene**: Removed broken/deprecated MCP Registry badge and external registry endpoint references from README and release runbooks, keeping clean authoritative npm and GitHub metadata.
+- **Release Parity Evidence**: Added a local-only pre/post-release evidence routine that records package identity, capability, install, transport, ownership, approval, and external-surface verification state without performing network requests or publication.
 
 ## 1.6.2 - 2026-10-05
 

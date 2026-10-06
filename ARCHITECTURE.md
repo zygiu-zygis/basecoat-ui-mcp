@@ -192,6 +192,7 @@ Multi-block and multi-page recipes wire these blocks into cohesive design graphs
 - `workspace-detail`: Inset shell, header, filter toolbar, records table, pagination, and slide-over detail drawer.
 - `auth-flow`: Bidirectional authentication flow between sign-in and sign-up cards.
 - `auth-split-flow`: Split-screen auth frame pairing sign-in and sign-up with branded hero media.
+- `data-records`: Records page with filters, table, and pager.
 - `marketing-pricing`: 3-tier pricing table paired with newsletter/waitlist banner.
 
 Composition rules enforce page-level landmark invariants (`main: 1, primaryHeading: 1` per complete page), frame alignment for `same-frame` layout rules (`layout.frameRef`), and strict spacing rhythm (`0, 2, 4, 6, 12` steps or `auto`).

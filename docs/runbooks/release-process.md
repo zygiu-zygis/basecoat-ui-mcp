@@ -35,11 +35,12 @@ Then discover the actual public surfaces instead of relying on an old list:
    client catalogs, and other surfaces found in repository metadata or the
    release evidence record.
 
-For each surface, record the URL, source of truth, observed name and version,
-status (`match`, `stale`, `missing`, or `manual correction needed`), evidence,
-and owner. Treat third-party directories as mirrors, not as authorities. Do
-not restore deprecated or broken registry links merely to make a checklist
-look complete.
+For each surface, record the platform, URL, source of truth, owner, observed
+and expected identity fields, capability/install/transport claims, approval
+state, checked date, evidence, next action, and status (`match`, `stale`,
+`missing`, `manual correction needed`, or `inaccessible`). Treat third-party
+directories as mirrors, not as authorities. Do not restore deprecated or
+broken registry links merely to make a checklist look complete.
 
 Use the local evidence generator to make this discovery repeatable:
 
@@ -48,15 +49,17 @@ npm run release:check -- --phase=pre-release --write=tmp/release-pre.json
 npm run release:check -- --phase=post-release --write=tmp/release-post.json
 ```
 
-The JSON record is intentionally local-only. Each record contains `surface`,
-`authority`, `current`, `expected`, `correction`, `status`, and `verification`.
-The routine derives public surfaces from current package/server/README metadata,
-checks package/version/install/stdio transport/capability parity, and reports
-SEO copy gaps or duplicate keywords for human review. It also lists excluded
-search noise (badges, download counts, upstream references, and snippets) so
-those values cannot become accidental release authority. `inaccessible` means
-the surface still requires a manual platform check; it is not evidence of a
-match.
+The JSON record is intentionally local-only. Each record contains the legacy
+summary fields (`surface`, `authority`, `current`, `expected`, `correction`,
+`status`, and `verification`) plus `platform`, `url`, `owner`,
+`observedIdentity`, `expectedIdentity`, `claims`, `approvalState`, `checkedAt`,
+`evidence`, and `nextAction`. The routine derives public surfaces from current
+package/server/README metadata, checks package/version/install/stdio
+transport/capability parity, and reports SEO copy gaps or duplicate keywords
+for human review. It also lists excluded search noise (badges, download
+counts, upstream references, and snippets) so those values cannot become
+accidental release authority. `inaccessible` means the surface still requires
+a manual platform check; it is not evidence of a match.
 
 The pre-release record is the approval baseline. The post-release record must
 repeat the same local parity checks and separately verify every approved public
