@@ -2,6 +2,10 @@
 
 Maintained by **Žygimantas Jasiulionis / Intellmedia**.
 
+## 1.6.4 - 2026-10-07
+
+- **Security & Compatibility**: Upgraded `@modelcontextprotocol/sdk` to 1.32.1 and verified omitted-argument behavior over the offline stdio transport.
+
 ## 1.6.3 - 2026-10-05
 
 - **Documentation & Registry Hygiene**: Removed broken/deprecated MCP Registry badge and external registry endpoint references from README and release runbooks, keeping clean authoritative npm and GitHub metadata.

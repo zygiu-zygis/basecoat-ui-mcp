@@ -1,10 +1,12 @@
 // Author and maintainer: Žygimantas Jasiulionis / Intellmedia.
 import assert from 'node:assert/strict';
 import { SERVER_VERSION } from '../src/server/version.js';
+import { spawn } from 'node:child_process';
 import { mkdtemp, mkdir, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { createInterface } from 'node:readline';
 import test from 'node:test';
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { StdioClientTransport } from '@modelcontextprotocol/sdk/client/stdio.js';
@@ -12,6 +14,27 @@ import { registry } from '../src/registry/index.js';
 
 const serverPath = fileURLToPath(new URL('../dist/server/stdio.js', import.meta.url));
 const offlineFixture = fileURLToPath(new URL('./fixtures/offline.mjs', import.meta.url));
+
+function readResponse(lines: ReturnType<typeof createInterface>, id: number): Promise<Record<string, unknown>> {
+  return new Promise((resolve, reject) => {
+    const onLine = (line: string) => {
+      const message = JSON.parse(line) as Record<string, unknown>;
+      if (message.id !== id) return;
+      cleanup();
+      resolve(message);
+    };
+    const onClose = () => {
+      cleanup();
+      reject(new Error(`stdio closed before response ${id}`));
+    };
+    const cleanup = () => {
+      lines.off('line', onLine);
+      lines.off('close', onClose);
+    };
+    lines.on('line', onLine);
+    lines.once('close', onClose);
+  });
+}
 
 function resultText(result: unknown): string {
   assert(result !== null && typeof result === 'object' && 'content' in result);
@@ -200,5 +223,47 @@ test('offline stdio initializes and serves the bounded, project-scoped MCP surfa
   } finally {
     await client.close();
     await rm(temp, { recursive: true, force: true });
+  }
+});
+
+test('raw stdio tolerates omitted optional arguments and rejects omitted required arguments', { timeout: 30_000 }, async () => {
+  const child = spawn(process.execPath, ['--import', offlineFixture, serverPath], {
+    cwd: tmpdir(),
+    stdio: ['pipe', 'pipe', 'pipe'],
+  });
+  const lines = createInterface({ input: child.stdout });
+  const send = (message: Record<string, unknown>) => child.stdin.write(`${JSON.stringify(message)}\n`);
+  try {
+    send({
+      jsonrpc: '2.0',
+      id: 1,
+      method: 'initialize',
+      params: {
+        protocolVersion: '2025-06-18',
+        capabilities: {},
+        clientInfo: { name: 'raw-stdio-test', version: '1.0.0' },
+      },
+    });
+    const initialized = await readResponse(lines, 1);
+    assert.equal(initialized.error, undefined);
+    send({ jsonrpc: '2.0', method: 'notifications/initialized', params: {} });
+
+    send({ jsonrpc: '2.0', id: 2, method: 'tools/call', params: { name: 'search_components' } });
+    const optional = await readResponse(lines, 2);
+    assert.equal(optional.error, undefined);
+    assert.equal((optional.result as { isError?: boolean }).isError, undefined);
+
+    send({ jsonrpc: '2.0', id: 3, method: 'tools/call', params: { name: 'get_component_details' } });
+    const required = await readResponse(lines, 3);
+    assert.equal(required.error, undefined);
+    assert.equal((required.result as { isError?: boolean }).isError, true);
+
+    send({ jsonrpc: '2.0', id: 4, method: 'tools/list', params: {} });
+    const stillOpen = await readResponse(lines, 4);
+    assert.equal(stillOpen.error, undefined);
+  } finally {
+    lines.close();
+    child.kill();
+    await new Promise<void>(resolve => child.once('close', () => resolve()));
   }
 });
