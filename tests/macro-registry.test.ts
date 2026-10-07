@@ -691,6 +691,8 @@ test('packaged dashboard graph exposes four KPIs plus activity and records slots
   assert(packaged.aliases['sidebar-dashboard-shell']);
   assert(packaged.aliases['svg-area-chart']);
   assert(packaged.aliases['segmented-toggle']);
+  assert(packaged.aliases['dashboard-tabs']);
+  assert(packaged.aliases['dashboard-row-actions']);
 
   const workspace = getBlock(packaged, 'dashboard-workspace');
   assert.equal(workspace.role, 'dashboard');
@@ -704,7 +706,20 @@ test('packaged dashboard graph exposes four KPIs plus activity and records slots
   const metrics = getBlock(packaged, 'dashboard-main');
   assert.equal(metrics.role, 'metrics');
   assert(metrics.fragments[0]?.emmet.includes('xl:grid-cols-4'));
-  assert(metrics.fragments[0]?.emmet.includes('card-d'));
+  assert(metrics.fragments[0]?.emmet.includes('card-$'));
+  assert.deepEqual(metrics.slots.map(slot => slot.id).sort(), ['card-1', 'card-2', 'card-3', 'card-4']);
+
+  const activity = getBlock(packaged, 'dashboard-activity');
+  assert(activity.fragments[0]?.emmet.includes('data-series=mobile,desktop'));
+  assert(activity.fragments[0]?.emmet.includes('data-tooltip=enabled'));
+
+  const records = getBlock(packaged, 'data-workspace');
+  assert.deepEqual(records.slots.map(slot => slot.id).sort(), ['detail-drawer', 'filters', 'pager', 'row-actions', 'table', 'tabs']);
+  assert(records.description.includes('id,header,sectionType,status,target,limit,reviewer'));
+
+  const rowActions = getBlock(packaged, 'dashboard-row-actions');
+  assert.equal(rowActions.role, 'row-action');
+  assert(rowActions.fragments[0]?.emmet.includes('data-action=view'));
 
   const filters = getBlock(packaged, 'data-filters');
   assert(filters.fragments[0]?.emmet.includes('gap-2'));
@@ -719,6 +734,55 @@ test('packaged dashboard graph exposes four KPIs plus activity and records slots
   assert.equal(toggle.role, 'range-control');
   assert(toggle.fragments[0]?.emmet.includes('role=radiogroup'));
   assert(toggle.fragments[0]?.emmet.includes('data-variant=pill'));
+});
+
+test('packaged dashboard preserves the verified visual contracts', () => {
+  const packaged = loadCompiledRegistry();
+  const shell = getBlock(packaged, 'app-shell');
+  const header = getBlock(packaged, 'page-header');
+  const sidebar = getBlock(packaged, 'sidebar-dashboard-shell');
+  const metrics = getBlock(packaged, 'dashboard-main');
+  const activity = getBlock(packaged, 'dashboard-activity');
+  const chart = getBlock(packaged, 'svg-area-chart');
+  const records = getBlock(packaged, 'data-workspace');
+  const table = getBlock(packaged, 'data-table');
+  const tabs = getBlock(packaged, 'dashboard-tabs');
+
+  assert(shell.description.includes('16rem sidebar'));
+  assert(shell.fragments[0]?.emmet.includes('data-sidebar-width=16rem'));
+  assert(shell.fragments[0]?.emmet.includes('data-mobile-breakpoint=md'));
+  assert(shell.fragments[0]?.emmet.includes('data-horizontal-overflow=contained'));
+  assert(shell.fragments[0]?.emmet.includes('data-width=fluid'));
+  assert(header.fragments[0]?.emmet.includes('h-16'));
+  assert(header.fragments[0]?.emmet.includes('data-responsive=wrap-below-md'));
+  assert(sidebar.fragments[0]?.emmet.includes('w-64'));
+  assert(sidebar.fragments[0]?.emmet.includes('aria-label=Sidebar'));
+  assert(sidebar.description.includes('including More'));
+  assert(sidebar.fragments[0]?.emmet.includes('data-slot=nav-more'));
+  assert(sidebar.fragments[0]?.emmet.includes('data-slot=footer-controls'));
+  assert(sidebar.fragments[0]?.emmet.includes('data-focus=return-on-close'));
+  assert(metrics.fragments[0]?.emmet.includes('data-columns=1,2,4'));
+  assert(metrics.fragments[0]?.emmet.includes('data-card-min-height=8rem'));
+  assert(metrics.fragments[0]?.emmet.includes('text-2xl'));
+  assert(activity.fragments[0]?.emmet.includes('data-height=24rem'));
+  assert(activity.fragments[0]?.emmet.includes('data-default-range=3m'));
+  assert(activity.fragments[0]?.emmet.includes('data-series-density=dense-apr-jun'));
+  assert(chart.fragments[0]?.emmet.includes('data-legend=mobile,desktop'));
+  assert(chart.fragments[0]?.emmet.includes('data-tooltip=enabled'));
+  assert(records.fragments[0]?.emmet.includes('data-density=compact'));
+  assert(records.fragments[0]?.emmet.includes('data-reviewer=enabled'));
+  assert(table.fragments[0]?.emmet.includes('data-selection=checkbox'));
+  assert(table.fragments[0]?.emmet.includes('data-column=reviewer'));
+  assert(table.fragments[0]?.emmet.includes('data-row-separators=visible'));
+  assert(table.fragments[0]?.emmet.includes('data-typography=readable'));
+  assert(table.fragments[0]?.emmet.includes('data-controls=bounded'));
+  assert(table.fragments[0]?.emmet.includes('data-responsive=horizontal-overflow-below-md'));
+  assert(table.fragments[0]?.emmet.includes('data-mobile-policy=scroll'));
+  assert(tabs.fragments[0]?.emmet.includes('data-responsive=horizontal-overflow-below-md'));
+  for (const block of [shell, header, sidebar, metrics, activity, chart, records, table, tabs]) {
+    assert.equal(block.provenance.origin, 'authored');
+    assert.equal(block.provenance.mappingVersion, '1.0.0');
+  }
 });
 
 test('registry revision calculation determinism', () => {

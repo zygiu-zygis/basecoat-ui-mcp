@@ -967,6 +967,9 @@ test('packaged workspace-dashboard recipe holds metrics, activity, and records i
   assert(nodeRoles.some(n => n.id === 'filters' && n.parent === 'filters'));
   assert(nodeRoles.some(n => n.id === 'table' && n.parent === 'table'));
   assert(nodeRoles.some(n => n.id === 'pager' && n.parent === 'pager'));
+  assert(nodeRoles.some(n => n.id === 'tabs' && n.role === 'tabs' && n.parent === 'tabs'));
+  assert(nodeRoles.some(n => n.id === 'row-actions' && n.role === 'row-action' && n.parent === 'row-actions'));
+  assert(nodeRoles.some(n => n.id === 'drawer' && n.role === 'details' && n.parent === 'detail-drawer'));
 
   const session: DesignSession = {
     schemaVersion: 1,

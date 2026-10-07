@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "id": "dashboard-tabs",
+  "role": "tabs",
+  "family": "workspace",
+  "description": "Reference tabs contract: Outline, Past Performance, Key Personnel, Focus Documents; horizontal overflow below md.",
+  "tags": ["dashboard", "tabs", "responsive", "navigation"],
+  "root": "tabs-root",
+  "fragments": [
+    {
+      "id": "tabs-root",
+      "emmet": "div.w-full[data-component=tabs][data-variant=line][data-orientation=horizontal][data-active=outline]>nav.flex.w-full.items-center.gap-4.border-b.border-border.overflow-x-auto.scrollbar-none[role=tablist][aria-label=Document sections][data-responsive=horizontal-overflow-below-md]>button.p-2.text-sm.font-medium.text-muted-foreground.border-b-2.border-transparent.hover:text-foreground.aria-selected:border-foreground.aria-selected:text-foreground[data-slot=outline][role=tab][aria-selected=true]{Outline}+button.p-2.text-sm.font-medium.text-muted-foreground.border-b-2.border-transparent.hover:text-foreground.aria-selected:border-foreground.aria-selected:text-foreground[data-slot=past-performance][role=tab]{Past Performance}+button.p-2.text-sm.font-medium.text-muted-foreground.border-b-2.border-transparent.hover:text-foreground.aria-selected:border-foreground.aria-selected:text-foreground[data-slot=key-personnel][role=tab]{Key Personnel}+button.p-2.text-sm.font-medium.text-muted-foreground.border-b-2.border-transparent.hover:text-foreground.aria-selected:border-foreground.aria-selected:text-foreground[data-slot=focus-documents][role=tab]{Focus Documents}"
+    }
+  ],
+  "mounts": [],
+  "slots": [
+    { "id": "outline", "at": { "fragment": "tabs-root", "name": "outline" }, "accepts": ["tab-panel"], "min": 0, "max": 1 },
+    { "id": "past-performance", "at": { "fragment": "tabs-root", "name": "past-performance" }, "accepts": ["tab-panel"], "min": 0, "max": 1 },
+    { "id": "key-personnel", "at": { "fragment": "tabs-root", "name": "key-personnel" }, "accepts": ["tab-panel"], "min": 0, "max": 1 },
+    { "id": "focus-documents", "at": { "fragment": "tabs-root", "name": "focus-documents" }, "accepts": ["tab-panel"], "min": 0, "max": 1 }
+  ],
+  "ports": [],
+  "componentRefs": ["tabs", "button"],
+  "ruleRefs": [],
+  "dependencyBlockIds": [],
+  "layout": { "frameRef": "tabs-root" },
+  "landmarks": { "main": 0, "primaryHeading": 0 },
+  "provenance": { "origin": "authored", "sourceHashes": {}, "mappingVersion": "1.0.0" }
+}

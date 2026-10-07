@@ -3,13 +3,13 @@
   "id": "page-header",
   "role": "header",
   "family": "layout",
-  "description": "Page header with breadcrumb trail and action cluster.",
+  "description": "Reference dashboard header contract: 4rem tall, 1rem horizontal gutter, breadcrumb/title on the left and actions on the right; menu toggle is available below md.",
   "tags": ["header", "breadcrumb"],
   "root": "content-frame",
   "fragments": [
     {
       "id": "content-frame",
-      "emmet": "div.flex.items-center.justify-between.gap-4.border-b.p-4>div[data-component=breadcrumb]+div.flex.gap-2[data-slot=actions]"
+      "emmet": "div.flex.h-16.items-center.justify-between.gap-4.border-b.border-border.px-4[data-height=4rem][data-gutter=1rem][data-responsive=wrap-below-md]>div[data-component=breadcrumb]+div.flex.gap-2[data-slot=actions]"
     }
   ],
   "mounts": [],

@@ -29,6 +29,8 @@ export interface ValidationOptions {
 export const VALIDATE_COMPOSITION_MAX_BYTES = 262_144;
 
 const LIMITATIONS = 'Static HTML/Framework heuristic: cannot resolve dynamic classes, imported layouts, external scripts, CSS overrides or runtime DOM. Missing imports may be supplied by a parent layout. This is not an accessibility or browser conformance audit.';
+const RUNTIME_NETWORK = /\b(?:fetch|XMLHttpRequest|WebSocket|EventSource)\s*\(|\b(?:axios|ky|graphql)\s*\(/;
+const REACT_RUNTIME = /(?:^|[<\s])(?:import\s+React\b|from\s+['"]react(?:['"]|\/)|createRoot\s*\(|hydrateRoot\s*\(|useState\s*\(|useEffect\s*\(|<\s*[A-Z][\w.]*(?:\s|\/?>))/;
 const SPACING_COMFORTABLE = new Set(['0', '2', '4', '6', '12']);
 const SPACING_COMPACT = new Set(['0', '1', '1.5', '2', '2.5', '3', '4', '5', '6', '12']);
 const MICRO_SPACING = new Set(['1', '1.5', '2.5', '3', '5']);
@@ -37,6 +39,9 @@ const ITEM_ANATOMY_CLASSES = new Set([
   'item-title', 'item-description', 'item-media', 'item-content', 'item-actions', 'item-header',
   'card-compact', 'subcard',
 ]);
+// Curated local anatomy used by the offline dashboard fixture. These are
+// deliberately metadata-backed project classes, not additions to Basecoat CSS.
+const CURATED_COMPOSITION_CLASSES = new Set(['sidebar-backdrop', 'sidebar-icon']);
 const ISSUE_CAP = 24;
 const SIZES = new Set(['xs', 'default', 'sm', 'lg', 'icon', 'icon-xs', 'icon-sm', 'icon-lg']);
 const BASECOAT_CLASSES = new Set(registry.upstream.css_classes);
@@ -204,6 +209,24 @@ export function validateComposition(code: string, options: ValidationOptions = {
   if (/<(?:script|link)[^>]+(?:src|href)=["']https?:\/\//i.test(code)) {
     report('cdn-dependency', 'error', 'External dependencies (e.g. CDNs) for scripts or stylesheets are forbidden. Use local modules or inline SVGs.', 1);
   }
+  if (RUNTIME_NETWORK.test(code)) {
+    report(
+      'runtime-network',
+      'error',
+      'Runtime network access is forbidden in offline compositions; keep data loading and transport in the host application.',
+      1,
+      'Remove fetch/XHR/WebSocket/EventSource and network client calls from the static composition.',
+    );
+  }
+  if (REACT_RUNTIME.test(code)) {
+    report(
+      'react-runtime',
+      'error',
+      'React imports, runtime mounting, hooks, and JSX component output are forbidden in Basecoat compositions.',
+      1,
+      'Use framework-neutral Astro/HTML and keep runtime behavior in the host application.',
+    );
+  }
   const parsedHtml = parseHtmlWithDiagnostics(code);
   const nodes = parsedHtml.nodes;
   for (const diagnostic of parsedHtml.diagnostics) {
@@ -264,6 +287,34 @@ export function validateComposition(code: string, options: ValidationOptions = {
       .find(name => name !== 'themeMode' && THEME_KEY.test(name));
     if (key) report('theme-storage-key', 'warning', `Theme persisted under "${key}", but basecoat.theme.set() uses "themeMode"; two resolvers drift apart.`, script.line, 'Read/write "themeMode" with one shared default, or call window.basecoat.theme.set().');
   }
+
+  // Check responsive obligations
+  for (const node of nodes) {
+    const bp = node.attrs['data-mobile-breakpoint'];
+    if (bp) {
+      // Find node or any descendants
+      let hasResponsive = node.classes.some(c => c.startsWith(`${bp}:`));
+      if (!hasResponsive) {
+        for (const descendant of nodes) {
+          if (descendant === node) continue;
+          let p = descendant.parent;
+          let isChild = false;
+          while (p !== null) {
+            if (nodes[p] === node) { isChild = true; break; }
+            p = nodes[p]!.parent;
+          }
+          if (isChild && descendant.classes.some(c => c.startsWith(`${bp}:`))) {
+            hasResponsive = true;
+            break;
+          }
+        }
+      }
+      if (!hasResponsive) {
+        report('missing-responsive-utility', 'warning', `Node declares data-mobile-breakpoint="${bp}" but neither it nor its descendants use ${bp}: utility classes.`, node.line, `Add responsive utilities like ${bp}:hidden or ${bp}:grid-cols-*.`);
+      }
+    }
+  }
+
   for (const node of nodes) {
     if (node.dynamic) report('dynamic-attributes', 'warning', 'Dynamic attributes cannot be checked completely; inspect their rendered classes and states.', node.line);
     const classes = node.classes.map(utility);
@@ -298,7 +349,13 @@ export function validateComposition(code: string, options: ValidationOptions = {
       }
     }
     for (const token of classes) {
-      if (COMPONENT_FAMILY.test(token) && !BASECOAT_CLASSES.has(token) && !TAILWIND_OVERLAP.test(token) && !ITEM_ANATOMY_CLASSES.has(token)) report('invalid-basecoat-class', 'error', `Unknown Basecoat class ${token}; use the current component anatomy and data-variant/data-size attributes. Custom project classes should use a separate namespace.`, node.line);
+      if (
+        COMPONENT_FAMILY.test(token) &&
+        !BASECOAT_CLASSES.has(token) &&
+        !TAILWIND_OVERLAP.test(token) &&
+        !ITEM_ANATOMY_CLASSES.has(token) &&
+        !CURATED_COMPOSITION_CLASSES.has(token)
+      ) report('invalid-basecoat-class', 'error', `Unknown Basecoat class ${token}; use the current component anatomy and data-variant/data-size attributes. Custom project classes should use a separate namespace.`, node.line);
       const spacing = /^(-?)(gap(?:-[xy])?|space-[xy]|[mp][trblxyse]?)-(.+)$/.exec(token);
       if (spacing) {
         const [, negative, family, value] = spacing;

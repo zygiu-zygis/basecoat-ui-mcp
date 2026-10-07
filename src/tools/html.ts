@@ -93,6 +93,15 @@ export function parseHtmlWithDiagnostics(code: string): ParseResult {
       cursor = end < 0 ? code.length : end + 3;
       continue;
     }
+    if (/^<!doctype\b/i.test(code.slice(start))) {
+      const end = code.indexOf('>', start + 2);
+      if (end < 0) {
+        addDiagnostic('unclosed-declaration', 'warning', 'Unclosed doctype declaration', start);
+        break;
+      }
+      cursor = end + 1;
+      continue;
+    }
     let end = start + 1;
     let quote = '';
     let braces = 0;

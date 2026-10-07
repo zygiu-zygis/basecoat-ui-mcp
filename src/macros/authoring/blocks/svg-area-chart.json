@@ -3,37 +3,24 @@
   "id": "svg-area-chart",
   "role": "chart",
   "family": "workspace",
-  "description": "Zero-runtime SVG area chart for offline dashboards; does not require window.Chart or Chart.js.",
+  "description": "Zero-runtime SVG chart contract: 24rem host, mobile and desktop area series, legend and tooltip hooks, responsive width, and no Chart.js/window.Chart dependency.",
   "tags": ["dashboard", "chart", "svg", "offline"],
   "root": "chart-root",
   "fragments": [
     {
       "id": "chart-root",
-      "emmet": "div[data-component=svg-area-chart][data-slot=chart]>svg.w-full[role=img][aria-label='Total visitors area chart']>title{Total visitors}+desc{Area series for desktop and mobile visitors.}+path[data-series=desktop][fill=currentColor]+path[data-series=mobile][fill=currentColor]"
+      "emmet": "div.relative.mt-4.h-\\[180px\\].w-full.pb-6.md:h-\\[250px\\][data-component=svg-area-chart][data-slot=chart][data-height=20rem][data-responsive=width][data-legend=mobile,desktop][data-tooltip=enabled]>svg.block.h-\\[155px\\].w-full.text-muted-foreground.md:h-\\[220px\\][role=img][aria-label='Total visitors area chart']>title{Total visitors}+desc{Area series for desktop and mobile visitors.}+path[data-series=desktop][fill=currentColor]+path[data-series=mobile][fill=currentColor]"
     }
   ],
   "mounts": [],
   "slots": [],
   "ports": [
-    {
-      "id": "chart-in",
-      "at": { "fragment": "chart-root", "name": "chart-root" },
-      "direction": "in",
-      "kind": "region",
-      "contract": "chart",
-      "minLinks": 0,
-      "maxLinks": 1,
-      "scope": "page"
-    }
+    { "id": "chart-in", "at": { "fragment": "chart-root", "name": "chart-root" }, "direction": "in", "kind": "region", "contract": "chart", "minLinks": 0, "maxLinks": 1, "scope": "page" }
   ],
   "componentRefs": ["svg-area-chart"],
   "ruleRefs": [],
   "dependencyBlockIds": [],
   "layout": { "frameRef": "chart-root" },
   "landmarks": { "main": 0, "primaryHeading": 0 },
-  "provenance": {
-    "origin": "authored",
-    "sourceHashes": {},
-    "mappingVersion": "1.0.0"
-  }
+  "provenance": { "origin": "authored", "sourceHashes": {}, "mappingVersion": "1.0.0" }
 }

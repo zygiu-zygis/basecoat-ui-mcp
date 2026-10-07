@@ -12,7 +12,7 @@
       "recipe": "workspace-dashboard",
       "root": "shell",
       "status": "plan-ready",
-      "decisions": { "density": "comfortable" },
+      "decisions": { "density": "comfortable", "nav-collapsed": false },
       "nodes": {
         "shell": {
           "id": "shell",
@@ -67,6 +67,12 @@
           "parent": { "node": "canvas", "slot": "records", "order": 0 },
           "bindings": { "data-context": "records-dataset" }
         },
+        "tabs": {
+          "id": "tabs",
+          "block": "dashboard-tabs",
+          "parent": { "node": "records", "slot": "tabs", "order": 0 },
+          "bindings": {}
+        },
         "filters": {
           "id": "filters",
           "block": "data-filters",
@@ -79,10 +85,22 @@
           "parent": { "node": "records", "slot": "table", "order": 1 },
           "bindings": { "data-context": "records-dataset" }
         },
+        "row-actions": {
+          "id": "row-actions",
+          "block": "dashboard-row-actions",
+          "parent": { "node": "records", "slot": "row-actions", "order": 2 },
+          "bindings": { "data-context": "records-dataset" }
+        },
         "pager": {
           "id": "pager",
           "block": "data-pager",
-          "parent": { "node": "records", "slot": "pager", "order": 2 },
+          "parent": { "node": "records", "slot": "pager", "order": 3 },
+          "bindings": { "data-context": "records-dataset" }
+        },
+        "drawer": {
+          "id": "drawer",
+          "block": "detail-drawer-panel",
+          "parent": { "node": "records", "slot": "detail-drawer", "order": 4 },
           "bindings": { "data-context": "records-dataset" }
         }
       },
@@ -110,6 +128,12 @@
           "relation": "data",
           "from": { "node": "filters", "port": "dataset-out" },
           "to": { "node": "pager", "port": "dataset-in" }
+        },
+        {
+          "id": "actions-to-drawer",
+          "relation": "data",
+          "from": { "node": "row-actions", "port": "dataset-out" },
+          "to": { "node": "drawer", "port": "dataset-in" }
         }
       ],
       "rules": [
@@ -122,6 +146,13 @@
           "id": "dashboard-same-shell",
           "type": "same-shell",
           "nodes": ["nav", "header", "canvas"]
+        },
+        {
+          "id": "dashboard-content-order",
+          "type": "ordered",
+          "parent": "canvas",
+          "slot": "records",
+          "nodes": ["records"]
         },
         {
           "id": "dashboard-shell-gutter",

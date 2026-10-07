@@ -3,37 +3,26 @@
   "id": "data-table",
   "role": "table",
   "family": "data",
-  "description": "Tabular results region wrapping the curated table component.",
-  "tags": ["data", "table"],
+  "description": "Reference table contract: compact density, readable typography, horizontal overflow below md, visible row separators, selectable rows, status badges, numeric alignment, reviewer column, trailing view/menu actions.",
+  "tags": ["data", "table", "row-actions", "selection", "responsive"],
   "root": "table-root",
   "fragments": [
     {
       "id": "table-root",
-      "emmet": "div.overflow-auto.rounded-md.border>div[data-component=table]"
+      "emmet": "div.overflow-auto.rounded-md.border.border-border[data-slot=table-scroll][data-controls=bounded][data-responsive=horizontal-overflow-below-md][data-mobile-policy=scroll][data-density=compact][data-row-separators=visible]>table.table.w-full.text-sm[data-component=table][data-row-height=2.5rem][data-typography=readable]>thead>tr.border-b.border-border.transition-colors.hover\\:bg-muted\\/50.data-\\[state\\=selected\\]\\:bg-muted>th.h-10.px-2.text-left.align-middle.font-medium.text-muted-foreground[data-column=header]+th.h-10.px-2.text-left.align-middle.font-medium.text-muted-foreground[data-column=section-type]+th.h-10.px-2.text-left.align-middle.font-medium.text-muted-foreground[data-column=status]+th.h-10.px-2.text-end.align-middle.font-medium.text-muted-foreground[data-column=target]+th.h-10.px-2.text-end.align-middle.font-medium.text-muted-foreground[data-column=limit]+th.h-10.px-2.text-left.align-middle.font-medium.text-muted-foreground[data-column=reviewer]+th.h-10.px-2.align-middle[data-column=row-action]^tbody[data-slot=rows][data-row-shape=id,title,type,status,target,limit,reviewer][data-selection=checkbox]"
     }
   ],
   "mounts": [],
-  "slots": [],
+  "slots": [
+    { "id": "row-action", "at": { "fragment": "table-root", "name": "row-action" }, "accepts": ["row-action"], "min": 0, "max": 1 }
+  ],
   "ports": [
-    {
-      "id": "dataset-in",
-      "at": { "fragment": "table-root", "name": "table-root" },
-      "direction": "in",
-      "kind": "data",
-      "contract": "dataset",
-      "minLinks": 1,
-      "maxLinks": 1,
-      "scope": "page"
-    }
+    { "id": "dataset-in", "at": { "fragment": "table-root", "name": "table-root" }, "direction": "in", "kind": "data", "contract": "dataset", "minLinks": 1, "maxLinks": 1, "scope": "page" }
   ],
   "componentRefs": ["table"],
   "ruleRefs": [],
   "dependencyBlockIds": [],
   "layout": { "frameRef": "table-root", "scrollBoundary": "table-root" },
   "landmarks": { "main": 0, "primaryHeading": 0 },
-  "provenance": {
-    "origin": "authored",
-    "sourceHashes": {},
-    "mappingVersion": "1.0.0"
-  }
+  "provenance": { "origin": "authored", "sourceHashes": {}, "mappingVersion": "1.0.0" }
 }

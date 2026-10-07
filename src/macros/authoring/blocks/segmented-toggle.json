@@ -9,31 +9,18 @@
   "fragments": [
     {
       "id": "toggle-root",
-      "emmet": "div[data-component=segmented-toggle][data-variant=pill][role=radiogroup][aria-label='Date range'].flex.gap-2>label.btn[data-variant=outline]>input[type=radio][name=date-range][value=3m].sr-only+span{Last 3 months}^label.btn[data-variant=outline]>input[type=radio][name=date-range][value=30d][checked].sr-only+span{Last 30 days}^label.btn[data-variant=outline]>input[type=radio][name=date-range][value=7d].sr-only+span{Last 7 days}"
+      "emmet": "div.inline-flex.h-9.w-full.items-center.justify-center.rounded-md.bg-muted.p-2.text-muted-foreground.md:w-auto[data-component=segmented-toggle][data-variant=pill][role=radiogroup][aria-label='Date range']>label.inline-flex.flex-1.items-center.justify-center.rounded-sm.px-4.py-2.text-xs.font-medium.hover:bg-background.hover:text-foreground.has-\\[:checked\\]:bg-background.has-\\[:checked\\]:text-foreground.has-\\[:checked\\]:shadow-sm>input[type=radio][name=date-range][value=3m][checked].sr-only+span{Last 3 months}^label.inline-flex.flex-1.items-center.justify-center.rounded-sm.px-4.py-2.text-xs.font-medium.hover:bg-background.hover:text-foreground.has-\\[:checked\\]:bg-background.has-\\[:checked\\]:text-foreground.has-\\[:checked\\]:shadow-sm>input[type=radio][name=date-range][value=30d].sr-only+span{Last 30 days}^label.inline-flex.flex-1.items-center.justify-center.rounded-sm.px-4.py-2.text-xs.font-medium.hover:bg-background.hover:text-foreground.has-\\[:checked\\]:bg-background.has-\\[:checked\\]:text-foreground.has-\\[:checked\\]:shadow-sm>input[type=radio][name=date-range][value=7d].sr-only+span{Last 7 days}"
     }
   ],
   "mounts": [],
   "slots": [],
   "ports": [
-    {
-      "id": "range-out",
-      "at": { "fragment": "toggle-root", "name": "toggle-root" },
-      "direction": "out",
-      "kind": "data",
-      "contract": "date-range",
-      "minLinks": 0,
-      "maxLinks": 2,
-      "scope": "page"
-    }
+    { "id": "range-out", "at": { "fragment": "toggle-root", "name": "toggle-root" }, "direction": "out", "kind": "data", "contract": "date-range", "minLinks": 0, "maxLinks": 2, "scope": "page" }
   ],
   "componentRefs": ["segmented-toggle", "radio-group", "button"],
   "ruleRefs": [],
   "dependencyBlockIds": [],
   "layout": { "frameRef": "toggle-root" },
   "landmarks": { "main": 0, "primaryHeading": 0 },
-  "provenance": {
-    "origin": "authored",
-    "sourceHashes": {},
-    "mappingVersion": "1.0.0"
-  }
+  "provenance": { "origin": "authored", "sourceHashes": {}, "mappingVersion": "1.0.0" }
 }

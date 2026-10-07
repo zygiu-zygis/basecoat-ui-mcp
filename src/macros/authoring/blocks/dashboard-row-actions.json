@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "id": "dashboard-row-actions",
+  "role": "row-action",
+  "family": "data",
+  "description": "Trailing per-row action contract for document records. Actions open the detail drawer or a bounded menu; disabled and unavailable states remain explicit.",
+  "tags": ["dashboard", "table", "row-actions", "drawer", "states"],
+  "root": "actions-root",
+  "fragments": [
+    {
+      "id": "actions-root",
+      "emmet": "div.flex.items-center.justify-end.gap-2[data-slot=row-action][data-action-shape=view,menu]>button.btn[data-variant=ghost][data-size=icon][data-action=view][aria-label=View]{View}+button.btn[data-variant=ghost][data-size=icon][data-action=menu][aria-label=More actions]{More}"
+    }
+  ],
+  "mounts": [],
+  "slots": [
+    { "id": "view", "at": { "fragment": "actions-root", "name": "view" }, "accepts": ["action"], "min": 0, "max": 1 },
+    { "id": "menu", "at": { "fragment": "actions-root", "name": "menu" }, "accepts": ["action"], "min": 0, "max": 1 }
+  ],
+  "ports": [
+    { "id": "dataset-out", "at": { "fragment": "actions-root", "name": "actions-root" }, "direction": "out", "kind": "data", "contract": "dataset", "minLinks": 0, "maxLinks": 1, "scope": "page" }
+  ],
+  "componentRefs": ["button", "dropdown-menu", "drawer"],
+  "ruleRefs": [],
+  "dependencyBlockIds": [],
+  "layout": { "frameRef": "actions-root" },
+  "landmarks": { "main": 0, "primaryHeading": 0 },
+  "provenance": { "origin": "authored", "sourceHashes": {}, "mappingVersion": "1.0.0" }
+}

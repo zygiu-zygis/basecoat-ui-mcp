@@ -1,13 +1,13 @@
 {
   "schemaVersion": 1,
-  "revision": "0a91a785f57de9b623ae859e46b63cbb71b34bc2d6c29a9fd83adb70d72eb72d",
+  "revision": "a8197af331a528c1db96d70c86ff1e76076c49db8a7a24da9de37fed2d4212d9",
   "blocks": {
-    "67de989d195a092ab9f5f799c19e64909a8faf84cb2277271b2619d3f9a62fb3": {
+    "cf9eba1c64fe88ee6b7477a5307670a128179199d03cf834f741bfaee8e611b4": {
       "schemaVersion": 1,
       "id": "app-shell",
       "role": "shell",
       "family": "layout",
-      "description": "Application shell with navigation, header, and main content slots.",
+      "description": "Reference dashboard shell contract: 16rem sidebar, 4rem header, 1rem desktop content gutter, 1rem mobile gutter; sidebar collapses below md and the content frame owns scrolling.",
       "tags": [
         "shell",
         "layout",
@@ -17,7 +17,7 @@
       "fragments": [
         {
           "id": "shell-root",
-          "emmet": "div.flex.min-h-screen.bg-background>aside[data-slot=nav]+div.flex.flex-1.flex-col>header[data-slot=header]+main#main[data-slot=content]"
+          "emmet": "div.flex.min-h-screen.w-full.bg-background.text-foreground[data-theme-tokens=bg-background,text-foreground,border-border][data-sidebar-width=16rem][data-mobile-breakpoint=md][data-content-gutter=1rem][data-horizontal-overflow=contained]>div.sidebar-backdrop.fixed.inset-0.z-30.hidden.bg-black/50.data-[state=open]:block.md:hidden[data-sidebar-backdrop][aria-hidden=true]+aside[data-slot=nav]+div.flex.min-w-0.flex-1.flex-col.>header.flex.items-center.justify-between.gap-4.border-b.border-border.p-4[data-slot=header][data-height=4rem]+main#main.flex-1.min-w-0[data-slot=content][data-scroll-owner=main][data-width=fluid]"
         }
       ],
       "mounts": [],
@@ -31,9 +31,8 @@
           "accepts": [
             "navigation"
           ],
-          "min": 1,
-          "max": 1,
-          "boundary": "shell-root"
+          "min": 0,
+          "max": 1
         },
         {
           "id": "header",
@@ -44,7 +43,7 @@
           "accepts": [
             "header"
           ],
-          "min": 1,
+          "min": 0,
           "max": 1
         },
         {
@@ -54,53 +53,35 @@
             "name": "content"
           },
           "accepts": [
-            "page",
             "workspace",
+            "hero",
+            "page",
             "dashboard"
           ],
           "min": 1,
-          "max": 1,
-          "boundary": "shell-root"
+          "max": 1
         }
       ],
       "ports": [
         {
-          "id": "nav-control",
-          "at": {
-            "fragment": "shell-root",
-            "name": "nav"
-          },
-          "direction": "out",
-          "kind": "control",
-          "contract": "nav-toggle",
-          "minLinks": 0,
-          "maxLinks": 1,
-          "scope": "shell"
-        },
-        {
           "id": "main-region",
           "at": {
             "fragment": "shell-root",
-            "name": "content"
+            "name": "shell-root"
           },
           "direction": "out",
           "kind": "region",
           "contract": "main",
           "minLinks": 0,
-          "maxLinks": 4,
-          "scope": "shell"
+          "maxLinks": 1,
+          "scope": "page"
         }
       ],
       "componentRefs": [],
-      "ruleRefs": [
-        "b5d7a493bc7eac10e352c137750a54fdd11140b9a0e36442e7a4693de7a64c92",
-        "3804c304e4328847ae10c8de08dc4d56994e306217f3b66eab1c08f205591954"
-      ],
+      "ruleRefs": [],
       "dependencyRefs": [],
       "layout": {
-        "frameRef": "shell-root",
-        "gutterBoundary": "shell-root",
-        "scrollBoundary": "shell-root"
+        "frameRef": "shell-root"
       },
       "landmarks": {
         "main": 0,
@@ -340,26 +321,78 @@
         "mappingVersion": "1.0.0"
       }
     },
-    "dc633c7b5a31229b36eef74338791a30c9254446987fe1d4d7d3d726ee095d3d": {
+    "e37abed2ecbbe245ff79cd23681fc2545a72f00dba2486d27ac7232aa4cbd125": {
       "schemaVersion": 1,
       "id": "dashboard-main",
       "role": "metrics",
       "family": "workspace",
-      "description": "Dashboard metrics region with a four-card KPI grid using approved rhythm utilities.",
+      "description": "Reference KPI contract: four equal cards, 1/2/4 columns at base/md/xl, 1rem grid gap, 8rem minimum card height.",
       "tags": [
         "dashboard",
         "cards",
-        "metrics"
+        "metrics",
+        "kpi",
+        "responsive",
+        "states"
       ],
       "root": "content-frame",
       "fragments": [
         {
           "id": "content-frame",
-          "emmet": "section.grid.gap-4.p-4.md:grid-cols-2.xl:grid-cols-4>div[data-component=card][data-slot=card-a]+div[data-component=card][data-slot=card-b]+div[data-component=card][data-slot=card-c]+div[data-component=card][data-slot=card-d]"
+          "emmet": "section.grid.grid-cols-1.gap-4.p-4.md:grid-cols-2.xl:grid-cols-4[data-slot=metrics-grid][data-columns=1,2,4][data-card-min-height=8rem]>article.card.flex.min-h-32.min-w-0.flex-col.rounded-xl.border.border-border.bg-card.text-card-foreground.shadow-sm[data-slot=card-$]*4>header.flex.flex-row.items-center.justify-between.gap-2.p-6.pb-2>span.text-sm.font-medium[data-slot=label]+span.badge.rounded-full.border.border-border.px-2..text-[10px].text-muted-foreground[data-slot=delta]^section.flex.flex-col.gap-2.p-6.pt-0>strong.text-2xl.font-bold[data-slot=value]+p.text-xs.text-muted-foreground[data-slot=helper]"
         }
       ],
       "mounts": [],
-      "slots": [],
+      "slots": [
+        {
+          "id": "card-1",
+          "at": {
+            "fragment": "content-frame",
+            "name": "card-1"
+          },
+          "accepts": [
+            "kpi"
+          ],
+          "min": 0,
+          "max": 1
+        },
+        {
+          "id": "card-2",
+          "at": {
+            "fragment": "content-frame",
+            "name": "card-2"
+          },
+          "accepts": [
+            "kpi"
+          ],
+          "min": 0,
+          "max": 1
+        },
+        {
+          "id": "card-3",
+          "at": {
+            "fragment": "content-frame",
+            "name": "card-3"
+          },
+          "accepts": [
+            "kpi"
+          ],
+          "min": 0,
+          "max": 1
+        },
+        {
+          "id": "card-4",
+          "at": {
+            "fragment": "content-frame",
+            "name": "card-4"
+          },
+          "accepts": [
+            "kpi"
+          ],
+          "min": 0,
+          "max": 1
+        }
+      ],
       "ports": [
         {
           "id": "metrics-in",
@@ -383,6 +416,178 @@
       "dependencyRefs": [],
       "layout": {
         "frameRef": "content-frame"
+      },
+      "landmarks": {
+        "main": 0,
+        "primaryHeading": 0
+      },
+      "provenance": {
+        "origin": "authored",
+        "sourceHashes": {},
+        "mappingVersion": "1.0.0"
+      }
+    },
+    "9604f39f3923de0570eefdfe380984a95b26f4dacfb18b09b8f4d690874fa9fb": {
+      "schemaVersion": 1,
+      "id": "dashboard-row-actions",
+      "role": "row-action",
+      "family": "data",
+      "description": "Trailing per-row action contract for document records. Actions open the detail drawer or a bounded menu; disabled and unavailable states remain explicit.",
+      "tags": [
+        "dashboard",
+        "table",
+        "row-actions",
+        "drawer",
+        "states"
+      ],
+      "root": "actions-root",
+      "fragments": [
+        {
+          "id": "actions-root",
+          "emmet": "div.flex.items-center.justify-end.gap-2[data-slot=row-action][data-action-shape=view,menu]>button.btn[data-variant=ghost][data-size=icon][data-action=view][aria-label=View]{View}+button.btn[data-variant=ghost][data-size=icon][data-action=menu][aria-label=More actions]{More}"
+        }
+      ],
+      "mounts": [],
+      "slots": [
+        {
+          "id": "view",
+          "at": {
+            "fragment": "actions-root",
+            "name": "view"
+          },
+          "accepts": [
+            "action"
+          ],
+          "min": 0,
+          "max": 1
+        },
+        {
+          "id": "menu",
+          "at": {
+            "fragment": "actions-root",
+            "name": "menu"
+          },
+          "accepts": [
+            "action"
+          ],
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "ports": [
+        {
+          "id": "dataset-out",
+          "at": {
+            "fragment": "actions-root",
+            "name": "actions-root"
+          },
+          "direction": "out",
+          "kind": "data",
+          "contract": "dataset",
+          "minLinks": 0,
+          "maxLinks": 1,
+          "scope": "page"
+        }
+      ],
+      "componentRefs": [
+        "button",
+        "dropdown-menu",
+        "drawer"
+      ],
+      "ruleRefs": [],
+      "dependencyRefs": [],
+      "layout": {
+        "frameRef": "actions-root"
+      },
+      "landmarks": {
+        "main": 0,
+        "primaryHeading": 0
+      },
+      "provenance": {
+        "origin": "authored",
+        "sourceHashes": {},
+        "mappingVersion": "1.0.0"
+      }
+    },
+    "bba1211323caad19153bc2eefe4c50c49f0dd1d6200c2cf5d1fdacf8fb3ed7fd": {
+      "schemaVersion": 1,
+      "id": "dashboard-tabs",
+      "role": "tabs",
+      "family": "workspace",
+      "description": "Reference tabs contract: Outline, Past Performance, Key Personnel, Focus Documents; horizontal overflow below md.",
+      "tags": [
+        "dashboard",
+        "tabs",
+        "responsive",
+        "navigation"
+      ],
+      "root": "tabs-root",
+      "fragments": [
+        {
+          "id": "tabs-root",
+          "emmet": "div.w-full[data-component=tabs][data-variant=line][data-orientation=horizontal][data-active=outline]>nav.flex.w-full.items-center.gap-4.border-b.border-border.overflow-x-auto.scrollbar-none[role=tablist][aria-label=Document sections][data-responsive=horizontal-overflow-below-md]>button.p-2.text-sm.font-medium.text-muted-foreground.border-b-2.border-transparent.hover:text-foreground.aria-selected:border-foreground.aria-selected:text-foreground[data-slot=outline][role=tab][aria-selected=true]{Outline}+button.p-2.text-sm.font-medium.text-muted-foreground.border-b-2.border-transparent.hover:text-foreground.aria-selected:border-foreground.aria-selected:text-foreground[data-slot=past-performance][role=tab]{Past Performance}+button.p-2.text-sm.font-medium.text-muted-foreground.border-b-2.border-transparent.hover:text-foreground.aria-selected:border-foreground.aria-selected:text-foreground[data-slot=key-personnel][role=tab]{Key Personnel}+button.p-2.text-sm.font-medium.text-muted-foreground.border-b-2.border-transparent.hover:text-foreground.aria-selected:border-foreground.aria-selected:text-foreground[data-slot=focus-documents][role=tab]{Focus Documents}"
+        }
+      ],
+      "mounts": [],
+      "slots": [
+        {
+          "id": "outline",
+          "at": {
+            "fragment": "tabs-root",
+            "name": "outline"
+          },
+          "accepts": [
+            "tab-panel"
+          ],
+          "min": 0,
+          "max": 1
+        },
+        {
+          "id": "past-performance",
+          "at": {
+            "fragment": "tabs-root",
+            "name": "past-performance"
+          },
+          "accepts": [
+            "tab-panel"
+          ],
+          "min": 0,
+          "max": 1
+        },
+        {
+          "id": "key-personnel",
+          "at": {
+            "fragment": "tabs-root",
+            "name": "key-personnel"
+          },
+          "accepts": [
+            "tab-panel"
+          ],
+          "min": 0,
+          "max": 1
+        },
+        {
+          "id": "focus-documents",
+          "at": {
+            "fragment": "tabs-root",
+            "name": "focus-documents"
+          },
+          "accepts": [
+            "tab-panel"
+          ],
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "ports": [],
+      "componentRefs": [
+        "tabs",
+        "button"
+      ],
+      "ruleRefs": [],
+      "dependencyRefs": [],
+      "layout": {
+        "frameRef": "tabs-root"
       },
       "landmarks": {
         "main": 0,
@@ -583,25 +788,41 @@
         "mappingVersion": "1.0.0"
       }
     },
-    "3cf92bf80520abe59ab18ec9ce3ff1714ab917a31d5eab9ac8cd7f913f47b0cd": {
+    "7965117e46b8720212be167a0e2da5bdead00eaffbc3a51539d82db511ef7793": {
       "schemaVersion": 1,
       "id": "data-table",
       "role": "table",
       "family": "data",
-      "description": "Tabular results region wrapping the curated table component.",
+      "description": "Reference table contract: compact density, readable typography, horizontal overflow below md, visible row separators, selectable rows, status badges, numeric alignment, reviewer column, trailing view/menu actions.",
       "tags": [
         "data",
-        "table"
+        "table",
+        "row-actions",
+        "selection",
+        "responsive"
       ],
       "root": "table-root",
       "fragments": [
         {
           "id": "table-root",
-          "emmet": "div.overflow-auto.rounded-md.border>div[data-component=table]"
+          "emmet": "div.overflow-auto.rounded-md.border.border-border[data-slot=table-scroll][data-controls=bounded][data-responsive=horizontal-overflow-below-md][data-mobile-policy=scroll][data-density=compact][data-row-separators=visible]>table.table.w-full.text-sm[data-component=table][data-row-height=2.5rem][data-typography=readable]>thead>tr.border-b.border-border.transition-colors.hover\\:bg-muted\\/50.data-\\[state\\=selected\\]\\:bg-muted>th.h-10.px-2.text-left.align-middle.font-medium.text-muted-foreground[data-column=header]+th.h-10.px-2.text-left.align-middle.font-medium.text-muted-foreground[data-column=section-type]+th.h-10.px-2.text-left.align-middle.font-medium.text-muted-foreground[data-column=status]+th.h-10.px-2.text-end.align-middle.font-medium.text-muted-foreground[data-column=target]+th.h-10.px-2.text-end.align-middle.font-medium.text-muted-foreground[data-column=limit]+th.h-10.px-2.text-left.align-middle.font-medium.text-muted-foreground[data-column=reviewer]+th.h-10.px-2.align-middle[data-column=row-action]^tbody[data-slot=rows][data-row-shape=id,title,type,status,target,limit,reviewer][data-selection=checkbox]"
         }
       ],
       "mounts": [],
-      "slots": [],
+      "slots": [
+        {
+          "id": "row-action",
+          "at": {
+            "fragment": "table-root",
+            "name": "row-action"
+          },
+          "accepts": [
+            "row-action"
+          ],
+          "min": 0,
+          "max": 1
+        }
+      ],
       "ports": [
         {
           "id": "dataset-in",
@@ -636,26 +857,43 @@
         "mappingVersion": "1.0.0"
       }
     },
-    "02273050b9b6ad5f887ec47b177f349c8330c3fdd6565df310743c773771a6f4": {
+    "b2ee88d41603df708ade2d9b416b2ee55af10d64a034794a3d82ecf62a824887": {
       "schemaVersion": 1,
       "id": "data-workspace",
       "role": "workspace",
       "family": "data",
-      "description": "Data workspace frame with ordered filters, table, and pager slots.",
+      "description": "Reference records frame contract: tabs, filters, compact table, row actions, pager, and optional reviewer detail drawer. Region names must be tabs, filters, table, row-actions, pager, detail-drawer; records are {id,header,sectionType,status,target,limit,reviewer}; preserve selection, pagination, loading/empty/error states.",
       "tags": [
         "data",
         "workspace",
-        "table"
+        "table",
+        "tabs",
+        "row-actions",
+        "drawer",
+        "responsive",
+        "states"
       ],
       "root": "content-frame",
       "fragments": [
         {
           "id": "content-frame",
-          "emmet": "section.flex.flex-col.gap-4.p-4>div[data-slot=filters]+div[data-slot=table]+div[data-slot=pager]"
+          "emmet": "section.flex.flex-col.gap-4.p-4[data-role=records-workspace][data-density=compact][data-responsive=stack-below-md]>div[data-slot=tabs]+div[data-slot=filters]+div[data-slot=table][data-state=ready]+div[data-slot=row-actions]+div[data-slot=pager]+div[data-slot=detail-drawer][data-state=closed][data-reviewer=enabled]"
         }
       ],
       "mounts": [],
       "slots": [
+        {
+          "id": "tabs",
+          "at": {
+            "fragment": "content-frame",
+            "name": "tabs"
+          },
+          "accepts": [
+            "tabs"
+          ],
+          "min": 1,
+          "max": 1
+        },
         {
           "id": "filters",
           "at": {
@@ -691,6 +929,30 @@
           ],
           "min": 1,
           "max": 1
+        },
+        {
+          "id": "row-actions",
+          "at": {
+            "fragment": "content-frame",
+            "name": "row-actions"
+          },
+          "accepts": [
+            "row-action"
+          ],
+          "min": 0,
+          "max": 1
+        },
+        {
+          "id": "detail-drawer",
+          "at": {
+            "fragment": "content-frame",
+            "name": "detail-drawer"
+          },
+          "accepts": [
+            "details"
+          ],
+          "min": 0,
+          "max": 1
         }
       ],
       "ports": [
@@ -714,7 +976,7 @@
       ],
       "dependencyRefs": [
         "7b8a12c860ba038232b4973d25051b98867ca278cd0761541603f8516958265c",
-        "3cf92bf80520abe59ab18ec9ce3ff1714ab917a31d5eab9ac8cd7f913f47b0cd",
+        "7965117e46b8720212be167a0e2da5bdead00eaffbc3a51539d82db511ef7793",
         "8db430e806c397ae4259c221b7030e80e783f34c1f1c5002702020e1041a9296"
       ],
       "layout": {
@@ -801,7 +1063,7 @@
         "mappingVersion": "1.0.0"
       }
     },
-    "a9bc442695665c5bc07aad5aa1f7491f3f97ea1efba629f4dfd0b8268031e210": {
+    "dc206e8be4abd1b8fe3d26535290a721a0e5ca822b91a849c97708f3b11432b7": {
       "schemaVersion": 1,
       "id": "data-table-detail-layout",
       "role": "workspace",
@@ -891,7 +1153,7 @@
       "ruleRefs": [],
       "dependencyRefs": [
         "7b8a12c860ba038232b4973d25051b98867ca278cd0761541603f8516958265c",
-        "3cf92bf80520abe59ab18ec9ce3ff1714ab917a31d5eab9ac8cd7f913f47b0cd",
+        "7965117e46b8720212be167a0e2da5bdead00eaffbc3a51539d82db511ef7793",
         "8db430e806c397ae4259c221b7030e80e783f34c1f1c5002702020e1041a9296",
         "1cb011c6a62e6e6c82caddc5015ba58ceba8217f226a2bfcd6b587467083cb8b"
       ],
@@ -1090,12 +1352,12 @@
         "mappingVersion": "1.0.0"
       }
     },
-    "dbfae20d1ef27d597a119b019dfc9444fb0ae3800016076fc4271830b9565caf": {
+    "ea0aa5d07c517f19965bcbd10c5af8193e7678801c6fbe2f0a61650fc57e9379": {
       "schemaVersion": 1,
       "id": "page-header",
       "role": "header",
       "family": "layout",
-      "description": "Page header with breadcrumb trail and action cluster.",
+      "description": "Reference dashboard header contract: 4rem tall, 1rem horizontal gutter, breadcrumb/title on the left and actions on the right; menu toggle is available below md.",
       "tags": [
         "header",
         "breadcrumb"
@@ -1104,7 +1366,7 @@
       "fragments": [
         {
           "id": "content-frame",
-          "emmet": "div.flex.items-center.justify-between.gap-4.border-b.p-4>div[data-component=breadcrumb]+div.flex.gap-2[data-slot=actions]"
+          "emmet": "div.flex.h-16.items-center.justify-between.gap-4.border-b.border-border.px-4[data-height=4rem][data-gutter=1rem][data-responsive=wrap-below-md]>div[data-component=breadcrumb]+div.flex.gap-2[data-slot=actions]"
         }
       ],
       "mounts": [],
@@ -1316,7 +1578,7 @@
         "mappingVersion": "1.0.0"
       }
     },
-    "ff35aa4378cbabb98ebb0fc43c4f1fdf7f5ad94601078c1490f721c940a4fc5c": {
+    "0056c81cb0936eea54dd1cc7ca2c8990ccead21217e4d440e8b9ed15def2c9bb": {
       "schemaVersion": 1,
       "id": "segmented-toggle",
       "role": "range-control",
@@ -1332,7 +1594,7 @@
       "fragments": [
         {
           "id": "toggle-root",
-          "emmet": "div[data-component=segmented-toggle][data-variant=pill][role=radiogroup][aria-label='Date range'].flex.gap-2>label.btn[data-variant=outline]>input[type=radio][name=date-range][value=3m].sr-only+span{Last 3 months}^label.btn[data-variant=outline]>input[type=radio][name=date-range][value=30d][checked].sr-only+span{Last 30 days}^label.btn[data-variant=outline]>input[type=radio][name=date-range][value=7d].sr-only+span{Last 7 days}"
+          "emmet": "div.inline-flex.h-9.w-full.items-center.justify-center.rounded-md.bg-muted.p-2.text-muted-foreground.md:w-auto[data-component=segmented-toggle][data-variant=pill][role=radiogroup][aria-label='Date range']>label.inline-flex.flex-1.items-center.justify-center.rounded-sm.px-4.py-2.text-xs.font-medium.hover:bg-background.hover:text-foreground.has-\\[:checked\\]:bg-background.has-\\[:checked\\]:text-foreground.has-\\[:checked\\]:shadow-sm>input[type=radio][name=date-range][value=3m][checked].sr-only+span{Last 3 months}^label.inline-flex.flex-1.items-center.justify-center.rounded-sm.px-4.py-2.text-xs.font-medium.hover:bg-background.hover:text-foreground.has-\\[:checked\\]:bg-background.has-\\[:checked\\]:text-foreground.has-\\[:checked\\]:shadow-sm>input[type=radio][name=date-range][value=30d].sr-only+span{Last 30 days}^label.inline-flex.flex-1.items-center.justify-center.rounded-sm.px-4.py-2.text-xs.font-medium.hover:bg-background.hover:text-foreground.has-\\[:checked\\]:bg-background.has-\\[:checked\\]:text-foreground.has-\\[:checked\\]:shadow-sm>input[type=radio][name=date-range][value=7d].sr-only+span{Last 7 days}"
         }
       ],
       "mounts": [],
@@ -1513,12 +1775,12 @@
         "mappingVersion": "1.0.0"
       }
     },
-    "6245b44b5b79b16b6a7ba5cc61c9246a0330ddac6d2021ac374c2671cf61c14f": {
+    "c379af98853ec57a7484a03eab001c9339e54b9e8963af652ff7cd619420064a": {
       "schemaVersion": 1,
       "id": "sidebar-dashboard-shell",
       "role": "navigation",
       "family": "layout",
-      "description": "Dashboard sidebar with workspace switcher, grouped collapsible nav, user footer, and responsive canvas anchors.",
+      "description": "Reference dashboard sidebar contract: 16rem wide desktop frame with 1rem inner gutter, grouped navigation including More.",
       "tags": [
         "navigation",
         "sidebar",
@@ -1529,7 +1791,7 @@
       "fragments": [
         {
           "id": "nav-root",
-          "emmet": "aside.sidebar[data-slot=sidebar-host][data-component=sidebar][data-side=left][data-initial-open=true]>div.flex.flex-col.gap-4.p-4>div[data-slot=workspace-switcher]>button.btn[data-variant=outline]{Acme Inc}^nav.flex.flex-col.gap-4[aria-label=Main]>section[data-slot=nav-home]>h3.text-sm{Home}+ul>li>a[aria-current=page]{Dashboard}^^section[data-slot=nav-documents]>h3.text-sm{Documents}+ul>li>a{Library}^^div.mt-auto[data-slot=user-footer]>button.btn[data-variant=ghost]{Account}"
+          "emmet": "aside.sidebar.w-64[aria-label=Sidebar][data-slot=sidebar-host][data-component=sidebar][data-side=left][data-mobile-breakpoint=md][data-focus=return-on-close][data-mobile-policy=flyout-inert]>nav.flex.flex-col.gap-4.p-4[data-gutter=1rem]>button.btn.w-full.justify-start[data-variant=outline][data-slot=workspace-switcher]{Acme Inc}^section.flex.flex-col.gap-2[data-slot=nav-home]>h3.px-2.text-xs.font-medium.text-muted-foreground{Home}+a.btn.w-full.justify-start[data-variant=ghost][data-size=sm][aria-current=page]{Dashboard}^^section.flex.flex-col.gap-2[data-slot=nav-documents]>h3.px-2.text-xs.font-medium.text-muted-foreground{Documents}+a.btn.w-full.justify-start[data-variant=ghost][data-size=sm]{Library}^^section.flex.flex-col.gap-2[data-slot=nav-more]>h3.px-2.text-xs.font-medium.text-muted-foreground{More}+a.btn.w-full.justify-start[data-variant=ghost][data-size=sm]{More}^^div.mt-auto.flex.flex-col.gap-2.border-t.pt-4[data-slot=user-footer]>button.btn.w-full.justify-start[data-variant=ghost][data-size=sm]{Account}+div.flex.flex-wrap.gap-2.px-2.pt-2[data-slot=footer-controls]>button.btn.px-2.text-xs[data-variant=ghost]{Settings}+button.btn.px-2.text-xs[data-variant=ghost]{Help}"
         }
       ],
       "mounts": [],
@@ -1847,12 +2109,12 @@
         "mappingVersion": "1.0.0"
       }
     },
-    "9882f38bc966b690f268ad7f962ea638b8598b812d167a5340c6ab29b70f8209": {
+    "61d945845b25a30abb295d9e4d738ccb39e43f51aedb2337f29ca6eb027cc501": {
       "schemaVersion": 1,
       "id": "svg-area-chart",
       "role": "chart",
       "family": "workspace",
-      "description": "Zero-runtime SVG area chart for offline dashboards; does not require window.Chart or Chart.js.",
+      "description": "Zero-runtime SVG chart contract: 24rem host, mobile and desktop area series, legend and tooltip hooks, responsive width, and no Chart.js/window.Chart dependency.",
       "tags": [
         "dashboard",
         "chart",
@@ -1863,7 +2125,7 @@
       "fragments": [
         {
           "id": "chart-root",
-          "emmet": "div[data-component=svg-area-chart][data-slot=chart]>svg.w-full[role=img][aria-label='Total visitors area chart']>title{Total visitors}+desc{Area series for desktop and mobile visitors.}+path[data-series=desktop][fill=currentColor]+path[data-series=mobile][fill=currentColor]"
+          "emmet": "div.relative.mt-4.h-\\[180px\\].w-full.pb-6.md:h-\\[250px\\][data-component=svg-area-chart][data-slot=chart][data-height=20rem][data-responsive=width][data-legend=mobile,desktop][data-tooltip=enabled]>svg.block.h-\\[155px\\].w-full.text-muted-foreground.md:h-\\[220px\\][role=img][aria-label='Total visitors area chart']>title{Total visitors}+desc{Area series for desktop and mobile visitors.}+path[data-series=desktop][fill=currentColor]+path[data-series=mobile][fill=currentColor]"
         }
       ],
       "mounts": [],
@@ -1901,22 +2163,25 @@
         "mappingVersion": "1.0.0"
       }
     },
-    "78a55115c554a664f0e6389e597539ce1938b5b12e796a4c81e149a29091908e": {
+    "8628a8d5850a73a8045dc2615a12eb698b946a110802b4606f53e43564e51398": {
       "schemaVersion": 1,
       "id": "dashboard-activity",
       "role": "activity",
       "family": "workspace",
-      "description": "Dashboard visitors activity region with title, date-range controls, and chart mount.",
+      "description": "Reference activity contract: 24rem chart panel, 3-month default range, mobile and desktop series, visible legend and tooltip hooks, and loading/empty/error states. Controls wrap below md.",
       "tags": [
         "dashboard",
         "chart",
-        "activity"
+        "activity",
+        "responsive",
+        "states",
+        "offline"
       ],
       "root": "activity-root",
       "fragments": [
         {
           "id": "activity-root",
-          "emmet": "section.flex.flex-col.gap-4[data-slot=activity-panel]>(div.flex.items-center.justify-between.gap-4>h2.text-xl{Total Visitors}+div[data-slot=range])+div[data-component=chart][data-slot=chart]"
+          "emmet": "section.card.flex.min-w-0.flex-col.rounded-xl.border.border-border.bg-card.p-6.text-card-foreground.shadow-sm[data-slot=activity-panel][data-state=ready][data-height=24rem]>(header.flex.flex-col.items-start.justify-between.gap-2.md:flex-row.md:items-center>div.grid.gap-2>h2.text-lg.font-medium[data-slot=title]{Total Visitors}+p.text-sm.text-muted-foreground[data-slot=subtitle]{Total for the last 3 months}^div.flex.w-full.items-center.md:w-auto[data-slot=range][data-default-range=3m][data-responsive=wrap-below-md])+div[data-component=chart][data-slot=chart][data-series=mobile,desktop][data-series-density=dense-apr-jun][data-tooltip=enabled][data-legend=mobile,desktop]"
         }
       ],
       "mounts": [],
@@ -1966,8 +2231,8 @@
       ],
       "ruleRefs": [],
       "dependencyRefs": [
-        "ff35aa4378cbabb98ebb0fc43c4f1fdf7f5ad94601078c1490f721c940a4fc5c",
-        "9882f38bc966b690f268ad7f962ea638b8598b812d167a5340c6ab29b70f8209"
+        "0056c81cb0936eea54dd1cc7ca2c8990ccead21217e4d440e8b9ed15def2c9bb",
+        "61d945845b25a30abb295d9e4d738ccb39e43f51aedb2337f29ca6eb027cc501"
       ],
       "layout": {
         "frameRef": "activity-root"
@@ -1982,7 +2247,7 @@
         "mappingVersion": "1.0.0"
       }
     },
-    "1cc396b2660819c97d54e38c5ce12031f0e83213af29913ed178f0bb0a41fca8": {
+    "3f8e1b827935d61a7f759f80dc25fa4780489e2ec878f34a6a46d26b896d5093": {
       "schemaVersion": 1,
       "id": "dashboard-workspace",
       "role": "dashboard",
@@ -2057,9 +2322,9 @@
       "componentRefs": [],
       "ruleRefs": [],
       "dependencyRefs": [
-        "dc633c7b5a31229b36eef74338791a30c9254446987fe1d4d7d3d726ee095d3d",
-        "78a55115c554a664f0e6389e597539ce1938b5b12e796a4c81e149a29091908e",
-        "02273050b9b6ad5f887ec47b177f349c8330c3fdd6565df310743c773771a6f4"
+        "e37abed2ecbbe245ff79cd23681fc2545a72f00dba2486d27ac7232aa4cbd125",
+        "8628a8d5850a73a8045dc2615a12eb698b946a110802b4606f53e43564e51398",
+        "b2ee88d41603df708ade2d9b416b2ee55af10d64a034794a3d82ecf62a824887"
       ],
       "layout": {
         "frameRef": "content-frame"
@@ -2292,7 +2557,7 @@
         }
       ]
     },
-    "3d80d26e292c4d72ce9adc5b816eb4b5e009b4361c0f74420e218e823d6658e0": {
+    "1a7b9741fb099cc4cfd7206657177ebf894412b738dc8853baccacfe972c225f": {
       "schemaVersion": 1,
       "id": "data-records",
       "kind": "page",
@@ -2301,12 +2566,12 @@
         {
           "id": "records",
           "route": "/data",
-          "recipe": "3d80d26e292c4d72ce9adc5b816eb4b5e009b4361c0f74420e218e823d6658e0",
+          "recipe": "1a7b9741fb099cc4cfd7206657177ebf894412b738dc8853baccacfe972c225f",
           "root": "shell",
           "nodes": {
             "shell": {
               "id": "shell",
-              "block": "67de989d195a092ab9f5f799c19e64909a8faf84cb2277271b2619d3f9a62fb3",
+              "block": "cf9eba1c64fe88ee6b7477a5307670a128179199d03cf834f741bfaee8e611b4",
               "bindings": {}
             },
             "nav": {
@@ -2321,7 +2586,7 @@
             },
             "header": {
               "id": "header",
-              "block": "dbfae20d1ef27d597a119b019dfc9444fb0ae3800016076fc4271830b9565caf",
+              "block": "ea0aa5d07c517f19965bcbd10c5af8193e7678801c6fbe2f0a61650fc57e9379",
               "parent": {
                 "node": "shell",
                 "slot": "header",
@@ -2331,7 +2596,7 @@
             },
             "workspace": {
               "id": "workspace",
-              "block": "02273050b9b6ad5f887ec47b177f349c8330c3fdd6565df310743c773771a6f4",
+              "block": "b2ee88d41603df708ade2d9b416b2ee55af10d64a034794a3d82ecf62a824887",
               "parent": {
                 "node": "shell",
                 "slot": "content",
@@ -2355,7 +2620,7 @@
             },
             "table": {
               "id": "table",
-              "block": "3cf92bf80520abe59ab18ec9ce3ff1714ab917a31d5eab9ac8cd7f913f47b0cd",
+              "block": "7965117e46b8720212be167a0e2da5bdead00eaffbc3a51539d82db511ef7793",
               "parent": {
                 "node": "workspace",
                 "slot": "table",
@@ -2495,7 +2760,7 @@
       "entryPage": "pricing",
       "routeLinks": []
     },
-    "b20f7e5d9f0b7e7000753009adc81e84e4a1ad61e6be439c34e241d9c37bbbd9": {
+    "dd012524ce0a9b87cfd4239363f142a3157ff8e5cffc9b3bf40900d6e1ffb34e": {
       "schemaVersion": 1,
       "id": "workspace-dashboard",
       "kind": "page",
@@ -2504,17 +2769,17 @@
         {
           "id": "dashboard",
           "route": "/workspace",
-          "recipe": "b20f7e5d9f0b7e7000753009adc81e84e4a1ad61e6be439c34e241d9c37bbbd9",
+          "recipe": "dd012524ce0a9b87cfd4239363f142a3157ff8e5cffc9b3bf40900d6e1ffb34e",
           "root": "shell",
           "nodes": {
             "shell": {
               "id": "shell",
-              "block": "67de989d195a092ab9f5f799c19e64909a8faf84cb2277271b2619d3f9a62fb3",
+              "block": "cf9eba1c64fe88ee6b7477a5307670a128179199d03cf834f741bfaee8e611b4",
               "bindings": {}
             },
             "nav": {
               "id": "nav",
-              "block": "6245b44b5b79b16b6a7ba5cc61c9246a0330ddac6d2021ac374c2671cf61c14f",
+              "block": "c379af98853ec57a7484a03eab001c9339e54b9e8963af652ff7cd619420064a",
               "parent": {
                 "node": "shell",
                 "slot": "navigation",
@@ -2524,7 +2789,7 @@
             },
             "header": {
               "id": "header",
-              "block": "dbfae20d1ef27d597a119b019dfc9444fb0ae3800016076fc4271830b9565caf",
+              "block": "ea0aa5d07c517f19965bcbd10c5af8193e7678801c6fbe2f0a61650fc57e9379",
               "parent": {
                 "node": "shell",
                 "slot": "header",
@@ -2534,7 +2799,7 @@
             },
             "canvas": {
               "id": "canvas",
-              "block": "1cc396b2660819c97d54e38c5ce12031f0e83213af29913ed178f0bb0a41fca8",
+              "block": "3f8e1b827935d61a7f759f80dc25fa4780489e2ec878f34a6a46d26b896d5093",
               "parent": {
                 "node": "shell",
                 "slot": "content",
@@ -2544,7 +2809,7 @@
             },
             "metrics": {
               "id": "metrics",
-              "block": "dc633c7b5a31229b36eef74338791a30c9254446987fe1d4d7d3d726ee095d3d",
+              "block": "e37abed2ecbbe245ff79cd23681fc2545a72f00dba2486d27ac7232aa4cbd125",
               "parent": {
                 "node": "canvas",
                 "slot": "metrics",
@@ -2554,7 +2819,7 @@
             },
             "activity": {
               "id": "activity",
-              "block": "78a55115c554a664f0e6389e597539ce1938b5b12e796a4c81e149a29091908e",
+              "block": "8628a8d5850a73a8045dc2615a12eb698b946a110802b4606f53e43564e51398",
               "parent": {
                 "node": "canvas",
                 "slot": "activity",
@@ -2564,7 +2829,7 @@
             },
             "range": {
               "id": "range",
-              "block": "ff35aa4378cbabb98ebb0fc43c4f1fdf7f5ad94601078c1490f721c940a4fc5c",
+              "block": "0056c81cb0936eea54dd1cc7ca2c8990ccead21217e4d440e8b9ed15def2c9bb",
               "parent": {
                 "node": "activity",
                 "slot": "range",
@@ -2574,7 +2839,7 @@
             },
             "chart": {
               "id": "chart",
-              "block": "9882f38bc966b690f268ad7f962ea638b8598b812d167a5340c6ab29b70f8209",
+              "block": "61d945845b25a30abb295d9e4d738ccb39e43f51aedb2337f29ca6eb027cc501",
               "parent": {
                 "node": "activity",
                 "slot": "chart",
@@ -2584,7 +2849,7 @@
             },
             "records": {
               "id": "records",
-              "block": "02273050b9b6ad5f887ec47b177f349c8330c3fdd6565df310743c773771a6f4",
+              "block": "b2ee88d41603df708ade2d9b416b2ee55af10d64a034794a3d82ecf62a824887",
               "parent": {
                 "node": "canvas",
                 "slot": "records",
@@ -2593,6 +2858,16 @@
               "bindings": {
                 "data-context": "records-dataset"
               }
+            },
+            "tabs": {
+              "id": "tabs",
+              "block": "bba1211323caad19153bc2eefe4c50c49f0dd1d6200c2cf5d1fdacf8fb3ed7fd",
+              "parent": {
+                "node": "records",
+                "slot": "tabs",
+                "order": 0
+              },
+              "bindings": {}
             },
             "filters": {
               "id": "filters",
@@ -2608,11 +2883,23 @@
             },
             "table": {
               "id": "table",
-              "block": "3cf92bf80520abe59ab18ec9ce3ff1714ab917a31d5eab9ac8cd7f913f47b0cd",
+              "block": "7965117e46b8720212be167a0e2da5bdead00eaffbc3a51539d82db511ef7793",
               "parent": {
                 "node": "records",
                 "slot": "table",
                 "order": 1
+              },
+              "bindings": {
+                "data-context": "records-dataset"
+              }
+            },
+            "row-actions": {
+              "id": "row-actions",
+              "block": "9604f39f3923de0570eefdfe380984a95b26f4dacfb18b09b8f4d690874fa9fb",
+              "parent": {
+                "node": "records",
+                "slot": "row-actions",
+                "order": 2
               },
               "bindings": {
                 "data-context": "records-dataset"
@@ -2624,7 +2911,19 @@
               "parent": {
                 "node": "records",
                 "slot": "pager",
-                "order": 2
+                "order": 3
+              },
+              "bindings": {
+                "data-context": "records-dataset"
+              }
+            },
+            "drawer": {
+              "id": "drawer",
+              "block": "1cb011c6a62e6e6c82caddc5015ba58ceba8217f226a2bfcd6b587467083cb8b",
+              "parent": {
+                "node": "records",
+                "slot": "detail-drawer",
+                "order": 4
               },
               "bindings": {
                 "data-context": "records-dataset"
@@ -2679,6 +2978,18 @@
                 "node": "pager",
                 "port": "dataset-in"
               }
+            },
+            {
+              "id": "actions-to-drawer",
+              "relation": "data",
+              "from": {
+                "node": "row-actions",
+                "port": "dataset-out"
+              },
+              "to": {
+                "node": "drawer",
+                "port": "dataset-in"
+              }
             }
           ],
           "rules": [
@@ -2697,6 +3008,15 @@
                 "nav",
                 "header",
                 "canvas"
+              ]
+            },
+            {
+              "id": "dashboard-content-order",
+              "type": "ordered",
+              "parent": "canvas",
+              "slot": "records",
+              "nodes": [
+                "records"
               ]
             },
             {
@@ -2720,7 +3040,8 @@
             }
           ],
           "decisions": {
-            "density": "comfortable"
+            "density": "comfortable",
+            "nav-collapsed": false
           },
           "status": "plan-ready"
         }
@@ -2728,7 +3049,7 @@
       "entryPage": "dashboard",
       "routeLinks": []
     },
-    "a990d1a3c5dcbab18565b1b3e80d55788ed73de69912b8567cf5a6c290b69c9a": {
+    "53ba9d57a1f3484dd9b3b66ce797842678a521b941451b337dceaa41f97e042d": {
       "schemaVersion": 1,
       "id": "workspace-detail",
       "kind": "page",
@@ -2737,17 +3058,17 @@
         {
           "id": "detail",
           "route": "/workspace/detail",
-          "recipe": "a990d1a3c5dcbab18565b1b3e80d55788ed73de69912b8567cf5a6c290b69c9a",
+          "recipe": "53ba9d57a1f3484dd9b3b66ce797842678a521b941451b337dceaa41f97e042d",
           "root": "shell",
           "nodes": {
             "shell": {
               "id": "shell",
-              "block": "67de989d195a092ab9f5f799c19e64909a8faf84cb2277271b2619d3f9a62fb3",
+              "block": "cf9eba1c64fe88ee6b7477a5307670a128179199d03cf834f741bfaee8e611b4",
               "bindings": {}
             },
             "nav": {
               "id": "nav",
-              "block": "6245b44b5b79b16b6a7ba5cc61c9246a0330ddac6d2021ac374c2671cf61c14f",
+              "block": "c379af98853ec57a7484a03eab001c9339e54b9e8963af652ff7cd619420064a",
               "parent": {
                 "node": "shell",
                 "slot": "navigation",
@@ -2757,7 +3078,7 @@
             },
             "header": {
               "id": "header",
-              "block": "dbfae20d1ef27d597a119b019dfc9444fb0ae3800016076fc4271830b9565caf",
+              "block": "ea0aa5d07c517f19965bcbd10c5af8193e7678801c6fbe2f0a61650fc57e9379",
               "parent": {
                 "node": "shell",
                 "slot": "header",
@@ -2767,7 +3088,7 @@
             },
             "canvas": {
               "id": "canvas",
-              "block": "a9bc442695665c5bc07aad5aa1f7491f3f97ea1efba629f4dfd0b8268031e210",
+              "block": "dc206e8be4abd1b8fe3d26535290a721a0e5ca822b91a849c97708f3b11432b7",
               "parent": {
                 "node": "shell",
                 "slot": "content",
@@ -2789,7 +3110,7 @@
             },
             "table": {
               "id": "table",
-              "block": "3cf92bf80520abe59ab18ec9ce3ff1714ab917a31d5eab9ac8cd7f913f47b0cd",
+              "block": "7965117e46b8720212be167a0e2da5bdead00eaffbc3a51539d82db511ef7793",
               "parent": {
                 "node": "canvas",
                 "slot": "table",
@@ -2934,7 +3255,7 @@
       "entryPage": "detail",
       "routeLinks": []
     },
-    "7a0ff5b84767f2edaf38f1b5512431b4a31dd1d983856f50ad55afe101025e42": {
+    "0854e2a80cc9de2dd2b86372e63e40746ea8e6fcaac311023f132686d797019a": {
       "schemaVersion": 1,
       "id": "workspace-settings",
       "kind": "page",
@@ -2943,17 +3264,17 @@
         {
           "id": "settings",
           "route": "/settings",
-          "recipe": "7a0ff5b84767f2edaf38f1b5512431b4a31dd1d983856f50ad55afe101025e42",
+          "recipe": "0854e2a80cc9de2dd2b86372e63e40746ea8e6fcaac311023f132686d797019a",
           "root": "shell",
           "nodes": {
             "shell": {
               "id": "shell",
-              "block": "67de989d195a092ab9f5f799c19e64909a8faf84cb2277271b2619d3f9a62fb3",
+              "block": "cf9eba1c64fe88ee6b7477a5307670a128179199d03cf834f741bfaee8e611b4",
               "bindings": {}
             },
             "nav": {
               "id": "nav",
-              "block": "6245b44b5b79b16b6a7ba5cc61c9246a0330ddac6d2021ac374c2671cf61c14f",
+              "block": "c379af98853ec57a7484a03eab001c9339e54b9e8963af652ff7cd619420064a",
               "parent": {
                 "node": "shell",
                 "slot": "navigation",
@@ -2963,7 +3284,7 @@
             },
             "header": {
               "id": "header",
-              "block": "dbfae20d1ef27d597a119b019dfc9444fb0ae3800016076fc4271830b9565caf",
+              "block": "ea0aa5d07c517f19965bcbd10c5af8193e7678801c6fbe2f0a61650fc57e9379",
               "parent": {
                 "node": "shell",
                 "slot": "header",
@@ -3124,43 +3445,45 @@
     "shell-frame": "b5d7a493bc7eac10e352c137750a54fdd11140b9a0e36442e7a4693de7a64c92",
     "shell-gutter": "3804c304e4328847ae10c8de08dc4d56994e306217f3b66eab1c08f205591954",
     "app-default": "efcf2f3e93ee5b4730cff4a6d760833299d19ca480be4b16424ae24a810e6057",
-    "app-shell": "67de989d195a092ab9f5f799c19e64909a8faf84cb2277271b2619d3f9a62fb3",
+    "app-shell": "cf9eba1c64fe88ee6b7477a5307670a128179199d03cf834f741bfaee8e611b4",
     "auth-recovery": "44f07830cae181975863955bf469725b946855a8914e4cc6b63797bddf7f805d",
     "auth-reset": "a3f4265e047c061e5f009cd4cd2c5bb001701c29c3bcd655c67572d7468e0776",
     "auth-sign-in": "2707e4a25d2f99437d380b9ac7a44636882a812d8ba2b34494a9f369169d88c4",
     "auth-sign-up": "6fec7f17de2d2c7e3f69e52109b87b0255d948f881a5e33a6f9f61be1d36a8f3",
     "auth-split-screen": "01b514d6afe398f6f3baf4fa2dee37baffdbec3051e684602ed0f05d48573d69",
-    "dashboard-main": "dc633c7b5a31229b36eef74338791a30c9254446987fe1d4d7d3d726ee095d3d",
+    "dashboard-main": "e37abed2ecbbe245ff79cd23681fc2545a72f00dba2486d27ac7232aa4cbd125",
+    "dashboard-row-actions": "9604f39f3923de0570eefdfe380984a95b26f4dacfb18b09b8f4d690874fa9fb",
+    "dashboard-tabs": "bba1211323caad19153bc2eefe4c50c49f0dd1d6200c2cf5d1fdacf8fb3ed7fd",
     "data-bulk-actions": "d232d911c58b6e32e54e20c878151915e7bce015705c0f6717b65d8878cc4c10",
     "data-filters": "7b8a12c860ba038232b4973d25051b98867ca278cd0761541603f8516958265c",
     "data-pager": "8db430e806c397ae4259c221b7030e80e783f34c1f1c5002702020e1041a9296",
-    "data-table": "3cf92bf80520abe59ab18ec9ce3ff1714ab917a31d5eab9ac8cd7f913f47b0cd",
-    "data-workspace": "02273050b9b6ad5f887ec47b177f349c8330c3fdd6565df310743c773771a6f4",
+    "data-table": "7965117e46b8720212be167a0e2da5bdead00eaffbc3a51539d82db511ef7793",
+    "data-workspace": "b2ee88d41603df708ade2d9b416b2ee55af10d64a034794a3d82ecf62a824887",
     "detail-drawer-panel": "1cb011c6a62e6e6c82caddc5015ba58ceba8217f226a2bfcd6b587467083cb8b",
-    "data-table-detail-layout": "a9bc442695665c5bc07aad5aa1f7491f3f97ea1efba629f4dfd0b8268031e210",
+    "data-table-detail-layout": "dc206e8be4abd1b8fe3d26535290a721a0e5ca822b91a849c97708f3b11432b7",
     "empty-state": "b7c5de3a1cf828bda14e337119258c8613505b36c167633b347d1551367d10f5",
     "error-boundary": "47f6bc0a357930337589b78f8eb83051c2979498475f4154a38a8f9bb81764f7",
     "form-section": "db0f381548cf79f10b2eb645ee1a4586b5eca810b8aa670849767271debd6bc3",
     "newsletter-waitlist": "57a13cd223e2a23e2c4c7ec875cfba5eb5030f6bf587bd1170dbec4db33989e9",
-    "page-header": "dbfae20d1ef27d597a119b019dfc9444fb0ae3800016076fc4271830b9565caf",
+    "page-header": "ea0aa5d07c517f19965bcbd10c5af8193e7678801c6fbe2f0a61650fc57e9379",
     "pricing-tiers": "5857b53433f74071b407f98b96554ac99c6515031ff21a63f252cc9f3874cd96",
     "product-detail-layout": "1274d7167afc432e06f100a16c8f31d9173a3bd11ea2a21ca673752be3637054",
-    "segmented-toggle": "ff35aa4378cbabb98ebb0fc43c4f1fdf7f5ad94601078c1490f721c940a4fc5c",
+    "segmented-toggle": "0056c81cb0936eea54dd1cc7ca2c8990ccead21217e4d440e8b9ed15def2c9bb",
     "settings-workspace": "5307b337028dfb9f6fe1ece8975ad6a6857d3fe9fc1b41d1df2c28c709dc8cc8",
     "sidebar-collapsible-icon": "8a79b7ec1e26b7522a1d32d85d3d5c0a924b1ab21c32252b5d3207eefd0e5274",
-    "sidebar-dashboard-shell": "6245b44b5b79b16b6a7ba5cc61c9246a0330ddac6d2021ac374c2671cf61c14f",
+    "sidebar-dashboard-shell": "c379af98853ec57a7484a03eab001c9339e54b9e8963af652ff7cd619420064a",
     "sidebar-inset-shell": "036d12c586a0dacff01c67cc745856d2eb02092f9ce096c44336f3034a8fe71d",
     "sidebar-mobile-flyout": "b2f95030c433acc594d2dd8ce1a1bdf20f2410e9e646a83803103d17806d85fb",
     "sidebar-nav": "9625532a4f0d2a345eb368fbf7fa3fc77337782d5c6340c28f0d5df2d525ecd3",
-    "svg-area-chart": "9882f38bc966b690f268ad7f962ea638b8598b812d167a5340c6ab29b70f8209",
-    "dashboard-activity": "78a55115c554a664f0e6389e597539ce1938b5b12e796a4c81e149a29091908e",
-    "dashboard-workspace": "1cc396b2660819c97d54e38c5ce12031f0e83213af29913ed178f0bb0a41fca8",
+    "svg-area-chart": "61d945845b25a30abb295d9e4d738ccb39e43f51aedb2337f29ca6eb027cc501",
+    "dashboard-activity": "8628a8d5850a73a8045dc2615a12eb698b946a110802b4606f53e43564e51398",
+    "dashboard-workspace": "3f8e1b827935d61a7f759f80dc25fa4780489e2ec878f34a6a46d26b896d5093",
     "auth-flow": "9bf7cdd02ccaa4b26cfa92274aeeb6be1b1583793f349c97ebe5fa96baebd528",
     "auth-split-flow": "d929b9d4d54a7db7284e7478f596db39e8bbe05d7240555409b24eba33347b58",
-    "data-records": "3d80d26e292c4d72ce9adc5b816eb4b5e009b4361c0f74420e218e823d6658e0",
+    "data-records": "1a7b9741fb099cc4cfd7206657177ebf894412b738dc8853baccacfe972c225f",
     "marketing-pricing": "190c51eac23911ad817903da7f9390216eaf783c13737cef654a3096cc54aa56",
-    "workspace-dashboard": "b20f7e5d9f0b7e7000753009adc81e84e4a1ad61e6be439c34e241d9c37bbbd9",
-    "workspace-detail": "a990d1a3c5dcbab18565b1b3e80d55788ed73de69912b8567cf5a6c290b69c9a",
-    "workspace-settings": "7a0ff5b84767f2edaf38f1b5512431b4a31dd1d983856f50ad55afe101025e42"
+    "workspace-dashboard": "dd012524ce0a9b87cfd4239363f142a3157ff8e5cffc9b3bf40900d6e1ffb34e",
+    "workspace-detail": "53ba9d57a1f3484dd9b3b66ce797842678a521b941451b337dceaa41f97e042d",
+    "workspace-settings": "0854e2a80cc9de2dd2b86372e63e40746ea8e6fcaac311023f132686d797019a"
   }
 }

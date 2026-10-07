@@ -58,6 +58,36 @@ await import("basecoat-css/popover");`;
 });
 
 describe('composition validation', () => {
+  it('accepts the curated offline dashboard sidebar anatomy and landmark label', () => {
+    const result = validateComposition(`
+      <div class="sidebar-backdrop" data-sidebar-backdrop aria-hidden="true"></div>
+      <aside class="sidebar" aria-label="Sidebar">
+        <svg class="sidebar-icon" aria-hidden="true"></svg>
+      </aside>
+    `);
+    assert.equal(result.valid, true);
+    assert.equal(result.issues.filter(issue => issue.rule === 'invalid-basecoat-class').length, 0);
+    assert.equal(result.issues.filter(issue => issue.rule === 'a11y-landmark-label').length, 0);
+  });
+
+  it('does not allow unregistered sidebar anatomy classes', () => {
+    const result = validateComposition('<aside class="sidebar-unknown" aria-label="Sidebar"></aside>');
+    assert.equal(result.valid, false);
+    assert.ok(result.issues.some(issue => issue.rule === 'invalid-basecoat-class'));
+  });
+
+  it('rejects runtime network access in offline compositions', () => {
+    const result = validateComposition('<script>fetch("/api/records"); const socket = new WebSocket("/live");</script>');
+    assert.equal(result.valid, false);
+    assert.ok(result.issues.some(issue => issue.rule === 'runtime-network'));
+  });
+
+  it('rejects React runtime and JSX component output', () => {
+    const result = validateComposition(`import React from 'react';\nconst root = createRoot(el);\nreturn <Dashboard />;`);
+    assert.equal(result.valid, false);
+    assert.ok(result.issues.some(issue => issue.rule === 'react-runtime'));
+  });
+
   it('detects cards nested through intermediate containers as warnings', () => {
     const result = validateComposition('<div class="card"><section><div class="card"></div></section></div>');
     assert.equal(result.valid, true);
@@ -439,6 +469,12 @@ const preview = '<aside data-example="ignored">';
   it('reports invalid tag names', () => {
     const result = parseHtmlWithDiagnostics('<123invalid>');
     assert(result.diagnostics.some(d => d.code === 'invalid-tag-name'));
+  });
+
+  it('accepts the standard HTML doctype declaration', () => {
+    const result = parseHtmlWithDiagnostics('<!DOCTYPE html><html><body><main>Dashboard</main></body></html>');
+    assert.equal(result.diagnostics.length, 0);
+    assert.equal(result.nodes.find(node => node.tag === 'main')?.line, 1);
   });
 
   it('includes line and column information in diagnostics', () => {

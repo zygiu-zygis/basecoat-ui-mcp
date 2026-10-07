@@ -43,6 +43,71 @@ Companion notes from the first pass also live in `tests/fixtures/offline-dashboa
 
 Remaining human judgment: iconography polish, table interaction density (row menus/drag), and pixel parity with shadcn chrome.
 
+### Browser audit follow-up (2026-10-07)
+
+The local fixture now keeps the measured visual/state corrections in source: the
+3-month range is selected by default, the SVG has dense April-June points,
+font declarations use the same deterministic `"DejaVu Sans", sans-serif` stack
+available in the capture environment, KPI cards expose bordered
+rounded surfaces, the table has readable type and visible row separators with
+bounded pager controls, and the sidebar keeps More plus account/settings/help/
+search controls inside its frame. The corresponding macro contracts and focused
+registry assertions are tracked here so the ignored fixture is not the sole
+deliverable.
+
+Typography contract: the fixture must not declare or fetch Geist, Inter, or any
+other network font. Root and body text use the same local
+`"DejaVu Sans", sans-serif` stack so screenshots are reproducible in the
+offline Chromium capture environment.
+
+## Tracked visual contracts
+
+The authoring blocks and compiled registry now carry the deterministic contracts
+used to recreate this reference-like composition. These are executable metadata
+on the block roots, not fixture-only CSS:
+
+- Shell: `16rem` sidebar, `4rem` header, `1rem` content/header gutters, `md`
+  mobile breakpoint, main-owned scrolling, and Basecoat `bg-background`,
+  `text-foreground`, and `border-border` tokens. Mobile policy is an inert-safe
+  flyout.
+- KPIs: four equal cards, `1/2/4` columns at base/`md`/`xl`, `1rem` gap,
+  `8rem` minimum card height, `text-sm` labels, `text-2xl` values, and muted
+  helper text.
+- Activity: `24rem` panel, `mobile,desktop` series, visible legend and tooltip
+  hooks, default three-month range, and controls wrapping below `md`.
+- Records: named `tabs`, `filters`, `table`, `row-actions`, `pager`, and
+  `detail-drawer` regions; compact density; horizontal table overflow below
+  `md`; columns `header`, `sectionType`, `status`, `target`, `limit`,
+  `reviewer`, and row action; reviewer drawer and view/menu actions.
+
+`workspace-dashboard` is the single graph for these regions. Its recipe slots
+match the block anchors exactly, and the registry test fails if the visual
+contracts or authored provenance (`mappingVersion: 1.0.0`) disappear.
+
+### Responsive browser audit
+
+The local Astro fixture was checked at CSS viewport widths 320, 640, 768, and
+1024. At 320 and 640, the sidebar is off-canvas with `aria-hidden="true"` and
+`inert`, the main region starts at `x=0`, and KPI columns are `1` and `2`
+respectively. At 768 and 1024, the sidebar is a 256px desktop rail, the main
+region starts at `x=256`, and KPI columns remain `2`. Document scroll width
+stayed within the viewport at all four widths; mobile table content is
+intentionally clipped to its local horizontal scroll container.
+
+The mobile toggle was exercised with keyboard input: opening exposes the
+sidebar to the accessibility tree and focuses its first control; Escape closes
+it, restores `aria-hidden`/`inert`, and returns focus to the toggle. The
+backdrop also closes the flyout and restores focus. Captures:
+`/tmp/cursor/screenshots/dashboard-320-responsive.png`,
+`/tmp/cursor/screenshots/dashboard-640-responsive.png`,
+`/tmp/cursor/screenshots/dashboard-768-responsive.png`, and
+`/tmp/cursor/screenshots/dashboard-1024-responsive.png`.
+
+Provenance: authored offline metadata, compiled by `scripts/compile-blocks.ts`;
+the visual reference is the shadcn dashboard information hierarchy, not a
+runtime or network dependency. The local fixture remains ignored and is not
+the source of truth.
+
 ---
 
 ## Before / after registry evidence
