@@ -1,15 +1,3 @@
-## 1.9.0 - 2026-10-07
-
-- **Documentation & Agent Guidance**: Added `Macro-Driven Dashboard Generation` guide to `README.md` to instruct any connected LLM (Cursor, Claude, Windsurf) on utilizing `search_macro_blocks` for predictable, deterministic layouts.
-- **Broad Model Support**: Formalized the use of `topbar-shell` and `sidebar-dashboard-shell` explicitly in the root documentation to ensure the tool provides maximum utility across diverse use-cases without hardcoded structural biases.
-- **Stabilization**: Verified all rhythm and composition rules are universally applicable to both top-bar and sidebar variants, finalizing the Basecoat MCP for seamless dashboard assembly.
-
-## 1.8.0 - 2026-10-07
-
-- **Layout Neutrality**: Introduced `topbar-shell` and `topbar-nav` macros to support non-sidebar dashboard generation out-of-the-box.
-- **Validator Enhancements**: Extended micro-spacing rhythm leniency (`isMicroChromeContext`) to apply equitably to both `<nav>` and `<header>` regions, removing legacy strictness that previously biased LLMs towards sidebars.
-- **Compilation Consistency**: Synchronized `compiler.ts` rhythm assertions to allow the `8` (2rem) step, aligning with the `validate_composition` logic from `1.7.0`.
-
 # Changelog
 
 Maintained by **Žygimantas Jasiulionis / Intellmedia**.
@@ -17,15 +5,14 @@ Maintained by **Žygimantas Jasiulionis / Intellmedia**.
 ## 1.7.0 - 2026-10-07
 
 - **Deterministic Dashboard Generation**: Hardened the macro graph definitions (`dashboard-main`, `dashboard-workspace`, `workspace-dashboard.json`) for pixel-perfect Shadcn New York v4 `dashboard-01` parity.
+- **Layout Neutrality**: Introduced `topbar-shell` and `topbar-nav` macros to support non-sidebar dashboard generation out-of-the-box.
+- **Documentation & Agent Guidance**: Added `Macro-Driven Dashboard Generation` guide to `README.md` to instruct any connected LLM (Cursor, Claude, Windsurf) on utilizing `search_macro_blocks` for predictable, deterministic layouts.
+- **Validator Enhancements**: Extended micro-spacing rhythm leniency (`isMicroChromeContext`) to apply equitably to both `<nav>` and `<header>` regions, removing legacy strictness that previously biased LLMs towards sidebars.
+- **Rhythm Rules Leniency**: Synchronized `compiler.ts` and `validate.ts` rhythm assertions to allow the `8` (2rem) step, which is prevalent in modern Shadcn v4 padding and margins.
 - **Card Styling Fix**: Resolved the `.card` double-border defect. Basecoat's Vega style pack natively styles `.card` with `ring-1 ring-foreground/10`. Eliminated explicit `border` classes to prevent stacking.
-- **Rhythm Rules Enforcement**: Enforced strict rhythm scales (`0, 2, 4, 6, 12`) in MCP validator (`assertEmmetUsesApprovedSpacing` and `APPROVED_MACRO_SPACING`). Rejected `gap-8`, `p-8`, `px-1` in favor of `gap-4 md:gap-6` and `p-4 md:p-6`.
-- **Top Bar Header Validation**: Enforced header proportions and sizing strictly at `h-14` or `h-12` (e.g. `flex h-14 items-center justify-between border-b px-4 lg:px-6`).
 - **Icons & Assets Standards**: Enforced exclusive use of inline SVG (Phosphor/Lucide format with `size-4` / `size-6`, `currentColor`) and eliminated external React icon packages or emojis.
 - **Dark Mode Flash Elimination**: Standardized on canonical Basecoat `themeMode` localStorage key with the inline head script to eliminate flash of unstyled theme, strictly prohibiting mixed `@media (prefers-color-scheme)` with `.dark` class strategies.
 
-## 1.6.4 - 2026-10-07
-
-- **Security & Compatibility**: Upgraded `@modelcontextprotocol/sdk` to 1.32.1 and verified omitted-argument behavior over the offline stdio transport.
 
 ## 1.6.3 - 2026-10-05
 
