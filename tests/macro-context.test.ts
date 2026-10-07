@@ -962,8 +962,8 @@ test('packaged workspace-dashboard recipe holds metrics, activity, and records i
   });
   assert(nodeRoles.some(n => n.id === 'canvas' && n.role === 'dashboard'));
   assert(nodeRoles.some(n => n.id === 'metrics' && n.role === 'metrics' && n.parent === 'metrics'));
-  assert(nodeRoles.some(n => n.id === 'activity' && n.role === 'activity' && n.parent === 'activity'));
-  assert(nodeRoles.some(n => n.id === 'records' && n.role === 'workspace' && n.parent === 'records'));
+  assert(nodeRoles.some(n => n.id === 'activity' && n.role === 'activity' && n.parent === 'overview'));
+  assert(nodeRoles.some(n => n.id === 'records' && n.role === 'workspace' && n.parent === 'recent-sales'));
   assert(nodeRoles.some(n => n.id === 'filters' && n.parent === 'filters'));
   assert(nodeRoles.some(n => n.id === 'table' && n.parent === 'table'));
   assert(nodeRoles.some(n => n.id === 'pager' && n.parent === 'pager'));

@@ -698,16 +698,23 @@ test('packaged dashboard graph exposes four KPIs plus activity and records slots
   assert.equal(workspace.role, 'dashboard');
   assert.deepEqual(
     workspace.slots.map(slot => slot.id).sort(),
-    ['activity', 'metrics', 'records'],
+    ['metrics'],
   );
   assert(workspace.fragments[0]?.emmet.includes('data-role=canvas'));
   assert(workspace.fragments[0]?.emmet.includes('data-macro=canvas'));
 
   const metrics = getBlock(packaged, 'dashboard-main');
   assert.equal(metrics.role, 'metrics');
-  assert(metrics.fragments[0]?.emmet.includes('xl:grid-cols-4'));
+  assert(metrics.fragments[0]?.emmet.includes('lg:grid-cols-4'));
   assert(metrics.fragments[0]?.emmet.includes('card-$'));
-  assert.deepEqual(metrics.slots.map(slot => slot.id).sort(), ['card-1', 'card-2', 'card-3', 'card-4']);
+  assert.deepEqual(metrics.slots.map(slot => slot.id).sort(), [
+    'card-1',
+    'card-2',
+    'card-3',
+    'card-4',
+    'overview',
+    'recent-sales',
+  ]);
 
   const activity = getBlock(packaged, 'dashboard-activity');
   assert(activity.fragments[0]?.emmet.includes('data-series=mobile,desktop'));

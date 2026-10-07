@@ -9,7 +9,7 @@
   "fragments": [
     {
       "id": "content-frame",
-      "emmet": "section.grid.grid-cols-1.gap-4.px-4.lg:px-6.sm:grid-cols-2.xl:grid-cols-4[data-slot=metrics-grid][data-columns=1,2,4][data-card-min-height=8rem]>article.card.flex.min-h-32.min-w-0.flex-col.gap-6.rounded-xl.border.border-border.bg-card.py-6.text-card-foreground.shadow-sm[data-slot=card-$]*4>(header.grid.grid-rows-2.gap-2.px-6>div.flex.items-center.justify-between>span.text-sm.text-muted-foreground[data-slot=label]+span.badge.rounded-full.border.border-border.px-2.text-xs.font-medium[data-variant=outline][data-slot=delta]^strong.text-2xl.font-semibold.tabular-nums[data-slot=value])+div.flex.flex-col.gap-2.px-6>div.flex.items-center.gap-2.text-sm.font-medium[data-slot=detail]+p.text-xs.text-muted-foreground[data-slot=helper]"
+      "emmet": "div.flex.flex-1.flex-col.gap-4.md:gap-6[data-slot=metrics-grid]>div.grid.grid-cols-1.gap-4.md:gap-6.md:grid-cols-2.lg:grid-cols-4[data-columns=1,2,4][data-card-min-height=8rem]>(article.card.flex.min-h-32.min-w-0.flex-col.gap-6.rounded-xl.bg-card.py-6.text-card-foreground.shadow-sm[data-slot=card-$]*4>(header.grid.grid-rows-2.gap-2.px-6>div.flex.items-center.justify-between>span.text-sm.text-muted-foreground[data-slot=label]+span.badge.rounded-full.border.border-border.px-2.text-xs.font-medium[data-variant=outline][data-slot=delta]^strong.text-2xl.font-semibold.tabular-nums[data-slot=value])+div.flex.flex-col.gap-2.px-6>div.flex.items-center.gap-2.text-sm.font-medium[data-slot=detail]+p.text-xs.text-muted-foreground[data-slot=helper]))+div.grid.gap-4.md:gap-6.lg:grid-cols-2.xl:grid-cols-3>div.xl:col-span-2[data-slot=overview]+div[data-slot=recent-sales]"
     }
   ],
   "mounts": [],
@@ -17,7 +17,9 @@
     { "id": "card-1", "at": { "fragment": "content-frame", "name": "card-1" }, "accepts": ["kpi"], "min": 0, "max": 1 },
     { "id": "card-2", "at": { "fragment": "content-frame", "name": "card-2" }, "accepts": ["kpi"], "min": 0, "max": 1 },
     { "id": "card-3", "at": { "fragment": "content-frame", "name": "card-3" }, "accepts": ["kpi"], "min": 0, "max": 1 },
-    { "id": "card-4", "at": { "fragment": "content-frame", "name": "card-4" }, "accepts": ["kpi"], "min": 0, "max": 1 }
+    { "id": "card-4", "at": { "fragment": "content-frame", "name": "card-4" }, "accepts": ["kpi"], "min": 0, "max": 1 },
+    { "id": "overview", "at": { "fragment": "content-frame", "name": "overview" }, "accepts": ["activity", "chart"], "min": 0, "max": 1 },
+    { "id": "recent-sales", "at": { "fragment": "content-frame", "name": "recent-sales" }, "accepts": ["workspace", "list"], "min": 0, "max": 1 }
   ],
   "ports": [
     { "id": "metrics-in", "at": { "fragment": "content-frame", "name": "content-frame" }, "direction": "in", "kind": "region", "contract": "metrics", "minLinks": 0, "maxLinks": 1, "scope": "page" }

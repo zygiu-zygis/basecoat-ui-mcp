@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "revision": "bf21eb66eb26bad57b67f83323723df525a81210471102732bd37a1084e6f635",
+  "revision": "9e131aa19016777f27019cd45ba7e0a5f7a17cf715af5f48e5f2db56531e8f5d",
   "blocks": {
     "cbe0f152631792d61e6ebb46d791ae123dd45d83b58f2105e1c8f38e1bf283a7": {
       "schemaVersion": 1,
@@ -321,7 +321,7 @@
         "mappingVersion": "1.0.0"
       }
     },
-    "d8c0d1163f472cc411d5c5ebca54c213364ee3888ac4de793aadc837350f0430": {
+    "7e2d0789c42ad85b9fefbd1ebae6d268e077bdf9cf2f2d1333a30d992d5fc672": {
       "schemaVersion": 1,
       "id": "dashboard-main",
       "role": "metrics",
@@ -339,7 +339,7 @@
       "fragments": [
         {
           "id": "content-frame",
-          "emmet": "section.grid.grid-cols-1.gap-4.px-4.lg:px-6.sm:grid-cols-2.xl:grid-cols-4[data-slot=metrics-grid][data-columns=1,2,4][data-card-min-height=8rem]>article.card.flex.min-h-32.min-w-0.flex-col.gap-6.rounded-xl.border.border-border.bg-card.py-6.text-card-foreground.shadow-sm[data-slot=card-$]*4>(header.grid.grid-rows-2.gap-2.px-6>div.flex.items-center.justify-between>span.text-sm.text-muted-foreground[data-slot=label]+span.badge.rounded-full.border.border-border.px-2.text-xs.font-medium[data-variant=outline][data-slot=delta]^strong.text-2xl.font-semibold.tabular-nums[data-slot=value])+div.flex.flex-col.gap-2.px-6>div.flex.items-center.gap-2.text-sm.font-medium[data-slot=detail]+p.text-xs.text-muted-foreground[data-slot=helper]"
+          "emmet": "div.flex.flex-1.flex-col.gap-4.md:gap-6[data-slot=metrics-grid]>div.grid.grid-cols-1.gap-4.md:gap-6.md:grid-cols-2.lg:grid-cols-4[data-columns=1,2,4][data-card-min-height=8rem]>(article.card.flex.min-h-32.min-w-0.flex-col.gap-6.rounded-xl.bg-card.py-6.text-card-foreground.shadow-sm[data-slot=card-$]*4>(header.grid.grid-rows-2.gap-2.px-6>div.flex.items-center.justify-between>span.text-sm.text-muted-foreground[data-slot=label]+span.badge.rounded-full.border.border-border.px-2.text-xs.font-medium[data-variant=outline][data-slot=delta]^strong.text-2xl.font-semibold.tabular-nums[data-slot=value])+div.flex.flex-col.gap-2.px-6>div.flex.items-center.gap-2.text-sm.font-medium[data-slot=detail]+p.text-xs.text-muted-foreground[data-slot=helper]))+div.grid.gap-4.md:gap-6.lg:grid-cols-2.xl:grid-cols-3>div.xl:col-span-2[data-slot=overview]+div[data-slot=recent-sales]"
         }
       ],
       "mounts": [],
@@ -388,6 +388,32 @@
           },
           "accepts": [
             "kpi"
+          ],
+          "min": 0,
+          "max": 1
+        },
+        {
+          "id": "overview",
+          "at": {
+            "fragment": "content-frame",
+            "name": "overview"
+          },
+          "accepts": [
+            "activity",
+            "chart"
+          ],
+          "min": 0,
+          "max": 1
+        },
+        {
+          "id": "recent-sales",
+          "at": {
+            "fragment": "content-frame",
+            "name": "recent-sales"
+          },
+          "accepts": [
+            "workspace",
+            "list"
           ],
           "min": 0,
           "max": 1
@@ -588,6 +614,72 @@
       "dependencyRefs": [],
       "layout": {
         "frameRef": "tabs-root"
+      },
+      "landmarks": {
+        "main": 0,
+        "primaryHeading": 0
+      },
+      "provenance": {
+        "origin": "authored",
+        "sourceHashes": {},
+        "mappingVersion": "1.0.0"
+      }
+    },
+    "2ab30a18ff43fd607d925ef0075119934a5ed77030a7a0aa1cb5ce55c40fc42b": {
+      "schemaVersion": 1,
+      "id": "dashboard-workspace",
+      "role": "dashboard",
+      "family": "workspace",
+      "description": "Operate dashboard canvas hosting metrics, activity, and records regions without nesting cards.",
+      "tags": [
+        "dashboard",
+        "canvas",
+        "workspace"
+      ],
+      "root": "content-frame",
+      "fragments": [
+        {
+          "id": "content-frame",
+          "emmet": "main.flex.flex-1.flex-col.gap-4.p-4.md:gap-6.md:p-6[data-role=canvas][data-macro=canvas]>div[data-slot=metrics]"
+        }
+      ],
+      "mounts": [],
+      "slots": [
+        {
+          "id": "metrics",
+          "at": {
+            "fragment": "content-frame",
+            "name": "metrics"
+          },
+          "accepts": [
+            "metrics"
+          ],
+          "min": 1,
+          "max": 1
+        }
+      ],
+      "ports": [
+        {
+          "id": "main-in",
+          "at": {
+            "fragment": "content-frame",
+            "name": "content-frame"
+          },
+          "direction": "in",
+          "kind": "region",
+          "contract": "main",
+          "minLinks": 0,
+          "maxLinks": 1,
+          "scope": "shell"
+        }
+      ],
+      "componentRefs": [],
+      "ruleRefs": [],
+      "dependencyRefs": [
+        "7e2d0789c42ad85b9fefbd1ebae6d268e077bdf9cf2f2d1333a30d992d5fc672"
+      ],
+      "layout": {
+        "frameRef": "content-frame"
       },
       "landmarks": {
         "main": 0,
@@ -2163,7 +2255,7 @@
         "mappingVersion": "1.0.0"
       }
     },
-    "2df4c7b89ccfdc85b6296a8a4cce7b489403fa9e7c00e83762410806c012eee5": {
+    "11e81ac3707d99da5d12cb7c146e3ce74fe616496372c176a2f0e15a125bdae8": {
       "schemaVersion": 1,
       "id": "dashboard-activity",
       "role": "activity",
@@ -2181,7 +2273,7 @@
       "fragments": [
         {
           "id": "activity-root",
-          "emmet": "section.card.flex.min-w-0.flex-col.gap-6.rounded-xl.border.border-border.bg-card.py-6.text-card-foreground.shadow-sm[data-slot=activity-panel][data-state=ready][data-height=24rem]>(header.flex.flex-col.items-start.justify-between.gap-4.px-6.md:flex-row.md:items-center>div.grid.gap-2>h2.text-base.font-semibold[data-slot=title]{Total Visitors}+p.text-sm.text-muted-foreground[data-slot=subtitle]{Total for the last 3 months}^div.flex.w-full.items-center.md:w-auto[data-slot=range][data-default-range=3m][data-responsive=wrap-below-md])+div.px-2.sm:px-6[data-component=chart][data-slot=chart][data-series=mobile,desktop][data-series-density=dense-apr-jun][data-tooltip=enabled][data-legend=mobile,desktop]"
+          "emmet": "section.card.flex.min-w-0.flex-col.gap-6.rounded-xl.bg-card.py-6.text-card-foreground.shadow-sm[data-slot=activity-panel][data-state=ready][data-height=24rem]>(header.flex.flex-col.items-start.justify-between.gap-4.px-6.md:flex-row.md:items-center>div.grid.gap-2>h2.text-base.font-semibold[data-slot=title]{Total Visitors}+p.text-sm.text-muted-foreground[data-slot=subtitle]{Total for the last 3 months}^div.flex.w-full.items-center.md:w-auto[data-slot=range][data-default-range=3m][data-responsive=wrap-below-md])+div.px-2.sm:px-6[data-component=chart][data-slot=chart][data-series=mobile,desktop][data-series-density=dense-apr-jun][data-tooltip=enabled][data-legend=mobile,desktop]"
         }
       ],
       "mounts": [],
@@ -2236,98 +2328,6 @@
       ],
       "layout": {
         "frameRef": "activity-root"
-      },
-      "landmarks": {
-        "main": 0,
-        "primaryHeading": 0
-      },
-      "provenance": {
-        "origin": "authored",
-        "sourceHashes": {},
-        "mappingVersion": "1.0.0"
-      }
-    },
-    "61e5deea5dfd5725239cbd4ecd3b2e44b75f9579b2c681f9e40f1021dc479de7": {
-      "schemaVersion": 1,
-      "id": "dashboard-workspace",
-      "role": "dashboard",
-      "family": "workspace",
-      "description": "Operate dashboard canvas hosting metrics, activity, and records regions without nesting cards.",
-      "tags": [
-        "dashboard",
-        "canvas",
-        "workspace"
-      ],
-      "root": "content-frame",
-      "fragments": [
-        {
-          "id": "content-frame",
-          "emmet": "section.flex.flex-col.gap-4.p-4[data-role=canvas][data-macro=canvas]>div[data-slot=metrics]+div[data-slot=activity]+div[data-slot=records]"
-        }
-      ],
-      "mounts": [],
-      "slots": [
-        {
-          "id": "metrics",
-          "at": {
-            "fragment": "content-frame",
-            "name": "metrics"
-          },
-          "accepts": [
-            "metrics"
-          ],
-          "min": 1,
-          "max": 1
-        },
-        {
-          "id": "activity",
-          "at": {
-            "fragment": "content-frame",
-            "name": "activity"
-          },
-          "accepts": [
-            "activity"
-          ],
-          "min": 0,
-          "max": 1
-        },
-        {
-          "id": "records",
-          "at": {
-            "fragment": "content-frame",
-            "name": "records"
-          },
-          "accepts": [
-            "workspace"
-          ],
-          "min": 1,
-          "max": 1
-        }
-      ],
-      "ports": [
-        {
-          "id": "main-in",
-          "at": {
-            "fragment": "content-frame",
-            "name": "content-frame"
-          },
-          "direction": "in",
-          "kind": "region",
-          "contract": "main",
-          "minLinks": 0,
-          "maxLinks": 1,
-          "scope": "shell"
-        }
-      ],
-      "componentRefs": [],
-      "ruleRefs": [],
-      "dependencyRefs": [
-        "d8c0d1163f472cc411d5c5ebca54c213364ee3888ac4de793aadc837350f0430",
-        "2df4c7b89ccfdc85b6296a8a4cce7b489403fa9e7c00e83762410806c012eee5",
-        "fd464e595da290c7aeba1144598a7ebbf3f298d7192a4a60a9a6110bda6ed5a0"
-      ],
-      "layout": {
-        "frameRef": "content-frame"
       },
       "landmarks": {
         "main": 0,
@@ -2760,7 +2760,7 @@
       "entryPage": "pricing",
       "routeLinks": []
     },
-    "ea65a88508f97869c2fa953f93e3199b1ba17e6deaa4e845d26728631a7088bf": {
+    "9fa0447153ed9492a719538109dc554e23807e78a09e22a3f00bd85a359e36b4": {
       "schemaVersion": 1,
       "id": "workspace-dashboard",
       "kind": "page",
@@ -2769,7 +2769,7 @@
         {
           "id": "dashboard",
           "route": "/workspace",
-          "recipe": "ea65a88508f97869c2fa953f93e3199b1ba17e6deaa4e845d26728631a7088bf",
+          "recipe": "9fa0447153ed9492a719538109dc554e23807e78a09e22a3f00bd85a359e36b4",
           "root": "shell",
           "nodes": {
             "shell": {
@@ -2799,7 +2799,7 @@
             },
             "canvas": {
               "id": "canvas",
-              "block": "61e5deea5dfd5725239cbd4ecd3b2e44b75f9579b2c681f9e40f1021dc479de7",
+              "block": "2ab30a18ff43fd607d925ef0075119934a5ed77030a7a0aa1cb5ce55c40fc42b",
               "parent": {
                 "node": "shell",
                 "slot": "content",
@@ -2809,7 +2809,7 @@
             },
             "metrics": {
               "id": "metrics",
-              "block": "d8c0d1163f472cc411d5c5ebca54c213364ee3888ac4de793aadc837350f0430",
+              "block": "7e2d0789c42ad85b9fefbd1ebae6d268e077bdf9cf2f2d1333a30d992d5fc672",
               "parent": {
                 "node": "canvas",
                 "slot": "metrics",
@@ -2819,10 +2819,10 @@
             },
             "activity": {
               "id": "activity",
-              "block": "2df4c7b89ccfdc85b6296a8a4cce7b489403fa9e7c00e83762410806c012eee5",
+              "block": "11e81ac3707d99da5d12cb7c146e3ce74fe616496372c176a2f0e15a125bdae8",
               "parent": {
-                "node": "canvas",
-                "slot": "activity",
+                "node": "metrics",
+                "slot": "overview",
                 "order": 0
               },
               "bindings": {}
@@ -2851,8 +2851,8 @@
               "id": "records",
               "block": "fd464e595da290c7aeba1144598a7ebbf3f298d7192a4a60a9a6110bda6ed5a0",
               "parent": {
-                "node": "canvas",
-                "slot": "records",
+                "node": "metrics",
+                "slot": "recent-sales",
                 "order": 0
               },
               "bindings": {
@@ -3013,8 +3013,8 @@
             {
               "id": "dashboard-content-order",
               "type": "ordered",
-              "parent": "canvas",
-              "slot": "records",
+              "parent": "metrics",
+              "slot": "recent-sales",
               "nodes": [
                 "records"
               ]
@@ -3451,9 +3451,10 @@
     "auth-sign-in": "2707e4a25d2f99437d380b9ac7a44636882a812d8ba2b34494a9f369169d88c4",
     "auth-sign-up": "6fec7f17de2d2c7e3f69e52109b87b0255d948f881a5e33a6f9f61be1d36a8f3",
     "auth-split-screen": "01b514d6afe398f6f3baf4fa2dee37baffdbec3051e684602ed0f05d48573d69",
-    "dashboard-main": "d8c0d1163f472cc411d5c5ebca54c213364ee3888ac4de793aadc837350f0430",
+    "dashboard-main": "7e2d0789c42ad85b9fefbd1ebae6d268e077bdf9cf2f2d1333a30d992d5fc672",
     "dashboard-row-actions": "9604f39f3923de0570eefdfe380984a95b26f4dacfb18b09b8f4d690874fa9fb",
     "dashboard-tabs": "134cbe26caea6de9145179009486a115e0decd014c1659452cb8643f5317cf33",
+    "dashboard-workspace": "2ab30a18ff43fd607d925ef0075119934a5ed77030a7a0aa1cb5ce55c40fc42b",
     "data-bulk-actions": "d232d911c58b6e32e54e20c878151915e7bce015705c0f6717b65d8878cc4c10",
     "data-filters": "7b8a12c860ba038232b4973d25051b98867ca278cd0761541603f8516958265c",
     "data-pager": "8db430e806c397ae4259c221b7030e80e783f34c1f1c5002702020e1041a9296",
@@ -3476,13 +3477,12 @@
     "sidebar-mobile-flyout": "b2f95030c433acc594d2dd8ce1a1bdf20f2410e9e646a83803103d17806d85fb",
     "sidebar-nav": "9625532a4f0d2a345eb368fbf7fa3fc77337782d5c6340c28f0d5df2d525ecd3",
     "svg-area-chart": "5209282f4f9a9011131336fed4ab850de572ab3e542e8beb22a96e0a0c7e91fd",
-    "dashboard-activity": "2df4c7b89ccfdc85b6296a8a4cce7b489403fa9e7c00e83762410806c012eee5",
-    "dashboard-workspace": "61e5deea5dfd5725239cbd4ecd3b2e44b75f9579b2c681f9e40f1021dc479de7",
+    "dashboard-activity": "11e81ac3707d99da5d12cb7c146e3ce74fe616496372c176a2f0e15a125bdae8",
     "auth-flow": "9bf7cdd02ccaa4b26cfa92274aeeb6be1b1583793f349c97ebe5fa96baebd528",
     "auth-split-flow": "d929b9d4d54a7db7284e7478f596db39e8bbe05d7240555409b24eba33347b58",
     "data-records": "90200d4832214c0348cee75a1cf703b1edef0a4c8a18303904fc1a380891299a",
     "marketing-pricing": "190c51eac23911ad817903da7f9390216eaf783c13737cef654a3096cc54aa56",
-    "workspace-dashboard": "ea65a88508f97869c2fa953f93e3199b1ba17e6deaa4e845d26728631a7088bf",
+    "workspace-dashboard": "9fa0447153ed9492a719538109dc554e23807e78a09e22a3f00bd85a359e36b4",
     "workspace-detail": "075a58d1482369192acbd834b2ce4871a592817fdb8a020e57f8b7ab7802ec5b",
     "workspace-settings": "474439550f64d8fc1c2e4d246cc378053ddc22dbf644359968ee2cdea8b38cbf"
   }

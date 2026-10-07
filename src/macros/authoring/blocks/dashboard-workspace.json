@@ -9,7 +9,7 @@
   "fragments": [
     {
       "id": "content-frame",
-      "emmet": "section.flex.flex-col.gap-4.p-4[data-role=canvas][data-macro=canvas]>div[data-slot=metrics]+div[data-slot=activity]+div[data-slot=records]"
+      "emmet": "main.flex.flex-1.flex-col.gap-4.p-4.md:gap-6.md:p-6[data-role=canvas][data-macro=canvas]>div[data-slot=metrics]"
     }
   ],
   "mounts": [],
@@ -18,20 +18,6 @@
       "id": "metrics",
       "at": { "fragment": "content-frame", "name": "metrics" },
       "accepts": ["metrics"],
-      "min": 1,
-      "max": 1
-    },
-    {
-      "id": "activity",
-      "at": { "fragment": "content-frame", "name": "activity" },
-      "accepts": ["activity"],
-      "min": 0,
-      "max": 1
-    },
-    {
-      "id": "records",
-      "at": { "fragment": "content-frame", "name": "records" },
-      "accepts": ["workspace"],
       "min": 1,
       "max": 1
     }
@@ -50,7 +36,7 @@
   ],
   "componentRefs": [],
   "ruleRefs": [],
-  "dependencyBlockIds": ["dashboard-main", "dashboard-activity", "data-workspace"],
+  "dependencyBlockIds": ["dashboard-main"],
   "layout": {
     "frameRef": "content-frame"
   },

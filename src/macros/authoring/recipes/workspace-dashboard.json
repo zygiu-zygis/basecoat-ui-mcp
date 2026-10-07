@@ -46,7 +46,7 @@
         "activity": {
           "id": "activity",
           "block": "dashboard-activity",
-          "parent": { "node": "canvas", "slot": "activity", "order": 0 },
+          "parent": { "node": "metrics", "slot": "overview", "order": 0 },
           "bindings": {}
         },
         "range": {
@@ -64,7 +64,7 @@
         "records": {
           "id": "records",
           "block": "data-workspace",
-          "parent": { "node": "canvas", "slot": "records", "order": 0 },
+          "parent": { "node": "metrics", "slot": "recent-sales", "order": 0 },
           "bindings": { "data-context": "records-dataset" }
         },
         "tabs": {
@@ -150,8 +150,8 @@
         {
           "id": "dashboard-content-order",
           "type": "ordered",
-          "parent": "canvas",
-          "slot": "records",
+          "parent": "metrics",
+          "slot": "recent-sales",
           "nodes": ["records"]
         },
         {
