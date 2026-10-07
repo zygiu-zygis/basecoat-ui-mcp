@@ -9,7 +9,7 @@
   "fragments": [
     {
       "id": "shell-root",
-      "emmet": "div.flex.min-h-screen.w-full.bg-background.text-foreground[data-theme-tokens=bg-background,text-foreground,border-border][data-sidebar-width=16rem][data-mobile-breakpoint=md][data-content-gutter=1rem][data-horizontal-overflow=contained]>div.sidebar-backdrop.fixed.inset-0.z-30.hidden.bg-black/50.data-[state=open]:block.md:hidden[data-sidebar-backdrop][aria-hidden=true]+aside[data-slot=nav]+div.flex.min-w-0.flex-1.flex-col.>header.flex.items-center.justify-between.gap-4.border-b.border-border.p-4[data-slot=header][data-height=4rem]+main#main.flex-1.min-w-0[data-slot=content][data-scroll-owner=main][data-width=fluid]"
+      "emmet": "div.flex.min-h-screen.w-full.bg-background.text-foreground[data-theme-tokens=bg-background,text-foreground,border-border][data-sidebar-width=16rem][data-mobile-breakpoint=md][data-content-gutter=1rem][data-horizontal-overflow=contained]>div.sidebar-backdrop.fixed.inset-0.z-30.hidden.bg-black/50.data-[state=open]:block.md:hidden[data-sidebar-backdrop][aria-hidden=true]+aside[data-slot=nav]+div.flex.min-w-0.flex-1.flex-col.md:ms-0>header.flex.items-center.justify-between.gap-4.border-b.border-border.p-4[data-slot=header][data-height=4rem]+main#main.flex-1.min-w-0[data-slot=content][data-scroll-owner=main][data-width=fluid]"
     }
   ],
   "mounts": [],

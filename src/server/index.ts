@@ -63,7 +63,8 @@ const MACRO_INSTRUCTIONS =
   'Compose leaves in this order: content hierarchy, layout, component selection, spacing, typography, final composition. ' +
   'Read basecoat://project/context. Search returns summaries; request details only for selected IDs. ' +
   'Read basecoat://integration/frameworks for production setup. All runtime data is offline. ' +
-  'Layout contracts come from this server\'s macro registry, not from shadcn or MCP itself.';
+  'Layout contracts come from this server\'s macro registry, not from shadcn or MCP itself. ' +
+  'CRITICAL: Act as an expert UI designer (Shadcn aesthetic). Use 1px borders (never add border to .card), compact h-12 headers, gap-4/gap-6 spacing, text-sm/text-muted-foreground for data, and maintain precise visual hierarchy.';
 
 export function createServer(projectRoot = process.cwd()) {
   // Reject oversized registry entries before advertising a healthy server.

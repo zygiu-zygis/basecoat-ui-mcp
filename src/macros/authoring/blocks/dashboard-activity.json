@@ -9,7 +9,7 @@
   "fragments": [
     {
       "id": "activity-root",
-      "emmet": "section.card.flex.min-w-0.flex-col.rounded-xl.border.border-border.bg-card.p-6.text-card-foreground.shadow-sm[data-slot=activity-panel][data-state=ready][data-height=24rem]>(header.flex.flex-col.items-start.justify-between.gap-2.md:flex-row.md:items-center>div.grid.gap-2>h2.text-lg.font-medium[data-slot=title]{Total Visitors}+p.text-sm.text-muted-foreground[data-slot=subtitle]{Total for the last 3 months}^div.flex.w-full.items-center.md:w-auto[data-slot=range][data-default-range=3m][data-responsive=wrap-below-md])+div[data-component=chart][data-slot=chart][data-series=mobile,desktop][data-series-density=dense-apr-jun][data-tooltip=enabled][data-legend=mobile,desktop]"
+      "emmet": "section.card.flex.min-w-0.flex-col.gap-6.rounded-xl.border.border-border.bg-card.py-6.text-card-foreground.shadow-sm[data-slot=activity-panel][data-state=ready][data-height=24rem]>(header.flex.flex-col.items-start.justify-between.gap-4.px-6.md:flex-row.md:items-center>div.grid.gap-2>h2.text-base.font-semibold[data-slot=title]{Total Visitors}+p.text-sm.text-muted-foreground[data-slot=subtitle]{Total for the last 3 months}^div.flex.w-full.items-center.md:w-auto[data-slot=range][data-default-range=3m][data-responsive=wrap-below-md])+div.px-2.sm:px-6[data-component=chart][data-slot=chart][data-series=mobile,desktop][data-series-density=dense-apr-jun][data-tooltip=enabled][data-legend=mobile,desktop]"
     }
   ],
   "mounts": [],

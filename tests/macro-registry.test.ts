@@ -753,7 +753,7 @@ test('packaged dashboard preserves the verified visual contracts', () => {
   assert(shell.fragments[0]?.emmet.includes('data-mobile-breakpoint=md'));
   assert(shell.fragments[0]?.emmet.includes('data-horizontal-overflow=contained'));
   assert(shell.fragments[0]?.emmet.includes('data-width=fluid'));
-  assert(header.fragments[0]?.emmet.includes('h-16'));
+  assert(header.fragments[0]?.emmet.includes('h-12'));
   assert(header.fragments[0]?.emmet.includes('data-responsive=wrap-below-md'));
   assert(sidebar.fragments[0]?.emmet.includes('w-64'));
   assert(sidebar.fragments[0]?.emmet.includes('aria-label=Sidebar'));

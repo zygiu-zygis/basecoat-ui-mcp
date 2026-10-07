@@ -9,7 +9,7 @@
   "fragments": [
     {
       "id": "content-frame",
-      "emmet": "section.grid.grid-cols-1.gap-4.p-4.md:grid-cols-2.xl:grid-cols-4[data-slot=metrics-grid][data-columns=1,2,4][data-card-min-height=8rem]>article.card.flex.min-h-32.min-w-0.flex-col.rounded-xl.border.border-border.bg-card.text-card-foreground.shadow-sm[data-slot=card-$]*4>header.flex.flex-row.items-center.justify-between.gap-2.p-6.pb-2>span.text-sm.font-medium[data-slot=label]+span.badge.rounded-full.border.border-border.px-2..text-[10px].text-muted-foreground[data-slot=delta]^section.flex.flex-col.gap-2.p-6.pt-0>strong.text-2xl.font-bold[data-slot=value]+p.text-xs.text-muted-foreground[data-slot=helper]"
+      "emmet": "section.grid.grid-cols-1.gap-4.px-4.lg:px-6.sm:grid-cols-2.xl:grid-cols-4[data-slot=metrics-grid][data-columns=1,2,4][data-card-min-height=8rem]>article.card.flex.min-h-32.min-w-0.flex-col.gap-6.rounded-xl.border.border-border.bg-card.py-6.text-card-foreground.shadow-sm[data-slot=card-$]*4>(header.grid.grid-rows-2.gap-2.px-6>div.flex.items-center.justify-between>span.text-sm.text-muted-foreground[data-slot=label]+span.badge.rounded-full.border.border-border.px-2.text-xs.font-medium[data-variant=outline][data-slot=delta]^strong.text-2xl.font-semibold.tabular-nums[data-slot=value])+div.flex.flex-col.gap-2.px-6>div.flex.items-center.gap-2.text-sm.font-medium[data-slot=detail]+p.text-xs.text-muted-foreground[data-slot=helper]"
     }
   ],
   "mounts": [],

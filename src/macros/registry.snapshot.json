@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "revision": "a8197af331a528c1db96d70c86ff1e76076c49db8a7a24da9de37fed2d4212d9",
+  "revision": "bf21eb66eb26bad57b67f83323723df525a81210471102732bd37a1084e6f635",
   "blocks": {
-    "cf9eba1c64fe88ee6b7477a5307670a128179199d03cf834f741bfaee8e611b4": {
+    "cbe0f152631792d61e6ebb46d791ae123dd45d83b58f2105e1c8f38e1bf283a7": {
       "schemaVersion": 1,
       "id": "app-shell",
       "role": "shell",
@@ -17,7 +17,7 @@
       "fragments": [
         {
           "id": "shell-root",
-          "emmet": "div.flex.min-h-screen.w-full.bg-background.text-foreground[data-theme-tokens=bg-background,text-foreground,border-border][data-sidebar-width=16rem][data-mobile-breakpoint=md][data-content-gutter=1rem][data-horizontal-overflow=contained]>div.sidebar-backdrop.fixed.inset-0.z-30.hidden.bg-black/50.data-[state=open]:block.md:hidden[data-sidebar-backdrop][aria-hidden=true]+aside[data-slot=nav]+div.flex.min-w-0.flex-1.flex-col.>header.flex.items-center.justify-between.gap-4.border-b.border-border.p-4[data-slot=header][data-height=4rem]+main#main.flex-1.min-w-0[data-slot=content][data-scroll-owner=main][data-width=fluid]"
+          "emmet": "div.flex.min-h-screen.w-full.bg-background.text-foreground[data-theme-tokens=bg-background,text-foreground,border-border][data-sidebar-width=16rem][data-mobile-breakpoint=md][data-content-gutter=1rem][data-horizontal-overflow=contained]>div.sidebar-backdrop.fixed.inset-0.z-30.hidden.bg-black/50.data-[state=open]:block.md:hidden[data-sidebar-backdrop][aria-hidden=true]+aside[data-slot=nav]+div.flex.min-w-0.flex-1.flex-col.md:ms-0>header.flex.items-center.justify-between.gap-4.border-b.border-border.p-4[data-slot=header][data-height=4rem]+main#main.flex-1.min-w-0[data-slot=content][data-scroll-owner=main][data-width=fluid]"
         }
       ],
       "mounts": [],
@@ -321,7 +321,7 @@
         "mappingVersion": "1.0.0"
       }
     },
-    "e37abed2ecbbe245ff79cd23681fc2545a72f00dba2486d27ac7232aa4cbd125": {
+    "d8c0d1163f472cc411d5c5ebca54c213364ee3888ac4de793aadc837350f0430": {
       "schemaVersion": 1,
       "id": "dashboard-main",
       "role": "metrics",
@@ -339,7 +339,7 @@
       "fragments": [
         {
           "id": "content-frame",
-          "emmet": "section.grid.grid-cols-1.gap-4.p-4.md:grid-cols-2.xl:grid-cols-4[data-slot=metrics-grid][data-columns=1,2,4][data-card-min-height=8rem]>article.card.flex.min-h-32.min-w-0.flex-col.rounded-xl.border.border-border.bg-card.text-card-foreground.shadow-sm[data-slot=card-$]*4>header.flex.flex-row.items-center.justify-between.gap-2.p-6.pb-2>span.text-sm.font-medium[data-slot=label]+span.badge.rounded-full.border.border-border.px-2..text-[10px].text-muted-foreground[data-slot=delta]^section.flex.flex-col.gap-2.p-6.pt-0>strong.text-2xl.font-bold[data-slot=value]+p.text-xs.text-muted-foreground[data-slot=helper]"
+          "emmet": "section.grid.grid-cols-1.gap-4.px-4.lg:px-6.sm:grid-cols-2.xl:grid-cols-4[data-slot=metrics-grid][data-columns=1,2,4][data-card-min-height=8rem]>article.card.flex.min-h-32.min-w-0.flex-col.gap-6.rounded-xl.border.border-border.bg-card.py-6.text-card-foreground.shadow-sm[data-slot=card-$]*4>(header.grid.grid-rows-2.gap-2.px-6>div.flex.items-center.justify-between>span.text-sm.text-muted-foreground[data-slot=label]+span.badge.rounded-full.border.border-border.px-2.text-xs.font-medium[data-variant=outline][data-slot=delta]^strong.text-2xl.font-semibold.tabular-nums[data-slot=value])+div.flex.flex-col.gap-2.px-6>div.flex.items-center.gap-2.text-sm.font-medium[data-slot=detail]+p.text-xs.text-muted-foreground[data-slot=helper]"
         }
       ],
       "mounts": [],
@@ -509,7 +509,7 @@
         "mappingVersion": "1.0.0"
       }
     },
-    "bba1211323caad19153bc2eefe4c50c49f0dd1d6200c2cf5d1fdacf8fb3ed7fd": {
+    "134cbe26caea6de9145179009486a115e0decd014c1659452cb8643f5317cf33": {
       "schemaVersion": 1,
       "id": "dashboard-tabs",
       "role": "tabs",
@@ -525,7 +525,7 @@
       "fragments": [
         {
           "id": "tabs-root",
-          "emmet": "div.w-full[data-component=tabs][data-variant=line][data-orientation=horizontal][data-active=outline]>nav.flex.w-full.items-center.gap-4.border-b.border-border.overflow-x-auto.scrollbar-none[role=tablist][aria-label=Document sections][data-responsive=horizontal-overflow-below-md]>button.p-2.text-sm.font-medium.text-muted-foreground.border-b-2.border-transparent.hover:text-foreground.aria-selected:border-foreground.aria-selected:text-foreground[data-slot=outline][role=tab][aria-selected=true]{Outline}+button.p-2.text-sm.font-medium.text-muted-foreground.border-b-2.border-transparent.hover:text-foreground.aria-selected:border-foreground.aria-selected:text-foreground[data-slot=past-performance][role=tab]{Past Performance}+button.p-2.text-sm.font-medium.text-muted-foreground.border-b-2.border-transparent.hover:text-foreground.aria-selected:border-foreground.aria-selected:text-foreground[data-slot=key-personnel][role=tab]{Key Personnel}+button.p-2.text-sm.font-medium.text-muted-foreground.border-b-2.border-transparent.hover:text-foreground.aria-selected:border-foreground.aria-selected:text-foreground[data-slot=focus-documents][role=tab]{Focus Documents}"
+          "emmet": "div.w-full[data-component=tabs][data-variant=line][data-orientation=horizontal][data-active=outline]>div.flex.flex-wrap.items-center.justify-between.gap-4.pb-2>nav.inline-flex.rounded-lg.bg-muted.p-2.text-muted-foreground.text-sm.font-medium[role=tablist][aria-label='Document sections'][data-responsive=horizontal-overflow-below-md]>button.inline-flex.items-center.gap-2.rounded-md.px-4.py-2.text-sm.font-medium.bg-background.text-foreground.shadow-xs[data-slot=outline][role=tab][aria-selected=true]{Outline}+button.inline-flex.items-center.gap-2.rounded-md.px-4.py-2.text-sm.font-medium.text-muted-foreground.hover:text-foreground[data-slot=past-performance][role=tab]{Past Performance}+button.inline-flex.items-center.gap-2.rounded-md.px-4.py-2.text-sm.font-medium.text-muted-foreground.hover:text-foreground[data-slot=key-personnel][role=tab]{Key Personnel}+button.inline-flex.items-center.gap-2.rounded-md.px-4.py-2.text-sm.font-medium.text-muted-foreground.hover:text-foreground[data-slot=focus-documents][role=tab]{Focus Documents}"
         }
       ],
       "mounts": [],
@@ -788,7 +788,7 @@
         "mappingVersion": "1.0.0"
       }
     },
-    "7965117e46b8720212be167a0e2da5bdead00eaffbc3a51539d82db511ef7793": {
+    "2ea00445a26e83d13d2346abcc6adc570445def46468eb924334e26bf5271e9f": {
       "schemaVersion": 1,
       "id": "data-table",
       "role": "table",
@@ -805,7 +805,7 @@
       "fragments": [
         {
           "id": "table-root",
-          "emmet": "div.overflow-auto.rounded-md.border.border-border[data-slot=table-scroll][data-controls=bounded][data-responsive=horizontal-overflow-below-md][data-mobile-policy=scroll][data-density=compact][data-row-separators=visible]>table.table.w-full.text-sm[data-component=table][data-row-height=2.5rem][data-typography=readable]>thead>tr.border-b.border-border.transition-colors.hover\\:bg-muted\\/50.data-\\[state\\=selected\\]\\:bg-muted>th.h-10.px-2.text-left.align-middle.font-medium.text-muted-foreground[data-column=header]+th.h-10.px-2.text-left.align-middle.font-medium.text-muted-foreground[data-column=section-type]+th.h-10.px-2.text-left.align-middle.font-medium.text-muted-foreground[data-column=status]+th.h-10.px-2.text-end.align-middle.font-medium.text-muted-foreground[data-column=target]+th.h-10.px-2.text-end.align-middle.font-medium.text-muted-foreground[data-column=limit]+th.h-10.px-2.text-left.align-middle.font-medium.text-muted-foreground[data-column=reviewer]+th.h-10.px-2.align-middle[data-column=row-action]^tbody[data-slot=rows][data-row-shape=id,title,type,status,target,limit,reviewer][data-selection=checkbox]"
+          "emmet": "div.overflow-auto.rounded-md.border.border-border[data-slot=table-scroll][data-controls=bounded][data-responsive=horizontal-overflow-below-md][data-mobile-policy=scroll][data-density=compact][data-row-separators=visible]>table.table.w-full.text-sm[data-component=table][data-row-height=2.5rem][data-typography=readable]>thead>tr.border-b.border-border.bg-muted/20.text-xs.font-medium.text-muted-foreground>th.w-8.px-2.py-2[data-column=drag]+th.w-8.px-2.py-2[data-column=select]+th.h-10.px-4.py-2.text-left.font-medium[data-column=header]+th.h-10.px-4.py-2.text-left.font-medium[data-column=section-type]+th.h-10.px-4.py-2.text-left.font-medium[data-column=status]+th.h-10.px-4.py-2.text-end.font-medium[data-column=target]+th.h-10.px-4.py-2.text-end.font-medium[data-column=limit]+th.h-10.px-4.py-2.text-left.font-medium[data-column=reviewer]+th.w-8.h-10.px-2.py-2[data-column=row-action]^tbody[data-slot=rows][data-row-shape=id,title,type,status,target,limit,reviewer][data-selection=checkbox]"
         }
       ],
       "mounts": [],
@@ -857,7 +857,7 @@
         "mappingVersion": "1.0.0"
       }
     },
-    "b2ee88d41603df708ade2d9b416b2ee55af10d64a034794a3d82ecf62a824887": {
+    "fd464e595da290c7aeba1144598a7ebbf3f298d7192a4a60a9a6110bda6ed5a0": {
       "schemaVersion": 1,
       "id": "data-workspace",
       "role": "workspace",
@@ -877,7 +877,7 @@
       "fragments": [
         {
           "id": "content-frame",
-          "emmet": "section.flex.flex-col.gap-4.p-4[data-role=records-workspace][data-density=compact][data-responsive=stack-below-md]>div[data-slot=tabs]+div[data-slot=filters]+div[data-slot=table][data-state=ready]+div[data-slot=row-actions]+div[data-slot=pager]+div[data-slot=detail-drawer][data-state=closed][data-reviewer=enabled]"
+          "emmet": "section.flex.flex-col.gap-6.px-4.lg:px-6[data-role=records-workspace][data-density=compact][data-responsive=stack-below-md]>div[data-slot=tabs]+div[data-slot=filters]+div[data-slot=table][data-state=ready]+div[data-slot=row-actions]+div[data-slot=pager]+div[data-slot=detail-drawer][data-state=closed][data-reviewer=enabled]"
         }
       ],
       "mounts": [],
@@ -976,7 +976,7 @@
       ],
       "dependencyRefs": [
         "7b8a12c860ba038232b4973d25051b98867ca278cd0761541603f8516958265c",
-        "7965117e46b8720212be167a0e2da5bdead00eaffbc3a51539d82db511ef7793",
+        "2ea00445a26e83d13d2346abcc6adc570445def46468eb924334e26bf5271e9f",
         "8db430e806c397ae4259c221b7030e80e783f34c1f1c5002702020e1041a9296"
       ],
       "layout": {
@@ -1063,7 +1063,7 @@
         "mappingVersion": "1.0.0"
       }
     },
-    "dc206e8be4abd1b8fe3d26535290a721a0e5ca822b91a849c97708f3b11432b7": {
+    "a042a4239ba7f727d14425cfa4e42115808826c1decc810b93259afd4095c0ec": {
       "schemaVersion": 1,
       "id": "data-table-detail-layout",
       "role": "workspace",
@@ -1153,7 +1153,7 @@
       "ruleRefs": [],
       "dependencyRefs": [
         "7b8a12c860ba038232b4973d25051b98867ca278cd0761541603f8516958265c",
-        "7965117e46b8720212be167a0e2da5bdead00eaffbc3a51539d82db511ef7793",
+        "2ea00445a26e83d13d2346abcc6adc570445def46468eb924334e26bf5271e9f",
         "8db430e806c397ae4259c221b7030e80e783f34c1f1c5002702020e1041a9296",
         "1cb011c6a62e6e6c82caddc5015ba58ceba8217f226a2bfcd6b587467083cb8b"
       ],
@@ -1352,7 +1352,7 @@
         "mappingVersion": "1.0.0"
       }
     },
-    "ea0aa5d07c517f19965bcbd10c5af8193e7678801c6fbe2f0a61650fc57e9379": {
+    "a3e401eda6136789ae31b411ada1ef977bd5f2b665471460ff0a9db93aacd1aa": {
       "schemaVersion": 1,
       "id": "page-header",
       "role": "header",
@@ -1366,7 +1366,7 @@
       "fragments": [
         {
           "id": "content-frame",
-          "emmet": "div.flex.h-16.items-center.justify-between.gap-4.border-b.border-border.px-4[data-height=4rem][data-gutter=1rem][data-responsive=wrap-below-md]>div[data-component=breadcrumb]+div.flex.gap-2[data-slot=actions]"
+          "emmet": "header.flex.h-12.items-center.justify-between.gap-2.border-b.border-border.px-4.lg:px-6[data-slot=header][data-height=3rem][data-gutter=1rem][data-responsive=wrap-below-md]>div.flex.items-center.gap-2>button.btn.btn-ghost.size-7[data-slot=sidebar-trigger][aria-label='Toggle Sidebar']+div.w-px.h-4.bg-border[role=none]+h1.text-base.font-medium[data-slot=title]{Documents}^div.flex.items-center.gap-2[data-slot=actions]"
         }
       ],
       "mounts": [],
@@ -1578,7 +1578,7 @@
         "mappingVersion": "1.0.0"
       }
     },
-    "0056c81cb0936eea54dd1cc7ca2c8990ccead21217e4d440e8b9ed15def2c9bb": {
+    "aa973b7c26d26f157693ad3a693e98375230fa704481d4853814c7d021d223c1": {
       "schemaVersion": 1,
       "id": "segmented-toggle",
       "role": "range-control",
@@ -1594,7 +1594,7 @@
       "fragments": [
         {
           "id": "toggle-root",
-          "emmet": "div.inline-flex.h-9.w-full.items-center.justify-center.rounded-md.bg-muted.p-2.text-muted-foreground.md:w-auto[data-component=segmented-toggle][data-variant=pill][role=radiogroup][aria-label='Date range']>label.inline-flex.flex-1.items-center.justify-center.rounded-sm.px-4.py-2.text-xs.font-medium.hover:bg-background.hover:text-foreground.has-\\[:checked\\]:bg-background.has-\\[:checked\\]:text-foreground.has-\\[:checked\\]:shadow-sm>input[type=radio][name=date-range][value=3m][checked].sr-only+span{Last 3 months}^label.inline-flex.flex-1.items-center.justify-center.rounded-sm.px-4.py-2.text-xs.font-medium.hover:bg-background.hover:text-foreground.has-\\[:checked\\]:bg-background.has-\\[:checked\\]:text-foreground.has-\\[:checked\\]:shadow-sm>input[type=radio][name=date-range][value=30d].sr-only+span{Last 30 days}^label.inline-flex.flex-1.items-center.justify-center.rounded-sm.px-4.py-2.text-xs.font-medium.hover:bg-background.hover:text-foreground.has-\\[:checked\\]:bg-background.has-\\[:checked\\]:text-foreground.has-\\[:checked\\]:shadow-sm>input[type=radio][name=date-range][value=7d].sr-only+span{Last 7 days}"
+          "emmet": "div.inline-flex.w-full.items-center.justify-center.rounded-lg.bg-muted.p-2.text-muted-foreground.md:w-auto[data-component=segmented-toggle][data-variant=pill][role=radiogroup][aria-label='Date range']>label.inline-flex.flex-1.items-center.justify-center.whitespace-nowrap.rounded-md.px-4.py-2.text-xs.font-medium.transition-all.hover:text-foreground.has-\\[:checked\\]:bg-background.has-\\[:checked\\]:text-foreground.has-\\[:checked\\]:shadow-xs>input[type=radio][name=date-range][value=3m][checked].sr-only+span{Last 3 months}^label.inline-flex.flex-1.items-center.justify-center.whitespace-nowrap.rounded-md.px-4.py-2.text-xs.font-medium.transition-all.hover:text-foreground.has-\\[:checked\\]:bg-background.has-\\[:checked\\]:text-foreground.has-\\[:checked\\]:shadow-xs>input[type=radio][name=date-range][value=30d].sr-only+span{Last 30 days}^label.inline-flex.flex-1.items-center.justify-center.whitespace-nowrap.rounded-md.px-4.py-2.text-xs.font-medium.transition-all.hover:text-foreground.has-\\[:checked\\]:bg-background.has-\\[:checked\\]:text-foreground.has-\\[:checked\\]:shadow-xs>input[type=radio][name=date-range][value=7d].sr-only+span{Last 7 days}"
         }
       ],
       "mounts": [],
@@ -1775,7 +1775,7 @@
         "mappingVersion": "1.0.0"
       }
     },
-    "c379af98853ec57a7484a03eab001c9339e54b9e8963af652ff7cd619420064a": {
+    "72804bd89e0100488d25d1610c25cf18499e14acaceda5c4061b8e3bb7762a92": {
       "schemaVersion": 1,
       "id": "sidebar-dashboard-shell",
       "role": "navigation",
@@ -1791,7 +1791,7 @@
       "fragments": [
         {
           "id": "nav-root",
-          "emmet": "aside.sidebar.w-64[aria-label=Sidebar][data-slot=sidebar-host][data-component=sidebar][data-side=left][data-mobile-breakpoint=md][data-focus=return-on-close][data-mobile-policy=flyout-inert]>nav.flex.flex-col.gap-4.p-4[data-gutter=1rem]>button.btn.w-full.justify-start[data-variant=outline][data-slot=workspace-switcher]{Acme Inc}^section.flex.flex-col.gap-2[data-slot=nav-home]>h3.px-2.text-xs.font-medium.text-muted-foreground{Home}+a.btn.w-full.justify-start[data-variant=ghost][data-size=sm][aria-current=page]{Dashboard}^^section.flex.flex-col.gap-2[data-slot=nav-documents]>h3.px-2.text-xs.font-medium.text-muted-foreground{Documents}+a.btn.w-full.justify-start[data-variant=ghost][data-size=sm]{Library}^^section.flex.flex-col.gap-2[data-slot=nav-more]>h3.px-2.text-xs.font-medium.text-muted-foreground{More}+a.btn.w-full.justify-start[data-variant=ghost][data-size=sm]{More}^^div.mt-auto.flex.flex-col.gap-2.border-t.pt-4[data-slot=user-footer]>button.btn.w-full.justify-start[data-variant=ghost][data-size=sm]{Account}+div.flex.flex-wrap.gap-2.px-2.pt-2[data-slot=footer-controls]>button.btn.px-2.text-xs[data-variant=ghost]{Settings}+button.btn.px-2.text-xs[data-variant=ghost]{Help}"
+          "emmet": "aside.sidebar.w-64.border-e.border-border.bg-background.md:sticky.md:top-0.md:h-screen[aria-label=Sidebar][data-slot=sidebar-host][data-component=sidebar][data-side=left][data-mobile-breakpoint=md][data-focus=return-on-close][data-mobile-policy=flyout-inert]>nav.flex.h-full.flex-col.justify-between.p-2[data-gutter=0.5rem]>(div.flex.flex-col.gap-2>div.flex.items-center.gap-2.p-2.text-sm[data-slot=workspace-switcher]{Acme Inc}+div.flex.gap-2.px-2>button.btn.btn-sm.flex-1[data-slot=quick-create]{+ Create}+button.btn.btn-sm.size-8[data-slot=inbox]{✉}^section.flex.flex-col.gap-2[data-slot=nav-home]>a.btn.btn-ghost.btn-sm.w-full{Home}^section.flex.flex-col.gap-2[data-slot=nav-documents]>h3.px-2.text-xs{Documents}+a.btn.btn-ghost.btn-sm.w-full{Docs}^section.flex.flex-col.gap-2[data-slot=nav-more]>h3.px-2.text-xs.font-medium.text-muted-foreground{More}+a.btn.btn-ghost.btn-sm.w-full{More})+(div.mt-auto.flex.flex-col.gap-2.pt-2[data-slot=user-footer]>div.flex.gap-2.px-2[data-slot=footer-controls]>a.btn.btn-ghost.btn-sm{Help}^div.flex.items-center.gap-2.rounded-lg.p-2[data-slot=user-profile]>div.size-8.rounded-lg.bg-muted+div.flex-1.text-xs>span{shadcn}+span{m@example.com}^span{⋮})"
         }
       ],
       "mounts": [],
@@ -2109,7 +2109,7 @@
         "mappingVersion": "1.0.0"
       }
     },
-    "61d945845b25a30abb295d9e4d738ccb39e43f51aedb2337f29ca6eb027cc501": {
+    "5209282f4f9a9011131336fed4ab850de572ab3e542e8beb22a96e0a0c7e91fd": {
       "schemaVersion": 1,
       "id": "svg-area-chart",
       "role": "chart",
@@ -2125,7 +2125,7 @@
       "fragments": [
         {
           "id": "chart-root",
-          "emmet": "div.relative.mt-4.h-\\[180px\\].w-full.pb-6.md:h-\\[250px\\][data-component=svg-area-chart][data-slot=chart][data-height=20rem][data-responsive=width][data-legend=mobile,desktop][data-tooltip=enabled]>svg.block.h-\\[155px\\].w-full.text-muted-foreground.md:h-\\[220px\\][role=img][aria-label='Total visitors area chart']>title{Total visitors}+desc{Area series for desktop and mobile visitors.}+path[data-series=desktop][fill=currentColor]+path[data-series=mobile][fill=currentColor]"
+          "emmet": "div.relative.mt-4.h-\\[220px\\].w-full.pb-6.md:h-\\[260px\\][data-component=svg-area-chart][data-slot=chart][data-height=20rem][data-responsive=width][data-legend=mobile,desktop][data-tooltip=enabled]>svg.block.h-\\[190px\\].w-full.text-foreground.md:h-\\[230px\\][role=img][aria-label='Total visitors area chart']>title{Total visitors}+desc{Area series for desktop and mobile visitors.}+path[data-series=desktop][fill=currentColor]+path[data-series=mobile][fill=currentColor]"
         }
       ],
       "mounts": [],
@@ -2163,7 +2163,7 @@
         "mappingVersion": "1.0.0"
       }
     },
-    "8628a8d5850a73a8045dc2615a12eb698b946a110802b4606f53e43564e51398": {
+    "2df4c7b89ccfdc85b6296a8a4cce7b489403fa9e7c00e83762410806c012eee5": {
       "schemaVersion": 1,
       "id": "dashboard-activity",
       "role": "activity",
@@ -2181,7 +2181,7 @@
       "fragments": [
         {
           "id": "activity-root",
-          "emmet": "section.card.flex.min-w-0.flex-col.rounded-xl.border.border-border.bg-card.p-6.text-card-foreground.shadow-sm[data-slot=activity-panel][data-state=ready][data-height=24rem]>(header.flex.flex-col.items-start.justify-between.gap-2.md:flex-row.md:items-center>div.grid.gap-2>h2.text-lg.font-medium[data-slot=title]{Total Visitors}+p.text-sm.text-muted-foreground[data-slot=subtitle]{Total for the last 3 months}^div.flex.w-full.items-center.md:w-auto[data-slot=range][data-default-range=3m][data-responsive=wrap-below-md])+div[data-component=chart][data-slot=chart][data-series=mobile,desktop][data-series-density=dense-apr-jun][data-tooltip=enabled][data-legend=mobile,desktop]"
+          "emmet": "section.card.flex.min-w-0.flex-col.gap-6.rounded-xl.border.border-border.bg-card.py-6.text-card-foreground.shadow-sm[data-slot=activity-panel][data-state=ready][data-height=24rem]>(header.flex.flex-col.items-start.justify-between.gap-4.px-6.md:flex-row.md:items-center>div.grid.gap-2>h2.text-base.font-semibold[data-slot=title]{Total Visitors}+p.text-sm.text-muted-foreground[data-slot=subtitle]{Total for the last 3 months}^div.flex.w-full.items-center.md:w-auto[data-slot=range][data-default-range=3m][data-responsive=wrap-below-md])+div.px-2.sm:px-6[data-component=chart][data-slot=chart][data-series=mobile,desktop][data-series-density=dense-apr-jun][data-tooltip=enabled][data-legend=mobile,desktop]"
         }
       ],
       "mounts": [],
@@ -2231,8 +2231,8 @@
       ],
       "ruleRefs": [],
       "dependencyRefs": [
-        "0056c81cb0936eea54dd1cc7ca2c8990ccead21217e4d440e8b9ed15def2c9bb",
-        "61d945845b25a30abb295d9e4d738ccb39e43f51aedb2337f29ca6eb027cc501"
+        "aa973b7c26d26f157693ad3a693e98375230fa704481d4853814c7d021d223c1",
+        "5209282f4f9a9011131336fed4ab850de572ab3e542e8beb22a96e0a0c7e91fd"
       ],
       "layout": {
         "frameRef": "activity-root"
@@ -2247,7 +2247,7 @@
         "mappingVersion": "1.0.0"
       }
     },
-    "3f8e1b827935d61a7f759f80dc25fa4780489e2ec878f34a6a46d26b896d5093": {
+    "61e5deea5dfd5725239cbd4ecd3b2e44b75f9579b2c681f9e40f1021dc479de7": {
       "schemaVersion": 1,
       "id": "dashboard-workspace",
       "role": "dashboard",
@@ -2322,9 +2322,9 @@
       "componentRefs": [],
       "ruleRefs": [],
       "dependencyRefs": [
-        "e37abed2ecbbe245ff79cd23681fc2545a72f00dba2486d27ac7232aa4cbd125",
-        "8628a8d5850a73a8045dc2615a12eb698b946a110802b4606f53e43564e51398",
-        "b2ee88d41603df708ade2d9b416b2ee55af10d64a034794a3d82ecf62a824887"
+        "d8c0d1163f472cc411d5c5ebca54c213364ee3888ac4de793aadc837350f0430",
+        "2df4c7b89ccfdc85b6296a8a4cce7b489403fa9e7c00e83762410806c012eee5",
+        "fd464e595da290c7aeba1144598a7ebbf3f298d7192a4a60a9a6110bda6ed5a0"
       ],
       "layout": {
         "frameRef": "content-frame"
@@ -2557,7 +2557,7 @@
         }
       ]
     },
-    "1a7b9741fb099cc4cfd7206657177ebf894412b738dc8853baccacfe972c225f": {
+    "90200d4832214c0348cee75a1cf703b1edef0a4c8a18303904fc1a380891299a": {
       "schemaVersion": 1,
       "id": "data-records",
       "kind": "page",
@@ -2566,12 +2566,12 @@
         {
           "id": "records",
           "route": "/data",
-          "recipe": "1a7b9741fb099cc4cfd7206657177ebf894412b738dc8853baccacfe972c225f",
+          "recipe": "90200d4832214c0348cee75a1cf703b1edef0a4c8a18303904fc1a380891299a",
           "root": "shell",
           "nodes": {
             "shell": {
               "id": "shell",
-              "block": "cf9eba1c64fe88ee6b7477a5307670a128179199d03cf834f741bfaee8e611b4",
+              "block": "cbe0f152631792d61e6ebb46d791ae123dd45d83b58f2105e1c8f38e1bf283a7",
               "bindings": {}
             },
             "nav": {
@@ -2586,7 +2586,7 @@
             },
             "header": {
               "id": "header",
-              "block": "ea0aa5d07c517f19965bcbd10c5af8193e7678801c6fbe2f0a61650fc57e9379",
+              "block": "a3e401eda6136789ae31b411ada1ef977bd5f2b665471460ff0a9db93aacd1aa",
               "parent": {
                 "node": "shell",
                 "slot": "header",
@@ -2596,7 +2596,7 @@
             },
             "workspace": {
               "id": "workspace",
-              "block": "b2ee88d41603df708ade2d9b416b2ee55af10d64a034794a3d82ecf62a824887",
+              "block": "fd464e595da290c7aeba1144598a7ebbf3f298d7192a4a60a9a6110bda6ed5a0",
               "parent": {
                 "node": "shell",
                 "slot": "content",
@@ -2620,7 +2620,7 @@
             },
             "table": {
               "id": "table",
-              "block": "7965117e46b8720212be167a0e2da5bdead00eaffbc3a51539d82db511ef7793",
+              "block": "2ea00445a26e83d13d2346abcc6adc570445def46468eb924334e26bf5271e9f",
               "parent": {
                 "node": "workspace",
                 "slot": "table",
@@ -2760,7 +2760,7 @@
       "entryPage": "pricing",
       "routeLinks": []
     },
-    "dd012524ce0a9b87cfd4239363f142a3157ff8e5cffc9b3bf40900d6e1ffb34e": {
+    "ea65a88508f97869c2fa953f93e3199b1ba17e6deaa4e845d26728631a7088bf": {
       "schemaVersion": 1,
       "id": "workspace-dashboard",
       "kind": "page",
@@ -2769,17 +2769,17 @@
         {
           "id": "dashboard",
           "route": "/workspace",
-          "recipe": "dd012524ce0a9b87cfd4239363f142a3157ff8e5cffc9b3bf40900d6e1ffb34e",
+          "recipe": "ea65a88508f97869c2fa953f93e3199b1ba17e6deaa4e845d26728631a7088bf",
           "root": "shell",
           "nodes": {
             "shell": {
               "id": "shell",
-              "block": "cf9eba1c64fe88ee6b7477a5307670a128179199d03cf834f741bfaee8e611b4",
+              "block": "cbe0f152631792d61e6ebb46d791ae123dd45d83b58f2105e1c8f38e1bf283a7",
               "bindings": {}
             },
             "nav": {
               "id": "nav",
-              "block": "c379af98853ec57a7484a03eab001c9339e54b9e8963af652ff7cd619420064a",
+              "block": "72804bd89e0100488d25d1610c25cf18499e14acaceda5c4061b8e3bb7762a92",
               "parent": {
                 "node": "shell",
                 "slot": "navigation",
@@ -2789,7 +2789,7 @@
             },
             "header": {
               "id": "header",
-              "block": "ea0aa5d07c517f19965bcbd10c5af8193e7678801c6fbe2f0a61650fc57e9379",
+              "block": "a3e401eda6136789ae31b411ada1ef977bd5f2b665471460ff0a9db93aacd1aa",
               "parent": {
                 "node": "shell",
                 "slot": "header",
@@ -2799,7 +2799,7 @@
             },
             "canvas": {
               "id": "canvas",
-              "block": "3f8e1b827935d61a7f759f80dc25fa4780489e2ec878f34a6a46d26b896d5093",
+              "block": "61e5deea5dfd5725239cbd4ecd3b2e44b75f9579b2c681f9e40f1021dc479de7",
               "parent": {
                 "node": "shell",
                 "slot": "content",
@@ -2809,7 +2809,7 @@
             },
             "metrics": {
               "id": "metrics",
-              "block": "e37abed2ecbbe245ff79cd23681fc2545a72f00dba2486d27ac7232aa4cbd125",
+              "block": "d8c0d1163f472cc411d5c5ebca54c213364ee3888ac4de793aadc837350f0430",
               "parent": {
                 "node": "canvas",
                 "slot": "metrics",
@@ -2819,7 +2819,7 @@
             },
             "activity": {
               "id": "activity",
-              "block": "8628a8d5850a73a8045dc2615a12eb698b946a110802b4606f53e43564e51398",
+              "block": "2df4c7b89ccfdc85b6296a8a4cce7b489403fa9e7c00e83762410806c012eee5",
               "parent": {
                 "node": "canvas",
                 "slot": "activity",
@@ -2829,7 +2829,7 @@
             },
             "range": {
               "id": "range",
-              "block": "0056c81cb0936eea54dd1cc7ca2c8990ccead21217e4d440e8b9ed15def2c9bb",
+              "block": "aa973b7c26d26f157693ad3a693e98375230fa704481d4853814c7d021d223c1",
               "parent": {
                 "node": "activity",
                 "slot": "range",
@@ -2839,7 +2839,7 @@
             },
             "chart": {
               "id": "chart",
-              "block": "61d945845b25a30abb295d9e4d738ccb39e43f51aedb2337f29ca6eb027cc501",
+              "block": "5209282f4f9a9011131336fed4ab850de572ab3e542e8beb22a96e0a0c7e91fd",
               "parent": {
                 "node": "activity",
                 "slot": "chart",
@@ -2849,7 +2849,7 @@
             },
             "records": {
               "id": "records",
-              "block": "b2ee88d41603df708ade2d9b416b2ee55af10d64a034794a3d82ecf62a824887",
+              "block": "fd464e595da290c7aeba1144598a7ebbf3f298d7192a4a60a9a6110bda6ed5a0",
               "parent": {
                 "node": "canvas",
                 "slot": "records",
@@ -2861,7 +2861,7 @@
             },
             "tabs": {
               "id": "tabs",
-              "block": "bba1211323caad19153bc2eefe4c50c49f0dd1d6200c2cf5d1fdacf8fb3ed7fd",
+              "block": "134cbe26caea6de9145179009486a115e0decd014c1659452cb8643f5317cf33",
               "parent": {
                 "node": "records",
                 "slot": "tabs",
@@ -2883,7 +2883,7 @@
             },
             "table": {
               "id": "table",
-              "block": "7965117e46b8720212be167a0e2da5bdead00eaffbc3a51539d82db511ef7793",
+              "block": "2ea00445a26e83d13d2346abcc6adc570445def46468eb924334e26bf5271e9f",
               "parent": {
                 "node": "records",
                 "slot": "table",
@@ -3049,7 +3049,7 @@
       "entryPage": "dashboard",
       "routeLinks": []
     },
-    "53ba9d57a1f3484dd9b3b66ce797842678a521b941451b337dceaa41f97e042d": {
+    "075a58d1482369192acbd834b2ce4871a592817fdb8a020e57f8b7ab7802ec5b": {
       "schemaVersion": 1,
       "id": "workspace-detail",
       "kind": "page",
@@ -3058,17 +3058,17 @@
         {
           "id": "detail",
           "route": "/workspace/detail",
-          "recipe": "53ba9d57a1f3484dd9b3b66ce797842678a521b941451b337dceaa41f97e042d",
+          "recipe": "075a58d1482369192acbd834b2ce4871a592817fdb8a020e57f8b7ab7802ec5b",
           "root": "shell",
           "nodes": {
             "shell": {
               "id": "shell",
-              "block": "cf9eba1c64fe88ee6b7477a5307670a128179199d03cf834f741bfaee8e611b4",
+              "block": "cbe0f152631792d61e6ebb46d791ae123dd45d83b58f2105e1c8f38e1bf283a7",
               "bindings": {}
             },
             "nav": {
               "id": "nav",
-              "block": "c379af98853ec57a7484a03eab001c9339e54b9e8963af652ff7cd619420064a",
+              "block": "72804bd89e0100488d25d1610c25cf18499e14acaceda5c4061b8e3bb7762a92",
               "parent": {
                 "node": "shell",
                 "slot": "navigation",
@@ -3078,7 +3078,7 @@
             },
             "header": {
               "id": "header",
-              "block": "ea0aa5d07c517f19965bcbd10c5af8193e7678801c6fbe2f0a61650fc57e9379",
+              "block": "a3e401eda6136789ae31b411ada1ef977bd5f2b665471460ff0a9db93aacd1aa",
               "parent": {
                 "node": "shell",
                 "slot": "header",
@@ -3088,7 +3088,7 @@
             },
             "canvas": {
               "id": "canvas",
-              "block": "dc206e8be4abd1b8fe3d26535290a721a0e5ca822b91a849c97708f3b11432b7",
+              "block": "a042a4239ba7f727d14425cfa4e42115808826c1decc810b93259afd4095c0ec",
               "parent": {
                 "node": "shell",
                 "slot": "content",
@@ -3110,7 +3110,7 @@
             },
             "table": {
               "id": "table",
-              "block": "7965117e46b8720212be167a0e2da5bdead00eaffbc3a51539d82db511ef7793",
+              "block": "2ea00445a26e83d13d2346abcc6adc570445def46468eb924334e26bf5271e9f",
               "parent": {
                 "node": "canvas",
                 "slot": "table",
@@ -3255,7 +3255,7 @@
       "entryPage": "detail",
       "routeLinks": []
     },
-    "0854e2a80cc9de2dd2b86372e63e40746ea8e6fcaac311023f132686d797019a": {
+    "474439550f64d8fc1c2e4d246cc378053ddc22dbf644359968ee2cdea8b38cbf": {
       "schemaVersion": 1,
       "id": "workspace-settings",
       "kind": "page",
@@ -3264,17 +3264,17 @@
         {
           "id": "settings",
           "route": "/settings",
-          "recipe": "0854e2a80cc9de2dd2b86372e63e40746ea8e6fcaac311023f132686d797019a",
+          "recipe": "474439550f64d8fc1c2e4d246cc378053ddc22dbf644359968ee2cdea8b38cbf",
           "root": "shell",
           "nodes": {
             "shell": {
               "id": "shell",
-              "block": "cf9eba1c64fe88ee6b7477a5307670a128179199d03cf834f741bfaee8e611b4",
+              "block": "cbe0f152631792d61e6ebb46d791ae123dd45d83b58f2105e1c8f38e1bf283a7",
               "bindings": {}
             },
             "nav": {
               "id": "nav",
-              "block": "c379af98853ec57a7484a03eab001c9339e54b9e8963af652ff7cd619420064a",
+              "block": "72804bd89e0100488d25d1610c25cf18499e14acaceda5c4061b8e3bb7762a92",
               "parent": {
                 "node": "shell",
                 "slot": "navigation",
@@ -3284,7 +3284,7 @@
             },
             "header": {
               "id": "header",
-              "block": "ea0aa5d07c517f19965bcbd10c5af8193e7678801c6fbe2f0a61650fc57e9379",
+              "block": "a3e401eda6136789ae31b411ada1ef977bd5f2b665471460ff0a9db93aacd1aa",
               "parent": {
                 "node": "shell",
                 "slot": "header",
@@ -3445,45 +3445,45 @@
     "shell-frame": "b5d7a493bc7eac10e352c137750a54fdd11140b9a0e36442e7a4693de7a64c92",
     "shell-gutter": "3804c304e4328847ae10c8de08dc4d56994e306217f3b66eab1c08f205591954",
     "app-default": "efcf2f3e93ee5b4730cff4a6d760833299d19ca480be4b16424ae24a810e6057",
-    "app-shell": "cf9eba1c64fe88ee6b7477a5307670a128179199d03cf834f741bfaee8e611b4",
+    "app-shell": "cbe0f152631792d61e6ebb46d791ae123dd45d83b58f2105e1c8f38e1bf283a7",
     "auth-recovery": "44f07830cae181975863955bf469725b946855a8914e4cc6b63797bddf7f805d",
     "auth-reset": "a3f4265e047c061e5f009cd4cd2c5bb001701c29c3bcd655c67572d7468e0776",
     "auth-sign-in": "2707e4a25d2f99437d380b9ac7a44636882a812d8ba2b34494a9f369169d88c4",
     "auth-sign-up": "6fec7f17de2d2c7e3f69e52109b87b0255d948f881a5e33a6f9f61be1d36a8f3",
     "auth-split-screen": "01b514d6afe398f6f3baf4fa2dee37baffdbec3051e684602ed0f05d48573d69",
-    "dashboard-main": "e37abed2ecbbe245ff79cd23681fc2545a72f00dba2486d27ac7232aa4cbd125",
+    "dashboard-main": "d8c0d1163f472cc411d5c5ebca54c213364ee3888ac4de793aadc837350f0430",
     "dashboard-row-actions": "9604f39f3923de0570eefdfe380984a95b26f4dacfb18b09b8f4d690874fa9fb",
-    "dashboard-tabs": "bba1211323caad19153bc2eefe4c50c49f0dd1d6200c2cf5d1fdacf8fb3ed7fd",
+    "dashboard-tabs": "134cbe26caea6de9145179009486a115e0decd014c1659452cb8643f5317cf33",
     "data-bulk-actions": "d232d911c58b6e32e54e20c878151915e7bce015705c0f6717b65d8878cc4c10",
     "data-filters": "7b8a12c860ba038232b4973d25051b98867ca278cd0761541603f8516958265c",
     "data-pager": "8db430e806c397ae4259c221b7030e80e783f34c1f1c5002702020e1041a9296",
-    "data-table": "7965117e46b8720212be167a0e2da5bdead00eaffbc3a51539d82db511ef7793",
-    "data-workspace": "b2ee88d41603df708ade2d9b416b2ee55af10d64a034794a3d82ecf62a824887",
+    "data-table": "2ea00445a26e83d13d2346abcc6adc570445def46468eb924334e26bf5271e9f",
+    "data-workspace": "fd464e595da290c7aeba1144598a7ebbf3f298d7192a4a60a9a6110bda6ed5a0",
     "detail-drawer-panel": "1cb011c6a62e6e6c82caddc5015ba58ceba8217f226a2bfcd6b587467083cb8b",
-    "data-table-detail-layout": "dc206e8be4abd1b8fe3d26535290a721a0e5ca822b91a849c97708f3b11432b7",
+    "data-table-detail-layout": "a042a4239ba7f727d14425cfa4e42115808826c1decc810b93259afd4095c0ec",
     "empty-state": "b7c5de3a1cf828bda14e337119258c8613505b36c167633b347d1551367d10f5",
     "error-boundary": "47f6bc0a357930337589b78f8eb83051c2979498475f4154a38a8f9bb81764f7",
     "form-section": "db0f381548cf79f10b2eb645ee1a4586b5eca810b8aa670849767271debd6bc3",
     "newsletter-waitlist": "57a13cd223e2a23e2c4c7ec875cfba5eb5030f6bf587bd1170dbec4db33989e9",
-    "page-header": "ea0aa5d07c517f19965bcbd10c5af8193e7678801c6fbe2f0a61650fc57e9379",
+    "page-header": "a3e401eda6136789ae31b411ada1ef977bd5f2b665471460ff0a9db93aacd1aa",
     "pricing-tiers": "5857b53433f74071b407f98b96554ac99c6515031ff21a63f252cc9f3874cd96",
     "product-detail-layout": "1274d7167afc432e06f100a16c8f31d9173a3bd11ea2a21ca673752be3637054",
-    "segmented-toggle": "0056c81cb0936eea54dd1cc7ca2c8990ccead21217e4d440e8b9ed15def2c9bb",
+    "segmented-toggle": "aa973b7c26d26f157693ad3a693e98375230fa704481d4853814c7d021d223c1",
     "settings-workspace": "5307b337028dfb9f6fe1ece8975ad6a6857d3fe9fc1b41d1df2c28c709dc8cc8",
     "sidebar-collapsible-icon": "8a79b7ec1e26b7522a1d32d85d3d5c0a924b1ab21c32252b5d3207eefd0e5274",
-    "sidebar-dashboard-shell": "c379af98853ec57a7484a03eab001c9339e54b9e8963af652ff7cd619420064a",
+    "sidebar-dashboard-shell": "72804bd89e0100488d25d1610c25cf18499e14acaceda5c4061b8e3bb7762a92",
     "sidebar-inset-shell": "036d12c586a0dacff01c67cc745856d2eb02092f9ce096c44336f3034a8fe71d",
     "sidebar-mobile-flyout": "b2f95030c433acc594d2dd8ce1a1bdf20f2410e9e646a83803103d17806d85fb",
     "sidebar-nav": "9625532a4f0d2a345eb368fbf7fa3fc77337782d5c6340c28f0d5df2d525ecd3",
-    "svg-area-chart": "61d945845b25a30abb295d9e4d738ccb39e43f51aedb2337f29ca6eb027cc501",
-    "dashboard-activity": "8628a8d5850a73a8045dc2615a12eb698b946a110802b4606f53e43564e51398",
-    "dashboard-workspace": "3f8e1b827935d61a7f759f80dc25fa4780489e2ec878f34a6a46d26b896d5093",
+    "svg-area-chart": "5209282f4f9a9011131336fed4ab850de572ab3e542e8beb22a96e0a0c7e91fd",
+    "dashboard-activity": "2df4c7b89ccfdc85b6296a8a4cce7b489403fa9e7c00e83762410806c012eee5",
+    "dashboard-workspace": "61e5deea5dfd5725239cbd4ecd3b2e44b75f9579b2c681f9e40f1021dc479de7",
     "auth-flow": "9bf7cdd02ccaa4b26cfa92274aeeb6be1b1583793f349c97ebe5fa96baebd528",
     "auth-split-flow": "d929b9d4d54a7db7284e7478f596db39e8bbe05d7240555409b24eba33347b58",
-    "data-records": "1a7b9741fb099cc4cfd7206657177ebf894412b738dc8853baccacfe972c225f",
+    "data-records": "90200d4832214c0348cee75a1cf703b1edef0a4c8a18303904fc1a380891299a",
     "marketing-pricing": "190c51eac23911ad817903da7f9390216eaf783c13737cef654a3096cc54aa56",
-    "workspace-dashboard": "dd012524ce0a9b87cfd4239363f142a3157ff8e5cffc9b3bf40900d6e1ffb34e",
-    "workspace-detail": "53ba9d57a1f3484dd9b3b66ce797842678a521b941451b337dceaa41f97e042d",
-    "workspace-settings": "0854e2a80cc9de2dd2b86372e63e40746ea8e6fcaac311023f132686d797019a"
+    "workspace-dashboard": "ea65a88508f97869c2fa953f93e3199b1ba17e6deaa4e845d26728631a7088bf",
+    "workspace-detail": "075a58d1482369192acbd834b2ce4871a592817fdb8a020e57f8b7ab7802ec5b",
+    "workspace-settings": "474439550f64d8fc1c2e4d246cc378053ddc22dbf644359968ee2cdea8b38cbf"
   }
 }

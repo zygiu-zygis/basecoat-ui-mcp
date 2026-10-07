@@ -348,6 +348,28 @@ export function validateComposition(code: string, options: ValidationOptions = {
         }
       }
     }
+
+    if (classes.includes('card') || classes.includes('ui-card')) {
+      if (classes.some(c => c === 'border' || c === 'border-border' || c.startsWith('border-['))) {
+        report(
+          'card-double-border',
+          'error',
+          'The .card component inherently provides a 1px ring shadow (in Vega pack). Adding border utilities creates an ugly thick 2px double border.',
+          node.line,
+          'Remove the border utilities (e.g. border, border-border) from the .card element.',
+        );
+      }
+    }
+
+    if (classes.includes('h-16')) {
+      report(
+        'oversized-header',
+        'warning',
+        'Dashboard headers and app bars should be compact and balanced (shadcn aesthetic). h-16 is generally too tall for a data-dense UI.',
+        node.line,
+        'Change h-16 to h-12 or h-14.',
+      );
+    }
     for (const token of classes) {
       if (
         COMPONENT_FAMILY.test(token) &&
@@ -364,7 +386,11 @@ export function validateComposition(code: string, options: ValidationOptions = {
           densityProfile === 'compact' &&
           !negative &&
           MICRO_SPACING.has(value!);
-        if ((!spacingSteps.has(value!) || !!negative) && !allowedAuto && !microAllowed) {
+        const sidebarOffsetAllowed =
+          !negative &&
+          value === '64' &&
+          /^[mp][selr]$/.test(family!);
+        if ((!spacingSteps.has(value!) || !!negative) && !allowedAuto && !microAllowed && !sidebarOffsetAllowed) {
           if (!semanticMappings) {
             const allowed = [...spacingSteps].join(', ');
             report(
@@ -421,7 +447,8 @@ export function validateComposition(code: string, options: ValidationOptions = {
         if (hardcodedSpacing && hardcodedSpacing[1] !== '0' && hardcodedSpacing[1] !== 'auto' && !semanticMappings.byUtility.has(token)) {
           const val = hardcodedSpacing[1]!;
           const isMicroCompact = densityProfile === 'compact' && MICRO_SPACING.has(val);
-          if (!isMicroCompact) {
+          const isSidebarOffset = val === '64' && !token.startsWith('-') && /^[mp][selr]-64$/.test(utility(token));
+          if (!spacingSteps.has(val) && !isMicroCompact && !isSidebarOffset) {
             const allowed = [...spacingSteps].join(', ');
             report(
               'semantic-hardcoded-spacing',

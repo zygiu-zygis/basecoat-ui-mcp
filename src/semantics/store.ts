@@ -196,7 +196,8 @@ export class FileSemanticsStore implements SemanticsStore {
 
   getEffectiveRhythmProfile(profileId: Id, projectRoot?: string): CompiledRhythmProfile {
     const registry = this.getRegistry();
-    const profileRef = registry.aliases[profileId];
+    const resolvedId = (profileId === 'comfortable' || profileId === 'app-default' ? 'default' : profileId) as Id;
+    const profileRef = registry.aliases[resolvedId] ?? registry.aliases[profileId];
 
     if (!profileRef) {
       throw new SemanticsError('PROFILE_NOT_FOUND', `Rhythm profile not found: ${profileId}`);

@@ -9,7 +9,7 @@
   "fragments": [
     {
       "id": "content-frame",
-      "emmet": "div.flex.h-16.items-center.justify-between.gap-4.border-b.border-border.px-4[data-height=4rem][data-gutter=1rem][data-responsive=wrap-below-md]>div[data-component=breadcrumb]+div.flex.gap-2[data-slot=actions]"
+      "emmet": "header.flex.h-12.items-center.justify-between.gap-2.border-b.border-border.px-4.lg:px-6[data-slot=header][data-height=3rem][data-gutter=1rem][data-responsive=wrap-below-md]>div.flex.items-center.gap-2>button.btn.btn-ghost.size-7[data-slot=sidebar-trigger][aria-label='Toggle Sidebar']+div.w-px.h-4.bg-border[role=none]+h1.text-base.font-medium[data-slot=title]{Documents}^div.flex.items-center.gap-2[data-slot=actions]"
     }
   ],
   "mounts": [],

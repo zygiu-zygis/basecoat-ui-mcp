@@ -82,6 +82,15 @@ hierarchy before adding borders, shadows, backgrounds, or more wrappers.
 - Enforce a strict, neutral (zinc/slate) palette (replicating shadcn/ui minimalism).
   Forbid the use of aggressive colors unless they are semantic (success/danger) status indicators (badges/borders). Full red row backgrounds or overly bright base colors are strictly forbidden.
 
+## Shadcn Aesthetic & Deterministic Quality
+
+To achieve the precise, premium feel of shadcn/ui without React, you must act with a designer's intuition for proportions, typography, and contrast:
+- **Card Borders:** Basecoat's \`.card\` class intrinsically applies a 1px ring shadow (e.g., \`shadow-sm ring-1 ring-border\`). **Never** add \`border\` or \`border-border\` to a \`.card\`, as this creates an ugly, thick 2px double border.
+- **Header Proportions:** Dashboard headers and app bars should be compact and balanced. Use \`h-12\` or \`h-14\` for top header rows, never \`h-16\` or larger unless it's a prominent hero section.
+- **Typography Subtlety:** Use \`text-sm\` for most data tables, lists, and secondary navigation. Reserve \`text-base\` for primary body copy. Use \`text-muted-foreground\` (not arbitrary gray) for table headers, metadata, and secondary labels to establish a clear visual hierarchy.
+- **Whitespace & Rhythm:** Align elements to a strict grid. Use \`p-6\` for standard card padding, \`p-4\` for compact cards. When using flex gaps, use \`gap-4\` between cards and \`gap-6\` between major sections. Do not use random padding like \`p-5\` or \`p-7\`.
+- **Subtle Backgrounds:** Use \`bg-muted/50\` or \`bg-accent/50\` for subtle row highlights or secondary backgrounds. Avoid heavy, opaque backgrounds unless they are primary actions.
+
 Prefer a page header, a useful action row, and direct content over a dashboard
 of empty wrappers. Treat validation findings as review guidance: static source
 cannot establish visual contrast, computed spacing, or actual keyboard behavior.
