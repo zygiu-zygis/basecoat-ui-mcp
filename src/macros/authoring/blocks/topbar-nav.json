@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "id": "topbar-nav",
+  "role": "header",
+  "family": "navigation",
+  "description": "Horizontal top-bar navigation header: brand logo, horizontal links, search, and user profile.",
+  "tags": ["navigation", "header", "top-bar"],
+  "root": "nav-root",
+  "fragments": [
+    {
+      "id": "nav-root",
+      "emmet": "div.flex.items-center.w-full.justify-between.gap-4>div.flex.items-center.gap-6>div.flex.items-center.gap-2.font-semibold[data-slot=brand]{Brand}+nav.hidden.md:flex.items-center.gap-4.text-sm[aria-label=Main]>a.font-medium.text-foreground{Overview}+a.font-medium.text-muted-foreground.hover:text-foreground{Customers}+a.font-medium.text-muted-foreground.hover:text-foreground{Products}^^div.flex.items-center.gap-4>div.relative.hidden.sm:block>svg.lucide.lucide-search.absolute.left-2.top-2.5.size-4.text-muted-foreground{}+input.input.h-9.w-64.pl-8.rounded-md[type=search][placeholder=Search...]+kbd.pointer-events-none.absolute.right-2.top-2.hidden.h-5.select-none.items-center.gap-2.rounded.border.bg-muted.px-2.font-mono.text-[10px].font-medium.opacity-100.sm:flex>span{⌘}K^+button.avatar.size-8.rounded-full.bg-muted[data-slot=user]"
+    }
+  ],
+  "mounts": [],
+  "slots": [],
+  "ports": [],
+  "componentRefs": ["input", "avatar"],
+  "ruleRefs": [],
+  "dependencyBlockIds": [],
+  "layout": { "frameRef": "nav-root" },
+  "landmarks": { "main": 0, "primaryHeading": 0 },
+  "provenance": { "origin": "authored", "sourceHashes": {}, "mappingVersion": "1.0.0" }
+}

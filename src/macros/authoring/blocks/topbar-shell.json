@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "id": "topbar-shell",
+  "role": "shell",
+  "family": "layout",
+  "description": "Top-bar only dashboard shell contract: no sidebar, horizontal navigation in the header, fluid width main content area.",
+  "tags": ["shell", "layout", "top-bar", "workspace"],
+  "root": "shell-root",
+  "fragments": [
+    {
+      "id": "shell-root",
+      "emmet": "div.flex.min-h-screen.flex-col.w-full.bg-background.text-foreground[data-theme-tokens=bg-background,text-foreground,border-border]>header.flex.h-16.items-center.justify-between.gap-4.border-b.border-border.px-4.md:px-6[data-slot=header]+main#main.flex-1.w-full[data-slot=content][data-scroll-owner=main]"
+    }
+  ],
+  "mounts": [],
+  "slots": [
+    { "id": "header", "at": { "fragment": "shell-root", "name": "header" }, "accepts": ["header"], "min": 1, "max": 1 },
+    { "id": "content", "at": { "fragment": "shell-root", "name": "content" }, "accepts": ["workspace", "hero", "page", "dashboard"], "min": 1, "max": 1 }
+  ],
+  "ports": [
+    { "id": "main-region", "at": { "fragment": "shell-root", "name": "shell-root" }, "direction": "out", "kind": "region", "contract": "main", "minLinks": 0, "maxLinks": 1, "scope": "page" }
+  ],
+  "componentRefs": [],
+  "ruleRefs": [],
+  "dependencyBlockIds": [],
+  "layout": { "frameRef": "shell-root" },
+  "landmarks": { "main": 0, "primaryHeading": 0 },
+  "provenance": { "origin": "authored", "sourceHashes": {}, "mappingVersion": "1.0.0" }
+}

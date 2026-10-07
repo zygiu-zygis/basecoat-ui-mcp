@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "revision": "9e131aa19016777f27019cd45ba7e0a5f7a17cf715af5f48e5f2db56531e8f5d",
+  "revision": "8aae82b74c098a687022ceb1173743d6f270a55877886d6ca697f1d9b161606f",
   "blocks": {
     "cbe0f152631792d61e6ebb46d791ae123dd45d83b58f2105e1c8f38e1bf283a7": {
       "schemaVersion": 1,
@@ -2338,6 +2338,126 @@
         "sourceHashes": {},
         "mappingVersion": "1.0.0"
       }
+    },
+    "b35d8b3cac346f8036359903ae96b06608b28747a38f8ea835083281de2c0c6f": {
+      "schemaVersion": 1,
+      "id": "topbar-nav",
+      "role": "header",
+      "family": "navigation",
+      "description": "Horizontal top-bar navigation header: brand logo, horizontal links, search, and user profile.",
+      "tags": [
+        "navigation",
+        "header",
+        "top-bar"
+      ],
+      "root": "nav-root",
+      "fragments": [
+        {
+          "id": "nav-root",
+          "emmet": "div.flex.items-center.w-full.justify-between.gap-4>div.flex.items-center.gap-6>div.flex.items-center.gap-2.font-semibold[data-slot=brand]{Brand}+nav.hidden.md:flex.items-center.gap-4.text-sm[aria-label=Main]>a.font-medium.text-foreground{Overview}+a.font-medium.text-muted-foreground.hover:text-foreground{Customers}+a.font-medium.text-muted-foreground.hover:text-foreground{Products}^^div.flex.items-center.gap-4>div.relative.hidden.sm:block>svg.lucide.lucide-search.absolute.left-2.top-2.5.size-4.text-muted-foreground{}+input.input.h-9.w-64.pl-8.rounded-md[type=search][placeholder=Search...]+kbd.pointer-events-none.absolute.right-2.top-2.hidden.h-5.select-none.items-center.gap-2.rounded.border.bg-muted.px-2.font-mono.text-[10px].font-medium.opacity-100.sm:flex>span{⌘}K^+button.avatar.size-8.rounded-full.bg-muted[data-slot=user]"
+        }
+      ],
+      "mounts": [],
+      "slots": [],
+      "ports": [],
+      "componentRefs": [
+        "input",
+        "avatar"
+      ],
+      "ruleRefs": [],
+      "dependencyRefs": [],
+      "layout": {
+        "frameRef": "nav-root"
+      },
+      "landmarks": {
+        "main": 0,
+        "primaryHeading": 0
+      },
+      "provenance": {
+        "origin": "authored",
+        "sourceHashes": {},
+        "mappingVersion": "1.0.0"
+      }
+    },
+    "73094237dc12a88c4ea33ff78c32157694afcf74998993acbdc933f823abcad0": {
+      "schemaVersion": 1,
+      "id": "topbar-shell",
+      "role": "shell",
+      "family": "layout",
+      "description": "Top-bar only dashboard shell contract: no sidebar, horizontal navigation in the header, fluid width main content area.",
+      "tags": [
+        "shell",
+        "layout",
+        "top-bar",
+        "workspace"
+      ],
+      "root": "shell-root",
+      "fragments": [
+        {
+          "id": "shell-root",
+          "emmet": "div.flex.min-h-screen.flex-col.w-full.bg-background.text-foreground[data-theme-tokens=bg-background,text-foreground,border-border]>header.flex.h-16.items-center.justify-between.gap-4.border-b.border-border.px-4.md:px-6[data-slot=header]+main#main.flex-1.w-full[data-slot=content][data-scroll-owner=main]"
+        }
+      ],
+      "mounts": [],
+      "slots": [
+        {
+          "id": "header",
+          "at": {
+            "fragment": "shell-root",
+            "name": "header"
+          },
+          "accepts": [
+            "header"
+          ],
+          "min": 1,
+          "max": 1
+        },
+        {
+          "id": "content",
+          "at": {
+            "fragment": "shell-root",
+            "name": "content"
+          },
+          "accepts": [
+            "workspace",
+            "hero",
+            "page",
+            "dashboard"
+          ],
+          "min": 1,
+          "max": 1
+        }
+      ],
+      "ports": [
+        {
+          "id": "main-region",
+          "at": {
+            "fragment": "shell-root",
+            "name": "shell-root"
+          },
+          "direction": "out",
+          "kind": "region",
+          "contract": "main",
+          "minLinks": 0,
+          "maxLinks": 1,
+          "scope": "page"
+        }
+      ],
+      "componentRefs": [],
+      "ruleRefs": [],
+      "dependencyRefs": [],
+      "layout": {
+        "frameRef": "shell-root"
+      },
+      "landmarks": {
+        "main": 0,
+        "primaryHeading": 0
+      },
+      "provenance": {
+        "origin": "authored",
+        "sourceHashes": {},
+        "mappingVersion": "1.0.0"
+      }
     }
   },
   "recipes": {
@@ -3478,6 +3598,8 @@
     "sidebar-nav": "9625532a4f0d2a345eb368fbf7fa3fc77337782d5c6340c28f0d5df2d525ecd3",
     "svg-area-chart": "5209282f4f9a9011131336fed4ab850de572ab3e542e8beb22a96e0a0c7e91fd",
     "dashboard-activity": "11e81ac3707d99da5d12cb7c146e3ce74fe616496372c176a2f0e15a125bdae8",
+    "topbar-nav": "b35d8b3cac346f8036359903ae96b06608b28747a38f8ea835083281de2c0c6f",
+    "topbar-shell": "73094237dc12a88c4ea33ff78c32157694afcf74998993acbdc933f823abcad0",
     "auth-flow": "9bf7cdd02ccaa4b26cfa92274aeeb6be1b1583793f349c97ebe5fa96baebd528",
     "auth-split-flow": "d929b9d4d54a7db7284e7478f596db39e8bbe05d7240555409b24eba33347b58",
     "data-records": "90200d4832214c0348cee75a1cf703b1edef0a4c8a18303904fc1a380891299a",

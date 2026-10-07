@@ -122,7 +122,7 @@ export function assertFragmentPacketBudget(
 }
 
 /** Comfortable rhythm spacing steps approved for macro Emmet authoring. */
-export const APPROVED_MACRO_SPACING = new Set(['0', '2', '4', '6', '12']);
+export const APPROVED_MACRO_SPACING = new Set(['0', '2', '4', '6', '8', '12']);
 
 const EMMET_SPACING =
   /(?:^|[.>+*^()\[\],\s])(?:(?:sm|md|lg|xl|2xl):)?(!?)(-?)(gap(?:-[xy])?|space-[xy]|[mp][trblxyse]?)-(\d+(?:\.\d+)?)(?=[.>+*^()\[\],\s]|$)/g;

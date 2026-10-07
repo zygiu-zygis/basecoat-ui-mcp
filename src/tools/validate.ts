@@ -58,7 +58,7 @@ const NON_COLOR_BORDER = /^(?:0|2|4|8|x|y|s|e|t|r|b|l|x-0|x-2|x-4|x-8|y-0|y-2|y-
 const NON_COLOR_BACKGROUND = /^(?:auto|cover|contain|fixed|local|scroll|clip-(?:border|padding|content|text)|origin-(?:border|padding|content)|(?:center|top|right|bottom|left)(?:-(?:top|bottom|left|right))?|no-repeat|repeat(?:-x|-y|-round|-space)?)$/;
 
 function isMicroChromeContext(node: HtmlNode, nodes: HtmlNode[]): boolean {
-  if (node.tag === 'a' || node.tag === 'nav' || node.tag === 'td' || node.tag === 'th') return true;
+  if (node.tag === 'a' || node.tag === 'nav' || node.tag === 'header' || node.tag === 'td' || node.tag === 'th') return true;
   const classes = node.classes.map(utility);
   if (classes.includes('badge') || classes.includes('sidebar') || classes.some(c => c.startsWith('badge-'))) {
     return true;
@@ -67,7 +67,7 @@ function isMicroChromeContext(node: HtmlNode, nodes: HtmlNode[]): boolean {
   while (parent !== null) {
     const ancestor = nodes[parent]!;
     if (
-      ancestor.tag === 'nav' ||
+      ancestor.tag === 'nav' || ancestor.tag === 'header' ||
       ancestor.tag === 'td' ||
       ancestor.tag === 'th' ||
       ancestor.tag === 'table' ||

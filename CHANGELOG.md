@@ -1,3 +1,9 @@
+## 1.8.0 - 2026-10-07
+
+- **Layout Neutrality**: Introduced `topbar-shell` and `topbar-nav` macros to support non-sidebar dashboard generation out-of-the-box.
+- **Validator Enhancements**: Extended micro-spacing rhythm leniency (`isMicroChromeContext`) to apply equitably to both `<nav>` and `<header>` regions, removing legacy strictness that previously biased LLMs towards sidebars.
+- **Compilation Consistency**: Synchronized `compiler.ts` rhythm assertions to allow the `8` (2rem) step, aligning with the `validate_composition` logic from `1.7.0`.
+
 # Changelog
 
 Maintained by **Žygimantas Jasiulionis / Intellmedia**.
