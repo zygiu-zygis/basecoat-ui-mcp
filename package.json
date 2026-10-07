@@ -52,13 +52,8 @@
   "files": [
     "dist",
     "src",
-    "scripts",
     "assets/logo.svg",
-    "tests",
-    "!tests/fixtures/offline-dashboard",
     "templates",
-    "tsconfig.json",
-    "tsconfig.check.json",
     "README.md",
     "ARCHITECTURE.md",
     "CHANGELOG.md",
@@ -79,7 +74,8 @@
     "compile:semantics": "node --import tsx scripts/compile-semantics.ts",
     "compile:semantics:check": "node --import tsx scripts/compile-semantics.ts --check",
     "import:blocks": "node --import tsx scripts/import-blocks.ts",
-    "release:check": "node --import tsx scripts/release-check.ts"
+    "release:check": "node --import tsx scripts/release-check.ts",
+    "release:audit": "npm audit --omit=dev --json"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "1.32.1",

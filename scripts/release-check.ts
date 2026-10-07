@@ -67,6 +67,15 @@ interface PackageManifest {
   scripts?: Record<string, string>;
 }
 
+interface LockfileManifest {
+  name: string;
+  version: string;
+  packages?: Record<string, {
+    name?: string;
+    version?: string;
+  }>;
+}
+
 interface ServerManifest {
   name: string;
   version: string;
@@ -171,12 +180,14 @@ export async function buildReleaseEvidence(
   phase: ReleasePhase = 'pre-release',
   repositoryRoot = root,
 ): Promise<ReleaseEvidence> {
-  const [packageText, serverText, readme] = await Promise.all([
+  const [packageText, lockfileText, serverText, readme] = await Promise.all([
     readFile(resolve(repositoryRoot, 'package.json'), 'utf8'),
+    readFile(resolve(repositoryRoot, 'package-lock.json'), 'utf8'),
     readFile(resolve(repositoryRoot, 'server.json'), 'utf8'),
     readFile(resolve(repositoryRoot, 'README.md'), 'utf8'),
   ]);
   const packageJson = JSON.parse(packageText) as PackageManifest;
+  const lockfileJson = JSON.parse(lockfileText) as LockfileManifest;
   const serverJson = JSON.parse(serverText) as ServerManifest;
   const serverPackage = serverJson.packages?.[0];
   const packageName = packageJson.name;
@@ -215,6 +226,37 @@ export async function buildReleaseEvidence(
       'Manifest transport check',
     ),
   ];
+  const lockfileRoot = lockfileJson.packages?.[''];
+  records.push(
+    parityRecord(
+      'package-lock metadata name',
+      'package.json.name',
+      lockfileJson.name ?? '(missing)',
+      packageName,
+      'package-lock metadata parity check',
+    ),
+    parityRecord(
+      'package-lock metadata version',
+      'package.json.version',
+      lockfileJson.version ?? '(missing)',
+      version,
+      'package-lock metadata parity check',
+    ),
+    parityRecord(
+      'package-lock root package name',
+      'package.json.name',
+      lockfileRoot?.name ?? '(missing)',
+      packageName,
+      'package-lock root package parity check',
+    ),
+    parityRecord(
+      'package-lock root package version',
+      'package.json.version',
+      lockfileRoot?.version ?? '(missing)',
+      version,
+      'package-lock root package parity check',
+    ),
+  );
 
   const bin = packageJson.bin?.['basecoat-ui-mcp'];
   records.push(record(

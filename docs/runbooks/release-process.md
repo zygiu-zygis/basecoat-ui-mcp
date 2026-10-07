@@ -49,13 +49,20 @@ npm run release:check -- --phase=pre-release --write=tmp/release-pre.json
 npm run release:check -- --phase=post-release --write=tmp/release-post.json
 ```
 
+For machine-readable evidence without npm's lifecycle header, use the direct
+Node command:
+
+```bash
+node --import tsx scripts/release-check.ts --phase=pre-release
+```
+
 The JSON record is intentionally local-only. Each record contains the legacy
 summary fields (`surface`, `authority`, `current`, `expected`, `correction`,
 `status`, and `verification`) plus `platform`, `url`, `owner`,
 `observedIdentity`, `expectedIdentity`, `claims`, `approvalState`, `checkedAt`,
 `evidence`, and `nextAction`. The routine derives public surfaces from current
 package/server/README metadata, checks package/version/install/stdio
-transport/capability parity, and reports SEO copy gaps or duplicate keywords
+  transport/capability parity, lockfile name/version parity, and reports SEO copy gaps or duplicate keywords
 for human review. It also lists excluded search noise (badges, download
 counts, upstream references, and snippets) so those values cannot become
 accidental release authority. `inaccessible` means the surface still requires
@@ -105,9 +112,15 @@ Before any external write:
   same version in both `server.json` locations.
 - Move the changelog entry to `## X.Y.Z - YYYY-MM-DD` and prepare release notes.
 - Run `npm run check`.
-- Run `npm pack --dry-run` and inspect the file list. Confirm that no secrets,
+- Run `npm pack --dry-run --json --ignore-scripts` and inspect the file list. The
+  package must contain the runtime snapshots and must not contain `scripts/`,
+  `tests/`, TypeScript project files, secrets,
   credentials, `tmp/`, local probes, workflow files, or unrelated files ship.
   `.gitignore` does not replace the npm `files` allowlist.
+- Run `npm run release:audit`. Its JSON comes from stdout; npm configuration
+  warnings belong to stderr and are not release evidence.
+- Run `node --import tsx scripts/release-check.ts --phase=pre-release` and
+  require `parity: "pass"` before publication.
 - Verify the GitHub repository URL, npm identifier, `mcpName`, install examples,
   and release notes all describe the same package.
 - Re-run discovery and attach the clean pre-release evidence to the approval.

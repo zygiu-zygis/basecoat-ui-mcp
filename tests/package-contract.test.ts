@@ -93,6 +93,14 @@ test('npm package contains runtime, snapshots, source contracts, and no workflow
   ]) {
     assert(paths.has(required), `package is missing ${required}`);
   }
+  for (const forbidden of [
+    'scripts/',
+    'tests/',
+    'tsconfig.json',
+    'tsconfig.check.json',
+  ]) {
+    assert([...paths].every(path => !path.startsWith(forbidden)), `development path must not ship: ${forbidden}`);
+  }
   assert([...paths].every(path => !path.startsWith('.github/workflows/')));
   assert([...paths].every(path => !path.startsWith('tests/fixtures/offline-dashboard/') && !path.startsWith('tmp/')), 'local probe or scratch files must not ship');
 });

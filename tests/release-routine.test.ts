@@ -1,6 +1,29 @@
 import assert from 'node:assert/strict';
+import { cp, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import test from 'node:test';
 import { buildReleaseEvidence } from '../scripts/release-check.js';
+
+async function makeReleaseFixture(): Promise<string> {
+  const fixture = await mkdtemp(join(tmpdir(), 'basecoat-release-'));
+  await cp('package.json', join(fixture, 'package.json'));
+  await cp('package-lock.json', join(fixture, 'package-lock.json'));
+  await cp('server.json', join(fixture, 'server.json'));
+  await cp('README.md', join(fixture, 'README.md'));
+  await cp('src/server', join(fixture, 'src/server'), { recursive: true });
+  return fixture;
+}
+
+async function updateFixtureLockfile(
+  fixture: string,
+  update: (lockfile: Record<string, unknown>) => void,
+): Promise<void> {
+  const path = join(fixture, 'package-lock.json');
+  const lockfile = JSON.parse(await readFile(path, 'utf8')) as Record<string, unknown>;
+  update(lockfile);
+  await writeFile(path, `${JSON.stringify(lockfile, null, 2)}\n`);
+}
 
 test('release evidence enforces local parity without probing external surfaces', async () => {
   const evidence = await buildReleaseEvidence('pre-release');
@@ -56,4 +79,32 @@ test('release evidence supports the post-release parity phase', async () => {
   assert.equal(evidence.phase, 'post-release');
   assert.equal(evidence.parity, 'pass');
   assert(evidence.approvalsRequired.includes('npm publish'));
+});
+
+test('release evidence fails when authoritative lockfile identity drifts', async (t) => {
+  const cases = [
+    ['top-level name', (lockfile: Record<string, unknown>) => { lockfile.name = 'wrong-name'; }],
+    ['top-level version', (lockfile: Record<string, unknown>) => { lockfile.version = '0.0.0'; }],
+    ['root package name', (lockfile: Record<string, unknown>) => {
+      (lockfile.packages as Record<string, Record<string, unknown>>)['']!.name = 'wrong-name';
+    }],
+    ['root package version', (lockfile: Record<string, unknown>) => {
+      (lockfile.packages as Record<string, Record<string, unknown>>)['']!.version = '0.0.0';
+    }],
+  ] as const;
+
+  for (const [label, update] of cases) {
+    await t.test(label, async () => {
+      const fixture = await makeReleaseFixture();
+      try {
+        await updateFixtureLockfile(fixture, update);
+        const evidence = await buildReleaseEvidence('pre-release', fixture);
+        assert.equal(evidence.parity, 'fail');
+        assert(evidence.records.some(record =>
+          record.surface.startsWith('package-lock') && record.status === 'stale'));
+      } finally {
+        await rm(fixture, { recursive: true, force: true });
+      }
+    });
+  }
 });
