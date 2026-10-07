@@ -1,6 +1,6 @@
 {
   "name": "@intellmedia/basecoat-ui-mcp",
-  "version": "1.6.4",
+  "version": "1.7.0",
   "description": "Offline MCP server for Basecoat UI (shadcn/ui look without React): curated templates, macro layouts, theming/dark-mode guidance, and static validation (stdio, no runtime network)",
   "author": "Žygimantas Jasiulionis / Intellmedia",
   "maintainers": [

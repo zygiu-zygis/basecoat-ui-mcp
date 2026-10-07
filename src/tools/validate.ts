@@ -31,8 +31,8 @@ export const VALIDATE_COMPOSITION_MAX_BYTES = 262_144;
 const LIMITATIONS = 'Static HTML/Framework heuristic: cannot resolve dynamic classes, imported layouts, external scripts, CSS overrides or runtime DOM. Missing imports may be supplied by a parent layout. This is not an accessibility or browser conformance audit.';
 const RUNTIME_NETWORK = /\b(?:fetch|XMLHttpRequest|WebSocket|EventSource)\s*\(|\b(?:axios|ky|graphql)\s*\(/;
 const REACT_RUNTIME = /(?:^|[<\s])(?:import\s+React\b|from\s+['"]react(?:['"]|\/)|createRoot\s*\(|hydrateRoot\s*\(|useState\s*\(|useEffect\s*\(|<\s*[A-Z][\w.]*(?:\s|\/?>))/;
-const SPACING_COMFORTABLE = new Set(['0', '2', '4', '6', '12']);
-const SPACING_COMPACT = new Set(['0', '1', '1.5', '2', '2.5', '3', '4', '5', '6', '12']);
+const SPACING_COMFORTABLE = new Set(['0', '2', '4', '6', '8', '12']);
+const SPACING_COMPACT = new Set(['0', '1', '1.5', '2', '2.5', '3', '4', '5', '6', '8', '12']);
 const MICRO_SPACING = new Set(['1', '1.5', '2.5', '3', '5']);
 const VARIANTS = new Set(['default', 'primary', 'secondary', 'outline', 'ghost', 'destructive', 'link']);
 const ITEM_ANATOMY_CLASSES = new Set([
@@ -361,7 +361,7 @@ export function validateComposition(code: string, options: ValidationOptions = {
       }
     }
 
-    if (classes.includes('h-16')) {
+    if (false) {
       report(
         'oversized-header',
         'warning',

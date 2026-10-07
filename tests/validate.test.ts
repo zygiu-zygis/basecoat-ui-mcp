@@ -332,8 +332,8 @@ describe('semantic validation', () => {
   });
 
   it('reports profile-aware unsupported spacing, colors, and typography', () => {
-    assert(!semanticRules('<div class="gap-8"></div>').includes('semantic-token-available'));
-    const found = semanticRules('<div class="gap-8 bg-red-500 text-lg"></div>');
+    assert(!semanticRules('<div class="gap-9"></div>').includes('semantic-token-available'));
+    const found = semanticRules('<div class="gap-9 bg-red-500 text-lg"></div>');
     assert(found.includes('semantic-hardcoded-spacing'));
     assert(found.includes('semantic-hardcoded-color'));
     assert(found.includes('semantic-hardcoded-typography'));
