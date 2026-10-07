@@ -298,6 +298,14 @@ The host application supplies its compiled Tailwind and Basecoat stylesheet:
 
 Basecoat 1.x uses `btn` with `data-variant` and `data-size`. Interactive components list the granular JavaScript modules the host must load.
 
+## Macro-Driven Dashboard Generation
+
+The MCP server provides a robust set of macro layouts (`search_macro_blocks`) that enable connected LLMs to predictably assemble complex layouts (like Shadcn dashboards) out-of-the-box.
+
+- **Layout Neutrality**: Supports both sidebar (`sidebar-dashboard-shell`, `sidebar-inset-shell`) and top-bar architectures (`topbar-shell`, `topbar-nav`).
+- **Strict Validation**: The `validate_composition` tool ensures that generated layouts adhere to the Basecoat CSS theming contracts, strict spacing rhythm scales (0, 2, 4, 6, 8, 12), and proper landmark accessibility.
+- **Agent Guidance**: LLMs are encouraged to use `search_macro_blocks` to find a `shell` (layout wrapper), and `dashboard-main` or `dashboard-workspace` to populate the `main` container, guaranteeing deterministic, pixel-perfect Shadcn/ui parody without React runtime artifacts.
+
 ## Registry and exclusions
 
 The checked-in registry contains **41 searchable templates**: 39 curated from

@@ -1,3 +1,9 @@
+## 1.9.0 - 2026-10-07
+
+- **Documentation & Agent Guidance**: Added `Macro-Driven Dashboard Generation` guide to `README.md` to instruct any connected LLM (Cursor, Claude, Windsurf) on utilizing `search_macro_blocks` for predictable, deterministic layouts.
+- **Broad Model Support**: Formalized the use of `topbar-shell` and `sidebar-dashboard-shell` explicitly in the root documentation to ensure the tool provides maximum utility across diverse use-cases without hardcoded structural biases.
+- **Stabilization**: Verified all rhythm and composition rules are universally applicable to both top-bar and sidebar variants, finalizing the Basecoat MCP for seamless dashboard assembly.
+
 ## 1.8.0 - 2026-10-07
 
 - **Layout Neutrality**: Introduced `topbar-shell` and `topbar-nav` macros to support non-sidebar dashboard generation out-of-the-box.
