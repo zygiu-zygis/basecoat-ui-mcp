@@ -287,6 +287,25 @@ export function validateComposition(code: string, options: ValidationOptions = {
       .find(name => name !== 'themeMode' && THEME_KEY.test(name));
     if (key) report('theme-storage-key', 'warning', `Theme persisted under "${key}", but basecoat.theme.set() uses "themeMode"; two resolvers drift apart.`, script.line, 'Read/write "themeMode" with one shared default, or call window.basecoat.theme.set().');
   }
+  const hasDarkClassStrategy = Boolean(
+    darkScript ||
+    nodes.some(n => n.classes.some(c => utility(c) === 'dark')) ||
+    nodes.some(n => n.tag === 'style' && /\.dark(?![\w-])/.test(n.content ?? ''))
+  );
+  for (const node of nodes) {
+    if (node.tag === 'meta' && node.attrs.name?.toLowerCase() === 'color-scheme') {
+      const content = node.attrs.content?.toLowerCase() ?? '';
+      if (content.includes('dark') && hasDarkClassStrategy) {
+        report(
+          'theme-meta-color-scheme',
+          'warning',
+          '<meta name="color-scheme" content="light dark"> leaks dark OS scrollbars/controls into light mode when using class-based html.dark. Set color-scheme: light on :root and color-scheme: dark on .dark instead.',
+          node.line,
+          'Set color-scheme: light on :root and color-scheme: dark on .dark in CSS instead of using meta color-scheme.',
+        );
+      }
+    }
+  }
 
   // Check responsive obligations
   for (const node of nodes) {
@@ -318,13 +337,14 @@ export function validateComposition(code: string, options: ValidationOptions = {
   for (const node of nodes) {
     if (node.dynamic) report('dynamic-attributes', 'warning', 'Dynamic attributes cannot be checked completely; inspect their rendered classes and states.', node.line);
     const classes = node.classes.map(utility);
-    if (classes.includes('card') || classes.includes('ui-card')) {
-      const isSubcard =
-        node.attrs['data-variant'] === 'subcard' ||
+    const isSubcard =
+      (classes.includes('card') || classes.includes('ui-card')) &&
+      (node.attrs['data-variant'] === 'subcard' ||
         node.attrs['variant'] === 'subcard' ||
         node.attrs['data-role'] === 'subcard' ||
         classes.includes('card-compact') ||
-        classes.includes('subcard');
+        classes.includes('subcard'));
+    if (classes.includes('card') || classes.includes('ui-card')) {
       if (!isSubcard) {
         let parent = node.parent;
         while (parent !== null) {
@@ -346,22 +366,28 @@ export function validateComposition(code: string, options: ValidationOptions = {
           }
           parent = ancestor.parent;
         }
-      }
-    }
 
-    if (classes.includes('card') || classes.includes('ui-card')) {
-      if (classes.some(c => c === 'border' || c === 'border-border' || c.startsWith('border-['))) {
-        report(
-          'card-double-border',
-          'error',
-          'The .card component inherently provides a 1px ring shadow (in Vega pack). Adding border utilities creates an ugly thick 2px double border.',
-          node.line,
-          'Remove the border utilities (e.g. border, border-border) from the .card element.',
+        const hasBorderUtility = classes.some(
+          c => (c === 'border' || c === 'border-border' || c.startsWith('border-[')) && c !== 'border-0' && c !== 'border-none'
         );
+        if (hasBorderUtility) {
+          report(
+            'card-double-border',
+            'error',
+            'The .card component inherently provides a 1px ring shadow (in Vega pack). Adding border utilities creates an ugly thick 2px double border.',
+            node.line,
+            'Remove the border utilities (e.g. border, border-border) from the .card element.',
+          );
+        }
       }
     }
 
-    if (false) {
+    const isHeaderLandmark =
+      node.tag === 'header' ||
+      classes.includes('page-header') ||
+      node.attrs['data-role'] === 'header' ||
+      node.attrs['role'] === 'banner';
+    if (isHeaderLandmark && classes.includes('h-16')) {
       report(
         'oversized-header',
         'warning',
@@ -388,7 +414,7 @@ export function validateComposition(code: string, options: ValidationOptions = {
           MICRO_SPACING.has(value!);
         const sidebarOffsetAllowed =
           !negative &&
-          value === '64' &&
+          ['60', '64', '72'].includes(value!) &&
           /^[mp][selr]$/.test(family!);
         if ((!spacingSteps.has(value!) || !!negative) && !allowedAuto && !microAllowed && !sidebarOffsetAllowed) {
           if (!semanticMappings) {
@@ -447,7 +473,7 @@ export function validateComposition(code: string, options: ValidationOptions = {
         if (hardcodedSpacing && hardcodedSpacing[1] !== '0' && hardcodedSpacing[1] !== 'auto' && !semanticMappings.byUtility.has(token)) {
           const val = hardcodedSpacing[1]!;
           const isMicroCompact = densityProfile === 'compact' && MICRO_SPACING.has(val);
-          const isSidebarOffset = val === '64' && !token.startsWith('-') && /^[mp][selr]-64$/.test(utility(token));
+          const isSidebarOffset = ['60', '64', '72'].includes(val) && !token.startsWith('-') && /^[mp][selr]-(?:60|64|72)$/.test(utility(token));
           if (!spacingSteps.has(val) && !isMicroCompact && !isSidebarOffset) {
             const allowed = [...spacingSteps].join(', ');
             report(
@@ -501,7 +527,7 @@ export function validateComposition(code: string, options: ValidationOptions = {
     // These components have dedicated Basecoat behavior; native dialog uses application JS.
     for (const component of ['tabs', 'accordion', 'select', 'combobox', 'dropdown-menu', 'popover', 'sidebar', 'drawer', 'command', 'toast', 'range']) {
       const isRangeInput = component === 'range' && node.tag === 'input' && node.attrs.type?.toLowerCase() === 'range';
-      if ((classes.includes(component) || isRangeInput) && !(component === 'select' && node.tag === 'select') && !required.has(component)) required.set(component, node.line);
+      if ((classes.includes(component) || (component === 'range' && classes.includes('slider')) || isRangeInput) && !(component === 'select' && node.tag === 'select') && !required.has(component)) required.set(component, node.line);
     }
 
     // --- Accessibility (a11y) structural heuristics for generated macros ---

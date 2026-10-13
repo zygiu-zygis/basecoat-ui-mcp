@@ -10,17 +10,46 @@ Use this workflow when creating or modifying a Basecoat page with
 `basecoat-ui-mcp`. Call the MCP before grepping `node_modules/basecoat-css`
 CSS or hand-writing tokens.
 
+## Mandatory 4-Stage Intent-Driven Workflow (Fast Path)
+
+When generating or upgrading a page, follow this 4-step tool chaining sequence:
+
+1. **Step 1 — Layout Scaffold (`basecoat_page_architect`)**:
+   Query an approved layout scaffold (`workspace-dashboard`, `auth-split-flow`, `workspace-detail`, `workspace-settings`, `data-records`, `auth-flow`, `marketing-pricing`) to obtain slot markers, grid structures, responsive containers, and required leaf component IDs.
+2. **Step 2 — Technical & Aesthetic Rules (`basecoat_rules_enforcer` & `basecoat_creative_director`)**:
+   Verify strict Tailwind CSS v4 syntax (no `bg-opacity-*` or `flex-shrink-*`), FSM `data-state` contracts, semantic CSS variables (`--color-primary` / `--primary`, `--color-surface` / `--background`), Kanso typography ladders, and subtle elevation rules (never add `border` to `.card`).
+3. **Step 3 — FSM-Bound Component Markup (`basecoat_component_syntax`)**:
+   Fetch copy-pasteable HTML/Astro markup with pre-configured state variants (`default`, `active`, `loading`, `disabled`, `open`, `closed`) and required module imports.
+4. **Step 4 — Quality Audit (`basecoat_quality_inspector`)**:
+   Audit the assembled HTML/Astro source for a `0–100` quality score, syntax violations, ARIA/landmark omissions, and auto-fix repairs. Iterate until `score >= 90` (`valid: true`).
+
+### Tool Chaining Example
+```json
+// 1. Scaffold layout
+{ "tool": "basecoat_page_architect", "arguments": { "intent": "Workspace Dashboard", "density": "compact" } }
+// 2. Load technical & creative constraints
+{ "tool": "basecoat_rules_enforcer", "arguments": { "category": "all" } }
+{ "tool": "basecoat_creative_director", "arguments": { "topic": "all", "visitorJob": "operate", "stylePack": "vega" } }
+// 3. Fetch FSM-bound component snippets
+{ "tool": "basecoat_component_syntax", "arguments": { "component": "dialog", "state": "open", "environment": "html" } }
+{ "tool": "basecoat_component_syntax", "arguments": { "component": "tabs", "state": "active", "environment": "html" } }
+// 4. Audit final markup
+{ "tool": "basecoat_quality_inspector", "arguments": { "code": "<header>...</header><main>...</main>", "densityProfile": "compact", "enforceFsm": true } }
+```
+
+## Existing UI Audit & Stateful Macro Session Workflow
+
 Existing UI audit or restyle (no design session): read
 `basecoat://design/theming` and `basecoat://design/rhythm`, call
-`get_component_details` for each control you change, then run
-`validate_composition` on the rendered layout including `<head>` scripts and
+`get_component_details` or `basecoat_component_syntax` for each control you change, then run
+`basecoat_quality_inspector` (or `validate_composition`) on the rendered layout including `<head>` scripts and
 `<style>`. Select an official Basecoat style pack in CSS (default
 `@import "basecoat-css/vega"`, or `nova`, `maia`, `lyra`, `mira`, `luma`, `sera`, `rhea`).
 Keep one dark-mode strategy (`html.dark`) and one resolver
 (`window.basecoat.theme`, key `themeMode`). For headers, pair `theme-switcher`
 (sun/moon SVG toggle) with the style variant selector. Verify light and dark
 screenshots with an OS dark preference and empty `localStorage`. Steps below are
-for new pages:
+for stateful multi-step macro sessions:
 
 1. Read `basecoat://design/rhythm` and `basecoat://project/context`. Read
    `basecoat://integration/frameworks` before production asset integration.

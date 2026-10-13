@@ -1,0 +1,30 @@
+---
+description: Mandatory 4-Stage Intent-Driven Basecoat UI MCP workflow for layout architecture, rules enforcement, Kanso design direction, FSM component syntax, and quality inspection.
+globs:
+alwaysApply: false
+---
+
+# Basecoat UI MCP — 4-Stage Intent-Driven Workflow
+
+Always execute the 4-stage tool chain before hand-writing Basecoat markup or grepping `node_modules/basecoat-css`:
+
+1. **Step 1: Consult `basecoat_page_architect` for layout structure**
+   Retrieve the target scaffold (`workspace-dashboard`, `auth-split-flow`, `workspace-detail`, `workspace-settings`, `data-records`, `auth-flow`, `marketing-pricing`) with explicit slot topology, container grid contracts, and leaf component IDs.
+2. **Step 2: Verify guidelines via `basecoat_rules_enforcer` & `basecoat_creative_director`**
+   - `basecoat_rules_enforcer`: Enforce Tailwind CSS v4 syntax (no `bg-opacity-*`, `flex-shrink-*`, or `@tailwind` directives), FSM `data-state` / `data-fsm-*` bindings, semantic CSS variables (`--color-primary` / `--primary`, `--color-surface` / `--background`), and semantic HTML landmarks (`<header>`, `<main>`, `<nav>`, `<aside>`, `<footer>`).
+   - `basecoat_creative_director`: Apply Kanso minimalism, typography ladders (`text-3xl` -> `text-xl` -> `text-base` -> `text-sm text-muted-foreground`), optical spacing steps (`gap-2`, `gap-4`, `gap-6`, `gap-12`), and 1px card ring rules (never add `border` to `.card`).
+3. **Step 3: Retrieve exact FSM markup using `basecoat_component_syntax`**
+   Request state-bound markup (`default`, `active`, `loading`, `disabled`, `open`, `closed`) for each leaf component (`dialog`, `tabs`, `dropdown-menu`, `accordion`, `button`, `input`, `select`, `sidebar`, `theme-switcher`).
+4. **Step 4: Audit final code via `basecoat_quality_inspector`**
+   Validate the complete HTML/Astro composition to verify a `0–100` score (`grade: "A"`, `valid: true`) and apply all returned `autoFixSuggestions`.
+
+## Tool Chaining Pattern
+```json
+[
+  { "tool": "basecoat_page_architect", "arguments": { "recipe": "workspace-dashboard", "density": "compact" } },
+  { "tool": "basecoat_rules_enforcer", "arguments": { "category": "all" } },
+  { "tool": "basecoat_creative_director", "arguments": { "topic": "all", "visitorJob": "operate", "stylePack": "vega" } },
+  { "tool": "basecoat_component_syntax", "arguments": { "component": "dialog", "state": "closed", "environment": "html" } },
+  { "tool": "basecoat_quality_inspector", "arguments": { "code": "<header>...</header><main>...</main>", "densityProfile": "compact", "enforceFsm": true } }
+]
+```

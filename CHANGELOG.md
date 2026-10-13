@@ -2,8 +2,37 @@
 
 Maintained by **Žygimantas Jasiulionis / Intellmedia**.
 
+## 1.7.1 - 2026-10-14
+
+- **Validator Precision**:
+  - Restored and properly scoped `oversized-header` to `<header>`, `.page-header`, `data-role="header"`, and `role="banner"`.
+  - Refined `card-double-border` to ignore `subcard` variants and `border-0`/`border-none` resets, flagging only true border utility collisions on `.card`.
+  - Expanded allowed sidebar layout offsets to `60`, `64`, and `72` (`15rem`, `16rem`, `18rem`).
+  - Mapped `.slider` class to the `range` JS module check.
+  - Added `theme-meta-color-scheme` validator check to warn against `<meta name="color-scheme" content="light dark">` leaking dark OS controls into class-based dark mode setups.
+- **Quality Inspector & Primitives**:
+  - Registered `sidebar` (`expanded`, recipe `navigation`) in `INTERACTIVE_PRIMITIVES`.
+  - Scoped `semantic-div-nesting` to documents or layouts (`<html>`, `<body>`, or `>= 10` elements with `>= 6` divs), eliminating false positives on small leaf component snippets.
+- **Component ID & Search Ergonomics**:
+  - Expanded `ID_ALIASES` in `component-id.ts` to resolve common agent queries (`sheet` -> `drawer`, `modal` -> `dialog`, `dropdown`/`menu` -> `dropdown-menu`, `range` -> `slider`, `nav`/`navigation` -> `sidebar`, `check` -> `checkbox`, `radio` -> `radio-group`, `toggle` -> `theme-switcher`).
+  - Expanded search synonyms in `search.ts` (`sheet`, `dropdown`, `menu`, `nav`, `navigation`, `range`, `toggle`, `check`, `radio`, `pill`, `chip`, `popup`, `flyout`, `palette`, `notification`, `banner`, `spinner`, `loading`, `kpi`, `metric`).
+- **Semantics & FSM Aliases**:
+  - Added `FSM_RECIPE_ALIASES` in `handleGetFsmRecipe` to gracefully resolve `sidebar` (`navigation`), `modal`/`drawer`/`sheet` (`dialog`), `dropdown`/`accordion`/`select`/`popover` (`collapsible-navigation`), and `auth`/`login` (`auth-flow`).
+- **Dark Mode Native Select & Inline Action Icons**:
+  - Added native `<select>` and `<option>` dark mode CSS rules (`color-scheme: dark`) to `basecoat://design/theming` and `TOK-01` in `basecoat_rules_enforcer`.
+  - Added optional `icon` parameter to `basecoat_component_syntax` (`plus`, `edit`, `trash`, `search`, `chevron-down`, `check`, `external-link`) delivering verified inline SVG icon snippets while strictly bounding responses within `MAX_DETAIL_BYTES` (`<= 1999` bytes).
+- **Test Harness Portability**:
+  - Replaced repo-relative `../tmp/` scratch directories in tests with `os.tmpdir()` (`mkdtempSync`), ensuring tests run reliably across read-only or containerized mounts.
+
 ## 1.7.0 - 2026-10-07
 
+- **4-Stage Intent-Driven Tooling Layer**: Added 5 high-level, bounded (`<= 1999` UTF-8 bytes) MCP tools atop the offline registries while keeping all 11 existing tools backward-compatible:
+  - `basecoat_page_architect`: Searches and retrieves complete layout scaffolds (`workspace-dashboard`, `auth-split-flow`, `workspace-detail`, `workspace-settings`, `data-records`, `auth-flow`, `marketing-pricing`) with explicit slot topology, container grid contracts, and leaf component IDs.
+  - `basecoat_rules_enforcer`: Exposes an indexed technical rule set enforcing strict Tailwind CSS v4 syntax (banning v3 `bg-opacity-*`, `flex-shrink-*`, `@tailwind` directives), mandatory FSM `data-state` contracts, semantic CSS variable tokens (`--color-primary`, `--color-surface`), and semantic HTML5 landmarks.
+  - `basecoat_creative_director`: Surfaces Kanso minimalism, typography ladders, optical spacing rhythm, visitor job density profiles, contrast rules, and Basecoat style packs (`vega`..`rhea`).
+  - `basecoat_component_syntax`: Delivers copy-pasteable HTML/Astro component markup pre-bound with FSM state variants (`default`, `active`, `loading`, `disabled`, `open`, `closed`) and required JS imports.
+  - `basecoat_quality_inspector`: Enhanced audit wrapper over `validate_composition` returning a `0–100` score, letter grade, categorized `syntaxViolations`, `accessibilityOmissions`, and `autoFixSuggestions`.
+- **Agent Rules & Prompt Engineering**: Updated `templates/cursor/basecoat-designer.mdc` and added `.cursor/rules/basecoat.mdc` documenting the mandatory 4-step tool chaining workflow.
 - **Deterministic Dashboard Generation**: Hardened the macro graph definitions (`dashboard-main`, `dashboard-workspace`, `workspace-dashboard.json`) for pixel-perfect Shadcn New York v4 `dashboard-01` parity.
 - **Layout Neutrality**: Introduced `topbar-shell` and `topbar-nav` macros to support non-sidebar dashboard generation out-of-the-box.
 - **Documentation & Agent Guidance**: Added `Macro-Driven Dashboard Generation` guide to `README.md` to instruct any connected LLM (Cursor, Claude, Windsurf) on utilizing `search_macro_blocks` for predictable, deterministic layouts.

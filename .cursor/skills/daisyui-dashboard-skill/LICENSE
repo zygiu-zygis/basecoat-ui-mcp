@@ -1,0 +1,83 @@
+Copyright (c) 2026 daisyUI
+
+By purchasing or using this "Software", you agree to this license agreement:
+
+## Permissions
+
+- Private use of the Software is allowed.
+- Commercial use of the Software is allowed.
+- Distribution of the Software is allowed within the permitted scope of the license.
+- Modification of the Software is allowed.
+
+## Limitations
+
+1. Solo Package:
+  - Only one developer can have access to the Software
+  - Can be used for multiple projects
+  - Cannot be shared with other developers
+
+2. Team Package:
+  - Maximum 5 developers within a single organization can access the Software
+  - Can be used for multiple projects
+  - Cannot be shared outside the designated team
+
+3. Enterprise Package:
+  - Multiple developers within a single organization can access the Software
+  - Can be used for multiple projects
+  - Can be used across different departments/teams within the organization
+
+## Conditions
+
+- This license is only valid for users who have purchased the Software and possess a valid receipt from daisyUI's Official Store at https://daisyui.com/store
+- License rights are non-transferable and valid only for the original purchaser with proof of purchase
+- Reselling, sublicensing, or redistributing the Software in its original form is not allowed
+- The Software cannot be used for any illegal or unethical purposes
+- The Software cannot be refunded once purchased, as it is a digital product and cannot be returned once downloaded
+- This is a perpetual license with no expiration date
+- This agreement is governed by applicable laws
+
+## Examples of use cases
+
+- Allowed use cases:
+  - Using the Software to create a website for your business
+  - Using the Software to create a web application for your client
+  - Using the Software as a starting point for your project
+  - Using parts of the Software in your project
+  - Modifying the Software to fit your project's requirements
+  - Publishing or open-sourcing an end product created using the Software
+
+- Prohibited use cases:
+  - Purchasing a package of Software and reselling it in its original form
+  - Purchasing the Software and publishing it publicly it in its original form
+  - Purchasing a package of Software that is limited to one developer and sharing it with multiple developers
+  - Purchasing a package of Software that is limited to one project and using it for multiple projects
+
+## Terms of Use
+
+1. Definitions:
+  - "Software" means the software package purchased from the daisyUI Store at https://daisyui.com/store
+  - "Organization" means your company or entity and its members, not external contractors or partners
+  - "End product" means any product created using the Software
+
+2. Usage Terms:
+  - The Software will be provided in its current state
+  - Technical support is not included in the license
+  - Updates, bug fixes, and new features are not guaranteed but may be provided at the discretion of daisyUI
+  - You may create and distribute end products using the Software
+  - You may not use the Software in any way that violates applicable laws
+
+3. Termination:
+  - Your license remains valid as long as you follow these terms
+  - To maintain access to the Software, you need to comply with this agreement
+
+4. Amendments:
+  - This license is valid for the current version of the Software. daisyUI reserves the right to use new license terms for future versions of the Software.
+
+5. Intellectual Property Rights
+  - The daisyUI name, logo, website (daisyui.com), daisyUI CSS library, and all other daisyUI project properties remain the exclusive property of daisyUI
+  - This license does not grant any rights to use daisyUI's name, logo, website, or any other daisyUI property
+  - Any misuse of daisyUI's intellectual property will result in immediate license termination
+
+## Disclaimer
+
+THE SOFTWARE IS PROVIDED "AS IS," WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT. IN NO EVENT SHALL DAISYUI, POUYA SAADEGHI, THE AUTHORS, OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT, OR OTHERWISE, ARISING FROM, OUT OF, OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.

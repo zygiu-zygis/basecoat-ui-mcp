@@ -1,7 +1,7 @@
 // Author and maintainer: Žygimantas Jasiulionis / Intellmedia.
 // Characterization and release-readiness regressions for known defect candidates.
 import assert from 'node:assert/strict';
-import { mkdirSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
+import { mkdirSync, mkdtempSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
 import { mkdtemp, mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
@@ -233,11 +233,9 @@ test('pinned macro registry load verifies content hashes, not only revision file
 });
 
 test('rhythm overrides reject parent-directory symlink escape and preserve mapping order', () => {
-  const base = join(dirname(fileURLToPath(import.meta.url)), '../tmp');
+  const base = mkdtempSync(join(tmpdir(), 'basecoat-symlink-'));
   const testDir = join(base, 'semantics-parent-symlink');
   const outside = join(base, 'semantics-parent-outside');
-  rmSync(testDir, { recursive: true, force: true });
-  rmSync(outside, { recursive: true, force: true });
   mkdirSync(testDir, { recursive: true });
   mkdirSync(outside, { recursive: true });
   try {
@@ -295,8 +293,7 @@ test('rhythm overrides reject parent-directory symlink escape and preserve mappi
       'overrides must replace in place and keep base mapping order',
     );
   } finally {
-    rmSync(testDir, { recursive: true, force: true });
-    rmSync(outside, { recursive: true, force: true });
+    rmSync(base, { recursive: true, force: true });
   }
 });
 

@@ -74,6 +74,12 @@ Standard header action cluster (as seen on basecoatui.com):
   input[type=checkbox|radio], switch). Borders use --input, focus uses --ring.
   Do not hand-roll checkbox visuals with --foreground/--border-strong borders;
   they look too heavy in light mode.
+- Native <select> and <option> dark mode contract:
+  Set color-scheme: light on :root and color-scheme: dark on .dark (never
+  <meta name="color-scheme" content="light dark"> alone). Style dark selects:
+    .dark select, .dark select option { background-color: var(--card); color: var(--foreground); color-scheme: dark; }
+    :root { color-scheme: light; }
+  This prevents white-on-white native option popup menus on Linux and Windows.
 - Browser autofill paints its own background. If needed, neutralize it with
   input:-webkit-autofill { -webkit-text-fill-color: var(--foreground);
   box-shadow: 0 0 0 1000px var(--background) inset;

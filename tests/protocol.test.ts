@@ -76,6 +76,11 @@ test('offline stdio initializes and serves the bounded, project-scoped MCP surfa
     const { tools } = await client.listTools();
     assert.deepEqual(tools.map(tool => tool.name).sort(), [
       'apply_design_patch',
+      'basecoat_component_syntax',
+      'basecoat_creative_director',
+      'basecoat_page_architect',
+      'basecoat_quality_inspector',
+      'basecoat_rules_enforcer',
       'begin_design',
       'get_component_details',
       'get_design_context',
@@ -88,6 +93,11 @@ test('offline stdio initializes and serves the bounded, project-scoped MCP surfa
       'validate_design',
     ]);
     const readOnly = new Set([
+      'basecoat_component_syntax',
+      'basecoat_creative_director',
+      'basecoat_page_architect',
+      'basecoat_quality_inspector',
+      'basecoat_rules_enforcer',
       'get_component_details',
       'get_design_context',
       'get_fsm_recipe',

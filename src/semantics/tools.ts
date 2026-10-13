@@ -216,12 +216,33 @@ export async function handleGetRhythmRules(
 
 // --- FSM Recipe Handler ---
 
+const FSM_RECIPE_ALIASES: Record<string, string> = {
+  sidebar: 'navigation',
+  modal: 'dialog',
+  'alert-dialog': 'dialog',
+  drawer: 'dialog',
+  sheet: 'dialog',
+  dropdown: 'collapsible-navigation',
+  'dropdown-menu': 'collapsible-navigation',
+  accordion: 'collapsible-navigation',
+  popover: 'collapsible-navigation',
+  select: 'collapsible-navigation',
+  combobox: 'collapsible-navigation',
+  disclosure: 'collapsible-navigation',
+  auth: 'auth-flow',
+  login: 'auth-flow',
+};
+
 export async function handleGetFsmRecipe(
   input: z.infer<z.ZodObject<typeof getFsmRecipeInputShape>>,
 ): Promise<CallToolResult> {
   try {
     const registry = defaultSemanticsStore.getRegistry();
-    const { recipe: recipeFilter, section: sectionFilter, limit, cursor } = input;
+    let recipeFilter = input.recipe;
+    if (recipeFilter && FSM_RECIPE_ALIASES[recipeFilter]) {
+      recipeFilter = FSM_RECIPE_ALIASES[recipeFilter];
+    }
+    const { section: sectionFilter, limit, cursor } = input;
     if (recipeFilter && !Object.values(registry.fsmRecipes).some(recipe => recipe.id === recipeFilter)) {
       throw new MacroError('NOT_FOUND', `Unknown FSM recipe: ${recipeFilter}`);
     }

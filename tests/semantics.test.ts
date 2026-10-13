@@ -3,7 +3,8 @@
 import { test } from 'node:test';
 import assert from 'node:assert';
 import { join, dirname } from 'node:path';
-import { existsSync, mkdirSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, mkdtempSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
 import { fileURLToPath } from 'node:url';
 import {
   compileSemantics,
@@ -151,11 +152,7 @@ test('rhythm profile content-addressable compilation', () => {
 
 test('semantics store provides effective rhythm profiles with project overrides', () => {
   // Create temporary test directory
-  const testDir = join(__dirname, '../tmp/semantics-test');
-  if (existsSync(testDir)) {
-    rmSync(testDir, { recursive: true });
-  }
-  mkdirSync(testDir, { recursive: true });
+  const testDir = mkdtempSync(join(tmpdir(), 'basecoat-semantics-test-'));
 
   try {
     const { registry: snapshot } = compileSemantics(DEFAULT_SEMANTICS_INPUT);
@@ -208,10 +205,9 @@ test('semantics store provides effective rhythm profiles with project overrides'
 });
 
 test('project rhythm overrides reject unsafe or invalid files before parsing', () => {
-  const testDir = join(__dirname, '../tmp/semantics-override-safety-test');
+  const testDir = mkdtempSync(join(tmpdir(), 'basecoat-semantics-override-'));
   const overrideDir = join(testDir, '.basecoat');
   const overridePath = join(overrideDir, 'rhythm.json');
-  rmSync(testDir, { recursive: true, force: true });
   mkdirSync(overrideDir, { recursive: true });
 
   try {
@@ -296,9 +292,7 @@ test('invalid FSM recipes produce compilation errors', () => {
 });
 
 test('semantics store fails closed on record, alias, and revision tampering', () => {
-  const testDir = join(__dirname, '../tmp/semantics-tamper-test');
-  rmSync(testDir, { recursive: true, force: true });
-  mkdirSync(testDir, { recursive: true });
+  const testDir = mkdtempSync(join(tmpdir(), 'basecoat-semantics-tamper-'));
   try {
     const { registry } = compileSemantics(DEFAULT_SEMANTICS_INPUT);
     const expectCode = (value: unknown, code: string) => {

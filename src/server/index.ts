@@ -8,6 +8,11 @@ import { readProjectContext } from '../design/project.js';
 import { searchComponents } from '../tools/search.js';
 import { getComponentDetails } from '../tools/details.js';
 import { validateComposition, VALIDATE_COMPOSITION_MAX_BYTES } from '../tools/validate.js';
+import { pageArchitectInputShape, runPageArchitect } from '../tools/page-architect.js';
+import { rulesEnforcerInputShape, runRulesEnforcer } from '../tools/rules-enforcer.js';
+import { creativeDirectorInputShape, runCreativeDirector } from '../tools/creative-director.js';
+import { componentSyntaxInputShape, runComponentSyntax } from '../tools/component-syntax.js';
+import { qualityInspectorInputShape, runQualityInspector } from '../tools/quality-inspector.js';
 import { jsonResult } from '../tools/budget.js';
 import { registry } from '../registry/index.js';
 import { SERVER_VERSION } from './version.js';
@@ -51,7 +56,9 @@ const MUTATION_ANNOTATIONS = {
 const MACRO_INSTRUCTIONS =
   'Use this server first whenever a project depends on basecoat-css or targets a shadcn/ui look, ' +
   'before grepping node_modules CSS or hand-writing tokens. ' +
-  'New UI (macro-first): begin_design (pin profile) → search_macro_blocks / get_macro_block → ' +
+  '4-Stage Intent Workflow (fast path): (1) basecoat_page_architect → (2) basecoat_rules_enforcer & basecoat_creative_director → ' +
+  '(3) basecoat_component_syntax → (4) basecoat_quality_inspector. ' +
+  'New UI (stateful macro graph): begin_design (pin profile) → search_macro_blocks / get_macro_block → ' +
   'apply_design_patch (expectedRevision + unique operationId) → get_design_context → ' +
   'validate_design → implement leaves via search_components / get_component_details → ' +
   'get_rhythm_rules / get_fsm_recipe → validate_composition on generated source. ' +
@@ -71,6 +78,7 @@ export function createServer(projectRoot = process.cwd()) {
   for (const { id } of registry.index) {
     getComponentDetails(id, 'astro');
     getComponentDetails(id, 'html');
+    runComponentSyntax({ component: id, state: 'default', environment: 'html' });
   }
   ensureMacroRegistryLoaded();
 
@@ -164,6 +172,53 @@ export function createServer(projectRoot = process.cwd()) {
     inputSchema: getFsmRecipeInputShape,
     annotations: READ_ANNOTATIONS,
   }, input => handleGetFsmRecipe(input));
+
+  server.registerTool('basecoat_page_architect', {
+    description: 'Stage 1: Search and retrieve complete layout scaffolds (Workspace Dashboard, Auth Split-Screen, Data Table Detail, Workspace Settings, Pricing, etc.) with explicit slot markers, grid structures, and responsive containers.',
+    inputSchema: pageArchitectInputShape,
+    annotations: READ_ANNOTATIONS,
+  }, input => jsonResult(runPageArchitect(input)));
+
+  server.registerTool('basecoat_rules_enforcer', {
+    description: 'Stage 2a: Retrieve indexed technical implementation constraints covering strict Tailwind CSS v4 syntax, mandatory FSM data-state contracts, semantic CSS variable tokens, and semantic HTML landmarks.',
+    inputSchema: rulesEnforcerInputShape,
+    annotations: READ_ANNOTATIONS,
+  }, input => jsonResult(runRulesEnforcer(input)));
+
+  server.registerTool('basecoat_creative_director', {
+    description: 'Stage 2b: Surface Kanso minimalism and Basecoat design intelligence: typography ladders, optical spacing rhythm, whitespace density, contrast ratios, style packs, and subtle elevation strategies.',
+    inputSchema: creativeDirectorInputShape,
+    annotations: READ_ANNOTATIONS,
+  }, input => jsonResult(runCreativeDirector(input, projectRoot)));
+
+  server.registerTool('basecoat_component_syntax', {
+    description: 'Stage 3: Retrieve copy-pasteable Basecoat component markup with pre-configured FSM state variants (default, active, loading, disabled, open, closed) and dependencies.',
+    inputSchema: componentSyntaxInputShape,
+    annotations: READ_ANNOTATIONS,
+  }, input => {
+    try {
+      return jsonResult(runComponentSyntax(input));
+    } catch (error) {
+      return { ...jsonResult({ error: (error as Error).message }), isError: true };
+    }
+  });
+
+  server.registerTool('basecoat_quality_inspector', {
+    description: 'Stage 4: Audit HTML/Astro markup and return a structured quality report with Score (0-100), Syntax Violations, Accessibility/ARIA omissions, and Auto-Fix suggestions.',
+    inputSchema: qualityInspectorInputShape,
+    annotations: READ_ANNOTATIONS,
+  }, input => {
+    const source = input.code ?? input.html ?? input.markup;
+    if (source === undefined) {
+      return { ...jsonResult({ error: 'Provide code, html, or markup (required).' }), isError: true };
+    }
+    return jsonResult(runQualityInspector(source, {
+      semanticProfile: input.semanticProfile,
+      densityProfile: input.densityProfile,
+      enforceFsm: input.enforceFsm,
+      projectRoot,
+    }));
+  });
 
   server.registerResource('design-rhythm', 'basecoat://design/rhythm', {
     description: 'Content hierarchy, spatial rhythm, density, typography, and composition constraints.', mimeType: 'text/markdown',

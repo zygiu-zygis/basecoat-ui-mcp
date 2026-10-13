@@ -101,6 +101,11 @@ const requiredCapabilities = [
   'validate_design',
   'get_rhythm_rules',
   'get_fsm_recipe',
+  'basecoat_page_architect',
+  'basecoat_rules_enforcer',
+  'basecoat_creative_director',
+  'basecoat_component_syntax',
+  'basecoat_quality_inspector',
 ];
 
 function record(

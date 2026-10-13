@@ -2,6 +2,16 @@ import { metadata } from '../registry/index.js';
 
 const ID_ALIASES: Record<string, string> = Object.assign(Object.create(null), {
   'theme-toggle': 'theme-switcher',
+  'toggle': 'theme-switcher',
+  'dropdown': 'dropdown-menu',
+  'menu': 'dropdown-menu',
+  'modal': 'dialog',
+  'sheet': 'drawer',
+  'nav': 'sidebar',
+  'navigation': 'sidebar',
+  'range': 'slider',
+  'check': 'checkbox',
+  'radio': 'radio-group',
 });
 
 const INDEX_IDS = metadata.map(component => component.id);
@@ -33,6 +43,10 @@ export function resolveComponentId(id: string): string {
 export function suggestComponentId(id: string): string | undefined {
   if (typeof id !== 'string' || id.length === 0) return undefined;
   const needle = id.toLowerCase();
+  if (Object.hasOwn(ID_ALIASES, needle)) {
+    const aliased = ID_ALIASES[needle]!;
+    if (INDEX_IDS.includes(aliased)) return aliased;
+  }
   const head = needle.split('-')[0] ?? needle;
   let best: { id: string; score: number } | undefined;
   for (const candidate of INDEX_IDS) {

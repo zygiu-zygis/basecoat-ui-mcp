@@ -145,6 +145,11 @@ test('packed MCP bin starts offline from a read-only installed package tree', { 
     const toolNames = tools.map(tool => tool.name).sort();
     assert.deepEqual(toolNames, [
       'apply_design_patch',
+      'basecoat_component_syntax',
+      'basecoat_creative_director',
+      'basecoat_page_architect',
+      'basecoat_quality_inspector',
+      'basecoat_rules_enforcer',
       'begin_design',
       'get_component_details',
       'get_design_context',
