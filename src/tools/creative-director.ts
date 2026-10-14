@@ -87,20 +87,24 @@ export function runCreativeDirector(input: CreativeDirectorInput = {}, projectRo
   const sections = {
     typography: {
       ladder: [
-        'h1: text-3xl font-semibold tracking-tight (exactly one per page)',
+        'h1: text-3xl font-semibold tracking-tight (one per page)',
         'h2: text-xl font-semibold tracking-tight (section headings)',
+        'h3: text-lg font-medium (card/sub-group titles)',
         'body: text-base text-foreground (60-75ch prose measure)',
-        'data/meta: text-sm text-muted-foreground (tables, secondary labels, captions)',
+        'data/meta: text-sm text-muted-foreground (tables, secondary labels)',
+        'caption: text-xs text-muted-foreground (badges, kbd, timestamps)',
         'numeric: tabular-nums on KPIs, prices, and table cells',
       ],
       opticalRules: 'No eyebrow/kicker above headings. More space above a heading than below it.',
     },
     whitespace: {
+      opticalGrid: '4px/8px grid (1 unit = 4px; base rhythm = 8px).',
       rhythmScale: [
-        'gap-2 (0.5rem): label/control pairs, inline icon+text, compact actions',
-        'gap-4 (1rem): neighboring fields, related control rows, card grid gaps',
-        'gap-6 (1.5rem): section heading to content, major local groups, standard card p-6',
-        'gap-12 (3rem): major page sections',
+        '4px (p-1 / gap-1): micro-chrome, badge padding, compact toolbar cells',
+        '8px (gap-2 / 0.5rem): label/control pairs, inline icon+text, compact actions',
+        '16px (gap-4 / 1rem): neighboring fields, related control rows, card grid gaps',
+        '24px (gap-6 / 1.5rem): section heading to content, standard card p-6',
+        '48px (gap-12 / 3rem): major page sections',
       ],
       kansoMinimalism: 'Internal group spacing <= 1/3 of inter-section spacing. Compact headers use h-12 or h-14 (never h-16).',
     },
@@ -111,8 +115,8 @@ export function runCreativeDirector(input: CreativeDirectorInput = {}, projectRo
     },
     elevation: {
       palette: 'Neutral oklch zinc/slate (--background, --card, --foreground, --muted-foreground, --border). No decorative gradients.',
-      surfaces: 'Cards (.card) carry an intrinsic 1px ring shadow—never add border/border-border. Use bg-muted/50 for subtle row highlights.',
-      contrast: 'Maintain WCAG AA contrast; text on tinted fills must use matching foreground tokens (--primary-foreground).',
+      surfaces: 'Cards (.card) carry an intrinsic 1px ring shadow (ring-1 ring-foreground/10)—never add border/border-border. Use bg-muted/50 for subtle row highlights.',
+      borderContrast: 'Subtle dividers use border-border/60; text requires WCAG 2.1 AA >= 4.5:1 (APCA Lc >= 60) with paired foreground tokens (--primary-foreground).',
       themingContract: THEMING.includes('window.basecoat.theme') && RHYTHM.includes('Shadcn Aesthetic')
         ? 'Single html.dark class + window.basecoat.theme (localStorage key "themeMode").'
         : 'Class-based html.dark only.',
@@ -156,8 +160,8 @@ export function runCreativeDirector(input: CreativeDirectorInput = {}, projectRo
   const compact = {
     stage: '2b-creative-director',
     philosophy: 'Kanso minimalism + Shadcn New York v4 precision',
-    typography: sections.typography.ladder,
-    whitespace: sections.whitespace.rhythmScale,
+    typography: sections.typography.ladder.slice(0, 5),
+    whitespace: sections.whitespace.rhythmScale.slice(0, 4),
     hierarchy: sections.hierarchy,
     elevation: {
       palette: sections.elevation.palette,

@@ -52,10 +52,76 @@ const SEMANTIC_TOKEN = /^(?:p-density-|gap-rhythm-|text-(?:heading-|body$|muted$
 const SAFE_ANCHOR = /^[a-z][a-z0-9-]*$/;
 const TYPOGRAPHY_UTILITY = /^text-(?:xs|sm|base|lg|xl|[2-9]xl)$/;
 const ARBITRARY_COLOR = /^(?:bg|border|text|from|via|to)-\[(?:#|rgba?\(|hsla?\(|oklch\(|lab\(|lch\(|color:|var\(--)/i;
+const ARBITRARY_DIMENSION = /^(?:w|h|min-w|max-w|min-h|max-h|size|p[trblxyse]?|m[trblxyse]?|gap(?:-[xy])?|space-[xy]|inset(?:-[xy])?|top|right|bottom|left)-\[\d+(?:\.\d+)?(?:px|rem|em|vh|vw|%|ch|dvh|svh|lvh)\]$/i;
 const COLOR_NAMES = /^(?:transparent|current|inherit|black|white|background|foreground|card|popover|primary|secondary|muted|accent|destructive|border|input|ring|chart-[1-5]|sidebar(?:-[a-z-]+)?|(?:slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-(?:50|100|200|300|400|500|600|700|800|900|950))(?:\/\d{1,3})?$/;
 const NON_COLOR_TEXT = /^(?:left|center|right|justify|start|end|wrap|nowrap|balance|pretty|ellipsis|clip|xs|sm|base|lg|xl|[2-9]xl)$/;
 const NON_COLOR_BORDER = /^(?:0|2|4|8|x|y|s|e|t|r|b|l|x-0|x-2|x-4|x-8|y-0|y-2|y-4|y-8|s-0|s-2|s-4|s-8|e-0|e-2|e-4|e-8|t-0|t-2|t-4|t-8|r-0|r-2|r-4|r-8|b-0|b-2|b-4|b-8|l-0|l-2|l-4|l-8|solid|dashed|dotted|double|hidden|none|collapse|separate)$/;
 const NON_COLOR_BACKGROUND = /^(?:auto|cover|contain|fixed|local|scroll|clip-(?:border|padding|content|text)|origin-(?:border|padding|content)|(?:center|top|right|bottom|left)(?:-(?:top|bottom|left|right))?|no-repeat|repeat(?:-x|-y|-round|-space)?)$/;
+
+/**
+ * Canonical relative luminance (sRGB Y in [0, 1]) for Basecoat default neutral tokens in Light mode.
+ * Used for deterministic WCAG 2.1 contrast ratio & APCA Lc evaluation of semantic token pairings.
+ */
+const SEMANTIC_TOKEN_LUMINANCE_LIGHT: Record<string, number> = {
+  background: 1.0,
+  card: 1.0,
+  popover: 1.0,
+  surface: 1.0,
+  white: 1.0,
+  secondary: 0.91,
+  muted: 0.91,
+  accent: 0.91,
+  border: 0.82,
+  input: 0.82,
+  'muted-foreground': 0.175,
+  destructive: 0.14,
+  foreground: 0.008,
+  'card-foreground': 0.008,
+  'popover-foreground': 0.008,
+  'secondary-foreground': 0.012,
+  'accent-foreground': 0.012,
+  primary: 0.012,
+  black: 0.0,
+  'primary-foreground': 0.97,
+  'destructive-foreground': 0.97,
+};
+
+const EXPECTED_FOREGROUND_FOR_BG: Record<string, string> = {
+  primary: 'text-primary-foreground',
+  destructive: 'text-destructive-foreground',
+  secondary: 'text-secondary-foreground',
+  accent: 'text-accent-foreground',
+  card: 'text-card-foreground (or text-foreground)',
+  popover: 'text-popover-foreground (or text-foreground)',
+  background: 'text-foreground',
+  muted: 'text-foreground (or text-muted-foreground)',
+};
+
+function wcagContrastRatio(lumA: number, lumB: number): number {
+  const lighter = Math.max(lumA, lumB);
+  const darker = Math.min(lumA, lumB);
+  return Number(((lighter + 0.05) / (darker + 0.05)).toFixed(2));
+}
+
+function apcaContrastLc(textLum: number, bgLum: number): number {
+  const txtY = Math.max(0, textLum);
+  const bgY = Math.max(0, bgLum);
+  const sapc = bgY > txtY
+    ? (Math.pow(bgY, 0.56) - Math.pow(txtY, 0.57)) * 1.14
+    : (Math.pow(bgY, 0.65) - Math.pow(txtY, 0.62)) * 1.14;
+  if (Math.abs(sapc) < 0.1) return 0;
+  return Number(((sapc > 0 ? sapc - 0.027 : sapc + 0.027) * 100).toFixed(1));
+}
+
+function parseSemanticColorToken(cls: string, prefix: 'bg' | 'text'): { token: string; alpha: number } | null {
+  if (!cls.startsWith(`${prefix}-`)) return null;
+  const raw = cls.slice(prefix.length + 1).replace(/^color-/, '');
+  const [tokenPart, alphaPart] = raw.split('/');
+  if (!tokenPart || !(tokenPart in SEMANTIC_TOKEN_LUMINANCE_LIGHT)) return null;
+  const alpha = alphaPart !== undefined ? Number(alphaPart) / 100 : 1;
+  if (Number.isNaN(alpha) || alpha <= 0 || alpha > 1) return null;
+  return { token: tokenPart, alpha };
+}
 
 function isMicroChromeContext(node: HtmlNode, nodes: HtmlNode[]): boolean {
   if (node.tag === 'a' || node.tag === 'nav' || node.tag === 'header' || node.tag === 'td' || node.tag === 'th') return true;
@@ -514,6 +580,46 @@ export function validateComposition(code: string, options: ValidationOptions = {
         );
       }
     }
+
+    // --- WCAG 2.1 & APCA Semantic Token Contrast Validation ---
+    const bgTokenInfo = classes.map(c => parseSemanticColorToken(c, 'bg')).find(Boolean) ?? null;
+    const textTokenInfo = classes.map(c => parseSemanticColorToken(c, 'text')).find(Boolean) ?? null;
+    let effectiveBg = bgTokenInfo;
+    if (!effectiveBg && textTokenInfo) {
+      let p = node.parent;
+      while (p !== null) {
+        const ancestorBg = nodes[p]!.classes.map(utility).map(c => parseSemanticColorToken(c, 'bg')).find(Boolean);
+        if (ancestorBg) {
+          effectiveBg = ancestorBg;
+          break;
+        }
+        p = nodes[p]!.parent;
+      }
+      if (!effectiveBg) {
+        effectiveBg = { token: 'background', alpha: 1 };
+      }
+    }
+    if (effectiveBg && textTokenInfo) {
+      const bgLum = SEMANTIC_TOKEN_LUMINANCE_LIGHT[effectiveBg.token]!;
+      const rawTextLum = SEMANTIC_TOKEN_LUMINANCE_LIGHT[textTokenInfo.token]!;
+      const blendedTextLum = rawTextLum * textTokenInfo.alpha + bgLum * (1 - textTokenInfo.alpha);
+      const ratio = wcagContrastRatio(bgLum, blendedTextLum);
+      const lc = Math.abs(apcaContrastLc(blendedTextLum, bgLum));
+      const isLargeText = classes.some(c => /^text-(?:lg|xl|[2-9]xl)$/.test(c)) || /^h[1-3]$/.test(node.tag);
+      const minRatio = isLargeText ? 3.0 : 4.5;
+      const minLc = isLargeText ? 45 : 60;
+      if (ratio < minRatio || lc < minLc) {
+        const suggested = EXPECTED_FOREGROUND_FOR_BG[effectiveBg.token] ?? 'text-foreground';
+        report(
+          'color-contrast-wcag',
+          'error',
+          `Insufficient contrast between 'bg-${effectiveBg.token}' and 'text-${textTokenInfo.token}${textTokenInfo.alpha < 1 ? `/${Math.round(textTokenInfo.alpha * 100)}` : ''}' (WCAG ${ratio}:1 < ${minRatio}:1, APCA Lc ${lc} < ${minLc}).`,
+          node.line,
+          `Pair 'bg-${effectiveBg.token}' with '${suggested}' to satisfy WCAG 2.1 AA and APCA contrast.`,
+        );
+      }
+    }
+
     if (classes.includes('btn')) {
       const variant = node.attrs['data-variant'];
       const size = node.attrs['data-size'];
@@ -558,6 +664,87 @@ export function validateComposition(code: string, options: ValidationOptions = {
       }
       if (!hasId && !hasAriaLabel && !isInsideLabel) {
         report('a11y-input-label', 'warning', 'Input field should have an id (to bind with <label for="id">), an aria-label, or be nested inside a <label>.', node.line);
+      }
+    }
+
+    // --- ARIA Expanded / Controls Binding Check ---
+    if (node.attrs['aria-expanded'] !== undefined) {
+      const controlsId = node.attrs['aria-controls']?.trim();
+      let insideManagedController = false;
+      let p: number | null = node.index;
+      while (p !== null) {
+        const anc: HtmlNode = nodes[p]!;
+        const ancClasses = anc.classes.map(utility);
+        if (
+          anc.tag === 'details' ||
+          anc.tag === 'dialog' ||
+          ancClasses.some((c: string) => ['dropdown-menu', 'popover', 'select', 'combobox', 'accordion', 'sidebar'].includes(c))
+        ) {
+          insideManagedController = true;
+          break;
+        }
+        p = anc.parent;
+      }
+      if (controlsId) {
+        const targetExists = nodes.some(n => n.attrs.id === controlsId);
+        if (!targetExists) {
+          report(
+            'a11y-aria-controls-binding',
+            'warning',
+            `Trigger declares aria-controls="${controlsId}", but no element with id="${controlsId}" exists in the composition.`,
+            node.line,
+            `Add id="${controlsId}" to the controlled panel or menu element.`,
+          );
+        }
+      } else if (!insideManagedController) {
+        report(
+          'a11y-aria-controls-binding',
+          'warning',
+          'Interactive trigger with aria-expanded is missing an aria-controls="<panel-id>" binding.',
+          node.line,
+          'Add aria-controls="<target-id>" on the trigger and matching id="<target-id>" on the controlled region.',
+        );
+      }
+    }
+
+    // --- Modal Dialog Keyboard Focus Trap Heuristic ---
+    const isModalDialog =
+      node.attrs.role === 'dialog' ||
+      node.attrs.role === 'alertdialog' ||
+      classes.includes('dialog') ||
+      classes.includes('alert-dialog');
+    if (isModalDialog) {
+      const descendants = nodes.filter(candidate => {
+        if (candidate === node) return false;
+        let ptr = candidate.parent;
+        while (ptr !== null) {
+          if (nodes[ptr] === node) return true;
+          ptr = nodes[ptr]!.parent;
+        }
+        return false;
+      });
+      const hasFocusableControl = descendants.some(
+        d =>
+          ['button', 'input', 'select', 'textarea', 'a'].includes(d.tag) ||
+          d.attrs.tabindex !== undefined ||
+          d.attrs.autofocus !== undefined,
+      );
+      if (node.tag !== 'dialog' && node.attrs['aria-modal'] !== 'true') {
+        report(
+          'a11y-dialog-focus-trap',
+          'warning',
+          'Non-native dialog container is missing aria-modal="true" for keyboard focus trapping.',
+          node.line,
+          'Use native <dialog class="dialog"> or add role="dialog" aria-modal="true" with a focusable close button.',
+        );
+      } else if (descendants.length > 0 && !hasFocusableControl) {
+        report(
+          'a11y-dialog-focus-trap',
+          'warning',
+          'Dialog container has no focusable control (<button>, <input>, or [tabindex]) for keyboard focus trapping and dismissal.',
+          node.line,
+          'Include at least one focusable action or close <button type="button" class="btn"> inside the dialog.',
+        );
       }
     }
   }

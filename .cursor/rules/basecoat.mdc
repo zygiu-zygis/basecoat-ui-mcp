@@ -9,14 +9,19 @@ alwaysApply: false
 Always execute the 4-stage tool chain before hand-writing Basecoat markup or grepping `node_modules/basecoat-css`:
 
 1. **Step 1: Consult `basecoat_page_architect` for layout structure**
-   Retrieve the target scaffold (`workspace-dashboard`, `auth-split-flow`, `workspace-detail`, `workspace-settings`, `data-records`, `auth-flow`, `marketing-pricing`) with explicit slot topology, container grid contracts, and leaf component IDs.
+   Retrieve the target scaffold (`workspace-dashboard`, `auth-split-flow`, `workspace-detail`, `workspace-settings`, `data-records`, `auth-flow`, `marketing-pricing`) or macro block with explicit slot topology, container grid contracts, semantic HTML skeleton, and leaf component IDs.
 2. **Step 2: Verify guidelines via `basecoat_rules_enforcer` & `basecoat_creative_director`**
-   - `basecoat_rules_enforcer`: Enforce Tailwind CSS v4 syntax (no `bg-opacity-*`, `flex-shrink-*`, or `@tailwind` directives), FSM `data-state` / `data-fsm-*` bindings, semantic CSS variables (`--color-primary` / `--primary`, `--color-surface` / `--background`), and semantic HTML landmarks (`<header>`, `<main>`, `<nav>`, `<aside>`, `<footer>`).
-   - `basecoat_creative_director`: Apply Kanso minimalism, typography ladders (`text-3xl` -> `text-xl` -> `text-base` -> `text-sm text-muted-foreground`), optical spacing steps (`gap-2`, `gap-4`, `gap-6`, `gap-12`), and 1px card ring rules (never add `border` to `.card`).
+   - `basecoat_rules_enforcer`: Enforce Tailwind CSS v4 syntax (no `bg-opacity-*`, `flex-shrink-*`, `@tailwind` directives, or arbitrary dimensions like `w-[327px]`), FSM `data-state` / `data-fsm-*` bindings, semantic CSS variables (`--color-primary` / `--primary`, `--color-surface` / `--background`), and semantic HTML landmarks (`<header>`, `<main>`, `<nav>`, `<aside>`, `<footer>`).
+   - `basecoat_creative_director`: Apply Kanso minimalism, 4px/8px optical rhythm (`gap-2`, `gap-4`, `gap-6`, `gap-12`), typography ladders (`text-3xl` -> `text-xl` -> `text-lg` -> `text-base` -> `text-sm text-muted-foreground` -> `text-xs`), border-contrast ratios, and 1px card ring rules (never add `border` to `.card`).
 3. **Step 3: Retrieve exact FSM markup using `basecoat_component_syntax`**
    Request state-bound markup (`default`, `active`, `loading`, `disabled`, `open`, `closed`) for each leaf component (`dialog`, `tabs`, `dropdown-menu`, `accordion`, `button`, `input`, `select`, `sidebar`, `theme-switcher`).
 4. **Step 4: Audit final code via `basecoat_quality_inspector`**
-   Validate the complete HTML/Astro composition to verify a `0–100` score (`grade: "A"`, `valid: true`) and apply all returned `autoFixSuggestions`.
+   Validate the complete HTML/Astro composition to verify a `0–100` score (`grade: "A"`, `valid: true`), WCAG 2.1 / APCA contrast pairings, keyboard focus traps, and `aria-expanded`/`aria-controls` bindings, applying all returned `autoFixSuggestions`.
+
+## Clean Generation Constraints
+- **No Redundant Explanatory Text**: Deliver clean code directly without conversational filler or repetitive prose.
+- **No Duplicate Wrapper Containers**: Never wrap semantic tags (`<header>`, `<main>`, `<nav>`, `<section>`) or `.card` components in redundant `<div>` containers.
+- **Deterministic Class Ordering**: Always order classes as: `Basecoat Class (.card/.btn)` -> `Layout (flex/grid)` -> `Positioning` -> `Alignment` -> `Sizing (w/h/size)` -> `Spacing (p/m/gap)` -> `Typography` -> `Background/Surface` -> `Border/Ring` -> `Effects` -> `Variants (hover:/focus-visible:/dark:)`.
 
 ## Tool Chaining Pattern
 ```json

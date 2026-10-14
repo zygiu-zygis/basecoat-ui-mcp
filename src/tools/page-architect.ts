@@ -7,6 +7,7 @@ import { assertDetailBudget, MAX_DETAIL_BYTES, responseBytes } from './budget.js
 export const pageArchitectInputShape = {
   intent: z.string().max(200).optional(),
   recipe: z.string().max(80).optional(),
+  block: z.string().max(80).optional(),
   density: z.enum(['comfortable', 'compact']).optional(),
 };
 
@@ -54,6 +55,15 @@ function tokenize(text: string): string[] {
   return text.toLowerCase().split(/[^a-z0-9-]+/).filter(Boolean);
 }
 
+function formatRecipeLabel(id: string): string {
+  const known = INTENT_MAP.find(m => m.id === id);
+  if (known) return known.label;
+  return id
+    .split('-')
+    .map(w => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(' ');
+}
+
 function resolveRecipe(
   registry: CompiledMacroRegistry,
   recipeParam?: string,
@@ -68,8 +78,7 @@ function resolveRecipe(
     const clean = recipeParam.trim().toLowerCase();
     const direct = recipesById.get(clean);
     if (direct) {
-      const meta = INTENT_MAP.find(m => m.id === direct.id);
-      return { recipe: direct, label: meta?.label ?? direct.id };
+      return { recipe: direct, label: formatRecipeLabel(direct.id) };
     }
     const byMatch = INTENT_MAP.find(
       m => m.id === clean || m.label.toLowerCase() === clean || m.keywords.includes(clean),
@@ -83,11 +92,15 @@ function resolveRecipe(
     const tokens = tokenize(intentParam);
     const joined = tokens.join('-');
     if (recipesById.has(joined)) {
-      const meta = INTENT_MAP.find(m => m.id === joined);
-      return { recipe: recipesById.get(joined)!, label: meta?.label ?? joined };
+      return { recipe: recipesById.get(joined)!, label: formatRecipeLabel(joined) };
     }
     let best: { id: string; label: string; score: number } | undefined;
-    for (const entry of INTENT_MAP) {
+    for (const r of recipesById.values()) {
+      const entry = INTENT_MAP.find(m => m.id === r.id) ?? {
+        id: r.id,
+        label: formatRecipeLabel(r.id),
+        keywords: r.id.split('-'),
+      };
       let score = 0;
       for (const token of tokens) {
         if (entry.id === token) score += 10;
@@ -118,18 +131,62 @@ function safeGetBlock(registry: CompiledMacroRegistry, refOrId: string): MacroBl
   }
 }
 
+function buildSemanticScaffold(
+  recipeId: string,
+  density: 'comfortable' | 'compact',
+  slotNames: string[],
+): string {
+  const pad = density === 'compact' ? 'p-4 gap-4' : 'p-6 gap-6';
+  const hdr = density === 'compact' ? 'h-12 px-4' : 'h-14 px-6';
+  const slotsComment = slotNames.slice(0, 5).map(s => `<!-- slot:${s} -->`).join(' ');
+  if (recipeId.startsWith('auth')) {
+    return `<main class="grid min-h-dvh grid-cols-1 lg:grid-cols-2 bg-background text-foreground"><section class="flex items-center justify-center ${pad}" data-slot="form">${slotsComment}</section><aside class="hidden lg:flex bg-muted ${pad}" aria-label="Brand showcase" data-slot="hero"></aside></main>`;
+  }
+  return `<div class="min-h-dvh bg-background text-foreground"><aside class="sidebar" data-state="expanded" data-fsm-recipe="navigation" data-fsm-state="expanded" aria-label="Primary navigation" data-slot="nav"></aside><header class="flex ${hdr} items-center justify-between border-b border-border/60" data-slot="header"><h1 class="text-xl font-semibold tracking-tight">Title</h1></header><main class="grid grid-cols-1 md:grid-cols-12 ${pad}" data-slot="content">${slotsComment}</main></div>`;
+}
+
 export function runPageArchitect(input: PageArchitectInput = {}) {
   const registry = getCompiledRegistry();
+
+  if (input.block && input.block.trim().length > 0) {
+    const cleanBlock = input.block.trim().toLowerCase();
+    const block = safeGetBlock(registry, cleanBlock);
+    if (block) {
+      const slotTopology = block.slots.map(s => ({
+        node: s.id,
+        block: block.id,
+        slot: s.id,
+        acceptsSlots: s.accepts,
+      }));
+      const blockResult = {
+        stage: '1-page-architect' as const,
+        matched: true as const,
+        recipe: block.id,
+        block: block.id,
+        role: block.role,
+        family: block.family,
+        emmet: (block.fragments[0]?.emmet ?? '').slice(0, 240),
+        slotTopology,
+        slots: block.slots.map(s => ({ id: s.id, accepts: s.accepts })),
+        components: block.componentRefs,
+        landmarks: block.landmarks,
+        nextStep: 'Call basecoat_rules_enforcer and basecoat_creative_director before writing markup.',
+      };
+      assertDetailBudget(blockResult);
+      return blockResult;
+    }
+  }
+
   const matched = resolveRecipe(registry, input.recipe, input.intent);
 
   if (!matched) {
-    const catalog = INTENT_MAP.map(item => {
-      const r = Object.values(registry.recipes).find(rec => rec.id === item.id);
-      const entry = r?.pages.find(p => p.id === r.entryPage) ?? r?.pages[0];
+    const allRecipes = Object.values(registry.recipes);
+    const catalog = allRecipes.map(r => {
+      const entry = r.pages.find(p => p.id === r.entryPage) ?? r.pages[0];
       return {
-        recipe: item.id,
-        label: item.label,
-        kind: r?.kind ?? 'page',
+        recipe: r.id,
+        label: formatRecipeLabel(r.id),
+        kind: r.kind,
         route: entry?.route ?? '/',
         nodeCount: entry ? Object.keys(entry.nodes).length : 0,
       };
@@ -139,7 +196,8 @@ export function runPageArchitect(input: PageArchitectInput = {}) {
       matched: false as const,
       recipe: null,
       availableScaffolds: catalog,
-      usage: 'Pass recipe (e.g. "workspace-dashboard", "auth-split-flow", "workspace-detail", "workspace-settings") or intent.',
+      blockCount: Object.keys(registry.blocks).length,
+      usage: 'Pass recipe (e.g. "workspace-dashboard", "auth-split-flow", "workspace-detail", "workspace-settings"), block (e.g. "topbar-shell"), or intent.',
     };
     assertDetailBudget(overview);
     return overview;
@@ -165,6 +223,11 @@ export function runPageArchitect(input: PageArchitectInput = {}) {
 
   const leafComponents = [...new Set(nodes.flatMap(n => n.components))].sort();
   const rootEmmet = rootBlock?.fragments[0]?.emmet ?? '';
+  const scaffoldHtml = buildSemanticScaffold(
+    recipe.id,
+    density,
+    nodes.map(n => n.node),
+  );
 
   const baseResult = {
     stage: '1-page-architect' as const,
@@ -180,7 +243,8 @@ export function runPageArchitect(input: PageArchitectInput = {}) {
       grid: 'grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-6',
       landmarks: { main: 1, h1: 1 },
     },
-    rootEmmet: rootEmmet.slice(0, 320),
+    scaffoldHtml,
+    rootEmmet: rootEmmet.slice(0, 200),
     slotTopology: nodes,
     leafComponents,
     nextStep: 'Call basecoat_rules_enforcer and basecoat_creative_director before writing markup.',
@@ -190,7 +254,7 @@ export function runPageArchitect(input: PageArchitectInput = {}) {
     return baseResult;
   }
 
-  for (const nodeLimit of [12, 10, 8, 6]) {
+  for (const nodeLimit of [10, 8, 6, 5]) {
     const candidate = {
       stage: '1-page-architect' as const,
       matched: true as const,
@@ -200,7 +264,8 @@ export function runPageArchitect(input: PageArchitectInput = {}) {
       route: page.route,
       density,
       containerContract: baseResult.containerContract,
-      rootEmmet: rootEmmet.slice(0, 80),
+      scaffoldHtml,
+      rootEmmet: rootEmmet.slice(0, 72),
       slotTopology: nodes.slice(0, nodeLimit).map(n => ({
         node: n.node,
         block: n.block,
@@ -224,8 +289,9 @@ export function runPageArchitect(input: PageArchitectInput = {}) {
     route: page.route,
     density,
     containerContract: baseResult.containerContract,
+    scaffoldHtml,
     rootEmmet: rootEmmet.slice(0, 60),
-    slotTopology: nodes.slice(0, 5).map(n => ({ node: n.node, block: n.block, slot: n.slot })),
+    slotTopology: nodes.slice(0, 4).map(n => ({ node: n.node, block: n.block, slot: n.slot })),
     leafComponents: leafComponents.slice(0, 8),
     nextStep: baseResult.nextStep,
   };

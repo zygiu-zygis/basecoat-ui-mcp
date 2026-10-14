@@ -96,7 +96,7 @@ function injectRootAttributes(
   fsmState?: string,
   variant?: string,
 ): string {
-  return markup.replace(/^(\s*<([a-zA-Z][a-zA-Z0-9-]*)\b)([^>]*)(>)/, (_match, prefix: string, tagName: string, attrs: string, close: string) => {
+  let result = markup.replace(/^(\s*<([a-zA-Z][a-zA-Z0-9-]*)\b)([^>]*)(>)/, (_match, prefix: string, tagName: string, attrs: string, close: string) => {
     const tag = tagName.toLowerCase();
     let updatedAttrs = attrs;
 
@@ -150,6 +150,16 @@ function injectRootAttributes(
 
     return `${prefix}${updatedAttrs}${close}`;
   });
+
+  if (state === 'open') {
+    result = result.replace(/\baria-expanded="false"/g, 'aria-expanded="true"');
+    result = result.replace(/<(dialog|details)\b(?![^>]*\bopen\b)([^>]*)>/i, '<$1$2 open>');
+  } else if (state === 'closed') {
+    result = result.replace(/\baria-expanded="true"/g, 'aria-expanded="false"');
+    result = result.replace(/(<(?:dialog|details)\b[^>]*?)\s+open(?==["'][^"']*["']|\s|>)/gi, '$1');
+  }
+
+  return result;
 }
 
 export function runComponentSyntax(

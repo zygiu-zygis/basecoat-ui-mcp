@@ -15,13 +15,20 @@ CSS or hand-writing tokens.
 When generating or upgrading a page, follow this 4-step tool chaining sequence:
 
 1. **Step 1 — Layout Scaffold (`basecoat_page_architect`)**:
-   Query an approved layout scaffold (`workspace-dashboard`, `auth-split-flow`, `workspace-detail`, `workspace-settings`, `data-records`, `auth-flow`, `marketing-pricing`) to obtain slot markers, grid structures, responsive containers, and required leaf component IDs.
+   Query an approved layout scaffold (`workspace-dashboard`, `auth-split-flow`, `workspace-detail`, `workspace-settings`, `data-records`, `auth-flow`, `marketing-pricing`) or macro block to obtain slot markers, grid structures, responsive containers, semantic HTML skeleton, and required leaf component IDs.
 2. **Step 2 — Technical & Aesthetic Rules (`basecoat_rules_enforcer` & `basecoat_creative_director`)**:
-   Verify strict Tailwind CSS v4 syntax (no `bg-opacity-*` or `flex-shrink-*`), FSM `data-state` contracts, semantic CSS variables (`--color-primary` / `--primary`, `--color-surface` / `--background`), Kanso typography ladders, and subtle elevation rules (never add `border` to `.card`).
+   Verify strict Tailwind CSS v4 syntax (no `bg-opacity-*`, `flex-shrink-*`, or arbitrary dimensions like `w-[327px]`), FSM `data-state` contracts, semantic CSS variables (`--color-primary` / `--primary`, `--color-surface` / `--background`), Kanso 4px/8px optical rhythm & typography ladders, and subtle elevation rules (never add `border` to `.card`).
 3. **Step 3 — FSM-Bound Component Markup (`basecoat_component_syntax`)**:
    Fetch copy-pasteable HTML/Astro markup with pre-configured state variants (`default`, `active`, `loading`, `disabled`, `open`, `closed`) and required module imports.
 4. **Step 4 — Quality Audit (`basecoat_quality_inspector`)**:
-   Audit the assembled HTML/Astro source for a `0–100` quality score, syntax violations, ARIA/landmark omissions, and auto-fix repairs. Iterate until `score >= 90` (`valid: true`).
+   Audit the assembled HTML/Astro source for a `0–100` quality score, WCAG 2.1 / APCA contrast pairings, keyboard focus traps, `aria-expanded`/`aria-controls` bindings, syntax violations, and auto-fix repairs. Iterate until `score >= 90` (`valid: true`).
+
+## Clean Generation Standards (Zero Muda)
+
+1. **No Redundant Explanatory Text**: Emit clean, executable markup and minimal structural summaries without conversational filler, restating instructions, or redundant prose around code blocks.
+2. **No Duplicate Wrapper Containers**: Never wrap semantic landmarks (`<header>`, `<main>`, `<nav>`, `<aside>`, `<section>`) or `.card` elements in superfluous `<div class="wrapper">` or unstyled `<div>` shells. Apply flex/grid/spacing utilities directly to the semantic element.
+3. **Deterministic Class Ordering**: Order all Tailwind CSS v4 utility classes deterministically on every element:
+   `Basecoat Component (.card/.btn/.input)` → `Layout (block/flex/grid/hidden)` → `Positioning (relative/sticky/inset)` → `Flex/Grid Alignment (items-center/justify-between/col-span)` → `Sizing (w/h/size/max-w)` → `Spacing (p/m/gap)` → `Typography (text/font/tracking/leading/tabular-nums)` → `Surface/Background (bg-*)` → `Borders/Rings (border-*/ring-*)` → `Effects (shadow/opacity/transition)` → `Interactive Variants (hover:/focus-visible:/dark:)`.
 
 ### Tool Chaining Example
 ```json

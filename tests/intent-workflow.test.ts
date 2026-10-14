@@ -261,3 +261,77 @@ test('Phase 2 improvements: oversized-header, ID aliases, sidebar FSM recipe, ac
   ].join('\n'));
   assert(!metaSafeReport.issues.some(i => i.rule === 'theme-meta-color-scheme'), 'did not expect theme-meta-color-scheme warning on safe meta');
 });
+
+test('WCAG 2.1 / APCA contrast, arbitrary dimensions, dialog focus traps, aria-controls bindings, block queries, and plugin manifests', () => {
+  // 1. basecoat_page_architect block query & scaffoldHtml
+  const blockRes = runPageArchitect({ block: 'topbar-shell' });
+  assert.equal(blockRes.matched, true);
+  assert.equal((blockRes as { block?: string }).block, 'topbar-shell');
+  assert(responseBytes(blockRes) <= MAX_DETAIL_BYTES);
+
+  const dashboardRes = runPageArchitect({ recipe: 'workspace-dashboard', density: 'compact' });
+  assert.equal(dashboardRes.matched, true);
+  assert(typeof (dashboardRes as { scaffoldHtml?: string }).scaffoldHtml === 'string');
+  assert((dashboardRes as { scaffoldHtml: string }).scaffoldHtml.includes('data-slot='));
+  assert(responseBytes(dashboardRes) <= MAX_DETAIL_BYTES);
+
+  // 2. basecoat_rules_enforcer arbitrary sizing rule
+  const tw4Rules = runRulesEnforcer({ category: 'tailwind-v4' });
+  assert(tw4Rules.rules.some(r => r.forbidden.some(f => f.includes('w-[327px]'))));
+
+  // 3. basecoat_creative_director 4px/8px optical grid & border-contrast
+  const creativeAll = runCreativeDirector({ topic: 'all' });
+  assert(responseBytes(creativeAll) <= MAX_DETAIL_BYTES);
+  const creativeElevation = runCreativeDirector({ topic: 'elevation' }) as { guidance: { borderContrast: string } };
+  assert(creativeElevation.guidance.borderContrast.includes('WCAG 2.1'));
+
+  // 4. WCAG 2.1 & APCA contrast validation + arbitrary dimension + focus trap + aria-controls
+  const badContrastAndA11y = [
+    '<main class="p-6">',
+    '  <div class="w-[327px] bg-primary text-primary p-4">Unreadable primary on primary</div>',
+    '  <button type="button" class="btn" aria-expanded="true" aria-controls="missing-panel">Toggle</button>',
+    '  <dialog class="dialog" data-state="open" data-fsm-recipe="dialog" data-fsm-state="open"><p>Trapped with no button</p></dialog>',
+    '</main>',
+  ].join('\n');
+
+  const inspectorReport = runQualityInspector(badContrastAndA11y, { enforceFsm: true });
+  assert.equal(inspectorReport.valid, false);
+  assert(inspectorReport.syntaxViolations.some(v => v.rule === 'arbitrary-dimension'), 'expected arbitrary-dimension violation');
+  assert(inspectorReport.accessibilityOmissions.some(v => v.rule === 'color-contrast-wcag'), 'expected color-contrast-wcag omission');
+  assert(inspectorReport.accessibilityOmissions.some(v => v.rule === 'a11y-aria-controls-binding'), 'expected a11y-aria-controls-binding omission');
+  assert(inspectorReport.accessibilityOmissions.some(v => v.rule === 'a11y-dialog-focus-trap'), 'expected a11y-dialog-focus-trap omission');
+  assert(responseBytes(inspectorReport) <= MAX_DETAIL_BYTES);
+
+  // Valid paired contrast & accessible dialog + aria-controls should pass with 100/A
+  const validContrastAndA11y = [
+    '<main class="p-6">',
+    '  <div class="w-80 bg-primary text-primary-foreground p-4">Readable primary button surface</div>',
+    '  <button type="button" class="btn" aria-expanded="true" aria-controls="valid-panel">Toggle</button>',
+    '  <section id="valid-panel" class="card p-4"><p class="text-sm text-muted-foreground">Panel content</p></section>',
+    '  <dialog class="dialog" data-state="open" data-fsm-recipe="dialog" data-fsm-state="open">',
+    '    <button type="button" class="btn">Close</button>',
+    '  </dialog>',
+    '</main>',
+  ].join('\n');
+  const validReport = runQualityInspector(validContrastAndA11y, { enforceFsm: true });
+  assert.equal(validReport.accessibilityOmissions.filter(v => v.rule === 'color-contrast-wcag').length, 0);
+  assert.equal(validReport.accessibilityOmissions.filter(v => v.rule === 'a11y-aria-controls-binding').length, 0);
+  assert.equal(validReport.accessibilityOmissions.filter(v => v.rule === 'a11y-dialog-focus-trap').length, 0);
+
+  // 5. Multi-platform plugin manifests (.cursor-plugin/plugin.json & .claude-plugin/plugin.json)
+  const cursorPlugin = JSON.parse(readFileSync(join(root, '.cursor-plugin', 'plugin.json'), 'utf8')) as {
+    name: string;
+    version: string;
+    mcpServers: Record<string, { transport: string }>;
+  };
+  assert.equal(cursorPlugin.name, 'basecoat-ui-mcp');
+  assert.equal(cursorPlugin.mcpServers['basecoat-ui']?.transport, 'stdio');
+
+  const claudePlugin = JSON.parse(readFileSync(join(root, '.claude-plugin', 'plugin.json'), 'utf8')) as {
+    name: string;
+    version: string;
+    transport: { type: string };
+  };
+  assert.equal(claudePlugin.name, 'basecoat-ui-mcp');
+  assert.equal(claudePlugin.transport.type, 'stdio');
+});

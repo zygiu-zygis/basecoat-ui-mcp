@@ -4,6 +4,19 @@ Maintained by **Žygimantas Jasiulionis / Intellmedia**.
 
 ## 1.7.1 - 2026-10-14
 
+- **WCAG 2.1 & APCA Contrast & Accessibility Heuristics (`validate.ts` & `basecoat_quality_inspector`)**:
+  - Added `color-contrast-wcag` rule evaluating WCAG 2.1 relative luminance contrast ratios and APCA ($L_c$) thresholds across semantic surface/text token pairings (`bg-primary`, `bg-card`, `bg-muted`, `bg-destructive`, `bg-background`), flagging low-contrast pairings and suggesting canonical foreground tokens (`text-primary-foreground`, etc.).
+  - Added `a11y-dialog-focus-trap` heuristic checking that modal `<dialog>` / `role="dialog"` containers include `aria-modal="true"` (when non-native) and at least one focusable exit/action control.
+  - Added `a11y-aria-controls-binding` heuristic verifying that interactive triggers with `aria-expanded` bind a valid `aria-controls` target ID or reside within a managed Basecoat disclosure container.
+  - Added `arbitrary-dimension` rule rejecting arbitrary bracket sizing utilities (`w-[327px]`, `h-[412px]`) in favor of the 4px/8px optical rhythm scale.
+- **Intent-Driven Tooling Layer Upgrades**:
+  - `basecoat_page_architect`: Added direct macro block querying (`block` parameter), dynamic recipe indexing across all compiled recipes, and semantic HTML5 `scaffoldHtml` skeletons with explicit `data-slot` markers.
+  - `basecoat_rules_enforcer`: Added explicit prohibitions for arbitrary dimensions (`w-[327px]`), low-contrast token pairings, duplicate wrapper `<div>` containers, and enforced deterministic Tailwind v4 class ordering.
+  - `basecoat_creative_director`: Formalized the 4px/8px mathematical optical rhythm grid, complete typography hierarchy (`h1`..`h3`, body, data/meta, caption, `tabular-nums`), and explicit border-contrast ratios.
+  - `basecoat_component_syntax`: Synchronized child `<dialog>`/`<details>` `open` attributes and `aria-expanded` trigger states when requesting `open` or `closed` state variants.
+- **Clean Generation Rules & Multi-Platform Plugin Manifests**:
+  - Updated `templates/cursor/basecoat-designer.mdc` and `.cursor/rules/basecoat.mdc` with strict Clean Generation Standards (no redundant explanatory prose, no duplicate wrapper containers, deterministic Tailwind class ordering).
+  - Added `.cursor-plugin/plugin.json` and `.claude-plugin/plugin.json` supporting stdio MCP transport across Cursor, Claude Desktop, and Claude Code.
 - **Validator Precision**:
   - Restored and properly scoped `oversized-header` to `<header>`, `.page-header`, `data-role="header"`, and `role="banner"`.
   - Refined `card-double-border` to ignore `subcard` variants and `border-0`/`border-none` resets, flagging only true border utility collisions on `.card`.

@@ -29,4 +29,3 @@ Consult the subsequent specific Bibles for detailed rules based on the user's pr
 - `block-patterns/SKILL.md` for internal component assembly (Forms, Tables, Metric Cards, Charts).
 - `content-strategy/SKILL.md` to populate the UI with realistic, domain-specific data.
 - `audit/SKILL.md` internally to verify accessibility, mobile responsiveness, and contrast ratios *before* rendering the final response.
-

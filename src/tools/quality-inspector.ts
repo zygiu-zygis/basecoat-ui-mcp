@@ -23,6 +23,9 @@ export type QualityInspectorInput = z.infer<z.ZodObject<typeof qualityInspectorI
 const TW3_DEPRECATED_UTILITY =
   /^(?:(bg|text|border|divide|ring|placeholder)-opacity-(\d+)|flex-(shrink|grow)(?:-(0|1))?|overflow-ellipsis|decoration-(slice|clone))$/;
 
+const ARBITRARY_DIMENSION =
+  /^(?:w|h|min-w|max-w|min-h|max-h|size|p[trblxyse]?|m[trblxyse]?|gap(?:-[xy])?|space-[xy]|inset(?:-[xy])?|top|right|bottom|left)-\[\d+(?:\.\d+)?(?:px|rem|em|vh|vw|%|ch|dvh|svh|lvh)\]$/i;
+
 const INTERACTIVE_PRIMITIVES = new Map<string, { defaultState: string; recipe: string }>([
   ['dialog', { defaultState: 'closed', recipe: 'dialog' }],
   ['dropdown-menu', { defaultState: 'closed', recipe: 'collapsible-navigation' }],
@@ -41,7 +44,7 @@ const SEMANTIC_TAGS = new Set([
   'footer',
 ]);
 
-const A11Y_RULE_PREFIX = /^(?:a11y-|duplicate-main-landmark|duplicate-primary-heading|structural-order|fsm-|semantic-div-nesting)/;
+const A11Y_RULE_PREFIX = /^(?:a11y-|color-contrast-wcag|duplicate-main-landmark|duplicate-primary-heading|structural-order|fsm-|semantic-div-nesting)/;
 
 function stripVariants(token: string): string {
   let depth = 0;
@@ -82,6 +85,14 @@ function defaultRepairForIssue(issue: CompositionIssue): string {
       return 'Remove external CDN <script>/<link> and bundle local Basecoat/Tailwind assets.';
     case 'invalid-basecoat-class':
       return 'Use canonical Basecoat classes (.btn, .card, .input, .field, .tabs, .dialog) and data-variant/data-size.';
+    case 'arbitrary-dimension':
+      return 'Replace arbitrary bracket dimensions (e.g. w-[327px]) with 4px/8px Tailwind scale utilities (e.g. w-80, max-w-md, h-12).';
+    case 'color-contrast-wcag':
+      return 'Pair semantic surface tokens with their high-contrast foreground counterparts (e.g. bg-primary + text-primary-foreground).';
+    case 'a11y-aria-controls-binding':
+      return 'Bind aria-controls="<target-id>" on aria-expanded triggers to a matching id="<target-id>" on the panel.';
+    case 'a11y-dialog-focus-trap':
+      return 'Use native <dialog class="dialog"> or role="dialog" aria-modal="true" and include a focusable close <button>.';
     case 'spacing-rhythm':
       return 'Snap spacing to approved scale steps: 0, 2, 4, 6, 8, 12 (or compact micro-steps).';
     case 'all-js-bundle':
@@ -128,6 +139,15 @@ export function runQualityInspector(
             message: `Deprecated Tailwind v3 utility '${cls}' is forbidden in Tailwind v4.`,
             line: node.line,
             repair: tw3AutoFix(cls),
+          });
+        }
+        if (ARBITRARY_DIMENSION.test(cls)) {
+          extraIssues.push({
+            rule: 'arbitrary-dimension',
+            severity: 'error',
+            message: `Arbitrary sizing utility '${cls}' violates the 4px/8px optical rhythm scale.`,
+            line: node.line,
+            repair: 'Replace arbitrary bracket dimensions with standard Tailwind v4 spacing/sizing utilities (e.g. w-80, max-w-md, h-12, p-6).',
           });
         }
       }

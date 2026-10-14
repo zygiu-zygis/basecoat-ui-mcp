@@ -4,6 +4,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import test from 'node:test';
 import { buildReleaseEvidence } from '../scripts/release-check.js';
+import { SERVER_VERSION } from '../src/server/version.js';
 
 async function makeReleaseFixture(): Promise<string> {
   const fixture = await mkdtemp(join(tmpdir(), 'basecoat-release-'));
@@ -30,7 +31,7 @@ test('release evidence enforces local parity without probing external surfaces',
 
   assert.equal(evidence.parity, 'pass');
   assert.equal(evidence.phase, 'pre-release');
-  assert.equal(evidence.package.version, '1.7.0');
+  assert.equal(evidence.package.version, SERVER_VERSION);
   assert(evidence.records.some(record =>
     record.surface === 'server.json version' && record.status === 'match'));
   assert(evidence.records.some(record =>
@@ -49,7 +50,7 @@ test('release evidence enforces local parity without probing external surfaces',
     record.surface === 'npm package page');
   assert.equal(npmSurface?.platform, 'npm package page');
   assert.equal(npmSurface?.approvalState, 'required');
-  assert.equal(npmSurface?.expectedIdentity.version, '1.7.0');
+  assert.equal(npmSurface?.expectedIdentity.version, SERVER_VERSION);
   assert(npmSurface?.nextAction.includes('Manually verify'));
   assert(evidence.excludedSurfaces.some(surface =>
     surface.status === 'unrelated search noise'));

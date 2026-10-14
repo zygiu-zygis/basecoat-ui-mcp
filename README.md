@@ -143,13 +143,21 @@ Only that exact directory is used. The server does not walk parent directories. 
 
 ## Basecoat MCP tools
 
-The server exposes three component tools, six macro tools, and two semantic tools. Every macro and semantic result is a bounded MCP packet of at most **1,999 UTF-8 bytes**. Larger result sets use cursors; responses are not sliced mid-JSON.
+The server exposes **5 high-level intent-driven tools**, three component tools, six macro tools, and two semantic tools (16 tools total). Every tool result is a bounded MCP packet of at most **1,999 UTF-8 bytes**. Larger result sets use cursors; responses are not sliced mid-JSON.
+
+### 4-Stage Intent-Driven Tooling Layer (Fast Path)
+
+1. `basecoat_page_architect` — Query recipes (`src/macros/authoring/recipes/*.json`) and macro blocks (`src/macros/authoring/blocks/*.json`) by `intent`, `recipe`, or `block`. Delivers full layout scaffolds (`workspace-dashboard`, `auth-split-flow`, `workspace-detail`, `workspace-settings`, `data-records`, `auth-flow`, `marketing-pricing`) with explicit `data-slot` markers, semantic HTML skeletons, grid structures, and responsive containers.
+2. `basecoat_rules_enforcer` — Enforces strict technical constraints across `tailwind-v4`, `fsm-contracts`, `tokens`, and `semantic-html`: rejects deprecated Tailwind v3 utilities (`bg-opacity-*`, `flex-shrink-*`), rejects arbitrary bracket dimensions (`w-[327px]`), enforces mandatory FSM `data-state` contracts (`dialog`, `dropdown-menu`, `accordion`, `tabs`), mandates semantic tokens (`--color-primary`, `--color-surface`), and enforces deterministic class ordering.
+3. `basecoat_creative_director` — Surfaces Kanso minimalism and Basecoat design intelligence from `src/design/rhythm.ts` and `theming.ts`: 4px/8px mathematical optical rhythm scale, complete typography ladder (`h1`..`h3`, body, data/meta, caption, `tabular-nums`), whitespace density balancing, subtle 1px card ring elevation, and WCAG 2.1 AA / APCA border-contrast ratios.
+4. `basecoat_component_syntax` — Delivers copy-pasteable HTML or Astro component markup from `src/registry/components.json` with pre-configured FSM state variants (`default`, `active`, `loading`, `disabled`, `open`, `closed`), synchronized child trigger/panel attributes, and verified inline SVG action icons (`plus`, `edit`, `trash`, `search`, `chevron-down`, `check`, `external-link`).
+5. `basecoat_quality_inspector` — Audits HTML/Astro compositions and outputs structured diagnostics: `score` (`0–100`), letter `grade` (`A–F`), `syntaxViolations` (Tailwind v3 utilities, arbitrary colors/dimensions, `.card` double borders), `accessibilityOmissions` (WCAG 2.1 & APCA semantic token contrast pairings, modal `<dialog>` keyboard focus traps, `aria-expanded`/`aria-controls` DOM bindings, landmark/label checks), and actionable `autoFixSuggestions`.
 
 ### Component tools
 
 - `search_components` returns up to 8 compact `{id, name, intent}` summaries and never returns markup. `intent` and `query` are optional; an empty search returns an empty list.
 - `get_component_details` returns one Astro or HTML template with dependencies and composition guidance. Oversized entries fail closed. `theme-toggle` resolves to `theme-switcher`.
-- `validate_composition` statically checks up to **256 KiB** (262,144 UTF-8 bytes) of HTML or Astro source and returns at most 24 issues. Pass `code` or `html`, and optional `semanticProfile` or `densityProfile` (comfortable|compact). It does not render, execute, resolve application modules, or certify accessibility.
+- `validate_composition` statically checks up to **256 KiB** (262,144 UTF-8 bytes) of HTML or Astro source and returns at most 24 issues (including WCAG 2.1 / APCA token contrast, arbitrary dimensions, dialog focus traps, and `aria-controls` bindings). Pass `code` or `html`, and optional `semanticProfile` or `densityProfile` (comfortable|compact). It does not render, execute, resolve application modules, or certify runtime browser accessibility.
 
 ### Macro tools
 
