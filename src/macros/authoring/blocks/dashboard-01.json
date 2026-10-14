@@ -16,11 +16,25 @@
   "fragments": [
     {
       "id": "content-frame",
-      "emmet": "div.flex.flex-1.flex-col.gap-6.p-6[data-role=canvas][data-macro=canvas][data-block=dashboard-01]>div[data-slot=kpi]+div[data-slot=chart]+div[data-slot=table]"
+      "emmet": "div.flex.flex-1.flex-col[data-role=canvas][data-macro=canvas][data-block=dashboard-01]>header.flex.h-14.items-center.justify-between.border-b.border-border.px-6[data-slot=topbar]>nav.flex.items-center.gap-4>a.text-sm.font-medium{Overview}+a.text-sm.text-muted{Customers}+a.text-sm.text-muted{Products}^^div.flex.items-center.gap-4>input.input.input-sm[placeholder=Search]+button.btn.btn-sm.btn-ghost{Alerts}+div.size-8.rounded-full.bg-muted[data-slot=avatar]^^^main.flex.flex-1.flex-col.gap-6.p-6>section.grid.grid-cols-1.gap-4.sm:grid-cols-2.lg:grid-cols-4[data-slot=kpi]>div.card.p-4>span.text-xs.text-muted{Total Revenue}+strong.text-2xl.font-semibold{$45,231.89}+span.badge{+20.1%}^div.card.p-4>span.text-xs.text-muted{Subscriptions}+strong.text-2xl.font-semibold{+2,350}+span.badge{+180.1%}^div.card.p-4>span.text-xs.text-muted{Sales}+strong.text-2xl.font-semibold{+12,234}+span.badge{+19%}^div.card.p-4>span.text-xs.text-muted{Active Now}+strong.text-2xl.font-semibold{+573}+span.badge{+201}^^section.grid.grid-cols-1.gap-6.lg:grid-cols-7>div.lg:col-span-4[data-slot=chart][data-chart-id=area-interactive]+div.lg:col-span-3[data-slot=recent-sales]+div[data-slot=table]"
     }
   ],
   "mounts": [],
   "slots": [
+    {
+      "id": "topbar",
+      "at": {
+        "fragment": "content-frame",
+        "name": "topbar"
+      },
+      "accepts": [
+        "header",
+        "topbar",
+        "navigation"
+      ],
+      "min": 0,
+      "max": 1
+    },
     {
       "id": "kpi",
       "at": {
@@ -43,6 +57,20 @@
       "accepts": [
         "chart",
         "activity"
+      ],
+      "min": 0,
+      "max": 1
+    },
+    {
+      "id": "recent-sales",
+      "at": {
+        "fragment": "content-frame",
+        "name": "recent-sales"
+      },
+      "accepts": [
+        "activity",
+        "table",
+        "data"
       ],
       "min": 0,
       "max": 1

@@ -1911,10 +1911,12 @@ Basecoat Charts provides robust, theme-aware chart blueprints designed to integr
 
 ## Core Directives
 
-1. **Theme-Token Color Mapping**: All series colors must bind directly to CSS variables (\`var(--chart-1)\` through \`var(--chart-5)\`) or surface tokens (\`var(--foreground)\`, \`var(--muted-foreground)\`, \`var(--border)\`).
-2. **Container Sizing**: Chart parent containers must specify explicit dimensions (e.g. \`h-80 w-full\`). Set height in ApexCharts options: \`options.chart.height = "100%"\`.
-3. **Zero Framework Wrappers**: Do not require heavy framework wrappers like \`react-apexcharts\`. Initialize charts directly with vanilla ApexCharts in the client.
-4. **SVG Fallback Option**: For offline dashboards without third-party libraries, prefer declarative Basecoat SVG area charts (\`svg-area-chart\`).
+1. **Theme-Token Color Mapping**: All series colors must bind directly to CSS variables (`var(--chart-1)` through `var(--chart-5)`) or surface tokens (`var(--foreground)`, `var(--muted-foreground)`, `var(--border)`).
+2. **Container Sizing & Responsive Footprint**: Chart viewport wrappers must specify the standard responsive layout footprint: `w-full aspect-[4/3] md:aspect-[16/9] lg:aspect-[2/1] min-h-[240px]`. Outer containers specify `chart-container card p-6 flex flex-col gap-4 w-full` with `role="img"` and descriptive `aria-label`.
+3. **Glassmorphic Tooltip Markup**: Interactive chart tooltips must feature Basecoat glassmorphic styling: `<div class="rounded-lg border border-border bg-background/95 p-2.5 text-xs shadow-xl backdrop-blur-sm" data-chart-tooltip>...</div>` with indicator dot/line/dashed/badge and numeric value formatting with `tabular-nums`.
+4. **Screen-Reader Data Fallback**: Every chart blueprint embeds an accessible table fallback for assistive technology: `<table class="sr-only"><caption>${title}</caption><thead>...</thead><tbody>...</tbody></table>`.
+5. **Zero Framework Wrappers**: Do not require heavy framework wrappers like `react-apexcharts`. Initialize charts directly with client-side vanilla ApexCharts mounts across all 5 supported frameworks (`vanilla`, `astro`, `react`, `vue`, `svelte`).
+6. **SVG Fallback & Macro Dashboard Binding**: For offline dashboards without third-party dependencies, declarative Basecoat SVG area charts (`svg-area-chart`) and layout blocks like `dashboard-01` bind directly to `data-chart-id="area-interactive"`.
 
 ## Chart Categories
 
@@ -1981,9 +1983,13 @@ description: Quality inspection gate for chart visualizations.
 
 - [ ] Series colors use \`var(--chart-1)\` through \`var(--chart-5)\`.
 - [ ] No hardcoded hex color codes in series options.
-- [ ] Parent wrapper specifies responsive height and width (\`w-full h-80\`).
-- [ ] Grid border colors use \`var(--border)\` or \`color-mix(in srgb, var(--foreground), transparent 90%)\`.
+- [ ] Responsive chart viewport wrapper specifies \`w-full aspect-[4/3] md:aspect-[16/9] lg:aspect-[2/1] min-h-[240px]\`.
+- [ ] Outer container specifies \`chart-container card p-6 flex flex-col gap-4 w-full\` with \`role="img"\` and \`aria-label\`.
+- [ ] Glassmorphic tooltip markup includes \`data-chart-tooltip\`, \`bg-background/95\`, \`backdrop-blur-sm\`, and \`border-border\`.
+- [ ] Screen-reader accessible data table fallback (\`<table class="sr-only">\`) is present inside the chart container.
+- [ ] Grid border colors use \`var(--border)\` or \`var(--color-border)\`.
 - [ ] All numeric tooltips and axis labels use \`tabular-nums\`.
+- [ ] Macro integration: \`dashboard-01\` and \`svg-area-chart\` bind to \`data-chart-id="area-interactive"\`.
 `);
 }
 

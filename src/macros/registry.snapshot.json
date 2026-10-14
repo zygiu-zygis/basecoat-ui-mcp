@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "revision": "bebae95d03c506ef67d9ab3ee3814d1082ce66262b5dce2892cb52053edd9262",
+  "revision": "851c62f2fd4a3d3ccfcf9a0f9ab499528c97d2625551397130a2435a708b0d0b",
   "blocks": {
     "cbe0f152631792d61e6ebb46d791ae123dd45d83b58f2105e1c8f38e1bf283a7": {
       "schemaVersion": 1,
@@ -5445,7 +5445,7 @@
         "mappingVersion": "1.0.0"
       }
     },
-    "5209282f4f9a9011131336fed4ab850de572ab3e542e8beb22a96e0a0c7e91fd": {
+    "e786ef4df23aef0a8a961f18050952659b8126fb94cedd6ee3841bced8a6c066": {
       "schemaVersion": 1,
       "id": "svg-area-chart",
       "role": "chart",
@@ -5461,7 +5461,7 @@
       "fragments": [
         {
           "id": "chart-root",
-          "emmet": "div.relative.mt-4.h-\\[220px\\].w-full.pb-6.md:h-\\[260px\\][data-component=svg-area-chart][data-slot=chart][data-height=20rem][data-responsive=width][data-legend=mobile,desktop][data-tooltip=enabled]>svg.block.h-\\[190px\\].w-full.text-foreground.md:h-\\[230px\\][role=img][aria-label='Total visitors area chart']>title{Total visitors}+desc{Area series for desktop and mobile visitors.}+path[data-series=desktop][fill=currentColor]+path[data-series=mobile][fill=currentColor]"
+          "emmet": "div.chart-container.relative.mt-4.h-\\[220px\\].w-full.pb-6.md:h-\\[260px\\][data-component=svg-area-chart][data-slot=chart][data-chart-id=area-interactive][data-height=20rem][data-responsive=width][data-legend=mobile,desktop][data-tooltip=enabled][role=img][aria-label='Area Chart Interactive - Interactive area chart supporting time filter ranges and cursor highlights']>svg.block.h-\\[190px\\].w-full.text-foreground.md:h-\\[230px\\][role=img][aria-label='Total visitors area chart']>title{Total visitors}+desc{Area series for desktop and mobile visitors.}+path[data-series=desktop][fill=currentColor]+path[data-series=mobile][fill=currentColor]"
         }
       ],
       "mounts": [],
@@ -5499,7 +5499,7 @@
         "mappingVersion": "1.0.0"
       }
     },
-    "082705d57a2a89a3074a999560f7c9916ea2336b6c56e3c17805953ad5f70ba3": {
+    "d3e41e3ae29ec6577bed2b977e8031fb5ef5c55e96390261e3ec17d77c4da87f": {
       "schemaVersion": 1,
       "id": "analytics",
       "role": "dashboard",
@@ -5598,7 +5598,7 @@
       "ruleRefs": [],
       "dependencyRefs": [
         "bb9894899b8d66b96ecf5b7e20c6ec6b50fa4ba6b73d87558c04642025df6d00",
-        "5209282f4f9a9011131336fed4ab850de572ab3e542e8beb22a96e0a0c7e91fd"
+        "e786ef4df23aef0a8a961f18050952659b8126fb94cedd6ee3841bced8a6c066"
       ],
       "layout": {
         "frameRef": "content-frame"
@@ -5613,7 +5613,7 @@
         "mappingVersion": "1.0.0"
       }
     },
-    "3dbe776b3e39e3a3e6227e455f836fca8f10ba7b7719bf9f9c36cb189082d5a6": {
+    "cf097363d15a335bc47cd41833fe6b32f161dd96df3acf593032f7832d9a158b": {
       "schemaVersion": 1,
       "id": "dashboard-01",
       "role": "dashboard",
@@ -5631,11 +5631,25 @@
       "fragments": [
         {
           "id": "content-frame",
-          "emmet": "div.flex.flex-1.flex-col.gap-6.p-6[data-role=canvas][data-macro=canvas][data-block=dashboard-01]>div[data-slot=kpi]+div[data-slot=chart]+div[data-slot=table]"
+          "emmet": "div.flex.flex-1.flex-col[data-role=canvas][data-macro=canvas][data-block=dashboard-01]>header.flex.h-14.items-center.justify-between.border-b.border-border.px-6[data-slot=topbar]>nav.flex.items-center.gap-4>a.text-sm.font-medium{Overview}+a.text-sm.text-muted{Customers}+a.text-sm.text-muted{Products}^^div.flex.items-center.gap-4>input.input.input-sm[placeholder=Search]+button.btn.btn-sm.btn-ghost{Alerts}+div.size-8.rounded-full.bg-muted[data-slot=avatar]^^^main.flex.flex-1.flex-col.gap-6.p-6>section.grid.grid-cols-1.gap-4.sm:grid-cols-2.lg:grid-cols-4[data-slot=kpi]>div.card.p-4>span.text-xs.text-muted{Total Revenue}+strong.text-2xl.font-semibold{$45,231.89}+span.badge{+20.1%}^div.card.p-4>span.text-xs.text-muted{Subscriptions}+strong.text-2xl.font-semibold{+2,350}+span.badge{+180.1%}^div.card.p-4>span.text-xs.text-muted{Sales}+strong.text-2xl.font-semibold{+12,234}+span.badge{+19%}^div.card.p-4>span.text-xs.text-muted{Active Now}+strong.text-2xl.font-semibold{+573}+span.badge{+201}^^section.grid.grid-cols-1.gap-6.lg:grid-cols-7>div.lg:col-span-4[data-slot=chart][data-chart-id=area-interactive]+div.lg:col-span-3[data-slot=recent-sales]+div[data-slot=table]"
         }
       ],
       "mounts": [],
       "slots": [
+        {
+          "id": "topbar",
+          "at": {
+            "fragment": "content-frame",
+            "name": "topbar"
+          },
+          "accepts": [
+            "header",
+            "topbar",
+            "navigation"
+          ],
+          "min": 0,
+          "max": 1
+        },
         {
           "id": "kpi",
           "at": {
@@ -5658,6 +5672,20 @@
           "accepts": [
             "chart",
             "activity"
+          ],
+          "min": 0,
+          "max": 1
+        },
+        {
+          "id": "recent-sales",
+          "at": {
+            "fragment": "content-frame",
+            "name": "recent-sales"
+          },
+          "accepts": [
+            "activity",
+            "table",
+            "data"
           ],
           "min": 0,
           "max": 1
@@ -5701,7 +5729,7 @@
       "ruleRefs": [],
       "dependencyRefs": [
         "bb9894899b8d66b96ecf5b7e20c6ec6b50fa4ba6b73d87558c04642025df6d00",
-        "5209282f4f9a9011131336fed4ab850de572ab3e542e8beb22a96e0a0c7e91fd",
+        "e786ef4df23aef0a8a961f18050952659b8126fb94cedd6ee3841bced8a6c066",
         "9fd839dafa3ad90f5eb8223898c1d0d7b69a68bb16af66c595b6977c2d9db8ad"
       ],
       "layout": {
@@ -5719,7 +5747,7 @@
         "mappingVersion": "1.0.0"
       }
     },
-    "0484bff8778dcfc846c40ad8c519831e44e2576cf5a81eb22449ae8c62368b64": {
+    "bbdf1d0413c73b33f9e92c09fe8f225ddba04da2f5ee622c7ed9c0046ba8bb24": {
       "schemaVersion": 1,
       "id": "dashboard-02",
       "role": "dashboard",
@@ -5831,7 +5859,7 @@
       "ruleRefs": [],
       "dependencyRefs": [
         "bb9894899b8d66b96ecf5b7e20c6ec6b50fa4ba6b73d87558c04642025df6d00",
-        "5209282f4f9a9011131336fed4ab850de572ab3e542e8beb22a96e0a0c7e91fd",
+        "e786ef4df23aef0a8a961f18050952659b8126fb94cedd6ee3841bced8a6c066",
         "9fd839dafa3ad90f5eb8223898c1d0d7b69a68bb16af66c595b6977c2d9db8ad"
       ],
       "layout": {
@@ -5847,7 +5875,7 @@
         "mappingVersion": "1.0.0"
       }
     },
-    "11e81ac3707d99da5d12cb7c146e3ce74fe616496372c176a2f0e15a125bdae8": {
+    "13be7facca3a0967667187251aec175271de8de21d3da8e3eb9d388cb1783121": {
       "schemaVersion": 1,
       "id": "dashboard-activity",
       "role": "activity",
@@ -5916,7 +5944,7 @@
       "ruleRefs": [],
       "dependencyRefs": [
         "aa973b7c26d26f157693ad3a693e98375230fa704481d4853814c7d021d223c1",
-        "5209282f4f9a9011131336fed4ab850de572ab3e542e8beb22a96e0a0c7e91fd"
+        "e786ef4df23aef0a8a961f18050952659b8126fb94cedd6ee3841bced8a6c066"
       ],
       "layout": {
         "frameRef": "activity-root"
@@ -6125,7 +6153,7 @@
     }
   },
   "recipes": {
-    "c6c9468b97c1485b0eacd913f767c08c605147a915d8596a0b29241c02ffcc3a": {
+    "1808acb5f6553b54c62deedfa992646312ab16f013fbf796d22994da0bad84c0": {
       "schemaVersion": 1,
       "id": "analytics-workspace",
       "kind": "page",
@@ -6134,7 +6162,7 @@
         {
           "id": "analytics",
           "route": "/workspace/analytics",
-          "recipe": "c6c9468b97c1485b0eacd913f767c08c605147a915d8596a0b29241c02ffcc3a",
+          "recipe": "1808acb5f6553b54c62deedfa992646312ab16f013fbf796d22994da0bad84c0",
           "root": "shell",
           "nodes": {
             "shell": {
@@ -6164,7 +6192,7 @@
             },
             "canvas": {
               "id": "canvas",
-              "block": "3dbe776b3e39e3a3e6227e455f836fca8f10ba7b7719bf9f9c36cb189082d5a6",
+              "block": "cf097363d15a335bc47cd41833fe6b32f161dd96df3acf593032f7832d9a158b",
               "parent": {
                 "node": "shell",
                 "slot": "content",
@@ -6184,7 +6212,7 @@
             },
             "chart": {
               "id": "chart",
-              "block": "5209282f4f9a9011131336fed4ab850de572ab3e542e8beb22a96e0a0c7e91fd",
+              "block": "e786ef4df23aef0a8a961f18050952659b8126fb94cedd6ee3841bced8a6c066",
               "parent": {
                 "node": "canvas",
                 "slot": "chart",
@@ -6656,7 +6684,7 @@
       "entryPage": "records",
       "routeLinks": []
     },
-    "f32a8a5cdb03bba4e2046ac00b28a3ee3d730ec17a68cdea079dc7dfb6efcdf6": {
+    "e948f7d53d089e2cca21779142bd4c25504f51af73c4bc019f5b3c7a614063d6": {
       "schemaVersion": 1,
       "id": "ecommerce-overview",
       "kind": "page",
@@ -6665,7 +6693,7 @@
         {
           "id": "overview",
           "route": "/dashboard/ecommerce",
-          "recipe": "f32a8a5cdb03bba4e2046ac00b28a3ee3d730ec17a68cdea079dc7dfb6efcdf6",
+          "recipe": "e948f7d53d089e2cca21779142bd4c25504f51af73c4bc019f5b3c7a614063d6",
           "root": "shell",
           "nodes": {
             "shell": {
@@ -6695,7 +6723,7 @@
             },
             "canvas": {
               "id": "canvas",
-              "block": "0484bff8778dcfc846c40ad8c519831e44e2576cf5a81eb22449ae8c62368b64",
+              "block": "bbdf1d0413c73b33f9e92c09fe8f225ddba04da2f5ee622c7ed9c0046ba8bb24",
               "parent": {
                 "node": "shell",
                 "slot": "content",
@@ -6715,7 +6743,7 @@
             },
             "overview": {
               "id": "overview",
-              "block": "5209282f4f9a9011131336fed4ab850de572ab3e542e8beb22a96e0a0c7e91fd",
+              "block": "e786ef4df23aef0a8a961f18050952659b8126fb94cedd6ee3841bced8a6c066",
               "parent": {
                 "node": "canvas",
                 "slot": "overview",
@@ -7058,7 +7086,7 @@
       "entryPage": "tasks",
       "routeLinks": []
     },
-    "9fa0447153ed9492a719538109dc554e23807e78a09e22a3f00bd85a359e36b4": {
+    "d29f36affe7b69c3e293b5ca739ee454ec9b3db916bae7ee399317d778c52846": {
       "schemaVersion": 1,
       "id": "workspace-dashboard",
       "kind": "page",
@@ -7067,7 +7095,7 @@
         {
           "id": "dashboard",
           "route": "/workspace",
-          "recipe": "9fa0447153ed9492a719538109dc554e23807e78a09e22a3f00bd85a359e36b4",
+          "recipe": "d29f36affe7b69c3e293b5ca739ee454ec9b3db916bae7ee399317d778c52846",
           "root": "shell",
           "nodes": {
             "shell": {
@@ -7117,7 +7145,7 @@
             },
             "activity": {
               "id": "activity",
-              "block": "11e81ac3707d99da5d12cb7c146e3ce74fe616496372c176a2f0e15a125bdae8",
+              "block": "13be7facca3a0967667187251aec175271de8de21d3da8e3eb9d388cb1783121",
               "parent": {
                 "node": "metrics",
                 "slot": "overview",
@@ -7137,13 +7165,15 @@
             },
             "chart": {
               "id": "chart",
-              "block": "5209282f4f9a9011131336fed4ab850de572ab3e542e8beb22a96e0a0c7e91fd",
+              "block": "e786ef4df23aef0a8a961f18050952659b8126fb94cedd6ee3841bced8a6c066",
               "parent": {
                 "node": "activity",
                 "slot": "chart",
                 "order": 0
               },
-              "bindings": {}
+              "bindings": {
+                "chart-id": "area-interactive"
+              }
             },
             "records": {
               "id": "records",
@@ -7819,23 +7849,23 @@
     "signup-03": "50f123c77cdd20b24e812c4f92148dbd8c169de799342ed1208efe540ad593b2",
     "signup-04": "3c3ecf08f5ac030e4a69a80c665e3e8661f3b03cff859bfef2ad3df962df7c41",
     "signup-05": "3723bfddfd290bc3546e56995036328711d7ef41e71f61d9dd983da2b2d5e940",
-    "svg-area-chart": "5209282f4f9a9011131336fed4ab850de572ab3e542e8beb22a96e0a0c7e91fd",
-    "analytics": "082705d57a2a89a3074a999560f7c9916ea2336b6c56e3c17805953ad5f70ba3",
-    "dashboard-01": "3dbe776b3e39e3a3e6227e455f836fca8f10ba7b7719bf9f9c36cb189082d5a6",
-    "dashboard-02": "0484bff8778dcfc846c40ad8c519831e44e2576cf5a81eb22449ae8c62368b64",
-    "dashboard-activity": "11e81ac3707d99da5d12cb7c146e3ce74fe616496372c176a2f0e15a125bdae8",
+    "svg-area-chart": "e786ef4df23aef0a8a961f18050952659b8126fb94cedd6ee3841bced8a6c066",
+    "analytics": "d3e41e3ae29ec6577bed2b977e8031fb5ef5c55e96390261e3ec17d77c4da87f",
+    "dashboard-01": "cf097363d15a335bc47cd41833fe6b32f161dd96df3acf593032f7832d9a158b",
+    "dashboard-02": "bbdf1d0413c73b33f9e92c09fe8f225ddba04da2f5ee622c7ed9c0046ba8bb24",
+    "dashboard-activity": "13be7facca3a0967667187251aec175271de8de21d3da8e3eb9d388cb1783121",
     "tasks": "32844e61382361ac6a12cc6a5493226cf3acb053f09bbdd1332d268678b57ab1",
     "topbar-nav": "b35d8b3cac346f8036359903ae96b06608b28747a38f8ea835083281de2c0c6f",
     "topbar-shell": "73094237dc12a88c4ea33ff78c32157694afcf74998993acbdc933f823abcad0",
-    "analytics-workspace": "c6c9468b97c1485b0eacd913f767c08c605147a915d8596a0b29241c02ffcc3a",
+    "analytics-workspace": "1808acb5f6553b54c62deedfa992646312ab16f013fbf796d22994da0bad84c0",
     "auth-flow": "9bf7cdd02ccaa4b26cfa92274aeeb6be1b1583793f349c97ebe5fa96baebd528",
     "auth-split-flow": "d929b9d4d54a7db7284e7478f596db39e8bbe05d7240555409b24eba33347b58",
     "data-records": "90200d4832214c0348cee75a1cf703b1edef0a4c8a18303904fc1a380891299a",
-    "ecommerce-overview": "f32a8a5cdb03bba4e2046ac00b28a3ee3d730ec17a68cdea079dc7dfb6efcdf6",
+    "ecommerce-overview": "e948f7d53d089e2cca21779142bd4c25504f51af73c4bc019f5b3c7a614063d6",
     "mail-workspace": "c99944fb47accea505246c8737d76acf45146519079310b5a6e53cc170e27b86",
     "marketing-pricing": "190c51eac23911ad817903da7f9390216eaf783c13737cef654a3096cc54aa56",
     "tasks-table-workspace": "9b9a0ee2699bdd6be171d2cd24a114bf1cd25c30e73fbf8252dd5e2eb6633a1a",
-    "workspace-dashboard": "9fa0447153ed9492a719538109dc554e23807e78a09e22a3f00bd85a359e36b4",
+    "workspace-dashboard": "d29f36affe7b69c3e293b5ca739ee454ec9b3db916bae7ee399317d778c52846",
     "workspace-detail": "075a58d1482369192acbd834b2ce4871a592817fdb8a020e57f8b7ab7802ec5b",
     "workspace-settings": "474439550f64d8fc1c2e4d246cc378053ddc22dbf644359968ee2cdea8b38cbf"
   }

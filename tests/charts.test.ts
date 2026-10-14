@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
+import { loadCompiledRegistry, getBlock } from '../src/macros/registry.js';
 import {
   runListCharts,
   runGetChartBlueprint,
@@ -24,9 +25,12 @@ test('runListCharts({}) returns all 56 charts across all 7 categories', () => {
   for (const chart of result.charts) {
     assert.ok(chart.id, 'Chart must have an id');
     assert.ok(chart.name, 'Chart must have a name');
+    assert.equal(chart.title, chart.name, 'Chart title must equal name');
     assert.ok(chart.description, 'Chart must have a description');
+    assert.ok(chart.layoutFootprint, 'Chart must have layoutFootprint');
     assert.ok(Array.isArray(chart.tags) && chart.tags.length > 0, `Chart ${chart.id} must have non-empty tags`);
     assert.ok(Array.isArray(chart.cssTokens) && chart.cssTokens.length > 0, `Chart ${chart.id} must have cssTokens`);
+    assert.ok(Array.isArray(chart.requiredTokens) && chart.requiredTokens.length > 0, `Chart ${chart.id} must have requiredTokens`);
   }
 });
 
@@ -101,18 +105,26 @@ test('runGetChartBlueprint returns valid Basecoat HTML using var(--chart-1)..var
   for (const framework of FRAMEWORKS) {
     const blueprint = runGetChartBlueprint({ id: chartId, framework });
     assert.equal(blueprint.id, chartId);
+    assert.equal(blueprint.chartId, chartId);
     assert.equal(blueprint.category, 'area');
     assert.equal(blueprint.framework, framework);
     assert.deepEqual(blueprint.allFrameworksAvailable, FRAMEWORKS);
+    assert.ok(blueprint.options && typeof blueprint.options === 'object', 'Must provide options');
+    assert.ok(blueprint.layoutFootprint, 'Must provide layoutFootprint');
 
     assert.ok(blueprint.cssTokens.length > 0, 'Must provide cssTokens');
     for (const token of blueprint.cssTokens) {
-      assert.match(token, /^var\(--chart-[1-5]\)$/, `Token ${token} must match var(--chart-1..5)`);
+      assert.match(token, /^var\(--(chart-[1-5]|color-border|color-muted-foreground)\)$/, `Token ${token} must match approved CSS variables`);
     }
 
     assert.ok(blueprint.html.includes('var(--chart-'), 'HTML must use Basecoat var(--chart-*) tokens');
     assert.ok(blueprint.html.startsWith('<div'), 'HTML must start with root element');
+    assert.ok(blueprint.html.includes('chart-container'), 'HTML must have chart-container class');
+    assert.ok(blueprint.html.includes('role="img"'), 'HTML must have role="img"');
+    assert.ok(blueprint.html.includes('<table class="sr-only">'), 'HTML must have accessible table fallback');
+    assert.ok(blueprint.html.includes('data-chart-tooltip'), 'HTML must have glassmorphic tooltip');
     assert.ok(blueprint.mountCode.length > 0, `Mount code for ${framework} must not be empty`);
+    assert.equal(blueprint.code, blueprint.mountCode, 'blueprint.code must match mountCode');
 
     switch (framework) {
       case 'vanilla':
@@ -240,4 +252,76 @@ test('zero daisyUI class names or signatures exist in any chart HTML or mount co
       }
     }
   }
+});
+
+test('search parameter and layoutFootprint / requiredTokens / title work in runListCharts', () => {
+  const searchResult = runListCharts({ search: 'stacked' });
+  const queryResult = runListCharts({ query: 'stacked' });
+  assert.equal(searchResult.total, queryResult.total);
+  assert.ok(searchResult.total >= 1);
+
+  for (const c of searchResult.charts) {
+    assert.ok(c.id);
+    assert.equal(c.title, c.name);
+    assert.equal(c.layoutFootprint, 'w-full aspect-[4/3] md:aspect-[16/9] lg:aspect-[2/1] min-h-[240px]');
+    assert.ok(Array.isArray(c.requiredTokens) && c.requiredTokens.length === 7);
+  }
+});
+
+test('runGetChartBlueprint supports chartId, defaults, and applies themeTokens override across all 5 frameworks', () => {
+  // Defaults to area-default when called with empty input
+  const defaultBp = runGetChartBlueprint({});
+  assert.equal(defaultBp.id, 'area-default');
+  assert.equal(defaultBp.chartId, 'area-default');
+
+  // Accepts chartId
+  const areaInteractive = runGetChartBlueprint({ chartId: 'area-interactive' });
+  assert.equal(areaInteractive.id, 'area-interactive');
+  assert.equal(areaInteractive.chartId, 'area-interactive');
+
+  // Theme tokens override across all 5 frameworks
+  const overrides = {
+    'var(--chart-1)': 'var(--color-primary)',
+    'var(--chart-2)': 'var(--color-secondary)',
+  };
+
+  for (const fw of FRAMEWORKS) {
+    const bp = runGetChartBlueprint({
+      chartId: 'area-interactive',
+      framework: fw,
+      themeTokens: overrides,
+    });
+
+    assert.equal(bp.chartId, 'area-interactive');
+    assert.equal(bp.framework, fw);
+    assert.ok(bp.html.includes('var(--color-primary)'), `HTML for ${fw} must include token override`);
+    assert.ok(bp.code.includes('var(--color-primary)'), `Code for ${fw} must include token override`);
+    assert.ok(bp.mountCode.includes('var(--color-primary)'), `mountCode for ${fw} must include token override`);
+    assert.ok(bp.html.includes('chart-container'), 'Must have chart-container class');
+    assert.ok(bp.html.includes('role="img"'), 'Must have role="img"');
+    assert.ok(bp.html.includes('<table class="sr-only">'), 'Must have screen reader data table fallback');
+    assert.ok(bp.html.includes('data-chart-tooltip'), 'Must have data-chart-tooltip');
+    assert.ok(bp.options && typeof bp.options === 'object', 'Must have options object');
+  }
+});
+
+test('dashboard-01 correctly references and resolves its embedded chart (area-interactive) from charts-catalog', () => {
+  const packaged = loadCompiledRegistry();
+  const block = getBlock(packaged, 'dashboard-01');
+  assert.ok(block, 'dashboard-01 block must exist in compiled registry');
+
+  const rootFragment = block.fragments.find(f => f.id === 'content-frame');
+  assert.ok(rootFragment, 'dashboard-01 must have content-frame fragment');
+  assert.ok(
+    rootFragment.emmet.includes('data-chart-id=area-interactive'),
+    'dashboard-01 emmet must bind to data-chart-id=area-interactive',
+  );
+
+  // Assert area-interactive resolves cleanly from charts catalog
+  const chartBlueprint = runGetChartBlueprint({ chartId: 'area-interactive' });
+  assert.equal(chartBlueprint.id, 'area-interactive');
+  assert.equal(chartBlueprint.chartId, 'area-interactive');
+  assert.equal(chartBlueprint.category, 'area');
+  assert.ok(chartBlueprint.html.includes('chart-container'));
+  assert.ok(chartBlueprint.html.includes('role="img"'));
 });

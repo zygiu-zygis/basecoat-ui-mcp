@@ -9,7 +9,7 @@
   "fragments": [
     {
       "id": "chart-root",
-      "emmet": "div.relative.mt-4.h-\\[220px\\].w-full.pb-6.md:h-\\[260px\\][data-component=svg-area-chart][data-slot=chart][data-height=20rem][data-responsive=width][data-legend=mobile,desktop][data-tooltip=enabled]>svg.block.h-\\[190px\\].w-full.text-foreground.md:h-\\[230px\\][role=img][aria-label='Total visitors area chart']>title{Total visitors}+desc{Area series for desktop and mobile visitors.}+path[data-series=desktop][fill=currentColor]+path[data-series=mobile][fill=currentColor]"
+      "emmet": "div.chart-container.relative.mt-4.h-\\[220px\\].w-full.pb-6.md:h-\\[260px\\][data-component=svg-area-chart][data-slot=chart][data-chart-id=area-interactive][data-height=20rem][data-responsive=width][data-legend=mobile,desktop][data-tooltip=enabled][role=img][aria-label='Area Chart Interactive - Interactive area chart supporting time filter ranges and cursor highlights']>svg.block.h-\\[190px\\].w-full.text-foreground.md:h-\\[230px\\][role=img][aria-label='Total visitors area chart']>title{Total visitors}+desc{Area series for desktop and mobile visitors.}+path[data-series=desktop][fill=currentColor]+path[data-series=mobile][fill=currentColor]"
     }
   ],
   "mounts": [],

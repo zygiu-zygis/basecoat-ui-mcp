@@ -204,8 +204,8 @@ The server exposes **22 offline MCP tools** organized across six architectural l
 
 ### Theme-Aware Charts and Data Visualization
 
-8. `basecoat_list_charts` - Discovers and filters 56 theme-aware chart blueprints across 7 categories (`area`, `bar`, `line`, `pie`, `radar`, `radial`, `tooltip`) with keyword search and variant summaries.
-9. `basecoat_get_chart_blueprint` - Retrieves chart container HTML using semantic theme tokens (`var(--chart-1)` through `var(--chart-5)`) and copy-pasteable mount scripts for 5 frameworks (`vanilla`, `astro`, `react`, `vue`, `svelte`).
+8. `basecoat_list_charts` - Discovers and filters 56 theme-aware chart blueprints across 7 categories (`area`, `bar`, `line`, `pie`, `radar`, `radial`, `tooltip`) with keyword `search` / `query`, layout footprint (`layoutFootprint`), `requiredTokens`, and variant summaries.
+9. `basecoat_get_chart_blueprint` - Retrieves chart container HTML (`chart-container`, `role="img"`, accessible `<table class="sr-only">` fallback, and glassmorphic tooltip markup with `bg-background/95 backdrop-blur-sm`), CSS tokens (`var(--chart-1)` through `var(--chart-5)`, `var(--color-border)`, `var(--color-muted-foreground)`), client `options`, `layoutFootprint`, and framework mount code for 5 frameworks (`vanilla`, `astro`, `react`, `vue`, `svelte`) with optional `themeTokens` overrides. Accepts `chartId` or alias `id` (defaults to `area-default`). Integrated directly into `dashboard-01` and `svg-area-chart` (`data-chart-id="area-interactive"`). Generated deterministically via `node scripts/ingest-shadcn-charts.mjs`.
 
 ### Component tools
 

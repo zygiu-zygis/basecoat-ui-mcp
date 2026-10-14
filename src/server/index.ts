@@ -20,9 +20,11 @@ import { componentSyntaxInputShape, runComponentSyntax } from '../tools/componen
 import {
   listChartsInputShape,
   runListCharts,
+} from '../tools/list-charts.js';
+import {
   getChartBlueprintInputShape,
   runGetChartBlueprint,
-} from '../tools/charts.js';
+} from '../tools/get-chart-blueprint.js';
 import { qualityInspectorInputShape, runQualityInspector } from '../tools/quality-inspector.js';
 import { jsonResult } from '../tools/budget.js';
 import { registry } from '../registry/index.js';
@@ -128,6 +130,16 @@ function registerSkillsResources(server: McpServer, skillsDir: string): void {
           description: `Basecoat skill reference file: ${relPath}`,
           mimeType: 'text/markdown',
         }, u => ({ contents: [{ uri: u.href, mimeType: 'text/markdown', text: readFileSync(fullPath, 'utf-8') }] }));
+
+        if (relPath.startsWith('basecoat-charts/')) {
+          const aliasRel = relPath.replace(/^basecoat-charts\//, 'charts/');
+          const aliasUri = `basecoat://skills/files/${aliasRel}`;
+          const aliasName = `skills-file-${aliasRel.replace(/[^a-zA-Z0-9_-]/g, '-')}`;
+          server.registerResource(aliasName, aliasUri, {
+            description: `Basecoat skill reference file alias: ${aliasRel}`,
+            mimeType: 'text/markdown',
+          }, u => ({ contents: [{ uri: u.href, mimeType: 'text/markdown', text: readFileSync(fullPath, 'utf-8') }] }));
+        }
       }
     }
   }
@@ -317,13 +329,13 @@ export function createServer(projectRoot = process.cwd()) {
   });
 
   server.registerTool('basecoat_list_charts', {
-    description: '[STAGE 3: SYNTAX & STACKS] List and filter 50+ Basecoat ApexCharts and SVG data visualization blueprints by category (area, bar, line, pie, radar, radial, tooltip) or keyword query. Next step: Call basecoat_get_chart_blueprint with the selected chart ID.',
+    description: '[STAGE 3: SYNTAX & STACKS] List and filter 50+ Basecoat ApexCharts and SVG data visualization blueprints by category (area, bar, line, pie, radar, radial, tooltip) or keyword search/query. Next step: Call basecoat_get_chart_blueprint with the selected chart ID.',
     inputSchema: listChartsInputShape,
     annotations: READ_ANNOTATIONS,
   }, input => jsonResult(runListCharts(input)));
 
   server.registerTool('basecoat_get_chart_blueprint', {
-    description: '[STAGE 3: SYNTAX & STACKS] Retrieve complete chart markup, CSS theme tokens (--chart-1..5), and framework mount code (vanilla, astro, react, vue, svelte) for a specific chart blueprint ID or category. Next step: Call basecoat_quality_inspector to audit the assembled page.',
+    description: '[STAGE 3: SYNTAX & STACKS] Retrieve complete chart markup, CSS theme tokens (--chart-1..5), layout footprint, client options, and framework mount code (vanilla, astro, react, vue, svelte) with optional theme token overrides for a specific chart blueprint ID or category. Next step: Call basecoat_quality_inspector to audit the assembled page.',
     inputSchema: getChartBlueprintInputShape,
     annotations: READ_ANNOTATIONS,
   }, input => {

@@ -269,6 +269,8 @@ if (chartsCatalog) {
 
   let tokenViolations = 0;
   let mountViolations = 0;
+  let layoutViolations = 0;
+  let htmlViolations = 0;
 
   for (const chart of chartList) {
     const tokens = chart.cssTokens || [];
@@ -286,6 +288,23 @@ if (chartsCatalog) {
         mountViolations++;
       }
     }
+
+    if (!chart.layoutFootprint || typeof chart.layoutFootprint !== 'string') {
+      fail(`Chart ${chart.id} missing layoutFootprint`);
+      layoutViolations++;
+    }
+
+    const html = chart.html || '';
+    if (
+      !html.includes('chart-container') ||
+      !html.includes('role="img"') ||
+      !html.includes('<table class="sr-only">') ||
+      !html.includes('bg-background/95') ||
+      !html.includes('backdrop-blur-sm')
+    ) {
+      fail(`Chart ${chart.id} html missing required elements (chart-container, role="img", <table class="sr-only">, bg-background/95, backdrop-blur-sm)`);
+      htmlViolations++;
+    }
   }
 
   if (tokenViolations === 0) {
@@ -293,6 +312,12 @@ if (chartsCatalog) {
   }
   if (mountViolations === 0) {
     ok(`charts-catalog.json all ${chartList.length} charts define all 5 framework mounts (vanilla, astro, react, vue, svelte)`);
+  }
+  if (layoutViolations === 0) {
+    ok(`charts-catalog.json all ${chartList.length} charts define layoutFootprint`);
+  }
+  if (htmlViolations === 0) {
+    ok(`charts-catalog.json all ${chartList.length} charts include chart-container, role="img", <table class="sr-only">, bg-background/95, and backdrop-blur-sm`);
   }
 }
 

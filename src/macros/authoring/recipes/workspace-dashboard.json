@@ -59,7 +59,7 @@
           "id": "chart",
           "block": "svg-area-chart",
           "parent": { "node": "activity", "slot": "chart", "order": 0 },
-          "bindings": {}
+          "bindings": { "chart-id": "area-interactive" }
         },
         "records": {
           "id": "records",

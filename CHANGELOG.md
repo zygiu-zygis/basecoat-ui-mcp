@@ -4,6 +4,27 @@ Maintained by **Žygimantas Jasiulionis / Intellmedia**.
 
 ## 1.7.1 - 2026-10-14
 
+- **Shadcn v4 Chart Ingestion Engine (`scripts/ingest-shadcn-charts.mjs`)**:
+  - Ingested 56 theme-aware chart blueprints across 7 categories (`area`, `bar`, `line`, `pie`, `radar`, `radial`, `tooltip`) directly into `src/data/catalog/charts-catalog.json`.
+  - Every blueprint enforces a responsive layout footprint (`w-full aspect-[4/3] md:aspect-[16/9] lg:aspect-[2/1] min-h-[240px]`), glassmorphic tooltip styling (`bg-background/95 backdrop-blur-sm border border-border shadow-md rounded-lg p-2 text-xs` with `data-chart-tooltip`), and an accessible `<table class="sr-only">` fallback with complete tabular data rows.
+  - Multi-framework mount templates for all 5 frameworks (`vanilla`, `astro`, `react`, `vue`, `svelte`) with pure Basecoat CSS tokens (`var(--chart-1)` through `var(--chart-5)`).
+- **Enhanced Chart Tooling Layer (`basecoat_list_charts` & `basecoat_get_chart_blueprint`)**:
+  - `src/tools/list-charts.ts`: Added multi-term search filtering via `search` and `query` parameters, returning `layoutFootprint`, `requiredTokens`, `cssTokens`, and category tags.
+  - `src/tools/get-chart-blueprint.ts`: Added `chartId` parameter support (with `id` fallback defaulting to `area-default`), custom `themeTokens` CSS variable replacement across HTML, mount code, and options, and unified return payload.
+  - Re-exported both tools from `src/tools/charts.ts` for backward compatibility.
+  - Added skill resource URI registration aliases (`basecoat://skills/files/charts/*` alongside `basecoat://skills/files/basecoat-charts/*`) in `src/server/index.ts`.
+- **Macro Blocks Upgrade & Dashboard-01 Chart Integration**:
+  - Upgraded `src/macros/authoring/blocks/dashboard-01.json` with dedicated slots (`topbar`, `kpi`, `chart`, `recent-sales`, `table`), responsive grid column spans (`lg:col-span-4` and `lg:col-span-3`), approved optical rhythm spacing utilities, strictly bounded Emmet fragment (1174 chars, `<= 1200`), and bound `data-chart-id="area-interactive"`.
+  - Upgraded `src/macros/authoring/blocks/svg-area-chart.json` with `chart-container`, `role="img"`, and `data-chart-id="area-interactive"`.
+  - Upgraded `src/macros/authoring/recipes/workspace-dashboard.json` referencing `chart-id: area-interactive`.
+  - Recompiled snapshot `src/macros/registry.snapshot.json` with verified SHA256 integrity.
+- **Skill Vault & Cross-Editor Mirroring**:
+  - Updated `skills/basecoat-charts/SKILL.md` and audit checklist with v4 chart blueprint specifications, responsive layout footprint, accessibility table fallbacks, and multi-framework mounts.
+  - Synchronized skills vault generation script `scripts/build-skills-vault.mjs`.
+  - Mirrored skill vault to `~/.cursor/skills/basecoat-charts/` and `~/.gemini/config/skills/basecoat-charts/`.
+- **Verification & Test Harness**:
+  - Updated `scripts/verify-catalog-counts.mjs` with 23 assertions validating layout footprints, container classes, glassmorphic tooltips, and screen-reader tables.
+  - Expanded `tests/charts.test.ts` to test all 56 charts, search filtering, chartId aliases, theme token overrides, and dashboard-01 embedded chart resolution.
 - **Comprehensive 22-Tool Offline Protocol**:
   - Expanded the MCP protocol surface to 22 offline tools:
     - `basecoat_setup_config`: Automated configuration and boilerplate generator for 6 framework targets (`astro`, `vanilla`, `nextjs`, `sveltekit`, `vite`, `htmx`), 8 style packs (`vega`..`rhea`), OKLCH theme variables, and no-flash dark mode scripts.
