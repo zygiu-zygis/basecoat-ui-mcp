@@ -2202,7 +2202,7 @@
         ],
         "js": []
       },
-      "markup_template": "<div class=\"skeleton h-4 w-[150px]\"></div>",
+      "markup_template": "<div class=\"skeleton h-4 w-40\"></div>",
       "composition_rules": "skeleton plus sizing utilities shapes placeholders. Mark decorative blocks aria-hidden when adjacent text explains loading. Wrong: use skeleton as a live content container without aria-busy on the updating region."
     },
     "slider": {

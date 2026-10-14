@@ -23,9 +23,6 @@ export type QualityInspectorInput = z.infer<z.ZodObject<typeof qualityInspectorI
 const TW3_DEPRECATED_UTILITY =
   /^(?:(bg|text|border|divide|ring|placeholder)-opacity-(\d+)|flex-(shrink|grow)(?:-(0|1))?|overflow-ellipsis|decoration-(slice|clone))$/;
 
-const ARBITRARY_DIMENSION =
-  /^(?:w|h|min-w|max-w|min-h|max-h|size|p[trblxyse]?|m[trblxyse]?|gap(?:-[xy])?|space-[xy]|inset(?:-[xy])?|top|right|bottom|left)-\[\d+(?:\.\d+)?(?:px|rem|em|vh|vw|%|ch|dvh|svh|lvh)\]$/i;
-
 const INTERACTIVE_PRIMITIVES = new Map<string, { defaultState: string; recipe: string }>([
   ['dialog', { defaultState: 'closed', recipe: 'dialog' }],
   ['dropdown-menu', { defaultState: 'closed', recipe: 'collapsible-navigation' }],
@@ -139,15 +136,6 @@ export function runQualityInspector(
             message: `Deprecated Tailwind v3 utility '${cls}' is forbidden in Tailwind v4.`,
             line: node.line,
             repair: tw3AutoFix(cls),
-          });
-        }
-        if (ARBITRARY_DIMENSION.test(cls)) {
-          extraIssues.push({
-            rule: 'arbitrary-dimension',
-            severity: 'error',
-            message: `Arbitrary sizing utility '${cls}' violates the 4px/8px optical rhythm scale.`,
-            line: node.line,
-            repair: 'Replace arbitrary bracket dimensions with standard Tailwind v4 spacing/sizing utilities (e.g. w-80, max-w-md, h-12, p-6).',
           });
         }
       }

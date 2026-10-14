@@ -579,6 +579,15 @@ export function validateComposition(code: string, options: ValidationOptions = {
           'Replace it with a semantic surface, text, or border token.',
         );
       }
+      if (ARBITRARY_DIMENSION.test(token)) {
+        report(
+          'arbitrary-dimension',
+          'error',
+          `Arbitrary sizing utility '${token}' violates the 4px/8px optical rhythm scale.`,
+          node.line,
+          'Replace arbitrary bracket dimensions with standard Tailwind v4 spacing/sizing utilities (e.g. w-40, w-80, max-w-md, h-12, p-6).',
+        );
+      }
     }
 
     // --- WCAG 2.1 & APCA Semantic Token Contrast Validation ---
