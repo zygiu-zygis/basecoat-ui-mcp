@@ -14,9 +14,9 @@ Always execute the 4-stage tool chain before hand-writing Basecoat markup or gre
    - `basecoat_rules_enforcer`: Enforce Tailwind CSS v4 syntax (no `bg-opacity-*`, `flex-shrink-*`, `@tailwind` directives, or arbitrary dimensions like `w-[327px]`), FSM `data-state` / `data-fsm-*` bindings, semantic CSS variables (`--color-primary` / `--primary`, `--color-surface` / `--background`), and semantic HTML landmarks (`<header>`, `<main>`, `<nav>`, `<aside>`, `<footer>`).
    - `basecoat_creative_director`: Apply Kanso minimalism, 4px/8px optical rhythm (`gap-2`, `gap-4`, `gap-6`, `gap-12`), typography ladders (`text-3xl` -> `text-xl` -> `text-lg` -> `text-base` -> `text-sm text-muted-foreground` -> `text-xs`), border-contrast ratios, and 1px card ring rules (never add `border` to `.card`).
 3. **Step 3: Retrieve exact FSM markup using `basecoat_component_syntax`**
-   Request state-bound markup (`default`, `active`, `loading`, `disabled`, `open`, `closed`) for each leaf component (`dialog`, `tabs`, `dropdown-menu`, `accordion`, `button`, `input`, `select`, `sidebar`, `theme-switcher`).
+   Request state-bound markup (`default`, `active`, `loading`, `disabled`, `open`, `closed`, `open/closed`) for each leaf component (`dialog`, `tabs`, `dropdown-menu`, `accordion`, `button`, `input`, `select`, `sidebar`, `theme-switcher`).
 4. **Step 4: Audit final code via `basecoat_quality_inspector`**
-   Validate the complete HTML/Astro composition to verify a `0–100` score (`grade: "A"`, `valid: true`), WCAG 2.1 / APCA contrast pairings, keyboard focus traps, and `aria-expanded`/`aria-controls` bindings, applying all returned `autoFixSuggestions`.
+   Validate the complete HTML/Astro composition to verify a `0–100` score (`grade: "A"`, `valid: true`), `syntaxViolations`, `ariaOmissions`, WCAG 2.1 / APCA contrast pairings, keyboard focus traps, and `aria-expanded`/`aria-controls` bindings, applying all returned `autoFixSuggestions`.
 
 ## Clean Generation Constraints
 - **No Redundant Explanatory Text**: Deliver clean code directly without conversational filler or repetitive prose.

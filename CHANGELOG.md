@@ -10,10 +10,12 @@ Maintained by **Žygimantas Jasiulionis / Intellmedia**.
   - Added `a11y-aria-controls-binding` heuristic verifying that interactive triggers with `aria-expanded` bind a valid `aria-controls` target ID or reside within a managed Basecoat disclosure container.
   - Added `arbitrary-dimension` rule rejecting arbitrary bracket sizing utilities (`w-[327px]`, `h-[412px]`) in favor of the 4px/8px optical rhythm scale.
 - **Intent-Driven Tooling Layer Upgrades**:
-  - `basecoat_page_architect`: Added direct macro block querying (`block` parameter), dynamic recipe indexing across all compiled recipes, and semantic HTML5 `scaffoldHtml` skeletons with explicit `data-slot` markers.
-  - `basecoat_rules_enforcer`: Added explicit prohibitions for arbitrary dimensions (`w-[327px]`), low-contrast token pairings, duplicate wrapper `<div>` containers, and enforced deterministic Tailwind v4 class ordering.
+  - `get_component_html`: Registered dedicated component markup endpoint returning the HTML template and dependencies for any Basecoat component (`environment` defaulting to `html`).
+  - `basecoat_page_architect`: Added block resolution fallback when `intent` or `recipe` refers to a macro block (`resolveBlockByQuery`), returning `scaffoldHtml` and `containerContract` with progressive detail budget compliance.
+  - `basecoat_rules_enforcer`: Added optional `code` parameter to inspect markup snippets inline against `TW4-01` (deprecated directives/utilities), `TOK-01` (arbitrary sizing/hex colors), `FSM-01` (missing FSM `data-state`), and `SEM-01` (div soup/redundant wrappers), returning compact `violations` and `valid` status.
   - `basecoat_creative_director`: Formalized the 4px/8px mathematical optical rhythm grid, complete typography hierarchy (`h1`..`h3`, body, data/meta, caption, `tabular-nums`), and explicit border-contrast ratios.
-  - `basecoat_component_syntax`: Synchronized child `<dialog>`/`<details>` `open` attributes and `aria-expanded` trigger states when requesting `open` or `closed` state variants.
+  - `basecoat_component_syntax`: Added `'open/closed'` compound state variant normalizing interactive open FSM attributes (`data-state="open"`) and returning `toggleStates: ['open', 'closed']`. Synchronized child `<dialog>`/`<details>` `open` attributes and `aria-expanded` trigger states when requesting `open` or `closed` state variants.
+  - `basecoat_quality_inspector` & `validate.ts`: Unified Tailwind v3 (`tailwind-v3-directive`, `tailwind-v3-deprecated`), FSM contracts, and landmark div checks directly inside `validateComposition`, eliminating duplicate AST traversals and surfacing structured `ariaOmissions` alongside `accessibilityOmissions`.
 - **Clean Generation Rules & Multi-Platform Plugin Manifests**:
   - Updated `templates/cursor/basecoat-designer.mdc` and `.cursor/rules/basecoat.mdc` with strict Clean Generation Standards (no redundant explanatory prose, no duplicate wrapper containers, deterministic Tailwind class ordering).
   - Added `.cursor-plugin/plugin.json` and `.claude-plugin/plugin.json` supporting stdio MCP transport across Cursor, Claude Desktop, and Claude Code.

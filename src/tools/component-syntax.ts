@@ -13,6 +13,7 @@ export const COMPONENT_STATES = [
   'disabled',
   'open',
   'closed',
+  'open/closed',
 ] as const;
 
 export type ComponentStateVariant = (typeof COMPONENT_STATES)[number];
@@ -179,17 +180,18 @@ export function runComponentSyntax(
 
   const id = aliasResolved;
   const state: ComponentStateVariant = input.state ?? 'default';
+  const effectiveState = state === 'open/closed' ? 'open' : state;
   const environment = input.environment ?? 'html';
   const entry = source.details[id]!;
   const fsmRecipeId = COMPONENT_TO_FSM_RECIPE[id];
   const semantics = defaultSemanticsStore.getRegistry();
   const fsmRecipeRef = fsmRecipeId ? semantics.aliases[fsmRecipeId] : undefined;
   const fsmRecipe = fsmRecipeRef ? semantics.fsmRecipes[fsmRecipeRef] : undefined;
-  const fsmState = fsmRecipeId ? mapToFsmState(fsmRecipeId, state) : undefined;
+  const fsmState = fsmRecipeId ? mapToFsmState(fsmRecipeId, effectiveState) : undefined;
 
   const transformedTemplate = injectRootAttributes(
     entry.markup_template,
-    state,
+    effectiveState,
     fsmRecipeId,
     fsmState,
     input.variant,
@@ -226,6 +228,7 @@ export function runComponentSyntax(
     id,
     environment,
     state,
+    ...(state === 'open/closed' ? { toggleStates: ['open', 'closed'] } : {}),
     availableStates: COMPONENT_STATES,
     ...(fsmRecipe
       ? {
@@ -252,6 +255,7 @@ export function runComponentSyntax(
     id,
     environment,
     state,
+    ...(state === 'open/closed' ? { toggleStates: ['open', 'closed'] } : {}),
     ...(fsmRecipe ? { fsm: { recipe: fsmRecipe.id, state: fsmState } } : {}),
     ...(iconSvg ? { icon: input.icon, iconSvg } : {}),
     markup,

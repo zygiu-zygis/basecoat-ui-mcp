@@ -101,6 +101,15 @@ export function createServer(projectRoot = process.cwd()) {
     catch (error) { return { ...jsonResult({ error: (error as Error).message }), isError: true }; }
   });
 
+  server.registerTool('get_component_html', {
+    description: 'Fetch HTML markup template and dependencies for a Basecoat component.',
+    inputSchema: { id: z.string().max(80), environment: z.enum(['astro', 'html']).optional() },
+    annotations: READ_ANNOTATIONS,
+  }, ({ id, environment }) => {
+    try { return jsonResult(getComponentDetails(id, environment ?? 'html')); }
+    catch (error) { return { ...jsonResult({ error: (error as Error).message }), isError: true }; }
+  });
+
   server.registerTool('validate_composition', {
     description: 'Statically check HTML/Astro source for Basecoat migration errors, semantic rhythm, FSM bindings, missing scripts, nested cards, spacing and hierarchy issues. Pass `code` or alias `html` and optionally a semanticProfile and densityProfile. Does not render or evaluate dynamic code.',
     inputSchema: {

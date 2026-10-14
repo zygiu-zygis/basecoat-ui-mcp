@@ -152,6 +152,7 @@ test('packed MCP bin starts offline from a read-only installed package tree', { 
       'basecoat_rules_enforcer',
       'begin_design',
       'get_component_details',
+      'get_component_html',
       'get_design_context',
       'get_fsm_recipe',
       'get_macro_block',

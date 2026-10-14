@@ -131,6 +131,41 @@ function safeGetBlock(registry: CompiledMacroRegistry, refOrId: string): MacroBl
   }
 }
 
+function resolveBlockByQuery(
+  registry: CompiledMacroRegistry,
+  query: string,
+): MacroBlock | undefined {
+  const clean = query.trim().toLowerCase();
+  if (!clean) return undefined;
+  const direct = safeGetBlock(registry, clean);
+  if (direct) return direct;
+
+  const tokens = tokenize(clean);
+  if (tokens.length === 0) return undefined;
+
+  let best: { block: MacroBlock; score: number } | undefined;
+  for (const block of Object.values(registry.blocks)) {
+    let score = 0;
+    const blockIdTokens = tokenize(block.id);
+    const roleTokens = tokenize(block.role);
+    const familyTokens = tokenize(block.family);
+
+    for (const t of tokens) {
+      if (block.id === t) score += 10;
+      else if (block.id.includes(t)) score += 5;
+      if (blockIdTokens.includes(t)) score += 6;
+      if (roleTokens.includes(t)) score += 4;
+      if (familyTokens.includes(t)) score += 3;
+    }
+
+    if (score > 0 && (!best || score > best.score)) {
+      best = { block, score };
+    }
+  }
+
+  return best?.block;
+}
+
 function buildSemanticScaffold(
   recipeId: string,
   density: 'comfortable' | 'compact',
@@ -145,41 +180,90 @@ function buildSemanticScaffold(
   return `<div class="min-h-dvh bg-background text-foreground"><aside class="sidebar" data-state="expanded" data-fsm-recipe="navigation" data-fsm-state="expanded" aria-label="Primary navigation" data-slot="nav"></aside><header class="flex ${hdr} items-center justify-between border-b border-border/60" data-slot="header"><h1 class="text-xl font-semibold tracking-tight">Title</h1></header><main class="grid grid-cols-1 md:grid-cols-12 ${pad}" data-slot="content">${slotsComment}</main></div>`;
 }
 
+function buildBlockResult(
+  block: MacroBlock,
+  density: 'comfortable' | 'compact',
+) {
+  const slotTopology = block.slots.map(s => ({
+    node: s.id,
+    block: block.id,
+    slot: s.id,
+    acceptsSlots: s.accepts,
+  }));
+  const scaffoldHtml = buildSemanticScaffold(block.id, density, block.slots.map(s => s.id));
+  const containerContract = {
+    frame: block.layout?.frameRef ?? 'app-frame',
+    gutter: density === 'compact' ? 'px-4 py-3 gap-4' : 'px-6 py-6 gap-6',
+    grid: 'grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-6',
+    landmarks: { main: 1, h1: 1 },
+  };
+
+  let blockResult = {
+    stage: '1-page-architect' as const,
+    matched: true as const,
+    recipe: block.id,
+    block: block.id,
+    role: block.role,
+    family: block.family,
+    density,
+    containerContract,
+    scaffoldHtml,
+    emmet: (block.fragments[0]?.emmet ?? '').slice(0, 240),
+    slotTopology,
+    slots: block.slots.map(s => ({ id: s.id, accepts: s.accepts })),
+    components: block.componentRefs,
+    landmarks: block.landmarks,
+    nextStep: 'Call basecoat_rules_enforcer and basecoat_creative_director before writing markup.',
+  };
+
+  if (responseBytes(blockResult) <= MAX_DETAIL_BYTES) {
+    return blockResult;
+  }
+
+  blockResult = {
+    ...blockResult,
+    emmet: (block.fragments[0]?.emmet ?? '').slice(0, 80),
+    components: block.componentRefs.slice(0, 6),
+    slotTopology: slotTopology.slice(0, 6),
+    slots: block.slots.slice(0, 6).map(s => ({ id: s.id, accepts: s.accepts })),
+  };
+
+  if (responseBytes(blockResult) <= MAX_DETAIL_BYTES) {
+    return blockResult;
+  }
+
+  const minimalBlockResult = {
+    ...blockResult,
+    emmet: '',
+    components: block.componentRefs.slice(0, 3),
+    slotTopology: slotTopology.slice(0, 3),
+    slots: block.slots.slice(0, 3).map(s => ({ id: s.id, accepts: s.accepts })),
+  };
+  assertDetailBudget(minimalBlockResult);
+  return minimalBlockResult;
+}
+
 export function runPageArchitect(input: PageArchitectInput = {}) {
   const registry = getCompiledRegistry();
+  const requestedDensity = input.density ?? 'comfortable';
 
   if (input.block && input.block.trim().length > 0) {
-    const cleanBlock = input.block.trim().toLowerCase();
-    const block = safeGetBlock(registry, cleanBlock);
+    const block = resolveBlockByQuery(registry, input.block);
     if (block) {
-      const slotTopology = block.slots.map(s => ({
-        node: s.id,
-        block: block.id,
-        slot: s.id,
-        acceptsSlots: s.accepts,
-      }));
-      const blockResult = {
-        stage: '1-page-architect' as const,
-        matched: true as const,
-        recipe: block.id,
-        block: block.id,
-        role: block.role,
-        family: block.family,
-        emmet: (block.fragments[0]?.emmet ?? '').slice(0, 240),
-        slotTopology,
-        slots: block.slots.map(s => ({ id: s.id, accepts: s.accepts })),
-        components: block.componentRefs,
-        landmarks: block.landmarks,
-        nextStep: 'Call basecoat_rules_enforcer and basecoat_creative_director before writing markup.',
-      };
-      assertDetailBudget(blockResult);
-      return blockResult;
+      return buildBlockResult(block, requestedDensity);
     }
   }
 
   const matched = resolveRecipe(registry, input.recipe, input.intent);
 
   if (!matched) {
+    const fallbackBlockQuery = input.recipe ?? input.intent;
+    if (fallbackBlockQuery && fallbackBlockQuery.trim().length > 0) {
+      const block = resolveBlockByQuery(registry, fallbackBlockQuery);
+      if (block) {
+        return buildBlockResult(block, requestedDensity);
+      }
+    }
     const allRecipes = Object.values(registry.recipes);
     const catalog = allRecipes.map(r => {
       const entry = r.pages.find(p => p.id === r.entryPage) ?? r.pages[0];

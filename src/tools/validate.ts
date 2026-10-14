@@ -23,7 +23,51 @@ export interface ValidationOptions {
   projectRoot?: string;
   /** Spacing density profile. Compact allows denser dashboard chrome. */
   densityProfile?: 'comfortable' | 'compact';
+  /** Strict FSM validation: elevate missing FSM data-state to errors. */
+  enforceFsm?: boolean;
+  /** Check legacy syntax & div nesting (used by quality inspector). */
+  checkLegacySyntax?: boolean;
 }
+
+export const TW3_DEPRECATED_UTILITY =
+  /^(?:(bg|text|border|divide|ring|placeholder)-opacity-(\d+)|flex-(shrink|grow)(?:-(0|1))?|overflow-ellipsis|decoration-(slice|clone))$/;
+
+export const INTERACTIVE_PRIMITIVES = new Map<string, { defaultState: string; recipe: string }>([
+  ['dialog', { defaultState: 'closed', recipe: 'dialog' }],
+  ['dropdown-menu', { defaultState: 'closed', recipe: 'collapsible-navigation' }],
+  ['accordion', { defaultState: 'closed', recipe: 'collapsible-navigation' }],
+  ['tabs', { defaultState: 'active', recipe: 'tabs' }],
+  ['sidebar', { defaultState: 'expanded', recipe: 'navigation' }],
+]);
+
+export function tw3AutoFix(util: string): string {
+  const opacityMatch = /^(bg|text|border|divide|ring|placeholder)-opacity-(\d+)$/.exec(util);
+  if (opacityMatch) {
+    return `Replace '${util}' with Tailwind v4 slash alpha syntax (e.g. '${opacityMatch[1]}-primary/${opacityMatch[2]}').`;
+  }
+  const flexMatch = /^flex-(shrink|grow)(?:-(0|1))?$/.exec(util);
+  if (flexMatch) {
+    const suffix = flexMatch[2] !== undefined ? `-${flexMatch[2]}` : '';
+    return `Replace '${util}' with Tailwind v4 '${flexMatch[1]}${suffix}'.`;
+  }
+  if (util === 'overflow-ellipsis') {
+    return `Replace 'overflow-ellipsis' with 'text-ellipsis' (or 'truncate').`;
+  }
+  if (util.startsWith('decoration-')) {
+    return `Replace '${util}' with 'box-${util}'.`;
+  }
+  return `Replace deprecated Tailwind v3 utility '${util}' with its Tailwind v4 equivalent.`;
+}
+
+export const SEMANTIC_TAGS = new Set([
+  'main',
+  'header',
+  'nav',
+  'section',
+  'article',
+  'aside',
+  'footer',
+]);
 
 /** Shared UTF-8 byte limit for validate_composition input (validator + server schema). */
 export const VALIDATE_COMPOSITION_MAX_BYTES = 262_144;
@@ -293,6 +337,15 @@ export function validateComposition(code: string, options: ValidationOptions = {
       'Use framework-neutral Astro/HTML and keep runtime behavior in the host application.',
     );
   }
+  if (Buffer.byteLength(code, 'utf8') <= VALIDATE_COMPOSITION_MAX_BYTES && /@tailwind\s+(?:base|components|utilities)\b/.test(code)) {
+    report(
+      'tailwind-v3-directive',
+      'error',
+      'Deprecated Tailwind v3 @tailwind directive detected.',
+      1,
+      'Use Tailwind v4 CSS-first imports: @import "tailwindcss"; @import "basecoat-css/vega";',
+    );
+  }
   const parsedHtml = parseHtmlWithDiagnostics(code);
   const nodes = parsedHtml.nodes;
   for (const diagnostic of parsedHtml.diagnostics) {
@@ -403,6 +456,37 @@ export function validateComposition(code: string, options: ValidationOptions = {
   for (const node of nodes) {
     if (node.dynamic) report('dynamic-attributes', 'warning', 'Dynamic attributes cannot be checked completely; inspect their rendered classes and states.', node.line);
     const classes = node.classes.map(utility);
+    for (const cls of classes) {
+      if (TW3_DEPRECATED_UTILITY.test(cls)) {
+        report(
+          'tailwind-v3-deprecated',
+          'error',
+          `Deprecated Tailwind v3 utility '${cls}' is forbidden in Tailwind v4.`,
+          node.line,
+          tw3AutoFix(cls),
+        );
+      }
+    }
+
+    if (options.checkLegacySyntax || options.enforceFsm) {
+      for (const [primitive, contract] of INTERACTIVE_PRIMITIVES) {
+        if (classes.includes(primitive)) {
+          const hasState =
+            node.attrs['data-state'] !== undefined ||
+            node.attrs['data-fsm-state'] !== undefined ||
+            (primitive === 'accordion' && node.tag === 'section');
+          if (!hasState) {
+            report(
+              'fsm-data-state-missing',
+              options.enforceFsm ? 'error' : 'warning',
+              `Interactive '${primitive}' primitive is missing explicit data-state / FSM binding.`,
+              node.line,
+              `Add data-state="${contract.defaultState}" data-fsm-recipe="${contract.recipe}" data-fsm-state="${contract.defaultState}".`,
+            );
+          }
+        }
+      }
+    }
     const isSubcard =
       (classes.includes('card') || classes.includes('ui-card')) &&
       (node.attrs['data-variant'] === 'subcard' ||
@@ -755,6 +839,20 @@ export function validateComposition(code: string, options: ValidationOptions = {
           'Include at least one focusable action or close <button type="button" class="btn"> inside the dialog.',
         );
       }
+    }
+  }
+  if (options.checkLegacySyntax || options.enforceFsm) {
+    const elementNodes = nodes.filter(n => !['script', 'style'].includes(n.tag));
+    const divCount = elementNodes.filter(n => n.tag === 'div').length;
+    const hasSemanticTag = elementNodes.some(n => SEMANTIC_TAGS.has(n.tag));
+    if ((elementNodes.some(n => n.tag === 'html' || n.tag === 'body') || elementNodes.length >= 10) && divCount >= 6 && !hasSemanticTag) {
+      report(
+        'semantic-div-nesting',
+        'warning',
+        'Generic <div> nesting detected without semantic HTML5 landmarks.',
+        elementNodes[0]?.line ?? 1,
+        'Replace outer layout <div> wrappers with <main>, <header>, <nav>, <section>, or <aside>.',
+      );
     }
   }
   const mains = nodes.filter(node => node.tag === 'main');

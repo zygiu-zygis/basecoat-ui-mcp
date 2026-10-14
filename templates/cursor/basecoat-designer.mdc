@@ -19,9 +19,9 @@ When generating or upgrading a page, follow this 4-step tool chaining sequence:
 2. **Step 2 — Technical & Aesthetic Rules (`basecoat_rules_enforcer` & `basecoat_creative_director`)**:
    Verify strict Tailwind CSS v4 syntax (no `bg-opacity-*`, `flex-shrink-*`, or arbitrary dimensions like `w-[327px]`), FSM `data-state` contracts, semantic CSS variables (`--color-primary` / `--primary`, `--color-surface` / `--background`), Kanso 4px/8px optical rhythm & typography ladders, and subtle elevation rules (never add `border` to `.card`).
 3. **Step 3 — FSM-Bound Component Markup (`basecoat_component_syntax`)**:
-   Fetch copy-pasteable HTML/Astro markup with pre-configured state variants (`default`, `active`, `loading`, `disabled`, `open`, `closed`) and required module imports.
+   Fetch copy-pasteable HTML/Astro markup with pre-configured state variants (`default`, `active`, `loading`, `disabled`, `open`, `closed`, `open/closed`) and required module imports.
 4. **Step 4 — Quality Audit (`basecoat_quality_inspector`)**:
-   Audit the assembled HTML/Astro source for a `0–100` quality score, WCAG 2.1 / APCA contrast pairings, keyboard focus traps, `aria-expanded`/`aria-controls` bindings, syntax violations, and auto-fix repairs. Iterate until `score >= 90` (`valid: true`).
+   Audit the assembled HTML/Astro source for a `0–100` quality score, WCAG 2.1 / APCA contrast pairings, keyboard focus traps, `aria-expanded`/`aria-controls` bindings, syntax violations, ARIA omissions (`ariaOmissions`), and auto-fix repairs. Iterate until `score >= 90` (`valid: true`).
 
 ## Clean Generation Standards (Zero Muda)
 

@@ -45,6 +45,22 @@ test('basecoat_page_architect lists scaffolds and resolves recipes by intent wit
     assert(Array.isArray(result.slotTopology) && result.slotTopology.length > 0);
     assert(responseBytes(result) <= MAX_DETAIL_BYTES, `${expected} exceeded ${MAX_DETAIL_BYTES} bytes`);
   }
+
+  // Block fallback via intent and direct block query
+  const blockByIntent = runPageArchitect({ intent: 'topbar-shell' });
+  assert.equal(blockByIntent.matched, true);
+  assert.equal(blockByIntent.recipe, 'topbar-shell');
+  assert('block' in blockByIntent && blockByIntent.block === 'topbar-shell');
+  assert(typeof blockByIntent.scaffoldHtml === 'string' && blockByIntent.scaffoldHtml.length > 0);
+  assert(blockByIntent.containerContract && typeof blockByIntent.containerContract === 'object');
+  assert(responseBytes(blockByIntent) <= MAX_DETAIL_BYTES);
+
+  const blockDirect = runPageArchitect({ block: 'topbar-shell' });
+  assert.equal(blockDirect.matched, true);
+  assert('block' in blockDirect && blockDirect.block === 'topbar-shell');
+  assert(typeof blockDirect.scaffoldHtml === 'string' && blockDirect.scaffoldHtml.length > 0);
+  assert(blockDirect.containerContract && typeof blockDirect.containerContract === 'object');
+  assert(responseBytes(blockDirect) <= MAX_DETAIL_BYTES);
 });
 
 test('basecoat_rules_enforcer returns indexed technical constraints within byte budget', () => {
@@ -63,6 +79,22 @@ test('basecoat_rules_enforcer returns indexed technical constraints within byte 
 
   const tok = runRulesEnforcer({ category: 'tokens' });
   assert(tok.rules.some(r => r.required.some(req => req.includes('--color-primary'))));
+
+  const codeCheck = runRulesEnforcer({
+    code: '<div class="bg-opacity-50 w-[327px]"><dialog class="dialog"></dialog></div>',
+  });
+  assert.equal(codeCheck.valid, false);
+  assert(Array.isArray(codeCheck.violations) && codeCheck.violations.length >= 3);
+  assert(codeCheck.violations.some(v => v.rule === 'TW4-01'));
+  assert(codeCheck.violations.some(v => v.rule === 'TOK-01'));
+  assert(codeCheck.violations.some(v => v.rule === 'FSM-01'));
+  assert(responseBytes(codeCheck) <= MAX_DETAIL_BYTES);
+
+  const cleanCheck = runRulesEnforcer({
+    code: '<header class="h-12 px-4"><h1 class="text-xl">Title</h1></header><main class="p-6"><dialog class="dialog" data-state="closed" data-fsm-recipe="dialog" data-fsm-state="closed"></dialog></main>',
+  });
+  assert.equal(cleanCheck.valid, true);
+  assert.deepEqual(cleanCheck.violations, []);
 });
 
 test('basecoat_creative_director surfaces Kanso minimalism, rhythm, and style packs within byte budget', () => {
@@ -81,11 +113,19 @@ test('basecoat_component_syntax generates FSM-bound markup for all components an
         const res = runComponentSyntax({ component: id, state, environment });
         assert.equal(res.id, id);
         assert.equal(res.state, state);
-        assert(res.markup.includes(`data-state="${state}"`), `${id} missing data-state="${state}"`);
+        const expectedState = state === 'open/closed' ? 'open' : state;
+        assert(res.markup.includes(`data-state="${expectedState}"`), `${id} missing data-state="${expectedState}"`);
         assert(responseBytes(res) <= MAX_DETAIL_BYTES, `${id} (${state}, ${environment}) exceeded ${MAX_DETAIL_BYTES} bytes`);
       }
     }
   }
+
+  const dialogOpenClosed = runComponentSyntax({ component: 'dialog', state: 'open/closed' });
+  assert.equal(dialogOpenClosed.state, 'open/closed');
+  assert.deepEqual(dialogOpenClosed.toggleStates, ['open', 'closed']);
+  assert(dialogOpenClosed.markup.includes('data-state="open"'));
+  assert(dialogOpenClosed.markup.includes('data-fsm-state="open"'));
+  assert(responseBytes(dialogOpenClosed) <= MAX_DETAIL_BYTES);
 
   const dialogOpen = runComponentSyntax({ component: 'dialog', state: 'open' });
   assert(dialogOpen.markup.includes('data-fsm-recipe="dialog"'));
@@ -120,6 +160,7 @@ test('basecoat_quality_inspector scores valid markup 100/A and flags Tailwind v3
   assert.equal(cleanReport.grade, 'A');
   assert.equal(cleanReport.syntaxViolations.length, 0);
   assert.equal(cleanReport.accessibilityOmissions.length, 0);
+  assert.equal(cleanReport.ariaOmissions.length, 0);
   assert(responseBytes(cleanReport) <= MAX_DETAIL_BYTES);
 
   const defectiveHtml = [
@@ -142,8 +183,17 @@ test('basecoat_quality_inspector scores valid markup 100/A and flags Tailwind v3
   assert(defectiveReport.accessibilityOmissions.some(v => v.rule === 'a11y-button-icon-label'));
   assert(defectiveReport.accessibilityOmissions.some(v => v.rule === 'fsm-data-state-missing'));
   assert(defectiveReport.accessibilityOmissions.some(v => v.rule === 'semantic-div-nesting'));
+  assert(Array.isArray(defectiveReport.ariaOmissions));
+  assert(defectiveReport.ariaOmissions.some(v => v.rule === 'a11y-img-alt'));
+  assert(defectiveReport.ariaOmissions.some(v => v.rule === 'a11y-button-icon-label'));
+  assert(defectiveReport.ariaOmissions.some(v => v.rule === 'fsm-data-state-missing'));
+  assert(defectiveReport.ariaOmissions.some(v => v.rule === 'semantic-div-nesting'));
   assert(defectiveReport.autoFixSuggestions.length > 0);
   assert(responseBytes(defectiveReport) <= MAX_DETAIL_BYTES);
+
+  // validateComposition catches tailwind-v3-deprecated directly
+  const v3Report = validateComposition('<div class="bg-opacity-50 flex-shrink-0"></div>');
+  assert(v3Report.issues.some(i => i.rule === 'tailwind-v3-deprecated'));
 });
 
 test('4-stage intent-driven tools work over stdio MCP with zero network imports', async () => {
@@ -205,6 +255,13 @@ test('4-stage intent-driven tools work over stdio MCP with zero network imports'
     });
     assert.notEqual(stage4.isError, true);
     assert(Buffer.byteLength(JSON.stringify(stage4), 'utf8') <= MAX_DETAIL_BYTES);
+
+    const compHtml = await client.callTool({
+      name: 'get_component_html',
+      arguments: { id: 'dialog' },
+    });
+    assert.notEqual(compHtml.isError, true);
+    assert(Buffer.byteLength(JSON.stringify(compHtml), 'utf8') <= MAX_DETAIL_BYTES);
   } finally {
     await client.close();
   }

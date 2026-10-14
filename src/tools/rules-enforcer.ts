@@ -1,13 +1,15 @@
-// Author & maintainer: Žygimantas Jasiulionis / Intellmedia.
 import { z } from 'zod';
 import { defaultSemanticsStore } from '../semantics/index.js';
 import { assertDetailBudget, MAX_DETAIL_BYTES, responseBytes } from './budget.js';
+import { parseHtmlWithDiagnostics } from './html.js';
+import { INTERACTIVE_PRIMITIVES, SEMANTIC_TAGS, TW3_DEPRECATED_UTILITY } from './validate.js';
 
 export const rulesEnforcerInputShape = {
   category: z
     .enum(['all', 'tailwind-v4', 'fsm-contracts', 'tokens', 'semantic-html'])
     .optional(),
   query: z.string().max(120).optional(),
+  code: z.string().max(16000).optional(),
 };
 
 export type RulesEnforcerInput = z.infer<z.ZodObject<typeof rulesEnforcerInputShape>>;
@@ -105,6 +107,105 @@ const TECHNICAL_RULES: TechnicalRule[] = [
   },
 ];
 
+function stripVariants(token: string): string {
+  let depth = 0;
+  let start = 0;
+  for (let i = 0; i < token.length; i++) {
+    if (token[i] === '[' || token[i] === '(') depth++;
+    else if (token[i] === ']' || token[i] === ')') depth = Math.max(0, depth - 1);
+    else if (token[i] === ':' && depth === 0) start = i + 1;
+  }
+  return token.slice(start).replace(/^!|!$/g, '');
+}
+
+function checkCodeViolations(code: string): Array<{ rule: string; message: string }> {
+  const violations: Array<{ rule: string; message: string }> = [];
+
+  if (/@tailwind\s+(?:base|components|utilities)\b/.test(code)) {
+    violations.push({
+      rule: 'TW4-01',
+      message: 'Deprecated @tailwind directive detected; use Tailwind v4 @import.',
+    });
+  }
+
+  const parsed = parseHtmlWithDiagnostics(code);
+  let tw3Found = false;
+  let fsmFound = false;
+  let tokFound = false;
+
+  for (const node of parsed.nodes) {
+    const baseClasses = node.classes.map(stripVariants);
+
+    if (!tw3Found) {
+      for (const cls of baseClasses) {
+        if (TW3_DEPRECATED_UTILITY.test(cls)) {
+          tw3Found = true;
+          violations.push({
+            rule: 'TW4-01',
+            message: `Deprecated Tailwind v3 utility '${cls}' detected.`,
+          });
+          break;
+        }
+      }
+    }
+
+    if (!tokFound) {
+      for (const cls of baseClasses) {
+        if (
+          /^(?:w|h|min-w|max-w|min-h|max-h|size|p[trblxyse]?|m[trblxyse]?|gap(?:-[xy])?|space-[xy]|inset(?:-[xy])?|top|right|bottom|left)-\[\d+(?:\.\d+)?(?:px|rem|em|vh|vw|%|ch|dvh|svh|lvh)\]$/i.test(cls) ||
+          /^(?:bg|border|text|from|via|to)-\[(?:#|rgba?\(|hsla?\(|oklch\(|lab\(|lch\(|color:|var\(--)/i.test(cls) ||
+          /#[0-9a-fA-F]{3,8}/.test(cls)
+        ) {
+          tokFound = true;
+          violations.push({
+            rule: 'TOK-01',
+            message: `Arbitrary dimension or hardcoded color '${cls}' detected; use semantic tokens.`,
+          });
+          break;
+        }
+      }
+    }
+
+    if (!fsmFound) {
+      for (const [primitive] of INTERACTIVE_PRIMITIVES) {
+        if (baseClasses.includes(primitive) || (primitive === 'dialog' && node.tag === 'dialog')) {
+          const hasState =
+            node.attrs['data-state'] !== undefined ||
+            node.attrs['data-fsm-state'] !== undefined ||
+            (primitive === 'accordion' && node.tag === 'section');
+          if (!hasState) {
+            fsmFound = true;
+            violations.push({
+              rule: 'FSM-01',
+              message: `Interactive '${primitive}' missing data-state or FSM binding.`,
+            });
+            break;
+          }
+        }
+      }
+    }
+  }
+
+  const elementNodes = parsed.nodes.filter(n => !['script', 'style'].includes(n.tag));
+  const divCount = elementNodes.filter(n => n.tag === 'div').length;
+  const hasSemanticTag = elementNodes.some(n => SEMANTIC_TAGS.has(n.tag));
+  const hasRedundantDiv = parsed.nodes.some(n =>
+    ['main', 'header', 'nav', 'aside', 'footer'].includes(n.tag) &&
+    n.parent !== null &&
+    parsed.nodes[n.parent]?.tag === 'div' &&
+    parsed.nodes.filter(c => c.parent === n.parent).length === 1
+  );
+
+  if ((divCount >= 6 && !hasSemanticTag) || hasRedundantDiv) {
+    violations.push({
+      rule: 'SEM-01',
+      message: 'Generic <div> soup or redundant wrapper detected without semantic HTML5 landmark structure.',
+    });
+  }
+
+  return violations;
+}
+
 export function runRulesEnforcer(input: RulesEnforcerInput = {}) {
   const category = input.category ?? 'all';
   const query = (input.query ?? '').trim().toLowerCase();
@@ -126,9 +227,17 @@ export function runRulesEnforcer(input: RulesEnforcerInput = {}) {
     if (filtered.length > 0) rules = filtered;
   }
 
+  const violations = input.code !== undefined && input.code.trim().length > 0
+    ? checkCodeViolations(input.code)
+    : [];
+  const codeReport = input.code !== undefined
+    ? { valid: violations.length === 0, violations: violations.slice(0, 6) }
+    : {};
+
   const fullResult = {
     stage: '2a-rules-enforcer',
     category,
+    ...codeReport,
     ruleCount: rules.length,
     rules,
     fsmContracts: fsmRecipes,
@@ -139,19 +248,22 @@ export function runRulesEnforcer(input: RulesEnforcerInput = {}) {
     return fullResult;
   }
 
-  for (const sliceCount of [2, 1]) {
+  for (const sliceCount of [2, 1, 0]) {
     const candidate = {
       stage: '2a-rules-enforcer',
       category,
+      ...(input.code !== undefined
+        ? { valid: violations.length === 0, violations: violations.slice(0, 6) }
+        : {}),
       ruleCount: rules.length,
       rules: rules.map(r => ({
         id: r.id,
         category: r.category,
-        rule: r.rule.slice(0, 90),
-        forbidden: r.forbidden.slice(0, sliceCount),
-        required: r.required.slice(0, sliceCount),
+        ...(sliceCount > 0 ? { rule: r.rule.slice(0, 80) } : {}),
+        forbidden: r.forbidden.slice(0, Math.max(1, sliceCount)),
+        required: r.required.slice(0, Math.max(1, sliceCount)),
       })),
-      fsmContracts: fsmRecipes.map(f => `${f.recipe}:${f.initialState}`),
+      fsmContracts: fsmRecipes.map(f => sliceCount === 2 ? `${f.recipe}:${f.initialState}` : f.recipe),
       nextStep: 'Call basecoat_component_syntax for FSM-bound HTML.',
     };
     if (responseBytes(candidate) <= MAX_DETAIL_BYTES) {
@@ -162,6 +274,9 @@ export function runRulesEnforcer(input: RulesEnforcerInput = {}) {
   const minimal = {
     stage: '2a-rules-enforcer',
     category,
+    ...(input.code !== undefined
+      ? { valid: violations.length === 0, violations: violations.slice(0, 6) }
+      : {}),
     ruleCount: rules.length,
     rules: rules.map(r => ({
       id: r.id,
