@@ -1,0 +1,141 @@
+{
+  "schemaVersion": 1,
+  "id": "analytics-workspace",
+  "kind": "page",
+  "profile": "app-default",
+  "entryPage": "analytics",
+  "routeLinks": [],
+  "pages": [
+    {
+      "id": "analytics",
+      "route": "/workspace/analytics",
+      "recipe": "analytics-workspace",
+      "root": "shell",
+      "status": "plan-ready",
+      "decisions": {
+        "density": "comfortable"
+      },
+      "nodes": {
+        "shell": {
+          "id": "shell",
+          "block": "app-shell",
+          "bindings": {}
+        },
+        "nav": {
+          "id": "nav",
+          "block": "sidebar-dashboard-shell",
+          "parent": {
+            "node": "shell",
+            "slot": "navigation",
+            "order": 0
+          },
+          "bindings": {}
+        },
+        "header": {
+          "id": "header",
+          "block": "page-header",
+          "parent": {
+            "node": "shell",
+            "slot": "header",
+            "order": 0
+          },
+          "bindings": {}
+        },
+        "canvas": {
+          "id": "canvas",
+          "block": "dashboard-01",
+          "parent": {
+            "node": "shell",
+            "slot": "content",
+            "order": 0
+          },
+          "bindings": {}
+        },
+        "kpi": {
+          "id": "kpi",
+          "block": "metrics-summary",
+          "parent": {
+            "node": "canvas",
+            "slot": "kpi",
+            "order": 0
+          },
+          "bindings": {}
+        },
+        "chart": {
+          "id": "chart",
+          "block": "svg-area-chart",
+          "parent": {
+            "node": "canvas",
+            "slot": "chart",
+            "order": 0
+          },
+          "bindings": {}
+        },
+        "table": {
+          "id": "table",
+          "block": "data-table-rich",
+          "parent": {
+            "node": "canvas",
+            "slot": "table",
+            "order": 0
+          },
+          "bindings": {}
+        }
+      },
+      "connections": [
+        {
+          "id": "shell-to-canvas",
+          "relation": "controls",
+          "from": {
+            "node": "shell",
+            "port": "main-region"
+          },
+          "to": {
+            "node": "canvas",
+            "port": "main-in"
+          }
+        },
+        {
+          "id": "header-to-nav",
+          "relation": "controls",
+          "from": {
+            "node": "header",
+            "port": "nav-toggle-out"
+          },
+          "to": {
+            "node": "nav",
+            "port": "nav-toggle-in"
+          }
+        }
+      ],
+      "rules": [
+        {
+          "id": "analytics-shell-frame",
+          "type": "same-frame",
+          "nodes": [
+            "header",
+            "canvas"
+          ]
+        },
+        {
+          "id": "analytics-same-shell",
+          "type": "same-shell",
+          "nodes": [
+            "nav",
+            "header",
+            "canvas"
+          ]
+        },
+        {
+          "id": "analytics-shell-gutter",
+          "type": "single-owner",
+          "boundary": "shell-root",
+          "property": "gutter",
+          "nodes": [
+            "shell"
+          ]
+        }
+      ]
+    }
+  ]
+}

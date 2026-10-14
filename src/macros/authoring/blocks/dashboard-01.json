@@ -1,0 +1,106 @@
+{
+  "schemaVersion": 1,
+  "id": "dashboard-01",
+  "role": "dashboard",
+  "family": "workspace",
+  "description": "A dashboard with sidebar, charts and data table.",
+  "tags": [
+    "dashboard",
+    "workspace",
+    "new-york-v4",
+    "metrics",
+    "chart",
+    "table"
+  ],
+  "root": "content-frame",
+  "fragments": [
+    {
+      "id": "content-frame",
+      "emmet": "div.flex.flex-1.flex-col.gap-6.p-6[data-role=canvas][data-macro=canvas][data-block=dashboard-01]>div[data-slot=kpi]+div[data-slot=chart]+div[data-slot=table]"
+    }
+  ],
+  "mounts": [],
+  "slots": [
+    {
+      "id": "kpi",
+      "at": {
+        "fragment": "content-frame",
+        "name": "kpi"
+      },
+      "accepts": [
+        "metrics",
+        "kpi"
+      ],
+      "min": 0,
+      "max": 1
+    },
+    {
+      "id": "chart",
+      "at": {
+        "fragment": "content-frame",
+        "name": "chart"
+      },
+      "accepts": [
+        "chart",
+        "activity"
+      ],
+      "min": 0,
+      "max": 1
+    },
+    {
+      "id": "table",
+      "at": {
+        "fragment": "content-frame",
+        "name": "table"
+      },
+      "accepts": [
+        "table",
+        "data"
+      ],
+      "min": 0,
+      "max": 1
+    }
+  ],
+  "ports": [
+    {
+      "id": "main-in",
+      "at": {
+        "fragment": "content-frame",
+        "name": "content-frame"
+      },
+      "direction": "in",
+      "kind": "region",
+      "contract": "main",
+      "minLinks": 0,
+      "maxLinks": 1,
+      "scope": "shell"
+    }
+  ],
+  "componentRefs": [
+    "card",
+    "button",
+    "badge",
+    "table",
+    "chart"
+  ],
+  "ruleRefs": [],
+  "dependencyBlockIds": [
+    "metrics-summary",
+    "svg-area-chart",
+    "data-table-rich"
+  ],
+  "layout": {
+    "frameRef": "content-frame"
+  },
+  "landmarks": {
+    "main": 1,
+    "primaryHeading": 0
+  },
+  "provenance": {
+    "origin": "authored",
+    "sourceHashes": {
+      "upstream:dashboard-01": "754696e17fd8191c5332bfde97e125e06daf3b622fc1338f16b8a65d4d897390"
+    },
+    "mappingVersion": "1.0.0"
+  }
+}

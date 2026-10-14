@@ -1,0 +1,128 @@
+{
+  "schemaVersion": 1,
+  "id": "dashboard-02",
+  "role": "dashboard",
+  "family": "workspace",
+  "description": "Shadcn new-york-v4 Dashboard 02: Analytics & E-commerce workspace with tabbed period selectors, revenue chart canvas, and recent orders table.",
+  "tags": [
+    "dashboard",
+    "workspace",
+    "new-york-v4",
+    "ecommerce",
+    "analytics"
+  ],
+  "root": "content-frame",
+  "fragments": [
+    {
+      "id": "content-frame",
+      "emmet": "div.flex.flex-1.flex-col.gap-6.p-6[data-role=canvas][data-macro=canvas][data-block=dashboard-02]>div.flex.items-center.justify-between.gap-4>div[data-slot=tabs]+div[data-slot=actions]^^div[data-slot=kpi]+div.grid.grid-cols-1.gap-6.lg:grid-cols-3>div.lg:col-span-2[data-slot=overview]+div[data-slot=recent-orders]"
+    }
+  ],
+  "mounts": [],
+  "slots": [
+    {
+      "id": "tabs",
+      "at": {
+        "fragment": "content-frame",
+        "name": "tabs"
+      },
+      "accepts": [
+        "tabs"
+      ],
+      "min": 0,
+      "max": 1
+    },
+    {
+      "id": "actions",
+      "at": {
+        "fragment": "content-frame",
+        "name": "actions"
+      },
+      "accepts": [
+        "action"
+      ],
+      "min": 0,
+      "max": 1
+    },
+    {
+      "id": "kpi",
+      "at": {
+        "fragment": "content-frame",
+        "name": "kpi"
+      },
+      "accepts": [
+        "metrics",
+        "kpi"
+      ],
+      "min": 0,
+      "max": 1
+    },
+    {
+      "id": "overview",
+      "at": {
+        "fragment": "content-frame",
+        "name": "overview"
+      },
+      "accepts": [
+        "chart",
+        "activity",
+        "workspace"
+      ],
+      "min": 0,
+      "max": 1
+    },
+    {
+      "id": "recent-orders",
+      "at": {
+        "fragment": "content-frame",
+        "name": "recent-orders"
+      },
+      "accepts": [
+        "table",
+        "data",
+        "workspace"
+      ],
+      "min": 0,
+      "max": 1
+    }
+  ],
+  "ports": [
+    {
+      "id": "main-in",
+      "at": {
+        "fragment": "content-frame",
+        "name": "content-frame"
+      },
+      "direction": "in",
+      "kind": "region",
+      "contract": "main",
+      "minLinks": 0,
+      "maxLinks": 1,
+      "scope": "shell"
+    }
+  ],
+  "componentRefs": [
+    "card",
+    "badge",
+    "button",
+    "tabs"
+  ],
+  "ruleRefs": [],
+  "dependencyBlockIds": [
+    "metrics-summary",
+    "svg-area-chart",
+    "data-table-rich"
+  ],
+  "layout": {
+    "frameRef": "content-frame"
+  },
+  "landmarks": {
+    "main": 1,
+    "primaryHeading": 0
+  },
+  "provenance": {
+    "origin": "authored",
+    "sourceHashes": {},
+    "mappingVersion": "1.0.0"
+  }
+}

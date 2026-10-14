@@ -1,0 +1,86 @@
+{
+  "schemaVersion": 1,
+  "id": "data-table-rich",
+  "role": "table",
+  "family": "data",
+  "description": "Rich data table with filter toolbar, bulk action bar, row action dropdown, sticky header & pagination.",
+  "tags": [
+    "data",
+    "table",
+    "filters",
+    "pagination",
+    "bulk-actions",
+    "responsive"
+  ],
+  "root": "table-root",
+  "fragments": [
+    {
+      "id": "table-root",
+      "emmet": "div.flex.flex-col.gap-4.rounded-xl.border.border-border.bg-card.p-4.text-card-foreground[data-component=data-table-rich][data-slot=table-host]>(div.flex.items-center.justify-between.gap-4[data-slot=toolbar]>div.flex.flex-1.items-center.gap-2>input.input.input-sm.w-64[type=search][placeholder='Filter records...'][data-slot=search]+button.btn.btn-sm.btn-outline[data-slot=filter-status]{Status: All}+button.btn.btn-sm.btn-outline[data-slot=view-options]{View})+(div.flex.items-center.justify-between.rounded-lg.bg-muted.px-4.py-2.text-sm[data-slot=bulk-actions][data-state=inactive]>span.font-medium{0 selected}+div.flex.items-center.gap-2>button.btn.btn-xs.btn-outline{Export}+button.btn.btn-xs.btn-destructive{Delete})+div[data-slot=table-body]+(div.flex.items-center.justify-between.gap-4.px-2.py-2[data-slot=pagination]>span.text-xs.text-muted-foreground{Showing 1 to 10 of 100 entries}+div.flex.items-center.gap-2>button.btn.btn-sm.btn-outline[disabled]{Previous}+button.btn.btn-sm.btn-outline{Next})"
+    },
+    {
+      "id": "table-body",
+      "emmet": "div.relative.overflow-auto.rounded-lg.border.border-border[data-slot=table-scroll]>table.table.w-full.text-sm>thead.sticky.top-0.border-b.border-border.bg-background>tr>th.h-10.px-4.text-left.font-medium[data-slot=th-select]>input.checkbox.checkbox-sm[type=checkbox]+th.h-10.px-4.text-left.font-medium{Task}+th.h-10.px-4.text-left.font-medium{Status}+th.h-10.px-4.text-right.font-medium{Actions}^tbody.divide-y.divide-border>tr.hover:bg-muted*2>td.px-4.py-2>input.checkbox.checkbox-sm[type=checkbox]+td.px-4.py-2.font-mono.text-xs{TASK-$}+td.px-4.py-2>span.badge.badge-outline.text-xs{In Progress}+td.px-4.py-2.text-right>button.btn.btn-ghost.btn-xs[aria-haspopup=menu][data-state=closed][aria-label=Actions]>svg[aria-hidden=true].size-4"
+    }
+  ],
+  "mounts": [
+    {
+      "parent": "table-root",
+      "anchor": "table-body",
+      "child": "table-body",
+      "order": 0
+    }
+  ],
+  "slots": [],
+  "ports": [
+    {
+      "id": "dataset-in",
+      "at": {
+        "fragment": "table-root",
+        "name": "table-root"
+      },
+      "direction": "in",
+      "kind": "data",
+      "contract": "dataset",
+      "minLinks": 0,
+      "maxLinks": 1,
+      "scope": "page"
+    },
+    {
+      "id": "dataset-out",
+      "at": {
+        "fragment": "table-root",
+        "name": "table-root"
+      },
+      "direction": "out",
+      "kind": "data",
+      "contract": "dataset",
+      "minLinks": 0,
+      "maxLinks": 1,
+      "scope": "page"
+    }
+  ],
+  "componentRefs": [
+    "table",
+    "button",
+    "input",
+    "checkbox",
+    "badge",
+    "dropdown-menu",
+    "pagination"
+  ],
+  "ruleRefs": [],
+  "dependencyBlockIds": [],
+  "layout": {
+    "frameRef": "table-root"
+  },
+  "landmarks": {
+    "main": 0,
+    "primaryHeading": 0
+  },
+  "provenance": {
+    "origin": "authored",
+    "sourceHashes": {},
+    "mappingVersion": "1.0.0"
+  }
+}

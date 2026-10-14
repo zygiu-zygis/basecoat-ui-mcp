@@ -36,6 +36,16 @@ const SYNTAX_ALIASES: Record<string, string> = {
   modal: 'dialog',
   nav: 'sidebar',
   toggle: 'theme-switcher',
+  sheet: 'drawer',
+  range: 'slider',
+  'metric-card': 'metric-card',
+  'metrics-card': 'metric-card',
+  'metrics-summary': 'metric-card',
+  'kpi-card': 'metric-card',
+  'data-table': 'data-table',
+  datatable: 'data-table',
+  'sidebar-shell': 'sidebar-shell',
+  'sidebar-dashboard-shell': 'sidebar-shell',
 };
 
 const COMPONENT_TO_FSM_RECIPE: Record<string, string> = {
@@ -50,6 +60,76 @@ const COMPONENT_TO_FSM_RECIPE: Record<string, string> = {
   combobox: 'collapsible-navigation',
   tabs: 'tabs',
   sidebar: 'navigation',
+  'sidebar-shell': 'navigation',
+};
+
+interface CompositePatternDetail {
+  id: string;
+  markup_template: string;
+  dependencies: { css: string[]; js: string[] };
+  composition_rules: string;
+  native_script?: string;
+}
+
+const COMPOSITE_PATTERNS: Record<string, CompositePatternDetail> = {
+  'metric-card': {
+    id: 'metric-card',
+    markup_template: `<article class="card flex min-w-0 flex-col gap-4 rounded-xl bg-card p-6 text-card-foreground shadow-sm">
+  <header class="flex items-center justify-between">
+    <span class="text-sm font-medium text-muted-foreground">Total Revenue</span>
+    <span class="badge" data-variant="outline">+12.5%</span>
+  </header>
+  <div class="flex flex-col gap-1">
+    <strong class="text-2xl font-semibold tracking-tight tabular-nums">$45,231.89</strong>
+    <p class="text-xs text-muted-foreground">+20.1% from last month</p>
+  </div>
+</article>`,
+    dependencies: { css: ['basecoat-css/card', 'basecoat-css/badge'], js: [] },
+    composition_rules: 'KPI metric card: use text-2xl font-semibold tabular-nums for numeric values. Never add border class to .card in Vega style pack.',
+  },
+  'data-table': {
+    id: 'data-table',
+    markup_template: `<div class="overflow-x-auto rounded-md border border-border">
+  <table class="table w-full text-sm">
+    <thead class="sticky top-0 bg-background/90 backdrop-blur">
+      <tr class="border-b border-border text-xs font-medium text-muted-foreground">
+        <th class="h-10 px-4 py-2 text-left">Invoice</th>
+        <th class="h-10 px-4 py-2 text-left">Status</th>
+        <th class="h-10 px-4 py-2 text-left">Method</th>
+        <th class="h-10 px-4 py-2 text-right">Amount</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="border-b border-border/50 transition-colors hover:bg-muted/50">
+        <td class="px-4 py-3 font-medium">INV-001</td>
+        <td class="px-4 py-3"><span class="badge" data-variant="outline">Paid</span></td>
+        <td class="px-4 py-3">Credit Card</td>
+        <td class="px-4 py-3 text-right tabular-nums font-medium">$250.00</td>
+      </tr>
+    </tbody>
+  </table>
+</div>`,
+    dependencies: { css: ['basecoat-css/table', 'basecoat-css/badge'], js: [] },
+    composition_rules: 'Data table: always wrap in overflow-x-auto container. Use text-right tabular-nums on numeric columns and sticky header.',
+  },
+  'sidebar-shell': {
+    id: 'sidebar-shell',
+    markup_template: `<aside class="sidebar w-64 border-e border-border bg-background md:sticky md:top-0 md:h-screen" aria-label="Sidebar" data-slot="sidebar-host" data-side="left" data-mobile-breakpoint="md">
+  <nav class="flex h-full flex-col justify-between p-2" aria-label="Main">
+    <div class="flex flex-col gap-2">
+      <div class="flex items-center gap-2 p-2 text-sm font-semibold">Workspace</div>
+      <a class="btn btn-ghost btn-sm w-full justify-start" href="#dashboard">Dashboard</a>
+      <a class="btn btn-ghost btn-sm w-full justify-start" href="#analytics">Analytics</a>
+      <a class="btn btn-ghost btn-sm w-full justify-start" href="#settings">Settings</a>
+    </div>
+    <div class="mt-auto flex flex-col gap-2 border-t border-border pt-2">
+      <a class="btn btn-ghost btn-sm w-full justify-start" href="#profile">Profile</a>
+    </div>
+  </nav>
+</aside>`,
+    dependencies: { css: ['basecoat-css/sidebar', 'basecoat-css/button'], js: ['basecoat-css/sidebar'] },
+    composition_rules: 'Sidebar shell: sticky 16rem desktop navigation with responsive flyout below md.',
+  },
 };
 
 const VERIFIED_ACTION_ICONS: Record<string, string> = {
@@ -172,7 +252,8 @@ export function runComponentSyntax(
     throw new Error('Provide component (e.g. "dialog", "tabs", "button", "dropdown-menu").');
   }
   const aliasResolved = SYNTAX_ALIASES[rawId.toLowerCase()] ?? resolveComponentId(rawId.toLowerCase());
-  if (!Object.hasOwn(source.details, aliasResolved)) {
+  const entry = COMPOSITE_PATTERNS[aliasResolved] ?? source.details[aliasResolved];
+  if (!entry) {
     const hint = suggestComponentId(aliasResolved);
     const suffix = hint ? ` Did you mean ${hint}?` : '';
     throw new Error(`Unknown component: ${rawId.slice(0, 80)}.${suffix} Use search_components.`);
@@ -182,7 +263,6 @@ export function runComponentSyntax(
   const state: ComponentStateVariant = input.state ?? 'default';
   const effectiveState = state === 'open/closed' ? 'open' : state;
   const environment = input.environment ?? 'html';
-  const entry = source.details[id]!;
   const fsmRecipeId = COMPONENT_TO_FSM_RECIPE[id];
   const semantics = defaultSemanticsStore.getRegistry();
   const fsmRecipeRef = fsmRecipeId ? semantics.aliases[fsmRecipeId] : undefined;

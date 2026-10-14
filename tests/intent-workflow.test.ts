@@ -392,3 +392,220 @@ test('WCAG 2.1 / APCA contrast, arbitrary dimensions, dialog focus traps, aria-c
   assert.equal(claudePlugin.name, 'basecoat-ui-mcp');
   assert.equal(claudePlugin.transport.type, 'stdio');
 });
+
+test('Phase 5 verification: 5 dashboard scaffolds, density profiles, and creative director density', () => {
+  const scaffolds = [
+    {
+      name: 'Executive Dashboard',
+      intents: ['Executive Dashboard', 'dashboard', 'executive'],
+      recipes: ['executive-dashboard', 'workspace-dashboard'],
+      expectedRecipe: 'workspace-dashboard',
+      expectedSlot: 'metrics',
+    },
+    {
+      name: 'E-commerce Overview',
+      intents: ['E-commerce Overview', 'ecommerce'],
+      recipes: ['ecommerce-overview'],
+      expectedRecipe: 'ecommerce-overview',
+      expectedSlot: 'sales-chart',
+    },
+    {
+      name: 'Analytics Workspace',
+      intents: ['Analytics Workspace', 'analytics'],
+      recipes: ['analytics-workspace'],
+      expectedRecipe: 'workspace-dashboard',
+      expectedSlot: 'chart',
+    },
+    {
+      name: 'Data Table Detail',
+      intents: ['Data Table Detail', 'tasks'],
+      recipes: ['data-table-detail', 'workspace-detail'],
+      expectedRecipe: 'workspace-detail',
+      expectedSlot: 'table',
+    },
+    {
+      name: 'Settings Split-Screen',
+      intents: ['Settings Split-Screen', 'settings'],
+      recipes: ['settings-split-screen', 'workspace-settings'],
+      expectedRecipe: 'workspace-settings',
+      expectedSlot: 'settings-nav',
+    },
+  ];
+
+  for (const scaffold of scaffolds) {
+    for (const intent of scaffold.intents) {
+      const res = runPageArchitect({ intent });
+      assert.equal(res.matched, true, `intent "${intent}" did not match`);
+      assert(
+        res.recipe === scaffold.expectedRecipe || res.recipe === 'workspace-dashboard',
+        `unexpected recipe for ${intent}: ${res.recipe}`,
+      );
+      assert(typeof res.scaffoldHtml === 'string' && res.scaffoldHtml.includes(scaffold.expectedSlot));
+      assert(responseBytes(res) <= MAX_DETAIL_BYTES);
+    }
+
+    for (const recipe of scaffold.recipes) {
+      for (const density of ['compact', 'comfortable'] as const) {
+        const res = runPageArchitect({ recipe, density });
+        assert.equal(res.matched, true, `recipe "${recipe}" did not match`);
+        assert.equal(res.recipe, recipe);
+        assert.equal(res.density, density);
+        assert(typeof res.scaffoldHtml === 'string' && res.scaffoldHtml.includes(scaffold.expectedSlot));
+        if (density === 'compact') {
+          assert(res.scaffoldHtml.includes('h-12 px-4') || res.scaffoldHtml.includes('p-4 gap-4'));
+        } else {
+          assert(res.scaffoldHtml.includes('h-14 px-6') || res.scaffoldHtml.includes('p-6 gap-6'));
+        }
+        assert(responseBytes(res) <= MAX_DETAIL_BYTES);
+      }
+    }
+  }
+
+  // Creative director density topic & profiles
+  const densityDir = runCreativeDirector({ topic: 'density' }) as {
+    guidance: { compact: string; standard: string; comfortable: string };
+  };
+  assert(densityDir.guidance);
+  assert(typeof densityDir.guidance.compact === 'string');
+  assert(typeof densityDir.guidance.standard === 'string');
+  assert(typeof densityDir.guidance.comfortable === 'string');
+
+  for (const density of ['compact', 'standard', 'comfortable'] as const) {
+    const res = runCreativeDirector({ topic: 'whitespace', density });
+    assert.equal(res.stage, '2b-creative-director');
+    assert(responseBytes(res) <= MAX_DETAIL_BYTES);
+  }
+});
+
+test('Phase 5 verification: composite component syntax and full FSM state coverage', () => {
+  const compositeComponents = [
+    'metric-card',
+    'metrics-card',
+    'metrics-summary',
+    'kpi-card',
+    'data-table',
+    'datatable',
+    'sidebar-shell',
+    'sidebar-dashboard-shell',
+  ];
+
+  for (const comp of compositeComponents) {
+    for (const state of COMPONENT_STATES) {
+      for (const environment of ['html', 'astro'] as const) {
+        const res = runComponentSyntax({ component: comp, state, environment });
+        assert.equal(res.state, state);
+        assert(typeof res.markup === 'string' && res.markup.length > 0);
+        assert(Array.isArray(res.dependencies.css));
+        assert(Array.isArray(res.dependencies.js));
+        assert(responseBytes(res) <= MAX_DETAIL_BYTES, `${comp} (${state}, ${environment}) exceeded budget`);
+      }
+    }
+  }
+
+  // Detailed assertions for composite patterns
+  const metric = runComponentSyntax({ component: 'metric-card', state: 'default' });
+  assert(metric.markup.includes('tabular-nums'));
+  assert(metric.markup.includes('Total Revenue'));
+
+  const table = runComponentSyntax({ component: 'data-table', state: 'default' });
+  assert(table.markup.includes('overflow-x-auto'));
+  assert(table.markup.includes('tabular-nums'));
+  assert(table.markup.includes('text-right'));
+
+  const sidebar = runComponentSyntax({ component: 'sidebar-shell', state: 'open' });
+  assert(sidebar.markup.includes('sidebar'));
+  assert(sidebar.markup.includes('data-slot="sidebar-host"'));
+});
+
+test('Phase 5 verification: dashboard audit rules (MET-01, TBL-01, FRM-01, NAV-01, hex, TW3, contrast)', () => {
+  // 1. MET-01: KPI numeral without tabular-nums
+  const metBad = runRulesEnforcer({
+    code: '<article class="card p-6"><strong class="text-3xl font-semibold">$99,999</strong></article>',
+  });
+  assert(metBad.violations!.some(v => v.rule === 'MET-01'), 'expected MET-01 violation');
+
+  const metGood = runRulesEnforcer({
+    code: '<article class="card p-6"><strong class="text-3xl font-semibold tabular-nums">$99,999</strong></article>',
+  });
+  assert(!metGood.violations?.some(v => v.rule === 'MET-01'), 'did not expect MET-01 violation with tabular-nums');
+
+  // 2. TBL-01: Bare table without overflow-x-auto wrapper
+  const tblBad = runRulesEnforcer({
+    code: '<table class="table"><thead><tr><th>Name</th></tr></thead></table>',
+  });
+  assert(tblBad.violations!.some(v => v.rule === 'TBL-01'), 'expected TBL-01 violation');
+
+  const tblGood = runRulesEnforcer({
+    code: '<div class="overflow-x-auto"><table class="table"><thead><tr><th>Name</th></tr></thead></table></div>',
+  });
+  assert(!tblGood.violations?.some(v => v.rule === 'TBL-01'), 'did not expect TBL-01 with overflow container');
+
+  // 3. FRM-01: Input without .field wrapper
+  const frmBad = runRulesEnforcer({
+    code: '<form><input id="email" type="email" placeholder="test@example.com" /></form>',
+  });
+  assert(frmBad.violations!.some(v => v.rule === 'FRM-01'), 'expected FRM-01 violation');
+
+  const frmGood = runRulesEnforcer({
+    code: '<form><div class="field"><label class="label" for="email">Email</label><input class="input" id="email" type="email" /></div></form>',
+  });
+  assert(!frmGood.violations?.some(v => v.rule === 'FRM-01'), 'did not expect FRM-01 with .field wrapper');
+
+  // 4. NAV-01: Oversized dashboard header (h-16)
+  const navBad = runRulesEnforcer({
+    code: '<header class="h-16 flex items-center px-4"><h1>Dashboard</h1></header>',
+  });
+  assert(navBad.violations!.some(v => v.rule === 'NAV-01'), 'expected NAV-01 violation');
+
+  const navGood = runRulesEnforcer({
+    code: '<header class="h-12 flex items-center px-4"><h1>Dashboard</h1></header>',
+  });
+  assert(!navGood.violations?.some(v => v.rule === 'NAV-01'), 'did not expect NAV-01 on h-12 header');
+
+  // 5. Arbitrary hex rejection (TOK-01)
+  const hexBad = runRulesEnforcer({
+    code: '<div class="bg-[#1e293b] text-[#f8fafc]">Hex styling</div>',
+  });
+  assert(hexBad.violations!.some(v => v.rule === 'TOK-01'), 'expected TOK-01 for arbitrary hex');
+
+  // 6. Tailwind v3 deprecation (TW4-01)
+  const tw3Bad = runRulesEnforcer({
+    code: '<div class="bg-opacity-75 flex-shrink-0">Deprecated v3</div>',
+  });
+  assert(tw3Bad.violations!.some(v => v.rule === 'TW4-01'), 'expected TW4-01 for deprecated utilities');
+
+  // 7. Comprehensive clean dashboard passes both rules-enforcer and quality-inspector
+  const cleanDashboard = [
+    '<aside class="sidebar" data-state="expanded" data-fsm-recipe="navigation" data-fsm-state="expanded" aria-label="Main navigation">',
+    '  <nav aria-label="Sections"><a class="btn" href="#dash">Dashboard</a></nav>',
+    '</aside>',
+    '<header class="flex h-12 items-center justify-between px-4 border-b border-border">',
+    '  <h1 class="text-lg font-semibold">Workspace Dashboard</h1>',
+    '</header>',
+    '<main class="p-6">',
+    '  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">',
+    '    <article class="card p-6">',
+    '      <span class="text-sm font-medium text-muted-foreground">Revenue</span>',
+    '      <strong class="text-2xl font-semibold tabular-nums">$12,345.67</strong>',
+    '    </article>',
+    '  </div>',
+    '  <div class="mt-6 overflow-x-auto rounded-md border border-border">',
+    '    <table class="table w-full">',
+    '      <thead><tr><th class="text-left px-4 py-2">Item</th><th class="text-right px-4 py-2">Cost</th></tr></thead>',
+    '      <tbody><tr><td class="px-4 py-2">Service</td><td class="px-4 py-2 text-right tabular-nums">$99.00</td></tr></tbody>',
+    '    </table>',
+    '  </div>',
+    '</main>',
+    '<script src="/assets/basecoat.min.js" defer></script>',
+    '<script src="/assets/sidebar.min.js" defer></script>',
+  ].join('\n');
+
+  const enforcerResult = runRulesEnforcer({ code: cleanDashboard });
+  assert.equal(enforcerResult.valid, true);
+  assert.equal(enforcerResult.violations?.length ?? 0, 0);
+
+  const inspectorResult = runQualityInspector(cleanDashboard, { enforceFsm: true });
+  assert.equal(inspectorResult.valid, true);
+  assert.equal(inspectorResult.score, 100);
+  assert.equal(inspectorResult.grade, 'A');
+});

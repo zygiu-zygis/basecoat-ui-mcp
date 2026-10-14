@@ -4,6 +4,25 @@ Maintained by **Žygimantas Jasiulionis / Intellmedia**.
 
 ## 1.7.1 - 2026-10-14
 
+- **Dashboard Intelligence Ingestion & 5 Core Scaffolds (`basecoat_page_architect`)**:
+  - Full coverage of 5 key dashboard page archetypes with responsive container grids, explicit slot topology, and density profiles (`compact`, `comfortable`):
+    - **Executive Dashboard** (`workspace-dashboard`, `executive-dashboard`) — KPI metric cards, revenue chart, and recent activity.
+    - **E-commerce Overview** (`ecommerce-overview`) — Sales metrics, revenue analytics, top products card, and order summary.
+    - **Analytics Workspace** (`analytics-workspace`) — Filter toolbar, time-series chart, and cohort analysis breakdown.
+    - **Data Table Detail** (`workspace-detail`, `data-table-detail`) — Paginated data table with search/filters and slide-over inspection drawer.
+    - **Settings Split-Screen** (`workspace-settings`, `settings-split-screen`) — Two-column responsive layout with vertical section navigation and form controls.
+- **Dashboard Audit Rules & Precision Enforcement (`validate.ts` & `basecoat_rules_enforcer`)**:
+  - Added `table-overflow-wrapper`: Data `<table>` requires an `overflow-x-auto` wrapper to prevent horizontal mobile viewport blowout.
+  - Added `kpi-metric-tabular-nums`: Large KPI numerals (`text-2xl`..`text-5xl`) require `tabular-nums` for digit vertical alignment.
+  - Added `table-numeric-alignment`: Numeric table cells with `tabular-nums` require right-alignment (`text-right` or `text-end`).
+  - Added `a11y-focus-ring`: Flags `outline-none` on interactive elements unless accompanied by a visible focus ring (`focus-visible:ring-2 focus-visible:ring-ring`).
+  - Added `MET-01`, `TBL-01`, `FRM-01`, and `NAV-01` rules to `basecoat_rules_enforcer` for inline code checking.
+- **Composite Component Patterns & Full FSM State Variants (`basecoat_component_syntax`)**:
+  - Added composite patterns for `metric-card` (KPI card with tabular-nums and trend badge), `data-table` (sticky header table in `overflow-x-auto` with right-aligned numeric cells), and `sidebar-shell` (sticky desktop navigation with responsive flyout below `md`).
+  - Supported all FSM lifecycle states: `default`, `active`, `loading`, `disabled`, `open`, `closed`, and compound `open/closed`.
+- **Ingestion of Translated shadcn/ui v4 Blocks & Multi-Block Recipes**:
+  - Compiled and registered 16 block blueprints: `dashboard-01` through `dashboard-07`, `metrics-summary`, `data-table-rich`, `form-field-group`, `svg-area-chart`, `sidebar-dashboard-shell`, `authentication`, `forms`, `tasks`, `mail`.
+  - Compiled and registered 5 multi-block recipes: `analytics-workspace`, `ecommerce-overview`, `tasks-table-workspace`, `mail-workspace`, and `auth-split-flow`.
 - **WCAG 2.1 & APCA Contrast & Accessibility Heuristics (`validate.ts` & `basecoat_quality_inspector`)**:
   - Added `color-contrast-wcag` rule evaluating WCAG 2.1 relative luminance contrast ratios and APCA ($L_c$) thresholds across semantic surface/text token pairings (`bg-primary`, `bg-card`, `bg-muted`, `bg-destructive`, `bg-background`), flagging low-contrast pairings and suggesting canonical foreground tokens (`text-primary-foreground`, etc.).
   - Added `a11y-dialog-focus-trap` heuristic checking that modal `<dialog>` / `role="dialog"` containers include `aria-modal="true"` (when non-native) and at least one focusable exit/action control.

@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "id": "authentication",
+  "role": "page",
+  "family": "auth",
+  "description": "Shadcn new-york-v4 authentication card with social OAuth triggers, credential inputs, FSM state attributes, and forgot-password link.",
+  "tags": [
+    "auth",
+    "login",
+    "social-auth",
+    "new-york-v4",
+    "states"
+  ],
+  "root": "auth-root",
+  "fragments": [
+    {
+      "id": "auth-root",
+      "emmet": "main.flex.min-h-screen.w-full.items-center.justify-center.p-6.bg-muted[data-slot=auth-page]>div.card.w-full.max-w-md.rounded-xl.border.border-border.bg-card.p-6.text-card-foreground.shadow-md[data-component=auth-card][data-fsm-recipe=auth-flow][data-fsm-state=idle]>(header.flex.flex-col.gap-2.text-center>h1.text-2xl.font-semibold[data-slot=title]{Sign In}+p.text-xs.text-muted-foreground[data-slot=desc]{Enter your credentials to access your account})+div[data-slot=auth-form]+(footer.text-center.text-xs.text-muted-foreground.pt-4>span{Don't have an account? }+a.text-primary.font-medium.hover:underline[href='#signup']{Sign Up})"
+    },
+    {
+      "id": "auth-form",
+      "emmet": "div.flex.flex-col.gap-4.py-4[data-slot=form-container]>(div.grid.grid-cols-2.gap-4>button.btn.btn-sm.btn-outline.w-full[type=button]>svg[aria-hidden=true].size-4+span{GitHub}^button.btn.btn-sm.btn-outline.w-full[type=button]>svg[aria-hidden=true].size-4+span{Google})+(div.relative.flex.items-center.justify-center>hr.w-full.border-border+span.bg-card.px-2.text-xs.text-muted-foreground{or continue with})+(form.flex.flex-col.gap-4>(div.flex.flex-col.gap-2>label.text-xs.font-medium[for=auth-email]{Email}+input.input.input-sm#auth-email[type=email][placeholder='name@example.com'][required][data-state=valid])+(div.flex.flex-col.gap-2>div.flex.items-center.justify-between>label.text-xs.font-medium[for=auth-password]{Password}+a.text-xs.text-primary.hover:underline[href='#forgot']{Forgot?}^input.input.input-sm#auth-password[type=password][required][data-state=valid])+button.btn.btn-sm.btn-primary.w-full[type=submit][data-state=idle]{Sign In})"
+    }
+  ],
+  "mounts": [
+    {
+      "parent": "auth-root",
+      "anchor": "auth-form",
+      "child": "auth-form",
+      "order": 0
+    }
+  ],
+  "slots": [],
+  "ports": [],
+  "componentRefs": [
+    "card",
+    "button",
+    "input",
+    "label",
+    "field"
+  ],
+  "ruleRefs": [],
+  "dependencyBlockIds": [],
+  "layout": {
+    "frameRef": "auth-root"
+  },
+  "landmarks": {
+    "main": 1,
+    "primaryHeading": 1
+  },
+  "provenance": {
+    "origin": "authored",
+    "sourceHashes": {
+      "upstream:login-01": "1830088a392d11fad8ed4a84743c991da69942ed66ec0bf47caa0ae37a2e1fee"
+    },
+    "mappingVersion": "1.0.0"
+  }
+}

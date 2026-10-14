@@ -9,6 +9,13 @@
   },
   "license": "MIT",
   "repository": "https://github.com/zygiu-zygis/basecoat-ui-mcp",
+  "rules": [
+    ".cursor/rules/basecoat.mdc",
+    "templates/cursor/basecoat-designer.mdc"
+  ],
+  "skills": [
+    "skills/basecoat-dashboard/SKILL.md"
+  ],
   "transport": {
     "type": "stdio",
     "command": "npx",

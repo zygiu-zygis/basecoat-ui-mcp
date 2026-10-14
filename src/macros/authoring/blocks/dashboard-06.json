@@ -1,0 +1,112 @@
+{
+  "schemaVersion": 1,
+  "id": "dashboard-06",
+  "role": "dashboard",
+  "family": "workspace",
+  "description": "Shadcn new-york-v4 Dashboard 06: Catalog management workspace with tabbed category filters, bulk actions, and inventory table.",
+  "tags": [
+    "dashboard",
+    "workspace",
+    "new-york-v4",
+    "inventory",
+    "table"
+  ],
+  "root": "content-frame",
+  "fragments": [
+    {
+      "id": "content-frame",
+      "emmet": "div.flex.flex-1.flex-col.gap-6.p-6[data-role=canvas][data-macro=canvas][data-block=dashboard-06]>div[data-slot=tabs]+div[data-slot=filters]+div[data-slot=inventory-table]+div[data-slot=pager]"
+    }
+  ],
+  "mounts": [],
+  "slots": [
+    {
+      "id": "tabs",
+      "at": {
+        "fragment": "content-frame",
+        "name": "tabs"
+      },
+      "accepts": [
+        "tabs"
+      ],
+      "min": 0,
+      "max": 1
+    },
+    {
+      "id": "filters",
+      "at": {
+        "fragment": "content-frame",
+        "name": "filters"
+      },
+      "accepts": [
+        "filters"
+      ],
+      "min": 0,
+      "max": 1
+    },
+    {
+      "id": "inventory-table",
+      "at": {
+        "fragment": "content-frame",
+        "name": "inventory-table"
+      },
+      "accepts": [
+        "table",
+        "data"
+      ],
+      "min": 0,
+      "max": 1
+    },
+    {
+      "id": "pager",
+      "at": {
+        "fragment": "content-frame",
+        "name": "pager"
+      },
+      "accepts": [
+        "pager",
+        "pagination"
+      ],
+      "min": 0,
+      "max": 1
+    }
+  ],
+  "ports": [
+    {
+      "id": "main-in",
+      "at": {
+        "fragment": "content-frame",
+        "name": "content-frame"
+      },
+      "direction": "in",
+      "kind": "region",
+      "contract": "main",
+      "minLinks": 0,
+      "maxLinks": 1,
+      "scope": "shell"
+    }
+  ],
+  "componentRefs": [
+    "card",
+    "tabs",
+    "table",
+    "button",
+    "badge"
+  ],
+  "ruleRefs": [],
+  "dependencyBlockIds": [
+    "data-table-rich"
+  ],
+  "layout": {
+    "frameRef": "content-frame"
+  },
+  "landmarks": {
+    "main": 1,
+    "primaryHeading": 0
+  },
+  "provenance": {
+    "origin": "authored",
+    "sourceHashes": {},
+    "mappingVersion": "1.0.0"
+  }
+}

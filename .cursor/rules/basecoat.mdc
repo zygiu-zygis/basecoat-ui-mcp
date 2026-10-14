@@ -1,29 +1,72 @@
 ---
-description: Mandatory 4-Stage Intent-Driven Basecoat UI MCP workflow for layout architecture, rules enforcement, Kanso design direction, FSM component syntax, and quality inspection.
-globs:
+description: Mandatory 4-Stage Intent-Driven Basecoat UI MCP workflow for layout architecture, rules enforcement, Kanso design direction, FSM component syntax, dashboard generation, and quality inspection.
+globs: "**/*.{html,astro,jsx,tsx,vue,svelte,php}"
 alwaysApply: false
 ---
 
 # Basecoat UI MCP — 4-Stage Intent-Driven Workflow
 
-Always execute the 4-stage tool chain before hand-writing Basecoat markup or grepping `node_modules/basecoat-css`:
+Always execute the 4-stage MCP toolchain before hand-writing Basecoat markup or grepping `node_modules/basecoat-css`:
 
-1. **Step 1: Consult `basecoat_page_architect` for layout structure**
+1. **Step 1: Consult `basecoat_page_architect` for Layout Structure**
    Retrieve the target scaffold (`workspace-dashboard`, `auth-split-flow`, `workspace-detail`, `workspace-settings`, `data-records`, `auth-flow`, `marketing-pricing`) or macro block with explicit slot topology, container grid contracts, semantic HTML skeleton, and leaf component IDs.
-2. **Step 2: Verify guidelines via `basecoat_rules_enforcer` & `basecoat_creative_director`**
-   - `basecoat_rules_enforcer`: Enforce Tailwind CSS v4 syntax (no `bg-opacity-*`, `flex-shrink-*`, `@tailwind` directives, or arbitrary dimensions like `w-[327px]`), FSM `data-state` / `data-fsm-*` bindings, semantic CSS variables (`--color-primary` / `--primary`, `--color-surface` / `--background`), and semantic HTML landmarks (`<header>`, `<main>`, `<nav>`, `<aside>`, `<footer>`).
+2. **Step 2: Verify Guidelines via `basecoat_rules_enforcer` & `basecoat_creative_director`**
+   - `basecoat_rules_enforcer`: Enforce strict Tailwind CSS v4 syntax (no `bg-opacity-*`, `flex-shrink-*`, `@tailwind` directives, or arbitrary dimensions like `w-[327px]`), FSM `data-state` / `data-fsm-*` bindings, semantic CSS variables (`--color-primary` / `--primary`, `--color-surface` / `--background`), and semantic HTML landmarks (`<header>`, `<main>`, `<nav>`, `<aside>`, `<footer>`).
    - `basecoat_creative_director`: Apply Kanso minimalism, 4px/8px optical rhythm (`gap-2`, `gap-4`, `gap-6`, `gap-12`), typography ladders (`text-3xl` -> `text-xl` -> `text-lg` -> `text-base` -> `text-sm text-muted-foreground` -> `text-xs`), border-contrast ratios, and 1px card ring rules (never add `border` to `.card`).
-3. **Step 3: Retrieve exact FSM markup using `basecoat_component_syntax`**
+3. **Step 3: Retrieve Exact FSM Markup using `basecoat_component_syntax`**
    Request state-bound markup (`default`, `active`, `loading`, `disabled`, `open`, `closed`, `open/closed`) for each leaf component (`dialog`, `tabs`, `dropdown-menu`, `accordion`, `button`, `input`, `select`, `sidebar`, `theme-switcher`).
-4. **Step 4: Audit final code via `basecoat_quality_inspector`**
+4. **Step 4: Audit Final Code via `basecoat_quality_inspector`**
    Validate the complete HTML/Astro composition to verify a `0–100` score (`grade: "A"`, `valid: true`), `syntaxViolations`, `ariaOmissions`, WCAG 2.1 / APCA contrast pairings, keyboard focus traps, and `aria-expanded`/`aria-controls` bindings, applying all returned `autoFixSuggestions`.
 
-## Clean Generation Constraints
-- **No Redundant Explanatory Text**: Deliver clean code directly without conversational filler or repetitive prose.
-- **No Duplicate Wrapper Containers**: Never wrap semantic tags (`<header>`, `<main>`, `<nav>`, `<section>`) or `.card` components in redundant `<div>` containers.
-- **Deterministic Class Ordering**: Always order classes as: `Basecoat Class (.card/.btn)` -> `Layout (flex/grid)` -> `Positioning` -> `Alignment` -> `Sizing (w/h/size)` -> `Spacing (p/m/gap)` -> `Typography` -> `Background/Surface` -> `Border/Ring` -> `Effects` -> `Variants (hover:/focus-visible:/dark:)`.
+---
+
+## Dashboard-Specific Generation Rules
+
+### 1. Strict KPI Hierarchy
+- **Typography Scale**: Core KPI value MUST be visually dominant using `<p class="text-3xl font-semibold tabular-nums tracking-tight">` (or `text-4xl`). Secondary label uses `<p class="text-sm font-medium text-muted-foreground">`. Helper context uses `<p class="text-xs text-muted-foreground">`.
+- **Universal Paragraphs**: Use `<p>` tags universally for all metric card text. Using `<span>` for text is FORBIDDEN.
+- **Trend Delta Indicators**: Mathematical signs (`+` or `-`) alone are FORBIDDEN. Use explicit directional inline SVG icons paired with semantic colors (`text-emerald-600` / `text-rose-600`) and an accessible `<p class="sr-only">Increased by...</p>`.
+- **Neutral Icon Wrapper**: Center card icons inside `size-10 rounded-lg bg-muted flex items-center justify-center text-muted-foreground`.
+- **Micro-Chart Slot**: Sparklines must be constrained to `h-8` or `h-10` at the bottom of the card.
+- **Card Ring Rule**: NEVER add `border` or `border-border` to `.card`. Basecoat `.card` provides its own subtle 1px ring and shadow elevation.
+
+### 2. Table Scaffolding & Data Grids
+- **Container Wrapping**: Wrap all tables in `<div class="overflow-x-auto rounded-md border border-border">`.
+- **Sticky Headers**: Sticky header pins with `thead.sticky.top-0.z-10.border-b.border-border.bg-muted/50.backdrop-blur`.
+- **Deterministic Alignment**: Numeric/currency columns MUST align right (`text-right tabular-nums`). Text columns align left (`text-left`).
+- **Interactive Toolbars & Actions**: Precede tables with an integrated filter toolbar (search input, filter dropdowns, export action). Equip selectable tables with a bulk action bar.
+- **Row Action Dropdowns**: Dropdown menus declare FSM `data-state="closed"` with trigger `aria-expanded="false"` and `aria-controls`.
+- **Pagination**: Position standard-sized button controls beneath the table displaying current slice (e.g., "Showing 1 to 10 of 124 entries"). Never use `btn-xs`.
+
+### 3. Responsive Container Wrapping & App Shell
+- **Root Shell**: `h-screen w-full overflow-hidden flex bg-background text-foreground`.
+- **Pinned Sidebar**: Desktop width strictly `w-64` (or `w-16` collapsed with tooltip mode), pinned at `md:sticky md:top-0 md:h-screen`.
+- **Matched Header Heights**: Sidebar brand container and Topbar must strictly match heights (`h-12` or `h-14`) with seamless border alignment.
+- **Independent Canvas Scroll**: The main content wrapper scrolls independently: `flex-1 flex flex-col min-w-0 overflow-y-auto`.
+- **12-Column Responsive Grid**: Use `grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-4 md:gap-6`. Never place a single full-width card on desktop; use asymmetrical spans (e.g., `lg:col-span-8` + `lg:col-span-4`).
+
+### 4. Mandatory FSM `data-state` Contracts
+- `dialog`: `<dialog class="dialog" data-state="closed" data-fsm-recipe="dialog" data-fsm-state="closed">`
+- `dropdown-menu`: `<div class="dropdown-menu" data-state="closed">` with trigger `aria-expanded="false"` and `aria-controls`
+- `tabs`: `<div class="tabs" data-state="active" data-fsm-recipe="tabs" role="tablist">`
+- `accordion`: `<section class="accordion" data-state="closed">` using `<details>` and `<summary>`
+- `button` (submit): `<button type="submit" class="btn btn-primary" data-state="default">` transitioning to `data-state="loading"` with disabled attribute and SVG spinner
+- `sidebar`: `<aside class="sidebar" data-component="sidebar" data-state="expanded|collapsed">`
+
+---
+
+## Clean Generation Directives (Zero Muda)
+
+1. **No Decorative Symbols or Emojis**: Unicode emojis are FORBIDDEN. Use clean inline SVG icons (Lucide / Phosphor SVG paths).
+2. **No Conversational Fluff**: Deliver clean, executable code directly. Eliminate conversational intros, pleasantries, or restating instructions.
+3. **No Duplicate Wrapper Containers**: Never wrap semantic tags (`<header>`, `<main>`, `<nav>`, `<aside>`, `<section>`, `<footer>`) or `.card` components in redundant `<div>` containers.
+4. **Deterministic Class Ordering**: Order classes strictly as:
+   `Basecoat Class (.card/.btn/.input)` → `Layout (block/flex/grid/hidden)` → `Positioning (relative/sticky/fixed)` → `Alignment (items-center/justify-between/col-span)` → `Sizing (w/h/size/max-w)` → `Spacing (p/m/gap)` → `Typography (text/font/tracking/leading/tabular-nums)` → `Surface/Background (bg-*)` → `Borders/Rings (border-*/ring-*)` → `Effects (shadow/opacity/transition)` → `Interactive Variants (hover:/focus-visible:/dark:)`.
+
+---
 
 ## Tool Chaining Pattern
+
 ```json
 [
   { "tool": "basecoat_page_architect", "arguments": { "recipe": "workspace-dashboard", "density": "compact" } },

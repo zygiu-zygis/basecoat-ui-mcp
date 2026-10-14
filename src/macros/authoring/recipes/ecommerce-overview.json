@@ -1,0 +1,141 @@
+{
+  "schemaVersion": 1,
+  "id": "ecommerce-overview",
+  "kind": "page",
+  "profile": "app-default",
+  "entryPage": "overview",
+  "routeLinks": [],
+  "pages": [
+    {
+      "id": "overview",
+      "route": "/dashboard/ecommerce",
+      "recipe": "ecommerce-overview",
+      "root": "shell",
+      "status": "plan-ready",
+      "decisions": {
+        "density": "comfortable"
+      },
+      "nodes": {
+        "shell": {
+          "id": "shell",
+          "block": "app-shell",
+          "bindings": {}
+        },
+        "nav": {
+          "id": "nav",
+          "block": "sidebar-dashboard-shell",
+          "parent": {
+            "node": "shell",
+            "slot": "navigation",
+            "order": 0
+          },
+          "bindings": {}
+        },
+        "header": {
+          "id": "header",
+          "block": "page-header",
+          "parent": {
+            "node": "shell",
+            "slot": "header",
+            "order": 0
+          },
+          "bindings": {}
+        },
+        "canvas": {
+          "id": "canvas",
+          "block": "dashboard-02",
+          "parent": {
+            "node": "shell",
+            "slot": "content",
+            "order": 0
+          },
+          "bindings": {}
+        },
+        "kpi": {
+          "id": "kpi",
+          "block": "metrics-summary",
+          "parent": {
+            "node": "canvas",
+            "slot": "kpi",
+            "order": 0
+          },
+          "bindings": {}
+        },
+        "overview": {
+          "id": "overview",
+          "block": "svg-area-chart",
+          "parent": {
+            "node": "canvas",
+            "slot": "overview",
+            "order": 0
+          },
+          "bindings": {}
+        },
+        "orders": {
+          "id": "orders",
+          "block": "data-table-rich",
+          "parent": {
+            "node": "canvas",
+            "slot": "recent-orders",
+            "order": 0
+          },
+          "bindings": {}
+        }
+      },
+      "connections": [
+        {
+          "id": "shell-to-canvas",
+          "relation": "controls",
+          "from": {
+            "node": "shell",
+            "port": "main-region"
+          },
+          "to": {
+            "node": "canvas",
+            "port": "main-in"
+          }
+        },
+        {
+          "id": "header-to-nav",
+          "relation": "controls",
+          "from": {
+            "node": "header",
+            "port": "nav-toggle-out"
+          },
+          "to": {
+            "node": "nav",
+            "port": "nav-toggle-in"
+          }
+        }
+      ],
+      "rules": [
+        {
+          "id": "ecom-shell-frame",
+          "type": "same-frame",
+          "nodes": [
+            "header",
+            "canvas"
+          ]
+        },
+        {
+          "id": "ecom-same-shell",
+          "type": "same-shell",
+          "nodes": [
+            "nav",
+            "header",
+            "canvas"
+          ]
+        },
+        {
+          "id": "ecom-shell-gutter",
+          "type": "single-owner",
+          "boundary": "shell-root",
+          "property": "gutter",
+          "nodes": [
+            "shell"
+          ]
+        }
+      ]
+    }
+  ]
+}

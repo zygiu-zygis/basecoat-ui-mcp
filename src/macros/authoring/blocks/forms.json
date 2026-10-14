@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "id": "forms",
+  "role": "form",
+  "family": "form",
+  "description": "Shadcn new-york-v4 form layout with multi-section inputs, select dropdowns, toggles, and validation feedback.",
+  "tags": [
+    "forms",
+    "new-york-v4",
+    "profile",
+    "validation"
+  ],
+  "root": "forms-root",
+  "fragments": [
+    {
+      "id": "forms-root",
+      "emmet": "section.flex.flex-col.gap-6.rounded-xl.border.border-border.bg-card.p-6.text-card-foreground.shadow-sm[data-component=forms][data-slot=form-container]>(header.flex.flex-col.gap-2>h2.text-lg.font-semibold{Profile Settings}+p.text-xs.text-muted-foreground{Configure how your personal information is shown})+div[data-slot=form-body]+(div.flex.items-center.justify-end.gap-4.pt-2>button.btn.btn-sm.btn-ghost{Reset}+button.btn.btn-sm.btn-primary{Save Changes})"
+    },
+    {
+      "id": "forms-body",
+      "emmet": "div.flex.flex-col.gap-4[data-slot=form-body]>(div.flex.flex-col.gap-2>label.text-xs.font-medium[for=usr]{Username}+input.input.input-sm#usr[placeholder='shadcn'][required][data-state=valid]+p.text-xs.text-muted-foreground{Public display name.})+(div.flex.flex-col.gap-2>label.text-xs.font-medium[for=pref-lang]{Language}+select.select.select-sm#pref-lang[data-state=valid]>option{English}+option{Lithuanian}+option{French}^p.text-xs.text-muted-foreground{Preferred interface language.})+(div.flex.items-center.justify-between.rounded-lg.border.border-border.p-4>div.flex.flex-col.gap-2>span.text-xs.font-medium{Marketing Emails}+span.text-xs.text-muted-foreground{Receive updates about new features.}^input.switch.switch-sm[type=checkbox][data-state=checked])"
+    }
+  ],
+  "mounts": [
+    {
+      "parent": "forms-root",
+      "anchor": "forms-body",
+      "child": "forms-body",
+      "order": 0
+    }
+  ],
+  "slots": [],
+  "ports": [],
+  "componentRefs": [
+    "card",
+    "input",
+    "select",
+    "switch",
+    "button",
+    "label"
+  ],
+  "ruleRefs": [],
+  "dependencyBlockIds": [],
+  "layout": {
+    "frameRef": "forms-root"
+  },
+  "landmarks": {
+    "main": 0,
+    "primaryHeading": 0
+  },
+  "provenance": {
+    "origin": "authored",
+    "sourceHashes": {},
+    "mappingVersion": "1.0.0"
+  }
+}

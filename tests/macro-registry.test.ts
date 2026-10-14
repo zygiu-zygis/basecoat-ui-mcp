@@ -894,3 +894,52 @@ test('packaged registry exposes complete core shadcn blueprint blocks and recipe
   assert(packaged.recipes[packaged.aliases['marketing-pricing']!]);
   assert(packaged.recipes[packaged.aliases['workspace-detail']!]);
 });
+
+test('Phase 5 verification: translated shadcn v4 block recipes and blocks in compiled registry', () => {
+  const packaged = loadCompiledRegistry();
+
+  const requiredBlocks = [
+    { id: 'dashboard-01', role: 'dashboard', minSlots: 1 },
+    { id: 'dashboard-02', role: 'dashboard', minSlots: 1 },
+    { id: 'dashboard-03', role: 'dashboard', minSlots: 1 },
+    { id: 'dashboard-04', role: 'dashboard', minSlots: 1 },
+    { id: 'dashboard-05', role: 'dashboard', minSlots: 1 },
+    { id: 'dashboard-06', role: 'dashboard', minSlots: 1 },
+    { id: 'dashboard-07', role: 'dashboard', minSlots: 1 },
+    { id: 'metrics-summary', role: 'metrics', minSlots: 1 },
+    { id: 'data-table-rich', role: 'table', minSlots: 0 },
+    { id: 'form-field-group', role: 'form', minSlots: 0 },
+    { id: 'svg-area-chart', role: 'chart', minSlots: 0 },
+    { id: 'sidebar-dashboard-shell', role: 'navigation', minSlots: 1 },
+    { id: 'authentication', role: 'page', minSlots: 0 },
+    { id: 'forms', role: 'form', minSlots: 0 },
+    { id: 'tasks', role: 'workspace', minSlots: 1 },
+    { id: 'mail', role: 'workspace', minSlots: 0 },
+  ];
+
+  for (const { id, role, minSlots } of requiredBlocks) {
+    const aliasResolved = packaged.aliases[id] ?? id;
+    assert(packaged.blocks[aliasResolved], `block ${id} not found in registry blocks`);
+    const block = getBlock(packaged, id);
+    assert.equal(block.role, role, `block ${id} role mismatch: expected ${role}, got ${block.role}`);
+    assert(block.slots.length >= minSlots, `block ${id} slots count below ${minSlots}`);
+    assert(block.fragments.length > 0, `block ${id} has no fragments`);
+    assert(block.fragments[0]!.emmet.length > 0, `block ${id} emmet is empty`);
+  }
+
+  const requiredRecipes = [
+    'analytics-workspace',
+    'ecommerce-overview',
+    'tasks-table-workspace',
+    'mail-workspace',
+    'auth-split-flow',
+  ];
+
+  for (const recipeId of requiredRecipes) {
+    const aliasResolved = packaged.aliases[recipeId] ?? recipeId;
+    const recipe = packaged.recipes[aliasResolved];
+    assert(recipe, `recipe ${recipeId} not found in compiled registry`);
+    assert(recipe.id === recipeId || packaged.aliases[recipeId] !== undefined);
+    assert(typeof recipe.kind === 'string' && recipe.kind.length > 0);
+  }
+});

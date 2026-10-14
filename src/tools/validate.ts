@@ -348,6 +348,7 @@ export function validateComposition(code: string, options: ValidationOptions = {
   }
   const parsedHtml = parseHtmlWithDiagnostics(code);
   const nodes = parsedHtml.nodes;
+  const codeLines = code.split('\n');
   for (const diagnostic of parsedHtml.diagnostics) {
     report(
       `html-parser-${diagnostic.code}`,
@@ -545,6 +546,56 @@ export function validateComposition(code: string, options: ValidationOptions = {
         node.line,
         'Change h-16 to h-12 or h-14.',
       );
+    }
+
+    if (options.checkLegacySyntax || options.enforceFsm) {
+      if (node.tag === 'table' || (classes.includes('table') && node.tag !== 'div')) {
+        let p = node.parent;
+        let hasOverflow = false;
+        while (p !== null) {
+          const parentNode = nodes[p]!;
+          if (parentNode.classes.map(utility).some(c => c === 'overflow-x-auto' || c === 'overflow-auto' || c === 'table-container')) {
+            hasOverflow = true;
+            break;
+          }
+          p = parentNode.parent;
+        }
+        if (!hasOverflow) {
+          report(
+            'table-overflow-wrapper',
+            'warning',
+            'Data <table> is missing an overflow-x-auto wrapper container.',
+            node.line,
+            'Wrap <table> in <div class="overflow-x-auto"> to prevent mobile overflow.',
+          );
+        }
+      }
+
+      const hasLargeText = classes.some(c => /^text-[2-5]xl$/.test(c));
+      const lineText = codeLines[node.line - 1] ?? '';
+      const hasDigits = /\d/.test(lineText);
+      if (hasLargeText && hasDigits && !classes.includes('tabular-nums')) {
+        report(
+          'kpi-metric-tabular-nums',
+          'warning',
+          'KPI metric numeral is missing tabular-nums for digit alignment.',
+          node.line,
+          'Add "tabular-nums" to the metric value class list.',
+        );
+      }
+
+      if ((node.tag === 'td' || node.tag === 'th') && classes.includes('tabular-nums')) {
+        const isRightAligned = classes.some(c => c === 'text-right' || c === 'text-end');
+        if (!isRightAligned) {
+          report(
+            'table-numeric-alignment',
+            'warning',
+            'Numeric table cell with tabular-nums should be right-aligned.',
+            node.line,
+            'Add "text-right" (or "text-end") to numeric table column header and cells.',
+          );
+        }
+      }
     }
     for (const token of classes) {
       if (
@@ -757,6 +808,29 @@ export function validateComposition(code: string, options: ValidationOptions = {
       }
       if (!hasId && !hasAriaLabel && !isInsideLabel) {
         report('a11y-input-label', 'warning', 'Input field should have an id (to bind with <label for="id">), an aria-label, or be nested inside a <label>.', node.line);
+      }
+    }
+
+    if (options.checkLegacySyntax || options.enforceFsm) {
+      const isInteractive =
+        node.tag === 'button' ||
+        node.tag === 'input' ||
+        node.tag === 'select' ||
+        node.tag === 'textarea' ||
+        (node.tag === 'a' && node.attrs.href !== undefined) ||
+        node.attrs.role === 'button';
+      if (isInteractive) {
+        const hasOutlineNone = classes.some(c => c === 'outline-none' || c === 'focus:outline-none');
+        const hasFocusRing = classes.some(c => c.includes('ring') || c.includes('focus-visible:outline-') || c.includes('focus:outline-'));
+        if (hasOutlineNone && !hasFocusRing) {
+          report(
+            'a11y-focus-ring',
+            'warning',
+            'Removing default outline with outline-none without a focus-visible ring impairs keyboard accessibility.',
+            node.line,
+            'Add "focus-visible:ring-2 focus-visible:ring-ring" or remove "outline-none".',
+          );
+        }
       }
     }
 

@@ -1,0 +1,111 @@
+{
+  "schemaVersion": 1,
+  "id": "dashboard-07",
+  "role": "dashboard",
+  "family": "workspace",
+  "description": "Shadcn new-york-v4 Dashboard 07: Product authoring studio with primary details, status dropdown, image gallery, and pricing forms.",
+  "tags": [
+    "dashboard",
+    "workspace",
+    "new-york-v4",
+    "editor",
+    "forms"
+  ],
+  "root": "content-frame",
+  "fragments": [
+    {
+      "id": "content-frame",
+      "emmet": "div.flex.flex-1.gap-6.p-6[data-role=canvas][data-macro=canvas][data-block=dashboard-07]>div.flex.flex-1.flex-col.gap-6>div[data-slot=general-info]+div[data-slot=variants]^^aside.w-80.flex.flex-col.gap-6>div[data-slot=status-card]+div[data-slot=media-card]"
+    }
+  ],
+  "mounts": [],
+  "slots": [
+    {
+      "id": "general-info",
+      "at": {
+        "fragment": "content-frame",
+        "name": "general-info"
+      },
+      "accepts": [
+        "form",
+        "workspace"
+      ],
+      "min": 0,
+      "max": 1
+    },
+    {
+      "id": "variants",
+      "at": {
+        "fragment": "content-frame",
+        "name": "variants"
+      },
+      "accepts": [
+        "form",
+        "table"
+      ],
+      "min": 0,
+      "max": 1
+    },
+    {
+      "id": "status-card",
+      "at": {
+        "fragment": "content-frame",
+        "name": "status-card"
+      },
+      "accepts": [
+        "card",
+        "details"
+      ],
+      "min": 0,
+      "max": 1
+    },
+    {
+      "id": "media-card",
+      "at": {
+        "fragment": "content-frame",
+        "name": "media-card"
+      },
+      "accepts": [
+        "card",
+        "details"
+      ],
+      "min": 0,
+      "max": 1
+    }
+  ],
+  "ports": [
+    {
+      "id": "main-in",
+      "at": {
+        "fragment": "content-frame",
+        "name": "content-frame"
+      },
+      "direction": "in",
+      "kind": "region",
+      "contract": "main",
+      "minLinks": 0,
+      "maxLinks": 1,
+      "scope": "shell"
+    }
+  ],
+  "componentRefs": [
+    "card",
+    "button",
+    "input",
+    "badge"
+  ],
+  "ruleRefs": [],
+  "dependencyBlockIds": [],
+  "layout": {
+    "frameRef": "content-frame"
+  },
+  "landmarks": {
+    "main": 1,
+    "primaryHeading": 0
+  },
+  "provenance": {
+    "origin": "authored",
+    "sourceHashes": {},
+    "mappingVersion": "1.0.0"
+  }
+}

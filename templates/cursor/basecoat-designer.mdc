@@ -1,14 +1,12 @@
 ---
 description: Basecoat design, audit, and theming workflow for agents using basecoat-ui-mcp (any project depending on basecoat-css or targeting a shadcn/ui look)
-globs:
+globs: "**/*.{html,astro,jsx,tsx,vue,svelte,php}"
 alwaysApply: false
 ---
 
-# Basecoat designer workflow
+# Basecoat Designer Workflow
 
-Use this workflow when creating or modifying a Basecoat page with
-`basecoat-ui-mcp`. Call the MCP before grepping `node_modules/basecoat-css`
-CSS or hand-writing tokens.
+Use this workflow when creating or modifying a Basecoat page with `basecoat-ui-mcp`. Call the MCP tools before grepping `node_modules/basecoat-css` CSS or hand-writing tokens.
 
 ## Mandatory 4-Stage Intent-Driven Workflow (Fast Path)
 
@@ -23,12 +21,50 @@ When generating or upgrading a page, follow this 4-step tool chaining sequence:
 4. **Step 4 — Quality Audit (`basecoat_quality_inspector`)**:
    Audit the assembled HTML/Astro source for a `0–100` quality score, WCAG 2.1 / APCA contrast pairings, keyboard focus traps, `aria-expanded`/`aria-controls` bindings, syntax violations, ARIA omissions (`ariaOmissions`), and auto-fix repairs. Iterate until `score >= 90` (`valid: true`).
 
+---
+
+## Dashboard-Specific Generation Rules
+
+### 1. Strict KPI Hierarchy
+- **Typography Scale**: Core KPI value MUST be visually dominant using `<p class="text-3xl font-semibold tabular-nums tracking-tight">` (or `text-4xl`). Category title uses `<p class="text-sm font-medium text-muted-foreground">`. Secondary context uses `<p class="text-xs text-muted-foreground">`.
+- **Universal Paragraphs**: Use `<p>` tags universally for all metric card text. Using `<span>` for text is FORBIDDEN.
+- **Trend Delta Indicators**: Mathematical signs (`+` or `-`) alone are FORBIDDEN. Use explicit directional inline SVG icons paired with semantic colors (`text-emerald-600` / `text-rose-600`) and an accessible `<p class="sr-only">Increased by...</p>`.
+- **Neutral Icon Wrapper**: Center card icons inside `size-10 rounded-lg bg-muted flex items-center justify-center text-muted-foreground`.
+- **Micro-Chart Slot**: Sparklines must be constrained to `h-8` or `h-10` at the bottom of the card.
+- **Card Ring Rule**: NEVER add `border` or `border-border` to `.card`. Basecoat `.card` provides its own subtle 1px ring and shadow elevation.
+
+### 2. Table Scaffolding & Data Grids
+- **Container Wrapping**: Wrap all tables in `<div class="overflow-x-auto rounded-md border border-border">`.
+- **Sticky Headers**: Sticky header pins with `thead.sticky.top-0.z-10.border-b.border-border.bg-muted/50.backdrop-blur`.
+- **Deterministic Alignment**: Numeric/currency columns MUST align right (`text-right tabular-nums`). Text columns align left (`text-left`).
+- **Interactive Toolbars & Actions**: Precede tables with an integrated filter toolbar (search input, filter dropdowns, export action). Equip selectable tables with a bulk action bar.
+- **Row Action Dropdowns**: Dropdown menus declare FSM `data-state="closed"` with trigger `aria-expanded="false"` and `aria-controls`.
+- **Pagination**: Position standard-sized button controls beneath the table displaying current slice (e.g., "Showing 1 to 10 of 124 entries"). Never use `btn-xs`.
+
+### 3. Responsive Container Wrapping & App Shell
+- **Root Shell**: `h-screen w-full overflow-hidden flex bg-background text-foreground`.
+- **Pinned Sidebar**: Desktop width strictly `w-64` (or `w-16` collapsed with tooltip mode), pinned at `md:sticky md:top-0 md:h-screen`.
+- **Matched Header Heights**: Sidebar brand container and Topbar must strictly match heights (`h-12` or `h-14`) with seamless border alignment.
+- **Independent Canvas Scroll**: The main content wrapper scrolls independently: `flex-1 flex flex-col min-w-0 overflow-y-auto`.
+- **12-Column Responsive Grid**: Use `grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-4 md:gap-6`. Never place a single full-width card on desktop; use asymmetrical spans (e.g., `lg:col-span-8` + `lg:col-span-4`).
+
+### 4. Mandatory FSM `data-state` Contracts
+- `dialog`: `<dialog class="dialog" data-state="closed" data-fsm-recipe="dialog" data-fsm-state="closed">`
+- `dropdown-menu`: `<div class="dropdown-menu" data-state="closed">` with trigger `aria-expanded="false"` and `aria-controls`
+- `tabs`: `<div class="tabs" data-state="active" data-fsm-recipe="tabs" role="tablist">`
+- `accordion`: `<section class="accordion" data-state="closed">` using `<details>` and `<summary>`
+- `button` (submit): `<button type="submit" class="btn btn-primary" data-state="default">` transitioning to `data-state="loading"` with disabled attribute and SVG spinner
+- `sidebar`: `<aside class="sidebar" data-component="sidebar" data-state="expanded|collapsed">`
+
+---
+
 ## Clean Generation Standards (Zero Muda)
 
-1. **No Redundant Explanatory Text**: Emit clean, executable markup and minimal structural summaries without conversational filler, restating instructions, or redundant prose around code blocks.
-2. **No Duplicate Wrapper Containers**: Never wrap semantic landmarks (`<header>`, `<main>`, `<nav>`, `<aside>`, `<section>`) or `.card` elements in superfluous `<div class="wrapper">` or unstyled `<div>` shells. Apply flex/grid/spacing utilities directly to the semantic element.
-3. **Deterministic Class Ordering**: Order all Tailwind CSS v4 utility classes deterministically on every element:
-   `Basecoat Component (.card/.btn/.input)` → `Layout (block/flex/grid/hidden)` → `Positioning (relative/sticky/inset)` → `Flex/Grid Alignment (items-center/justify-between/col-span)` → `Sizing (w/h/size/max-w)` → `Spacing (p/m/gap)` → `Typography (text/font/tracking/leading/tabular-nums)` → `Surface/Background (bg-*)` → `Borders/Rings (border-*/ring-*)` → `Effects (shadow/opacity/transition)` → `Interactive Variants (hover:/focus-visible:/dark:)`.
+1. **No Decorative Symbols or Emojis**: Unicode emojis are FORBIDDEN. Use clean inline SVG icons (Lucide / Phosphor SVG paths).
+2. **No Redundant Explanatory Text**: Emit clean, executable markup and minimal structural summaries without conversational filler, restating instructions, or redundant prose around code blocks.
+3. **No Duplicate Wrapper Containers**: Never wrap semantic landmarks (`<header>`, `<main>`, `<nav>`, `<aside>`, `<section>`, `<footer>`) or `.card` elements in superfluous `<div class="wrapper">` or unstyled `<div>` shells. Apply flex/grid/spacing utilities directly to the semantic element.
+4. **Deterministic Class Ordering**: Order all Tailwind CSS v4 utility classes deterministically on every element:
+   `Basecoat Component (.card/.btn/.input)` → `Layout (block/flex/grid/hidden)` → `Positioning (relative/sticky/fixed)` → `Flex/Grid Alignment (items-center/justify-between/col-span)` → `Sizing (w/h/size/max-w)` → `Spacing (p/m/gap)` → `Typography (text/font/tracking/leading/tabular-nums)` → `Surface/Background (bg-*)` → `Borders/Rings (border-*/ring-*)` → `Effects (shadow/opacity/transition)` → `Interactive Variants (hover:/focus-visible:/dark:)`.
 
 ### Tool Chaining Example
 ```json
@@ -44,89 +80,25 @@ When generating or upgrading a page, follow this 4-step tool chaining sequence:
 { "tool": "basecoat_quality_inspector", "arguments": { "code": "<header>...</header><main>...</main>", "densityProfile": "compact", "enforceFsm": true } }
 ```
 
+---
+
 ## Existing UI Audit & Stateful Macro Session Workflow
 
-Existing UI audit or restyle (no design session): read
-`basecoat://design/theming` and `basecoat://design/rhythm`, call
-`get_component_details` or `basecoat_component_syntax` for each control you change, then run
-`basecoat_quality_inspector` (or `validate_composition`) on the rendered layout including `<head>` scripts and
-`<style>`. Select an official Basecoat style pack in CSS (default
-`@import "basecoat-css/vega"`, or `nova`, `maia`, `lyra`, `mira`, `luma`, `sera`, `rhea`).
-Keep one dark-mode strategy (`html.dark`) and one resolver
-(`window.basecoat.theme`, key `themeMode`). For headers, pair `theme-switcher`
-(sun/moon SVG toggle) with the style variant selector. Verify light and dark
-screenshots with an OS dark preference and empty `localStorage`. Steps below are
-for stateful multi-step macro sessions:
+Existing UI audit or restyle (no design session): read `basecoat://design/theming` and `basecoat://design/rhythm`, call `get_component_details` or `basecoat_component_syntax` for each control you change, then run `basecoat_quality_inspector` (or `validate_composition`) on the rendered layout including `<head>` scripts and `<style>`. Select an official Basecoat style pack in CSS (default `@import "basecoat-css/vega"`, or `nova`, `maia`, `lyra`, `mira`, `luma`, `sera`, `rhea`).
+Keep one dark-mode strategy (`html.dark`) and one resolver (`window.basecoat.theme`, key `themeMode`). For headers, pair `theme-switcher` (sun/moon SVG toggle) with the style variant selector. Verify light and dark screenshots with an OS dark preference and empty `localStorage`. Steps below are for stateful multi-step macro sessions:
 
-1. Read `basecoat://design/rhythm` and `basecoat://project/context`. Read
-   `basecoat://integration/frameworks` before production asset integration.
+1. Read `basecoat://design/rhythm` and `basecoat://project/context`. Read `basecoat://integration/frameworks` before production asset integration.
+2. Identify the explicit design session. If unknown, call `get_design_context` with `view: "sessions"`. Never guess a global "current session".
+3. Read the current context and revision with `get_design_context` (`overview` or `next`).
+4. Select or resume an approved page or flow recipe such as `workspace-dashboard`, `workspace-settings`, `workspace-detail`, `auth-flow`, `auth-split-flow`, `marketing-pricing`, or `data-records`. Create the session with `begin_design`; change shared decisions with `apply_design_patch` using a `set_decision` operation.
+5. Make structural changes through `apply_design_patch`, always using the current `expectedRevision` and a unique `operationId`. A successful commit acknowledges with revision and `operationId`; if the packet includes `truncated: true`, reread validation or context for omitted detail.
+6. Before implementing a region, read its focused context, applicable `rules`, and referenced blueprint sections with `get_macro_block`. Follow `next` cursors until the required section is complete.
+7. For semantic consistency, use `get_rhythm_rules` to access approved spacing, typography, and layout patterns. Filter by profile and family as needed. Keep each returned semantic token ID in design metadata and use its separate approved utility in application `class` attributes. A token ID is not itself a Tailwind class. Optional host overrides live at `.basecoat/rhythm.json` inside the project root only. Use `get_fsm_recipe` for structural states, transitions, guards, and metadata-only actions (available recipes: `dialog`, `collapsible-navigation`, `navigation`, `auth-flow`, `tabs`). Follow every `next` cursor from either tool. Bind source explicitly with matching `data-fsm-recipe` and `data-fsm-state` attributes.
+8. Expand the approved static fragments in the host application. Preserve named slots, instance boundaries, ordering, and declared connections. The server does not write application source files. When writing HTML or framework template source, output literal line breaks rather than escaped `\n` strings. Prevent syntax bugs such as emitting raw `\n` characters in `<head>`.
+9. Use `search_components` and `get_component_details` only for selected component leaves. Keep OAuth, captcha, session, credential, data, and other runtime behavior in the host application. Strictly enforce a neutral (zinc/slate) palette; forbid aggressive colors except for semantic (success/danger) indicators. Completely forbid emojis. Use inline SVG (e.g., Phosphor Icons) and avoid external CDN dependencies.
+10. Record completed regions as client-reported checkpoints with `apply_design_patch` and a `record_written` operation tied to the current plan digest.
+11. After a conflict or restart, reread context. Do not continue from an assumed stale layout. A changed registry or design revision invalidates old cursors.
+12. Validate the complete graph with `validate_design` in `complete` mode. Compare generated source with that graph, then run `validate_composition` on the generated application source with the selected `semanticProfile` and `densityProfile` (e.g., `compact` for dense dashboards). Resolve parser diagnostics, invalid mappings, arbitrary colors, duplicate page landmarks, macro anchors, structural order, and FSM bindings.
+13. Report remaining obligations explicitly. A graph marked `plan-ready` is not proof of rendered correctness, runtime behavior, accessibility, or visual verification, runtime interaction testing, or full framework AST verification. Perform and report those checks separately when required.
 
-2. Identify the explicit design session. If unknown, call
-   `get_design_context` with `view: "sessions"`. Never guess a global
-   "current session".
-
-3. Read the current context and revision with `get_design_context`
-   (`overview` or `next`).
-
-4. Select or resume an approved page or flow recipe such as
-   `workspace-dashboard`, `workspace-settings`, `workspace-detail`,
-   `auth-flow`, `auth-split-flow`, `marketing-pricing`, or `data-records`.
-   Create the session with `begin_design`; change shared decisions with
-   `apply_design_patch` using a `set_decision` operation.
-
-5. Make structural changes through `apply_design_patch`, always using the
-   current `expectedRevision` and a unique `operationId`. A successful commit
-   acknowledges with revision and `operationId`; if the packet includes
-   `truncated: true`, reread validation or context for omitted detail.
-
-6. Before implementing a region, read its focused context, applicable
-   `rules`, and referenced blueprint sections with `get_macro_block`. Follow
-   `next` cursors until the required section is complete.
-
-7. For semantic consistency, use `get_rhythm_rules` to access approved
-   spacing, typography, and layout patterns. Filter by profile and family
-   as needed. Keep each returned semantic token ID in design metadata and use
-   its separate approved utility in application `class` attributes. A token ID
-   is not itself a Tailwind class. Optional host overrides live at
-   `.basecoat/rhythm.json` inside the project root only. Use `get_fsm_recipe`
-   for structural states, transitions, guards, and metadata-only actions
-   (available recipes: `dialog`, `collapsible-navigation`, `navigation`,
-   `auth-flow`, `tabs`). Follow every `next` cursor from either tool. Bind
-   source explicitly with matching `data-fsm-recipe` and `data-fsm-state`
-   attributes.
-
-8. Expand the approved static fragments in the host application. Preserve
-   named slots, instance boundaries, ordering, and declared connections.
-   The server does not write application source files.
-   When writing HTML or framework template source, output literal line breaks rather than escaped `\n` strings.
-   Prevent syntax bugs such as emitting raw `\n` characters in `<head>`.
-
-9. Use `search_components` and `get_component_details` only for selected
-   component leaves. Keep OAuth, captcha, session, credential, data, and
-   other runtime behavior in the host application.
-   Strictly enforce a neutral (zinc/slate) palette; forbid aggressive colors
-   except for semantic (success/danger) indicators. Completely forbid emojis.
-   Use inline SVG (e.g., Phosphor Icons) and avoid external CDN dependencies.
-
-10. Record completed regions as client-reported checkpoints with
-   `apply_design_patch` and a `record_written` operation tied to the current
-   plan digest.
-
-11. After a conflict or restart, reread context. Do not continue from an
-    assumed stale layout. A changed registry or design revision invalidates old
-    cursors.
-
-12. Validate the complete graph with `validate_design` in `complete` mode.
-    Compare generated source with that graph, then run
-    `validate_composition` on the generated application source with the
-    selected `semanticProfile` and `densityProfile` (e.g., `compact` for dense dashboards).
-    Resolve parser diagnostics, invalid mappings, arbitrary colors, duplicate
-    page landmarks, macro anchors, structural order, and FSM bindings.
-
-13. Report remaining obligations explicitly. A graph marked `plan-ready` is
-    not proof of rendered correctness, runtime behavior, accessibility, or
-    visual verification, runtime interaction testing, or full framework AST
-    verification. Perform and report those checks separately when required.
-
-Layout contracts come from this project's pinned macro registry via MCP tools.
-They are not supplied automatically by shadcn or by MCP itself.
+Layout contracts come from this project's pinned macro registry via MCP tools. They are not supplied automatically by shadcn or by MCP itself.

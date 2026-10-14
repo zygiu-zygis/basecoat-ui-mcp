@@ -1,0 +1,106 @@
+{
+  "schemaVersion": 1,
+  "id": "metrics-summary",
+  "role": "metrics",
+  "family": "workspace",
+  "description": "KPI and metric summary cards: 4-card responsive grid with trend delta badges, primary values, and comparative helper text.",
+  "tags": [
+    "dashboard",
+    "cards",
+    "metrics",
+    "kpi",
+    "responsive",
+    "states"
+  ],
+  "root": "metrics-root",
+  "fragments": [
+    {
+      "id": "metrics-root",
+      "emmet": "div.grid.grid-cols-1.gap-4.md:gap-6.md:grid-cols-2.lg:grid-cols-4[data-slot=metrics-summary]>article.card.flex.min-h-32.min-w-0.flex-col.gap-4.rounded-xl.bg-card.p-6.text-card-foreground.shadow-sm[data-slot=card-$]*4>(header.flex.items-center.justify-between>span.text-sm.font-medium.text-muted-foreground[data-slot=title]{Total Revenue}+span.badge.rounded-full.border.border-border.px-2.text-xs.font-medium[data-variant=outline][data-slot=delta]{+12%})+div.flex.flex-col.gap-2>strong.text-2xl.font-semibold.tabular-nums[data-slot=value]{$45,231.89}+p.text-xs.text-muted-foreground[data-slot=helper]{+20.1% from last month})"
+    }
+  ],
+  "mounts": [],
+  "slots": [
+    {
+      "id": "card-1",
+      "at": {
+        "fragment": "metrics-root",
+        "name": "card-1"
+      },
+      "accepts": [
+        "kpi"
+      ],
+      "min": 0,
+      "max": 1
+    },
+    {
+      "id": "card-2",
+      "at": {
+        "fragment": "metrics-root",
+        "name": "card-2"
+      },
+      "accepts": [
+        "kpi"
+      ],
+      "min": 0,
+      "max": 1
+    },
+    {
+      "id": "card-3",
+      "at": {
+        "fragment": "metrics-root",
+        "name": "card-3"
+      },
+      "accepts": [
+        "kpi"
+      ],
+      "min": 0,
+      "max": 1
+    },
+    {
+      "id": "card-4",
+      "at": {
+        "fragment": "metrics-root",
+        "name": "card-4"
+      },
+      "accepts": [
+        "kpi"
+      ],
+      "min": 0,
+      "max": 1
+    }
+  ],
+  "ports": [
+    {
+      "id": "metrics-in",
+      "at": {
+        "fragment": "metrics-root",
+        "name": "metrics-root"
+      },
+      "direction": "in",
+      "kind": "region",
+      "contract": "metrics",
+      "minLinks": 0,
+      "maxLinks": 1,
+      "scope": "page"
+    }
+  ],
+  "componentRefs": [
+    "card",
+    "badge"
+  ],
+  "ruleRefs": [],
+  "dependencyBlockIds": [],
+  "layout": {
+    "frameRef": "metrics-root"
+  },
+  "landmarks": {
+    "main": 0,
+    "primaryHeading": 0
+  },
+  "provenance": {
+    "origin": "authored",
+    "sourceHashes": {},
+    "mappingVersion": "1.0.0"
+  }
+}

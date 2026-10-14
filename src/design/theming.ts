@@ -85,10 +85,25 @@ Standard header action cluster (as seen on basecoatui.com):
   box-shadow: 0 0 0 1000px var(--background) inset;
   transition: background-color 9999s; } in theme.css.
 
-## Typography
+## Typography and Tabular Numerals
 - Keep one sans family with full Latin Extended coverage (e.g. Lithuanian
-  ąčęėįšųūž) when replacing fonts; verify glyphs before shipping. Use
-  tabular-nums for numeric table/KPI values.
+  ąčęėįšųūž) when replacing fonts; verify glyphs before shipping.
+- Use tabular-nums for all numeric table cells and KPI metrics (e.g. text-2xl font-semibold tabular-nums)
+  to ensure visual alignment stability during live updates.
+
+## Surface Elevation & Contrast Pairings
+- Always pair semantic surface tokens with high-contrast foreground counterparts:
+  - bg-primary + text-primary-foreground
+  - bg-card + text-card-foreground
+  - bg-muted + text-foreground or text-muted-foreground
+  - bg-popover + text-popover-foreground
+- Satisfy WCAG 2.1 AA (min 4.5:1) and APCA Lc 60 surface contrast. Never pair bg-primary with text-primary.
+- Surface elevation hierarchy: bg-background (ground) -> bg-card (surface) -> bg-popover with shadow-md (floating).
+
+## Realistic Content Strategy
+- Real domain identifiers: Use genuine invoice numbers (INV-2024-001), real user names, and dates.
+- Clear action verbs: "Export CSV", "Create Invoice", "Save Changes" instead of ambiguous labels.
+- Zero Lorem Ipsum: Completely avoid placeholder Latin or placeholder strings in all UI components.
 
 ## Verify
 - validate_composition flags mixed media+class strategies and custom theme

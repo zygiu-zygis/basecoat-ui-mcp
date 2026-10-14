@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "revision": "8aae82b74c098a687022ceb1173743d6f270a55877886d6ca697f1d9b161606f",
+  "revision": "0473d056fc8599426117299a08855b729070f715cab04768d77c3d1042de3c6b",
   "blocks": {
     "cbe0f152631792d61e6ebb46d791ae123dd45d83b58f2105e1c8f38e1bf283a7": {
       "schemaVersion": 1,
@@ -313,6 +313,354 @@
       },
       "landmarks": {
         "main": 0,
+        "primaryHeading": 0
+      },
+      "provenance": {
+        "origin": "authored",
+        "sourceHashes": {},
+        "mappingVersion": "1.0.0"
+      }
+    },
+    "4d58154ba01762c95b2fd5e7fa91c167dc4716c9c748346da4b4a362ef8bc186": {
+      "schemaVersion": 1,
+      "id": "authentication",
+      "role": "page",
+      "family": "auth",
+      "description": "Shadcn new-york-v4 authentication card with social OAuth triggers, credential inputs, FSM state attributes, and forgot-password link.",
+      "tags": [
+        "auth",
+        "login",
+        "social-auth",
+        "new-york-v4",
+        "states"
+      ],
+      "root": "auth-root",
+      "fragments": [
+        {
+          "id": "auth-root",
+          "emmet": "main.flex.min-h-screen.w-full.items-center.justify-center.p-6.bg-muted[data-slot=auth-page]>div.card.w-full.max-w-md.rounded-xl.border.border-border.bg-card.p-6.text-card-foreground.shadow-md[data-component=auth-card][data-fsm-recipe=auth-flow][data-fsm-state=idle]>(header.flex.flex-col.gap-2.text-center>h1.text-2xl.font-semibold[data-slot=title]{Sign In}+p.text-xs.text-muted-foreground[data-slot=desc]{Enter your credentials to access your account})+div[data-slot=auth-form]+(footer.text-center.text-xs.text-muted-foreground.pt-4>span{Don't have an account? }+a.text-primary.font-medium.hover:underline[href='#signup']{Sign Up})"
+        },
+        {
+          "id": "auth-form",
+          "emmet": "div.flex.flex-col.gap-4.py-4[data-slot=form-container]>(div.grid.grid-cols-2.gap-4>button.btn.btn-sm.btn-outline.w-full[type=button]>svg[aria-hidden=true].size-4+span{GitHub}^button.btn.btn-sm.btn-outline.w-full[type=button]>svg[aria-hidden=true].size-4+span{Google})+(div.relative.flex.items-center.justify-center>hr.w-full.border-border+span.bg-card.px-2.text-xs.text-muted-foreground{or continue with})+(form.flex.flex-col.gap-4>(div.flex.flex-col.gap-2>label.text-xs.font-medium[for=auth-email]{Email}+input.input.input-sm#auth-email[type=email][placeholder='name@example.com'][required][data-state=valid])+(div.flex.flex-col.gap-2>div.flex.items-center.justify-between>label.text-xs.font-medium[for=auth-password]{Password}+a.text-xs.text-primary.hover:underline[href='#forgot']{Forgot?}^input.input.input-sm#auth-password[type=password][required][data-state=valid])+button.btn.btn-sm.btn-primary.w-full[type=submit][data-state=idle]{Sign In})"
+        }
+      ],
+      "mounts": [
+        {
+          "parent": "auth-root",
+          "anchor": "auth-form",
+          "child": "auth-form",
+          "order": 0
+        }
+      ],
+      "slots": [],
+      "ports": [],
+      "componentRefs": [
+        "card",
+        "button",
+        "input",
+        "label",
+        "field"
+      ],
+      "ruleRefs": [],
+      "dependencyRefs": [],
+      "layout": {
+        "frameRef": "auth-root"
+      },
+      "landmarks": {
+        "main": 1,
+        "primaryHeading": 1
+      },
+      "provenance": {
+        "origin": "authored",
+        "sourceHashes": {
+          "upstream:login-01": "1830088a392d11fad8ed4a84743c991da69942ed66ec0bf47caa0ae37a2e1fee"
+        },
+        "mappingVersion": "1.0.0"
+      }
+    },
+    "6e45a7940e427a07117c1d51b4efbeb00018824b115dfe5e9d27dd96cab9a64b": {
+      "schemaVersion": 1,
+      "id": "dashboard-03",
+      "role": "dashboard",
+      "family": "workspace",
+      "description": "Shadcn new-york-v4 Dashboard 03: Split prompt studio canvas with model settings sidebar, message stream, and structured input console.",
+      "tags": [
+        "dashboard",
+        "workspace",
+        "new-york-v4",
+        "ai",
+        "prompt-studio"
+      ],
+      "root": "content-frame",
+      "fragments": [
+        {
+          "id": "content-frame",
+          "emmet": "div.flex.flex-1.gap-6.p-6[data-role=canvas][data-macro=canvas][data-block=dashboard-03]>div.flex.flex-1.flex-col.gap-4>div.flex-1.rounded-xl.border.border-border.bg-card.p-4[data-slot=chat-stream]+div[data-slot=prompt-input]^^aside.w-80.rounded-xl.border.border-border.bg-card.p-4[data-slot=model-settings]"
+        }
+      ],
+      "mounts": [],
+      "slots": [
+        {
+          "id": "chat-stream",
+          "at": {
+            "fragment": "content-frame",
+            "name": "chat-stream"
+          },
+          "accepts": [
+            "workspace",
+            "content"
+          ],
+          "min": 0,
+          "max": 1
+        },
+        {
+          "id": "prompt-input",
+          "at": {
+            "fragment": "content-frame",
+            "name": "prompt-input"
+          },
+          "accepts": [
+            "form",
+            "input"
+          ],
+          "min": 0,
+          "max": 1
+        },
+        {
+          "id": "model-settings",
+          "at": {
+            "fragment": "content-frame",
+            "name": "model-settings"
+          },
+          "accepts": [
+            "settings",
+            "form"
+          ],
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "ports": [
+        {
+          "id": "main-in",
+          "at": {
+            "fragment": "content-frame",
+            "name": "content-frame"
+          },
+          "direction": "in",
+          "kind": "region",
+          "contract": "main",
+          "minLinks": 0,
+          "maxLinks": 1,
+          "scope": "shell"
+        }
+      ],
+      "componentRefs": [
+        "card",
+        "button",
+        "textarea",
+        "badge"
+      ],
+      "ruleRefs": [],
+      "dependencyRefs": [],
+      "layout": {
+        "frameRef": "content-frame"
+      },
+      "landmarks": {
+        "main": 1,
+        "primaryHeading": 0
+      },
+      "provenance": {
+        "origin": "authored",
+        "sourceHashes": {},
+        "mappingVersion": "1.0.0"
+      }
+    },
+    "a6ee9e863dd469252923f2e446cae0aafd17dbaf81dc9f6b65aeb0d20a530540": {
+      "schemaVersion": 1,
+      "id": "dashboard-04",
+      "role": "dashboard",
+      "family": "workspace",
+      "description": "Shadcn new-york-v4 Dashboard 04: Two-column settings layout with sticky sub-navigation rail and stacked configuration sections.",
+      "tags": [
+        "dashboard",
+        "workspace",
+        "new-york-v4",
+        "settings"
+      ],
+      "root": "content-frame",
+      "fragments": [
+        {
+          "id": "content-frame",
+          "emmet": "div.flex.flex-1.gap-6.p-6[data-role=canvas][data-macro=canvas][data-block=dashboard-04]>nav.w-48.flex.flex-col.gap-2[data-slot=settings-nav]+div.flex.flex-1.flex-col.gap-6[data-slot=settings-content]"
+        }
+      ],
+      "mounts": [],
+      "slots": [
+        {
+          "id": "settings-nav",
+          "at": {
+            "fragment": "content-frame",
+            "name": "settings-nav"
+          },
+          "accepts": [
+            "navigation"
+          ],
+          "min": 0,
+          "max": 1
+        },
+        {
+          "id": "settings-content",
+          "at": {
+            "fragment": "content-frame",
+            "name": "settings-content"
+          },
+          "accepts": [
+            "form",
+            "workspace"
+          ],
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "ports": [
+        {
+          "id": "main-in",
+          "at": {
+            "fragment": "content-frame",
+            "name": "content-frame"
+          },
+          "direction": "in",
+          "kind": "region",
+          "contract": "main",
+          "minLinks": 0,
+          "maxLinks": 1,
+          "scope": "shell"
+        }
+      ],
+      "componentRefs": [
+        "button",
+        "card"
+      ],
+      "ruleRefs": [],
+      "dependencyRefs": [],
+      "layout": {
+        "frameRef": "content-frame"
+      },
+      "landmarks": {
+        "main": 1,
+        "primaryHeading": 0
+      },
+      "provenance": {
+        "origin": "authored",
+        "sourceHashes": {},
+        "mappingVersion": "1.0.0"
+      }
+    },
+    "162697c6992e035d3abcb4f2ffad5b30f14bca8fb59c50d5407d6bbf66d5e38c": {
+      "schemaVersion": 1,
+      "id": "dashboard-07",
+      "role": "dashboard",
+      "family": "workspace",
+      "description": "Shadcn new-york-v4 Dashboard 07: Product authoring studio with primary details, status dropdown, image gallery, and pricing forms.",
+      "tags": [
+        "dashboard",
+        "workspace",
+        "new-york-v4",
+        "editor",
+        "forms"
+      ],
+      "root": "content-frame",
+      "fragments": [
+        {
+          "id": "content-frame",
+          "emmet": "div.flex.flex-1.gap-6.p-6[data-role=canvas][data-macro=canvas][data-block=dashboard-07]>div.flex.flex-1.flex-col.gap-6>div[data-slot=general-info]+div[data-slot=variants]^^aside.w-80.flex.flex-col.gap-6>div[data-slot=status-card]+div[data-slot=media-card]"
+        }
+      ],
+      "mounts": [],
+      "slots": [
+        {
+          "id": "general-info",
+          "at": {
+            "fragment": "content-frame",
+            "name": "general-info"
+          },
+          "accepts": [
+            "form",
+            "workspace"
+          ],
+          "min": 0,
+          "max": 1
+        },
+        {
+          "id": "variants",
+          "at": {
+            "fragment": "content-frame",
+            "name": "variants"
+          },
+          "accepts": [
+            "form",
+            "table"
+          ],
+          "min": 0,
+          "max": 1
+        },
+        {
+          "id": "status-card",
+          "at": {
+            "fragment": "content-frame",
+            "name": "status-card"
+          },
+          "accepts": [
+            "card",
+            "details"
+          ],
+          "min": 0,
+          "max": 1
+        },
+        {
+          "id": "media-card",
+          "at": {
+            "fragment": "content-frame",
+            "name": "media-card"
+          },
+          "accepts": [
+            "card",
+            "details"
+          ],
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "ports": [
+        {
+          "id": "main-in",
+          "at": {
+            "fragment": "content-frame",
+            "name": "content-frame"
+          },
+          "direction": "in",
+          "kind": "region",
+          "contract": "main",
+          "minLinks": 0,
+          "maxLinks": 1,
+          "scope": "shell"
+        }
+      ],
+      "componentRefs": [
+        "card",
+        "button",
+        "input",
+        "badge"
+      ],
+      "ruleRefs": [],
+      "dependencyRefs": [],
+      "layout": {
+        "frameRef": "content-frame"
+      },
+      "landmarks": {
+        "main": 1,
         "primaryHeading": 0
       },
       "provenance": {
@@ -949,6 +1297,204 @@
         "mappingVersion": "1.0.0"
       }
     },
+    "9fd839dafa3ad90f5eb8223898c1d0d7b69a68bb16af66c595b6977c2d9db8ad": {
+      "schemaVersion": 1,
+      "id": "data-table-rich",
+      "role": "table",
+      "family": "data",
+      "description": "Rich data table with filter toolbar, bulk action bar, row action dropdown, sticky header & pagination.",
+      "tags": [
+        "data",
+        "table",
+        "filters",
+        "pagination",
+        "bulk-actions",
+        "responsive"
+      ],
+      "root": "table-root",
+      "fragments": [
+        {
+          "id": "table-root",
+          "emmet": "div.flex.flex-col.gap-4.rounded-xl.border.border-border.bg-card.p-4.text-card-foreground[data-component=data-table-rich][data-slot=table-host]>(div.flex.items-center.justify-between.gap-4[data-slot=toolbar]>div.flex.flex-1.items-center.gap-2>input.input.input-sm.w-64[type=search][placeholder='Filter records...'][data-slot=search]+button.btn.btn-sm.btn-outline[data-slot=filter-status]{Status: All}+button.btn.btn-sm.btn-outline[data-slot=view-options]{View})+(div.flex.items-center.justify-between.rounded-lg.bg-muted.px-4.py-2.text-sm[data-slot=bulk-actions][data-state=inactive]>span.font-medium{0 selected}+div.flex.items-center.gap-2>button.btn.btn-xs.btn-outline{Export}+button.btn.btn-xs.btn-destructive{Delete})+div[data-slot=table-body]+(div.flex.items-center.justify-between.gap-4.px-2.py-2[data-slot=pagination]>span.text-xs.text-muted-foreground{Showing 1 to 10 of 100 entries}+div.flex.items-center.gap-2>button.btn.btn-sm.btn-outline[disabled]{Previous}+button.btn.btn-sm.btn-outline{Next})"
+        },
+        {
+          "id": "table-body",
+          "emmet": "div.relative.overflow-auto.rounded-lg.border.border-border[data-slot=table-scroll]>table.table.w-full.text-sm>thead.sticky.top-0.border-b.border-border.bg-background>tr>th.h-10.px-4.text-left.font-medium[data-slot=th-select]>input.checkbox.checkbox-sm[type=checkbox]+th.h-10.px-4.text-left.font-medium{Task}+th.h-10.px-4.text-left.font-medium{Status}+th.h-10.px-4.text-right.font-medium{Actions}^tbody.divide-y.divide-border>tr.hover:bg-muted*2>td.px-4.py-2>input.checkbox.checkbox-sm[type=checkbox]+td.px-4.py-2.font-mono.text-xs{TASK-$}+td.px-4.py-2>span.badge.badge-outline.text-xs{In Progress}+td.px-4.py-2.text-right>button.btn.btn-ghost.btn-xs[aria-haspopup=menu][data-state=closed][aria-label=Actions]>svg[aria-hidden=true].size-4"
+        }
+      ],
+      "mounts": [
+        {
+          "parent": "table-root",
+          "anchor": "table-body",
+          "child": "table-body",
+          "order": 0
+        }
+      ],
+      "slots": [],
+      "ports": [
+        {
+          "id": "dataset-in",
+          "at": {
+            "fragment": "table-root",
+            "name": "table-root"
+          },
+          "direction": "in",
+          "kind": "data",
+          "contract": "dataset",
+          "minLinks": 0,
+          "maxLinks": 1,
+          "scope": "page"
+        },
+        {
+          "id": "dataset-out",
+          "at": {
+            "fragment": "table-root",
+            "name": "table-root"
+          },
+          "direction": "out",
+          "kind": "data",
+          "contract": "dataset",
+          "minLinks": 0,
+          "maxLinks": 1,
+          "scope": "page"
+        }
+      ],
+      "componentRefs": [
+        "table",
+        "button",
+        "input",
+        "checkbox",
+        "badge",
+        "dropdown-menu",
+        "pagination"
+      ],
+      "ruleRefs": [],
+      "dependencyRefs": [],
+      "layout": {
+        "frameRef": "table-root"
+      },
+      "landmarks": {
+        "main": 0,
+        "primaryHeading": 0
+      },
+      "provenance": {
+        "origin": "authored",
+        "sourceHashes": {},
+        "mappingVersion": "1.0.0"
+      }
+    },
+    "81a3941e6d578051e01a68c1015cd8d811855fa49b19946612d68e270f36f075": {
+      "schemaVersion": 1,
+      "id": "dashboard-06",
+      "role": "dashboard",
+      "family": "workspace",
+      "description": "Shadcn new-york-v4 Dashboard 06: Catalog management workspace with tabbed category filters, bulk actions, and inventory table.",
+      "tags": [
+        "dashboard",
+        "workspace",
+        "new-york-v4",
+        "inventory",
+        "table"
+      ],
+      "root": "content-frame",
+      "fragments": [
+        {
+          "id": "content-frame",
+          "emmet": "div.flex.flex-1.flex-col.gap-6.p-6[data-role=canvas][data-macro=canvas][data-block=dashboard-06]>div[data-slot=tabs]+div[data-slot=filters]+div[data-slot=inventory-table]+div[data-slot=pager]"
+        }
+      ],
+      "mounts": [],
+      "slots": [
+        {
+          "id": "tabs",
+          "at": {
+            "fragment": "content-frame",
+            "name": "tabs"
+          },
+          "accepts": [
+            "tabs"
+          ],
+          "min": 0,
+          "max": 1
+        },
+        {
+          "id": "filters",
+          "at": {
+            "fragment": "content-frame",
+            "name": "filters"
+          },
+          "accepts": [
+            "filters"
+          ],
+          "min": 0,
+          "max": 1
+        },
+        {
+          "id": "inventory-table",
+          "at": {
+            "fragment": "content-frame",
+            "name": "inventory-table"
+          },
+          "accepts": [
+            "table",
+            "data"
+          ],
+          "min": 0,
+          "max": 1
+        },
+        {
+          "id": "pager",
+          "at": {
+            "fragment": "content-frame",
+            "name": "pager"
+          },
+          "accepts": [
+            "pager",
+            "pagination"
+          ],
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "ports": [
+        {
+          "id": "main-in",
+          "at": {
+            "fragment": "content-frame",
+            "name": "content-frame"
+          },
+          "direction": "in",
+          "kind": "region",
+          "contract": "main",
+          "minLinks": 0,
+          "maxLinks": 1,
+          "scope": "shell"
+        }
+      ],
+      "componentRefs": [
+        "card",
+        "tabs",
+        "table",
+        "button",
+        "badge"
+      ],
+      "ruleRefs": [],
+      "dependencyRefs": [
+        "9fd839dafa3ad90f5eb8223898c1d0d7b69a68bb16af66c595b6977c2d9db8ad"
+      ],
+      "layout": {
+        "frameRef": "content-frame"
+      },
+      "landmarks": {
+        "main": 1,
+        "primaryHeading": 0
+      },
+      "provenance": {
+        "origin": "authored",
+        "sourceHashes": {},
+        "mappingVersion": "1.0.0"
+      }
+    },
     "fd464e595da290c7aeba1144598a7ebbf3f298d7192a4a60a9a6110bda6ed5a0": {
       "schemaVersion": 1,
       "id": "data-workspace",
@@ -1357,6 +1903,63 @@
         "mappingVersion": "1.0.0"
       }
     },
+    "0287630e74fce36efbc25d7019a39962eae1849b74ba66429ace7fdc4ca322f5": {
+      "schemaVersion": 1,
+      "id": "form-field-group",
+      "role": "form",
+      "family": "form",
+      "description": "Form field group layout with reactive validation feedback states, helper copy, and loading FSM submit actions.",
+      "tags": [
+        "form",
+        "fields",
+        "validation",
+        "states",
+        "actions"
+      ],
+      "root": "form-root",
+      "fragments": [
+        {
+          "id": "form-root",
+          "emmet": "form.flex.flex-col.gap-6.rounded-xl.border.border-border.bg-card.p-6.text-card-foreground.shadow-sm[data-component=form-field-group][data-fsm-recipe=form-flow][data-fsm-state=idle][data-slot=form-host]>(div.flex.flex-col.gap-2>h2.text-lg.font-semibold[data-slot=form-title]{Account Details}+p.text-xs.text-muted-foreground[data-slot=form-desc]{Update your profile and notification preferences.})+div[data-slot=form-fields]+(div.flex.items-center.justify-end.gap-4.pt-2[data-slot=actions]>button.btn.btn-sm.btn-ghost[type=button]{Cancel}+button.btn.btn-sm.btn-primary[type=submit][data-state=idle]>svg[aria-hidden=true].size-4+span{Save Changes})"
+        },
+        {
+          "id": "form-fields",
+          "emmet": "div.flex.flex-col.gap-4[data-slot=fields]>(div.flex.flex-col.gap-2[data-slot=field-name]>label.text-xs.font-medium[for=name]{Full Name}+input.input.input-sm#name[type=text][placeholder='Jane Doe'][required][data-state=valid]+p.text-xs.text-muted-foreground{Displayed on your public profile.})+(div.flex.flex-col.gap-2[data-slot=field-email]>label.text-xs.font-medium[for=email]{Email Address}+input.input.input-sm#email[type=email][placeholder='jane@example.com'][required][data-state=valid]+p.text-xs.text-destructive[data-state=invalid]{Please enter a valid email address.})+(div.flex.flex-col.gap-2[data-slot=field-bio]>label.text-xs.font-medium[for=bio]{Bio}+textarea.textarea.textarea-sm#bio[placeholder='Brief description...'][rows=3]+p.text-xs.text-muted-foreground{Max 250 characters.})"
+        }
+      ],
+      "mounts": [
+        {
+          "parent": "form-root",
+          "anchor": "form-fields",
+          "child": "form-fields",
+          "order": 0
+        }
+      ],
+      "slots": [],
+      "ports": [],
+      "componentRefs": [
+        "card",
+        "button",
+        "input",
+        "textarea",
+        "label",
+        "field"
+      ],
+      "ruleRefs": [],
+      "dependencyRefs": [],
+      "layout": {
+        "frameRef": "form-root"
+      },
+      "landmarks": {
+        "main": 0,
+        "primaryHeading": 0
+      },
+      "provenance": {
+        "origin": "authored",
+        "sourceHashes": {},
+        "mappingVersion": "1.0.0"
+      }
+    },
     "db0f381548cf79f10b2eb645ee1a4586b5eca810b8aa670849767271debd6bc3": {
       "schemaVersion": 1,
       "id": "form-section",
@@ -1395,6 +1998,355 @@
       "landmarks": {
         "main": 0,
         "primaryHeading": 1
+      },
+      "provenance": {
+        "origin": "authored",
+        "sourceHashes": {},
+        "mappingVersion": "1.0.0"
+      }
+    },
+    "efa0b835fb0696279d6b7f8c23ba985e5b5f5dfe7855c169dc86c4837a3118a2": {
+      "schemaVersion": 1,
+      "id": "forms",
+      "role": "form",
+      "family": "form",
+      "description": "Shadcn new-york-v4 form layout with multi-section inputs, select dropdowns, toggles, and validation feedback.",
+      "tags": [
+        "forms",
+        "new-york-v4",
+        "profile",
+        "validation"
+      ],
+      "root": "forms-root",
+      "fragments": [
+        {
+          "id": "forms-root",
+          "emmet": "section.flex.flex-col.gap-6.rounded-xl.border.border-border.bg-card.p-6.text-card-foreground.shadow-sm[data-component=forms][data-slot=form-container]>(header.flex.flex-col.gap-2>h2.text-lg.font-semibold{Profile Settings}+p.text-xs.text-muted-foreground{Configure how your personal information is shown})+div[data-slot=form-body]+(div.flex.items-center.justify-end.gap-4.pt-2>button.btn.btn-sm.btn-ghost{Reset}+button.btn.btn-sm.btn-primary{Save Changes})"
+        },
+        {
+          "id": "forms-body",
+          "emmet": "div.flex.flex-col.gap-4[data-slot=form-body]>(div.flex.flex-col.gap-2>label.text-xs.font-medium[for=usr]{Username}+input.input.input-sm#usr[placeholder='shadcn'][required][data-state=valid]+p.text-xs.text-muted-foreground{Public display name.})+(div.flex.flex-col.gap-2>label.text-xs.font-medium[for=pref-lang]{Language}+select.select.select-sm#pref-lang[data-state=valid]>option{English}+option{Lithuanian}+option{French}^p.text-xs.text-muted-foreground{Preferred interface language.})+(div.flex.items-center.justify-between.rounded-lg.border.border-border.p-4>div.flex.flex-col.gap-2>span.text-xs.font-medium{Marketing Emails}+span.text-xs.text-muted-foreground{Receive updates about new features.}^input.switch.switch-sm[type=checkbox][data-state=checked])"
+        }
+      ],
+      "mounts": [
+        {
+          "parent": "forms-root",
+          "anchor": "forms-body",
+          "child": "forms-body",
+          "order": 0
+        }
+      ],
+      "slots": [],
+      "ports": [],
+      "componentRefs": [
+        "card",
+        "input",
+        "select",
+        "switch",
+        "button",
+        "label"
+      ],
+      "ruleRefs": [],
+      "dependencyRefs": [],
+      "layout": {
+        "frameRef": "forms-root"
+      },
+      "landmarks": {
+        "main": 0,
+        "primaryHeading": 0
+      },
+      "provenance": {
+        "origin": "authored",
+        "sourceHashes": {},
+        "mappingVersion": "1.0.0"
+      }
+    },
+    "fce7ef64d5f208c14b12f0b69f2a3ba51387032aa87f19134d6f200c45bb64ae": {
+      "schemaVersion": 1,
+      "id": "mail",
+      "role": "workspace",
+      "family": "workspace",
+      "description": "Shadcn new-york-v4 mail workspace: 3-pane layout with mailbox folders, message list, and reading pane.",
+      "tags": [
+        "mail",
+        "new-york-v4",
+        "workspace",
+        "3-pane"
+      ],
+      "root": "mail-root",
+      "fragments": [
+        {
+          "id": "mail-root",
+          "emmet": "div.flex.flex-1.h-screen.divide-x.divide-border.border.border-border.bg-background[data-role=canvas][data-macro=canvas][data-block=mail]>div[data-slot=mail-nav]+div[data-slot=mail-list]+div[data-slot=mail-reading-pane]"
+        },
+        {
+          "id": "mail-nav",
+          "emmet": "nav.w-64.flex.flex-col.gap-2.p-4[data-slot=mail-nav]>div.flex.items-center.gap-2.pb-2>button.btn.btn-sm.btn-primary.w-full{Compose}^div.flex.flex-col.gap-2>a.btn.btn-ghost.btn-sm.justify-start.w-full[data-state=active]{Inbox}+a.btn.btn-ghost.btn-sm.justify-start.w-full{Drafts}+a.btn.btn-ghost.btn-sm.justify-start.w-full{Sent}+a.btn.btn-ghost.btn-sm.justify-start.w-full{Trash}"
+        },
+        {
+          "id": "mail-list",
+          "emmet": "div.w-96.flex.flex-col.gap-2.p-4[data-slot=mail-list]>input.input.input-sm[type=search][placeholder='Search messages...']+div.flex.flex-col.gap-2.overflow-auto>div.flex.flex-col.gap-2.rounded-lg.border.border-border.p-4.hover:bg-muted[data-state=active]*2>div.flex.items-center.justify-between>span.text-xs.font-semibold{Alice}+span.text-xs.text-muted-foreground{10:42 AM}^span.text-xs.font-medium{Project Update}+p.text-xs.text-muted-foreground{Summary of deliverables...}"
+        },
+        {
+          "id": "mail-reading-pane",
+          "emmet": "section.flex.flex-1.flex-col.gap-4.p-6[data-slot=mail-reading-pane]>header.flex.items-center.justify-between.border-b.border-border.pb-4>div.flex.items-center.gap-2>div.size-8.rounded-full.bg-muted+div.flex.flex-col>span.text-sm.font-semibold{Alice}+span.text-xs.text-muted-foreground{alice@example.com}^^span.text-xs.text-muted-foreground{Oct 14, 2026}^div.flex-1.text-sm.leading-relaxed{Hi team, please find attached the reviewed milestones...}+footer.flex.items-center.gap-2.pt-4.border-t.border-border>button.btn.btn-sm.btn-outline{Reply}+button.btn.btn-sm.btn-outline{Forward}"
+        }
+      ],
+      "mounts": [
+        {
+          "parent": "mail-root",
+          "anchor": "mail-nav",
+          "child": "mail-nav",
+          "order": 0
+        },
+        {
+          "parent": "mail-root",
+          "anchor": "mail-list",
+          "child": "mail-list",
+          "order": 1
+        },
+        {
+          "parent": "mail-root",
+          "anchor": "mail-reading-pane",
+          "child": "mail-reading-pane",
+          "order": 2
+        }
+      ],
+      "slots": [],
+      "ports": [
+        {
+          "id": "main-in",
+          "at": {
+            "fragment": "mail-root",
+            "name": "mail-root"
+          },
+          "direction": "in",
+          "kind": "region",
+          "contract": "main",
+          "minLinks": 0,
+          "maxLinks": 1,
+          "scope": "shell"
+        }
+      ],
+      "componentRefs": [
+        "button",
+        "input",
+        "badge"
+      ],
+      "ruleRefs": [],
+      "dependencyRefs": [],
+      "layout": {
+        "frameRef": "mail-root"
+      },
+      "landmarks": {
+        "main": 1,
+        "primaryHeading": 0
+      },
+      "provenance": {
+        "origin": "authored",
+        "sourceHashes": {},
+        "mappingVersion": "1.0.0"
+      }
+    },
+    "bb9894899b8d66b96ecf5b7e20c6ec6b50fa4ba6b73d87558c04642025df6d00": {
+      "schemaVersion": 1,
+      "id": "metrics-summary",
+      "role": "metrics",
+      "family": "workspace",
+      "description": "KPI and metric summary cards: 4-card responsive grid with trend delta badges, primary values, and comparative helper text.",
+      "tags": [
+        "dashboard",
+        "cards",
+        "metrics",
+        "kpi",
+        "responsive",
+        "states"
+      ],
+      "root": "metrics-root",
+      "fragments": [
+        {
+          "id": "metrics-root",
+          "emmet": "div.grid.grid-cols-1.gap-4.md:gap-6.md:grid-cols-2.lg:grid-cols-4[data-slot=metrics-summary]>article.card.flex.min-h-32.min-w-0.flex-col.gap-4.rounded-xl.bg-card.p-6.text-card-foreground.shadow-sm[data-slot=card-$]*4>(header.flex.items-center.justify-between>span.text-sm.font-medium.text-muted-foreground[data-slot=title]{Total Revenue}+span.badge.rounded-full.border.border-border.px-2.text-xs.font-medium[data-variant=outline][data-slot=delta]{+12%})+div.flex.flex-col.gap-2>strong.text-2xl.font-semibold.tabular-nums[data-slot=value]{$45,231.89}+p.text-xs.text-muted-foreground[data-slot=helper]{+20.1% from last month})"
+        }
+      ],
+      "mounts": [],
+      "slots": [
+        {
+          "id": "card-1",
+          "at": {
+            "fragment": "metrics-root",
+            "name": "card-1"
+          },
+          "accepts": [
+            "kpi"
+          ],
+          "min": 0,
+          "max": 1
+        },
+        {
+          "id": "card-2",
+          "at": {
+            "fragment": "metrics-root",
+            "name": "card-2"
+          },
+          "accepts": [
+            "kpi"
+          ],
+          "min": 0,
+          "max": 1
+        },
+        {
+          "id": "card-3",
+          "at": {
+            "fragment": "metrics-root",
+            "name": "card-3"
+          },
+          "accepts": [
+            "kpi"
+          ],
+          "min": 0,
+          "max": 1
+        },
+        {
+          "id": "card-4",
+          "at": {
+            "fragment": "metrics-root",
+            "name": "card-4"
+          },
+          "accepts": [
+            "kpi"
+          ],
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "ports": [
+        {
+          "id": "metrics-in",
+          "at": {
+            "fragment": "metrics-root",
+            "name": "metrics-root"
+          },
+          "direction": "in",
+          "kind": "region",
+          "contract": "metrics",
+          "minLinks": 0,
+          "maxLinks": 1,
+          "scope": "page"
+        }
+      ],
+      "componentRefs": [
+        "card",
+        "badge"
+      ],
+      "ruleRefs": [],
+      "dependencyRefs": [],
+      "layout": {
+        "frameRef": "metrics-root"
+      },
+      "landmarks": {
+        "main": 0,
+        "primaryHeading": 0
+      },
+      "provenance": {
+        "origin": "authored",
+        "sourceHashes": {},
+        "mappingVersion": "1.0.0"
+      }
+    },
+    "805de39d820786a5d33ddca505e125c08ee0b8ce56a2fcaf6d0af1f2e2a0ecdb": {
+      "schemaVersion": 1,
+      "id": "dashboard-05",
+      "role": "dashboard",
+      "family": "workspace",
+      "description": "Shadcn new-york-v4 Dashboard 05: Multi-column order operations canvas with summary cards, order table, and slide-over receipt inspector.",
+      "tags": [
+        "dashboard",
+        "workspace",
+        "new-york-v4",
+        "orders"
+      ],
+      "root": "content-frame",
+      "fragments": [
+        {
+          "id": "content-frame",
+          "emmet": "div.flex.flex-1.gap-6.p-6[data-role=canvas][data-macro=canvas][data-block=dashboard-05]>div.flex.flex-1.flex-col.gap-6>div[data-slot=kpi]+div[data-slot=orders-table]^^aside.w-96.rounded-xl.border.border-border.bg-card.p-6[data-slot=order-detail]"
+        }
+      ],
+      "mounts": [],
+      "slots": [
+        {
+          "id": "kpi",
+          "at": {
+            "fragment": "content-frame",
+            "name": "kpi"
+          },
+          "accepts": [
+            "metrics",
+            "kpi"
+          ],
+          "min": 0,
+          "max": 1
+        },
+        {
+          "id": "orders-table",
+          "at": {
+            "fragment": "content-frame",
+            "name": "orders-table"
+          },
+          "accepts": [
+            "table",
+            "data"
+          ],
+          "min": 0,
+          "max": 1
+        },
+        {
+          "id": "order-detail",
+          "at": {
+            "fragment": "content-frame",
+            "name": "order-detail"
+          },
+          "accepts": [
+            "details",
+            "workspace"
+          ],
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "ports": [
+        {
+          "id": "main-in",
+          "at": {
+            "fragment": "content-frame",
+            "name": "content-frame"
+          },
+          "direction": "in",
+          "kind": "region",
+          "contract": "main",
+          "minLinks": 0,
+          "maxLinks": 1,
+          "scope": "shell"
+        }
+      ],
+      "componentRefs": [
+        "card",
+        "badge",
+        "button",
+        "table"
+      ],
+      "ruleRefs": [],
+      "dependencyRefs": [
+        "bb9894899b8d66b96ecf5b7e20c6ec6b50fa4ba6b73d87558c04642025df6d00",
+        "9fd839dafa3ad90f5eb8223898c1d0d7b69a68bb16af66c595b6977c2d9db8ad"
+      ],
+      "layout": {
+        "frameRef": "content-frame"
+      },
+      "landmarks": {
+        "main": 1,
+        "primaryHeading": 0
       },
       "provenance": {
         "origin": "authored",
@@ -2255,6 +3207,240 @@
         "mappingVersion": "1.0.0"
       }
     },
+    "3dbe776b3e39e3a3e6227e455f836fca8f10ba7b7719bf9f9c36cb189082d5a6": {
+      "schemaVersion": 1,
+      "id": "dashboard-01",
+      "role": "dashboard",
+      "family": "workspace",
+      "description": "A dashboard with sidebar, charts and data table.",
+      "tags": [
+        "dashboard",
+        "workspace",
+        "new-york-v4",
+        "metrics",
+        "chart",
+        "table"
+      ],
+      "root": "content-frame",
+      "fragments": [
+        {
+          "id": "content-frame",
+          "emmet": "div.flex.flex-1.flex-col.gap-6.p-6[data-role=canvas][data-macro=canvas][data-block=dashboard-01]>div[data-slot=kpi]+div[data-slot=chart]+div[data-slot=table]"
+        }
+      ],
+      "mounts": [],
+      "slots": [
+        {
+          "id": "kpi",
+          "at": {
+            "fragment": "content-frame",
+            "name": "kpi"
+          },
+          "accepts": [
+            "metrics",
+            "kpi"
+          ],
+          "min": 0,
+          "max": 1
+        },
+        {
+          "id": "chart",
+          "at": {
+            "fragment": "content-frame",
+            "name": "chart"
+          },
+          "accepts": [
+            "chart",
+            "activity"
+          ],
+          "min": 0,
+          "max": 1
+        },
+        {
+          "id": "table",
+          "at": {
+            "fragment": "content-frame",
+            "name": "table"
+          },
+          "accepts": [
+            "table",
+            "data"
+          ],
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "ports": [
+        {
+          "id": "main-in",
+          "at": {
+            "fragment": "content-frame",
+            "name": "content-frame"
+          },
+          "direction": "in",
+          "kind": "region",
+          "contract": "main",
+          "minLinks": 0,
+          "maxLinks": 1,
+          "scope": "shell"
+        }
+      ],
+      "componentRefs": [
+        "card",
+        "button",
+        "badge",
+        "table",
+        "chart"
+      ],
+      "ruleRefs": [],
+      "dependencyRefs": [
+        "bb9894899b8d66b96ecf5b7e20c6ec6b50fa4ba6b73d87558c04642025df6d00",
+        "5209282f4f9a9011131336fed4ab850de572ab3e542e8beb22a96e0a0c7e91fd",
+        "9fd839dafa3ad90f5eb8223898c1d0d7b69a68bb16af66c595b6977c2d9db8ad"
+      ],
+      "layout": {
+        "frameRef": "content-frame"
+      },
+      "landmarks": {
+        "main": 1,
+        "primaryHeading": 0
+      },
+      "provenance": {
+        "origin": "authored",
+        "sourceHashes": {
+          "upstream:dashboard-01": "754696e17fd8191c5332bfde97e125e06daf3b622fc1338f16b8a65d4d897390"
+        },
+        "mappingVersion": "1.0.0"
+      }
+    },
+    "0484bff8778dcfc846c40ad8c519831e44e2576cf5a81eb22449ae8c62368b64": {
+      "schemaVersion": 1,
+      "id": "dashboard-02",
+      "role": "dashboard",
+      "family": "workspace",
+      "description": "Shadcn new-york-v4 Dashboard 02: Analytics & E-commerce workspace with tabbed period selectors, revenue chart canvas, and recent orders table.",
+      "tags": [
+        "dashboard",
+        "workspace",
+        "new-york-v4",
+        "ecommerce",
+        "analytics"
+      ],
+      "root": "content-frame",
+      "fragments": [
+        {
+          "id": "content-frame",
+          "emmet": "div.flex.flex-1.flex-col.gap-6.p-6[data-role=canvas][data-macro=canvas][data-block=dashboard-02]>div.flex.items-center.justify-between.gap-4>div[data-slot=tabs]+div[data-slot=actions]^^div[data-slot=kpi]+div.grid.grid-cols-1.gap-6.lg:grid-cols-3>div.lg:col-span-2[data-slot=overview]+div[data-slot=recent-orders]"
+        }
+      ],
+      "mounts": [],
+      "slots": [
+        {
+          "id": "tabs",
+          "at": {
+            "fragment": "content-frame",
+            "name": "tabs"
+          },
+          "accepts": [
+            "tabs"
+          ],
+          "min": 0,
+          "max": 1
+        },
+        {
+          "id": "actions",
+          "at": {
+            "fragment": "content-frame",
+            "name": "actions"
+          },
+          "accepts": [
+            "action"
+          ],
+          "min": 0,
+          "max": 1
+        },
+        {
+          "id": "kpi",
+          "at": {
+            "fragment": "content-frame",
+            "name": "kpi"
+          },
+          "accepts": [
+            "metrics",
+            "kpi"
+          ],
+          "min": 0,
+          "max": 1
+        },
+        {
+          "id": "overview",
+          "at": {
+            "fragment": "content-frame",
+            "name": "overview"
+          },
+          "accepts": [
+            "chart",
+            "activity",
+            "workspace"
+          ],
+          "min": 0,
+          "max": 1
+        },
+        {
+          "id": "recent-orders",
+          "at": {
+            "fragment": "content-frame",
+            "name": "recent-orders"
+          },
+          "accepts": [
+            "table",
+            "data",
+            "workspace"
+          ],
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "ports": [
+        {
+          "id": "main-in",
+          "at": {
+            "fragment": "content-frame",
+            "name": "content-frame"
+          },
+          "direction": "in",
+          "kind": "region",
+          "contract": "main",
+          "minLinks": 0,
+          "maxLinks": 1,
+          "scope": "shell"
+        }
+      ],
+      "componentRefs": [
+        "card",
+        "badge",
+        "button",
+        "tabs"
+      ],
+      "ruleRefs": [],
+      "dependencyRefs": [
+        "bb9894899b8d66b96ecf5b7e20c6ec6b50fa4ba6b73d87558c04642025df6d00",
+        "5209282f4f9a9011131336fed4ab850de572ab3e542e8beb22a96e0a0c7e91fd",
+        "9fd839dafa3ad90f5eb8223898c1d0d7b69a68bb16af66c595b6977c2d9db8ad"
+      ],
+      "layout": {
+        "frameRef": "content-frame"
+      },
+      "landmarks": {
+        "main": 1,
+        "primaryHeading": 0
+      },
+      "provenance": {
+        "origin": "authored",
+        "sourceHashes": {},
+        "mappingVersion": "1.0.0"
+      }
+    },
     "11e81ac3707d99da5d12cb7c146e3ce74fe616496372c176a2f0e15a125bdae8": {
       "schemaVersion": 1,
       "id": "dashboard-activity",
@@ -2331,6 +3517,78 @@
       },
       "landmarks": {
         "main": 0,
+        "primaryHeading": 0
+      },
+      "provenance": {
+        "origin": "authored",
+        "sourceHashes": {},
+        "mappingVersion": "1.0.0"
+      }
+    },
+    "32844e61382361ac6a12cc6a5493226cf3acb053f09bbdd1332d268678b57ab1": {
+      "schemaVersion": 1,
+      "id": "tasks",
+      "role": "workspace",
+      "family": "data",
+      "description": "Shadcn new-york-v4 tasks table workspace with task priority badges, status filters, and row action controls.",
+      "tags": [
+        "tasks",
+        "new-york-v4",
+        "table",
+        "workspace"
+      ],
+      "root": "tasks-root",
+      "fragments": [
+        {
+          "id": "tasks-root",
+          "emmet": "div.flex.flex-1.flex-col.gap-6.p-6[data-role=canvas][data-macro=canvas][data-block=tasks]>div.flex.items-center.justify-between.gap-4[data-slot=tasks-header]>div.flex.flex-col.gap-2>h2.text-xl.font-semibold{Tasks}+p.text-xs.text-muted-foreground{Here is a list of your tasks for this month!}^button.btn.btn-sm.btn-primary{+ New Task}^^div[data-slot=table]"
+        }
+      ],
+      "mounts": [],
+      "slots": [
+        {
+          "id": "table",
+          "at": {
+            "fragment": "tasks-root",
+            "name": "table"
+          },
+          "accepts": [
+            "table",
+            "data"
+          ],
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "ports": [
+        {
+          "id": "main-in",
+          "at": {
+            "fragment": "tasks-root",
+            "name": "tasks-root"
+          },
+          "direction": "in",
+          "kind": "region",
+          "contract": "main",
+          "minLinks": 0,
+          "maxLinks": 1,
+          "scope": "shell"
+        }
+      ],
+      "componentRefs": [
+        "button",
+        "badge",
+        "table"
+      ],
+      "ruleRefs": [],
+      "dependencyRefs": [
+        "9fd839dafa3ad90f5eb8223898c1d0d7b69a68bb16af66c595b6977c2d9db8ad"
+      ],
+      "layout": {
+        "frameRef": "tasks-root"
+      },
+      "landmarks": {
+        "main": 1,
         "primaryHeading": 0
       },
       "provenance": {
@@ -2461,6 +3719,147 @@
     }
   },
   "recipes": {
+    "c6c9468b97c1485b0eacd913f767c08c605147a915d8596a0b29241c02ffcc3a": {
+      "schemaVersion": 1,
+      "id": "analytics-workspace",
+      "kind": "page",
+      "profile": "efcf2f3e93ee5b4730cff4a6d760833299d19ca480be4b16424ae24a810e6057",
+      "pages": [
+        {
+          "id": "analytics",
+          "route": "/workspace/analytics",
+          "recipe": "c6c9468b97c1485b0eacd913f767c08c605147a915d8596a0b29241c02ffcc3a",
+          "root": "shell",
+          "nodes": {
+            "shell": {
+              "id": "shell",
+              "block": "cbe0f152631792d61e6ebb46d791ae123dd45d83b58f2105e1c8f38e1bf283a7",
+              "bindings": {}
+            },
+            "nav": {
+              "id": "nav",
+              "block": "72804bd89e0100488d25d1610c25cf18499e14acaceda5c4061b8e3bb7762a92",
+              "parent": {
+                "node": "shell",
+                "slot": "navigation",
+                "order": 0
+              },
+              "bindings": {}
+            },
+            "header": {
+              "id": "header",
+              "block": "a3e401eda6136789ae31b411ada1ef977bd5f2b665471460ff0a9db93aacd1aa",
+              "parent": {
+                "node": "shell",
+                "slot": "header",
+                "order": 0
+              },
+              "bindings": {}
+            },
+            "canvas": {
+              "id": "canvas",
+              "block": "3dbe776b3e39e3a3e6227e455f836fca8f10ba7b7719bf9f9c36cb189082d5a6",
+              "parent": {
+                "node": "shell",
+                "slot": "content",
+                "order": 0
+              },
+              "bindings": {}
+            },
+            "kpi": {
+              "id": "kpi",
+              "block": "bb9894899b8d66b96ecf5b7e20c6ec6b50fa4ba6b73d87558c04642025df6d00",
+              "parent": {
+                "node": "canvas",
+                "slot": "kpi",
+                "order": 0
+              },
+              "bindings": {}
+            },
+            "chart": {
+              "id": "chart",
+              "block": "5209282f4f9a9011131336fed4ab850de572ab3e542e8beb22a96e0a0c7e91fd",
+              "parent": {
+                "node": "canvas",
+                "slot": "chart",
+                "order": 0
+              },
+              "bindings": {}
+            },
+            "table": {
+              "id": "table",
+              "block": "9fd839dafa3ad90f5eb8223898c1d0d7b69a68bb16af66c595b6977c2d9db8ad",
+              "parent": {
+                "node": "canvas",
+                "slot": "table",
+                "order": 0
+              },
+              "bindings": {}
+            }
+          },
+          "connections": [
+            {
+              "id": "shell-to-canvas",
+              "relation": "controls",
+              "from": {
+                "node": "shell",
+                "port": "main-region"
+              },
+              "to": {
+                "node": "canvas",
+                "port": "main-in"
+              }
+            },
+            {
+              "id": "header-to-nav",
+              "relation": "controls",
+              "from": {
+                "node": "header",
+                "port": "nav-toggle-out"
+              },
+              "to": {
+                "node": "nav",
+                "port": "nav-toggle-in"
+              }
+            }
+          ],
+          "rules": [
+            {
+              "id": "analytics-shell-frame",
+              "type": "same-frame",
+              "nodes": [
+                "header",
+                "canvas"
+              ]
+            },
+            {
+              "id": "analytics-same-shell",
+              "type": "same-shell",
+              "nodes": [
+                "nav",
+                "header",
+                "canvas"
+              ]
+            },
+            {
+              "id": "analytics-shell-gutter",
+              "type": "single-owner",
+              "boundary": "shell-root",
+              "property": "gutter",
+              "nodes": [
+                "shell"
+              ]
+            }
+          ],
+          "decisions": {
+            "density": "comfortable"
+          },
+          "status": "plan-ready"
+        }
+      ],
+      "entryPage": "analytics",
+      "routeLinks": []
+    },
     "9bf7cdd02ccaa4b26cfa92274aeeb6be1b1583793f349c97ebe5fa96baebd528": {
       "schemaVersion": 1,
       "id": "auth-flow",
@@ -2851,6 +4250,258 @@
       "entryPage": "records",
       "routeLinks": []
     },
+    "f32a8a5cdb03bba4e2046ac00b28a3ee3d730ec17a68cdea079dc7dfb6efcdf6": {
+      "schemaVersion": 1,
+      "id": "ecommerce-overview",
+      "kind": "page",
+      "profile": "efcf2f3e93ee5b4730cff4a6d760833299d19ca480be4b16424ae24a810e6057",
+      "pages": [
+        {
+          "id": "overview",
+          "route": "/dashboard/ecommerce",
+          "recipe": "f32a8a5cdb03bba4e2046ac00b28a3ee3d730ec17a68cdea079dc7dfb6efcdf6",
+          "root": "shell",
+          "nodes": {
+            "shell": {
+              "id": "shell",
+              "block": "cbe0f152631792d61e6ebb46d791ae123dd45d83b58f2105e1c8f38e1bf283a7",
+              "bindings": {}
+            },
+            "nav": {
+              "id": "nav",
+              "block": "72804bd89e0100488d25d1610c25cf18499e14acaceda5c4061b8e3bb7762a92",
+              "parent": {
+                "node": "shell",
+                "slot": "navigation",
+                "order": 0
+              },
+              "bindings": {}
+            },
+            "header": {
+              "id": "header",
+              "block": "a3e401eda6136789ae31b411ada1ef977bd5f2b665471460ff0a9db93aacd1aa",
+              "parent": {
+                "node": "shell",
+                "slot": "header",
+                "order": 0
+              },
+              "bindings": {}
+            },
+            "canvas": {
+              "id": "canvas",
+              "block": "0484bff8778dcfc846c40ad8c519831e44e2576cf5a81eb22449ae8c62368b64",
+              "parent": {
+                "node": "shell",
+                "slot": "content",
+                "order": 0
+              },
+              "bindings": {}
+            },
+            "kpi": {
+              "id": "kpi",
+              "block": "bb9894899b8d66b96ecf5b7e20c6ec6b50fa4ba6b73d87558c04642025df6d00",
+              "parent": {
+                "node": "canvas",
+                "slot": "kpi",
+                "order": 0
+              },
+              "bindings": {}
+            },
+            "overview": {
+              "id": "overview",
+              "block": "5209282f4f9a9011131336fed4ab850de572ab3e542e8beb22a96e0a0c7e91fd",
+              "parent": {
+                "node": "canvas",
+                "slot": "overview",
+                "order": 0
+              },
+              "bindings": {}
+            },
+            "orders": {
+              "id": "orders",
+              "block": "9fd839dafa3ad90f5eb8223898c1d0d7b69a68bb16af66c595b6977c2d9db8ad",
+              "parent": {
+                "node": "canvas",
+                "slot": "recent-orders",
+                "order": 0
+              },
+              "bindings": {}
+            }
+          },
+          "connections": [
+            {
+              "id": "shell-to-canvas",
+              "relation": "controls",
+              "from": {
+                "node": "shell",
+                "port": "main-region"
+              },
+              "to": {
+                "node": "canvas",
+                "port": "main-in"
+              }
+            },
+            {
+              "id": "header-to-nav",
+              "relation": "controls",
+              "from": {
+                "node": "header",
+                "port": "nav-toggle-out"
+              },
+              "to": {
+                "node": "nav",
+                "port": "nav-toggle-in"
+              }
+            }
+          ],
+          "rules": [
+            {
+              "id": "ecom-shell-frame",
+              "type": "same-frame",
+              "nodes": [
+                "header",
+                "canvas"
+              ]
+            },
+            {
+              "id": "ecom-same-shell",
+              "type": "same-shell",
+              "nodes": [
+                "nav",
+                "header",
+                "canvas"
+              ]
+            },
+            {
+              "id": "ecom-shell-gutter",
+              "type": "single-owner",
+              "boundary": "shell-root",
+              "property": "gutter",
+              "nodes": [
+                "shell"
+              ]
+            }
+          ],
+          "decisions": {
+            "density": "comfortable"
+          },
+          "status": "plan-ready"
+        }
+      ],
+      "entryPage": "overview",
+      "routeLinks": []
+    },
+    "c99944fb47accea505246c8737d76acf45146519079310b5a6e53cc170e27b86": {
+      "schemaVersion": 1,
+      "id": "mail-workspace",
+      "kind": "page",
+      "profile": "efcf2f3e93ee5b4730cff4a6d760833299d19ca480be4b16424ae24a810e6057",
+      "pages": [
+        {
+          "id": "mail",
+          "route": "/workspace/mail",
+          "recipe": "c99944fb47accea505246c8737d76acf45146519079310b5a6e53cc170e27b86",
+          "root": "shell",
+          "nodes": {
+            "shell": {
+              "id": "shell",
+              "block": "cbe0f152631792d61e6ebb46d791ae123dd45d83b58f2105e1c8f38e1bf283a7",
+              "bindings": {}
+            },
+            "nav": {
+              "id": "nav",
+              "block": "72804bd89e0100488d25d1610c25cf18499e14acaceda5c4061b8e3bb7762a92",
+              "parent": {
+                "node": "shell",
+                "slot": "navigation",
+                "order": 0
+              },
+              "bindings": {}
+            },
+            "header": {
+              "id": "header",
+              "block": "a3e401eda6136789ae31b411ada1ef977bd5f2b665471460ff0a9db93aacd1aa",
+              "parent": {
+                "node": "shell",
+                "slot": "header",
+                "order": 0
+              },
+              "bindings": {}
+            },
+            "canvas": {
+              "id": "canvas",
+              "block": "fce7ef64d5f208c14b12f0b69f2a3ba51387032aa87f19134d6f200c45bb64ae",
+              "parent": {
+                "node": "shell",
+                "slot": "content",
+                "order": 0
+              },
+              "bindings": {}
+            }
+          },
+          "connections": [
+            {
+              "id": "shell-to-canvas",
+              "relation": "controls",
+              "from": {
+                "node": "shell",
+                "port": "main-region"
+              },
+              "to": {
+                "node": "canvas",
+                "port": "main-in"
+              }
+            },
+            {
+              "id": "header-to-nav",
+              "relation": "controls",
+              "from": {
+                "node": "header",
+                "port": "nav-toggle-out"
+              },
+              "to": {
+                "node": "nav",
+                "port": "nav-toggle-in"
+              }
+            }
+          ],
+          "rules": [
+            {
+              "id": "mail-shell-frame",
+              "type": "same-frame",
+              "nodes": [
+                "header",
+                "canvas"
+              ]
+            },
+            {
+              "id": "mail-same-shell",
+              "type": "same-shell",
+              "nodes": [
+                "nav",
+                "header",
+                "canvas"
+              ]
+            },
+            {
+              "id": "mail-shell-gutter",
+              "type": "single-owner",
+              "boundary": "shell-root",
+              "property": "gutter",
+              "nodes": [
+                "shell"
+              ]
+            }
+          ],
+          "decisions": {
+            "density": "compact"
+          },
+          "status": "plan-ready"
+        }
+      ],
+      "entryPage": "mail",
+      "routeLinks": []
+    },
     "190c51eac23911ad817903da7f9390216eaf783c13737cef654a3096cc54aa56": {
       "schemaVersion": 1,
       "id": "marketing-pricing",
@@ -2878,6 +4529,127 @@
         }
       ],
       "entryPage": "pricing",
+      "routeLinks": []
+    },
+    "9b9a0ee2699bdd6be171d2cd24a114bf1cd25c30e73fbf8252dd5e2eb6633a1a": {
+      "schemaVersion": 1,
+      "id": "tasks-table-workspace",
+      "kind": "page",
+      "profile": "efcf2f3e93ee5b4730cff4a6d760833299d19ca480be4b16424ae24a810e6057",
+      "pages": [
+        {
+          "id": "tasks",
+          "route": "/workspace/tasks",
+          "recipe": "9b9a0ee2699bdd6be171d2cd24a114bf1cd25c30e73fbf8252dd5e2eb6633a1a",
+          "root": "shell",
+          "nodes": {
+            "shell": {
+              "id": "shell",
+              "block": "cbe0f152631792d61e6ebb46d791ae123dd45d83b58f2105e1c8f38e1bf283a7",
+              "bindings": {}
+            },
+            "nav": {
+              "id": "nav",
+              "block": "72804bd89e0100488d25d1610c25cf18499e14acaceda5c4061b8e3bb7762a92",
+              "parent": {
+                "node": "shell",
+                "slot": "navigation",
+                "order": 0
+              },
+              "bindings": {}
+            },
+            "header": {
+              "id": "header",
+              "block": "a3e401eda6136789ae31b411ada1ef977bd5f2b665471460ff0a9db93aacd1aa",
+              "parent": {
+                "node": "shell",
+                "slot": "header",
+                "order": 0
+              },
+              "bindings": {}
+            },
+            "canvas": {
+              "id": "canvas",
+              "block": "32844e61382361ac6a12cc6a5493226cf3acb053f09bbdd1332d268678b57ab1",
+              "parent": {
+                "node": "shell",
+                "slot": "content",
+                "order": 0
+              },
+              "bindings": {}
+            },
+            "table": {
+              "id": "table",
+              "block": "9fd839dafa3ad90f5eb8223898c1d0d7b69a68bb16af66c595b6977c2d9db8ad",
+              "parent": {
+                "node": "canvas",
+                "slot": "table",
+                "order": 0
+              },
+              "bindings": {}
+            }
+          },
+          "connections": [
+            {
+              "id": "shell-to-canvas",
+              "relation": "controls",
+              "from": {
+                "node": "shell",
+                "port": "main-region"
+              },
+              "to": {
+                "node": "canvas",
+                "port": "main-in"
+              }
+            },
+            {
+              "id": "header-to-nav",
+              "relation": "controls",
+              "from": {
+                "node": "header",
+                "port": "nav-toggle-out"
+              },
+              "to": {
+                "node": "nav",
+                "port": "nav-toggle-in"
+              }
+            }
+          ],
+          "rules": [
+            {
+              "id": "tasks-shell-frame",
+              "type": "same-frame",
+              "nodes": [
+                "header",
+                "canvas"
+              ]
+            },
+            {
+              "id": "tasks-same-shell",
+              "type": "same-shell",
+              "nodes": [
+                "nav",
+                "header",
+                "canvas"
+              ]
+            },
+            {
+              "id": "tasks-shell-gutter",
+              "type": "single-owner",
+              "boundary": "shell-root",
+              "property": "gutter",
+              "nodes": [
+                "shell"
+              ]
+            }
+          ],
+          "decisions": {
+            "density": "compact"
+          },
+          "status": "plan-ready"
+        }
+      ],
+      "entryPage": "tasks",
       "routeLinks": []
     },
     "9fa0447153ed9492a719538109dc554e23807e78a09e22a3f00bd85a359e36b4": {
@@ -3571,6 +5343,10 @@
     "auth-sign-in": "2707e4a25d2f99437d380b9ac7a44636882a812d8ba2b34494a9f369169d88c4",
     "auth-sign-up": "6fec7f17de2d2c7e3f69e52109b87b0255d948f881a5e33a6f9f61be1d36a8f3",
     "auth-split-screen": "01b514d6afe398f6f3baf4fa2dee37baffdbec3051e684602ed0f05d48573d69",
+    "authentication": "4d58154ba01762c95b2fd5e7fa91c167dc4716c9c748346da4b4a362ef8bc186",
+    "dashboard-03": "6e45a7940e427a07117c1d51b4efbeb00018824b115dfe5e9d27dd96cab9a64b",
+    "dashboard-04": "a6ee9e863dd469252923f2e446cae0aafd17dbaf81dc9f6b65aeb0d20a530540",
+    "dashboard-07": "162697c6992e035d3abcb4f2ffad5b30f14bca8fb59c50d5407d6bbf66d5e38c",
     "dashboard-main": "7e2d0789c42ad85b9fefbd1ebae6d268e077bdf9cf2f2d1333a30d992d5fc672",
     "dashboard-row-actions": "9604f39f3923de0570eefdfe380984a95b26f4dacfb18b09b8f4d690874fa9fb",
     "dashboard-tabs": "134cbe26caea6de9145179009486a115e0decd014c1659452cb8643f5317cf33",
@@ -3579,12 +5355,19 @@
     "data-filters": "7b8a12c860ba038232b4973d25051b98867ca278cd0761541603f8516958265c",
     "data-pager": "8db430e806c397ae4259c221b7030e80e783f34c1f1c5002702020e1041a9296",
     "data-table": "2ea00445a26e83d13d2346abcc6adc570445def46468eb924334e26bf5271e9f",
+    "data-table-rich": "9fd839dafa3ad90f5eb8223898c1d0d7b69a68bb16af66c595b6977c2d9db8ad",
+    "dashboard-06": "81a3941e6d578051e01a68c1015cd8d811855fa49b19946612d68e270f36f075",
     "data-workspace": "fd464e595da290c7aeba1144598a7ebbf3f298d7192a4a60a9a6110bda6ed5a0",
     "detail-drawer-panel": "1cb011c6a62e6e6c82caddc5015ba58ceba8217f226a2bfcd6b587467083cb8b",
     "data-table-detail-layout": "a042a4239ba7f727d14425cfa4e42115808826c1decc810b93259afd4095c0ec",
     "empty-state": "b7c5de3a1cf828bda14e337119258c8613505b36c167633b347d1551367d10f5",
     "error-boundary": "47f6bc0a357930337589b78f8eb83051c2979498475f4154a38a8f9bb81764f7",
+    "form-field-group": "0287630e74fce36efbc25d7019a39962eae1849b74ba66429ace7fdc4ca322f5",
     "form-section": "db0f381548cf79f10b2eb645ee1a4586b5eca810b8aa670849767271debd6bc3",
+    "forms": "efa0b835fb0696279d6b7f8c23ba985e5b5f5dfe7855c169dc86c4837a3118a2",
+    "mail": "fce7ef64d5f208c14b12f0b69f2a3ba51387032aa87f19134d6f200c45bb64ae",
+    "metrics-summary": "bb9894899b8d66b96ecf5b7e20c6ec6b50fa4ba6b73d87558c04642025df6d00",
+    "dashboard-05": "805de39d820786a5d33ddca505e125c08ee0b8ce56a2fcaf6d0af1f2e2a0ecdb",
     "newsletter-waitlist": "57a13cd223e2a23e2c4c7ec875cfba5eb5030f6bf587bd1170dbec4db33989e9",
     "page-header": "a3e401eda6136789ae31b411ada1ef977bd5f2b665471460ff0a9db93aacd1aa",
     "pricing-tiers": "5857b53433f74071b407f98b96554ac99c6515031ff21a63f252cc9f3874cd96",
@@ -3597,13 +5380,20 @@
     "sidebar-mobile-flyout": "b2f95030c433acc594d2dd8ce1a1bdf20f2410e9e646a83803103d17806d85fb",
     "sidebar-nav": "9625532a4f0d2a345eb368fbf7fa3fc77337782d5c6340c28f0d5df2d525ecd3",
     "svg-area-chart": "5209282f4f9a9011131336fed4ab850de572ab3e542e8beb22a96e0a0c7e91fd",
+    "dashboard-01": "3dbe776b3e39e3a3e6227e455f836fca8f10ba7b7719bf9f9c36cb189082d5a6",
+    "dashboard-02": "0484bff8778dcfc846c40ad8c519831e44e2576cf5a81eb22449ae8c62368b64",
     "dashboard-activity": "11e81ac3707d99da5d12cb7c146e3ce74fe616496372c176a2f0e15a125bdae8",
+    "tasks": "32844e61382361ac6a12cc6a5493226cf3acb053f09bbdd1332d268678b57ab1",
     "topbar-nav": "b35d8b3cac346f8036359903ae96b06608b28747a38f8ea835083281de2c0c6f",
     "topbar-shell": "73094237dc12a88c4ea33ff78c32157694afcf74998993acbdc933f823abcad0",
+    "analytics-workspace": "c6c9468b97c1485b0eacd913f767c08c605147a915d8596a0b29241c02ffcc3a",
     "auth-flow": "9bf7cdd02ccaa4b26cfa92274aeeb6be1b1583793f349c97ebe5fa96baebd528",
     "auth-split-flow": "d929b9d4d54a7db7284e7478f596db39e8bbe05d7240555409b24eba33347b58",
     "data-records": "90200d4832214c0348cee75a1cf703b1edef0a4c8a18303904fc1a380891299a",
+    "ecommerce-overview": "f32a8a5cdb03bba4e2046ac00b28a3ee3d730ec17a68cdea079dc7dfb6efcdf6",
+    "mail-workspace": "c99944fb47accea505246c8737d76acf45146519079310b5a6e53cc170e27b86",
     "marketing-pricing": "190c51eac23911ad817903da7f9390216eaf783c13737cef654a3096cc54aa56",
+    "tasks-table-workspace": "9b9a0ee2699bdd6be171d2cd24a114bf1cd25c30e73fbf8252dd5e2eb6633a1a",
     "workspace-dashboard": "9fa0447153ed9492a719538109dc554e23807e78a09e22a3f00bd85a359e36b4",
     "workspace-detail": "075a58d1482369192acbd834b2ce4871a592817fdb8a020e57f8b7ab7802ec5b",
     "workspace-settings": "474439550f64d8fc1c2e4d246cc378053ddc22dbf644359968ee2cdea8b38cbf"

@@ -1,0 +1,81 @@
+{
+  "schemaVersion": 1,
+  "id": "dashboard-04",
+  "role": "dashboard",
+  "family": "workspace",
+  "description": "Shadcn new-york-v4 Dashboard 04: Two-column settings layout with sticky sub-navigation rail and stacked configuration sections.",
+  "tags": [
+    "dashboard",
+    "workspace",
+    "new-york-v4",
+    "settings"
+  ],
+  "root": "content-frame",
+  "fragments": [
+    {
+      "id": "content-frame",
+      "emmet": "div.flex.flex-1.gap-6.p-6[data-role=canvas][data-macro=canvas][data-block=dashboard-04]>nav.w-48.flex.flex-col.gap-2[data-slot=settings-nav]+div.flex.flex-1.flex-col.gap-6[data-slot=settings-content]"
+    }
+  ],
+  "mounts": [],
+  "slots": [
+    {
+      "id": "settings-nav",
+      "at": {
+        "fragment": "content-frame",
+        "name": "settings-nav"
+      },
+      "accepts": [
+        "navigation"
+      ],
+      "min": 0,
+      "max": 1
+    },
+    {
+      "id": "settings-content",
+      "at": {
+        "fragment": "content-frame",
+        "name": "settings-content"
+      },
+      "accepts": [
+        "form",
+        "workspace"
+      ],
+      "min": 0,
+      "max": 1
+    }
+  ],
+  "ports": [
+    {
+      "id": "main-in",
+      "at": {
+        "fragment": "content-frame",
+        "name": "content-frame"
+      },
+      "direction": "in",
+      "kind": "region",
+      "contract": "main",
+      "minLinks": 0,
+      "maxLinks": 1,
+      "scope": "shell"
+    }
+  ],
+  "componentRefs": [
+    "button",
+    "card"
+  ],
+  "ruleRefs": [],
+  "dependencyBlockIds": [],
+  "layout": {
+    "frameRef": "content-frame"
+  },
+  "landmarks": {
+    "main": 1,
+    "primaryHeading": 0
+  },
+  "provenance": {
+    "origin": "authored",
+    "sourceHashes": {},
+    "mappingVersion": "1.0.0"
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 1,
+  "id": "form-field-group",
+  "role": "form",
+  "family": "form",
+  "description": "Form field group layout with reactive validation feedback states, helper copy, and loading FSM submit actions.",
+  "tags": [
+    "form",
+    "fields",
+    "validation",
+    "states",
+    "actions"
+  ],
+  "root": "form-root",
+  "fragments": [
+    {
+      "id": "form-root",
+      "emmet": "form.flex.flex-col.gap-6.rounded-xl.border.border-border.bg-card.p-6.text-card-foreground.shadow-sm[data-component=form-field-group][data-fsm-recipe=form-flow][data-fsm-state=idle][data-slot=form-host]>(div.flex.flex-col.gap-2>h2.text-lg.font-semibold[data-slot=form-title]{Account Details}+p.text-xs.text-muted-foreground[data-slot=form-desc]{Update your profile and notification preferences.})+div[data-slot=form-fields]+(div.flex.items-center.justify-end.gap-4.pt-2[data-slot=actions]>button.btn.btn-sm.btn-ghost[type=button]{Cancel}+button.btn.btn-sm.btn-primary[type=submit][data-state=idle]>svg[aria-hidden=true].size-4+span{Save Changes})"
+    },
+    {
+      "id": "form-fields",
+      "emmet": "div.flex.flex-col.gap-4[data-slot=fields]>(div.flex.flex-col.gap-2[data-slot=field-name]>label.text-xs.font-medium[for=name]{Full Name}+input.input.input-sm#name[type=text][placeholder='Jane Doe'][required][data-state=valid]+p.text-xs.text-muted-foreground{Displayed on your public profile.})+(div.flex.flex-col.gap-2[data-slot=field-email]>label.text-xs.font-medium[for=email]{Email Address}+input.input.input-sm#email[type=email][placeholder='jane@example.com'][required][data-state=valid]+p.text-xs.text-destructive[data-state=invalid]{Please enter a valid email address.})+(div.flex.flex-col.gap-2[data-slot=field-bio]>label.text-xs.font-medium[for=bio]{Bio}+textarea.textarea.textarea-sm#bio[placeholder='Brief description...'][rows=3]+p.text-xs.text-muted-foreground{Max 250 characters.})"
+    }
+  ],
+  "mounts": [
+    {
+      "parent": "form-root",
+      "anchor": "form-fields",
+      "child": "form-fields",
+      "order": 0
+    }
+  ],
+  "slots": [],
+  "ports": [],
+  "componentRefs": [
+    "card",
+    "button",
+    "input",
+    "textarea",
+    "label",
+    "field"
+  ],
+  "ruleRefs": [],
+  "dependencyBlockIds": [],
+  "layout": {
+    "frameRef": "form-root"
+  },
+  "landmarks": {
+    "main": 0,
+    "primaryHeading": 0
+  },
+  "provenance": {
+    "origin": "authored",
+    "sourceHashes": {},
+    "mappingVersion": "1.0.0"
+  }
+}

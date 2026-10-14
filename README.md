@@ -147,11 +147,33 @@ The server exposes **5 high-level intent-driven tools**, four component tools, s
 
 ### 4-Stage Intent-Driven Tooling Layer (Fast Path)
 
-1. `basecoat_page_architect` — Query recipes (`src/macros/authoring/recipes/*.json`) and macro blocks (`src/macros/authoring/blocks/*.json`) by `intent`, `recipe`, or `block`. Delivers full layout scaffolds (`workspace-dashboard`, `auth-split-flow`, `workspace-detail`, `workspace-settings`, `data-records`, `auth-flow`, `marketing-pricing`) with explicit `data-slot` markers, semantic HTML skeletons, grid structures, and responsive containers.
-2. `basecoat_rules_enforcer` — Enforces strict technical constraints across `tailwind-v4`, `fsm-contracts`, `tokens`, and `semantic-html`: rejects deprecated Tailwind v3 utilities (`bg-opacity-*`, `flex-shrink-*`), rejects arbitrary bracket dimensions (`w-[327px]`), enforces mandatory FSM `data-state` contracts (`dialog`, `dropdown-menu`, `accordion`, `tabs`), mandates semantic tokens (`--color-primary`, `--color-surface`), and enforces deterministic class ordering. Optionally inspects `code` snippets inline and returns structured `violations` and `valid` status.
-3. `basecoat_creative_director` — Surfaces Kanso minimalism and Basecoat design intelligence from `src/design/rhythm.ts` and `theming.ts`: 4px/8px mathematical optical rhythm scale, complete typography ladder (`h1`..`h3`, body, data/meta, caption, `tabular-nums`), whitespace density balancing, subtle 1px card ring elevation, and WCAG 2.1 AA / APCA border-contrast ratios.
-4. `basecoat_component_syntax` — Delivers copy-pasteable HTML or Astro component markup from `src/registry/components.json` with pre-configured FSM state variants (`default`, `active`, `loading`, `disabled`, `open`, `closed`, `open/closed`), synchronized child trigger/panel attributes, and verified inline SVG action icons (`plus`, `edit`, `trash`, `search`, `chevron-down`, `check`, `external-link`).
-5. `basecoat_quality_inspector` — Audits HTML/Astro compositions and outputs structured diagnostics: `score` (`0–100`), letter `grade` (`A–F`), `syntaxViolations` (Tailwind v3 utilities, arbitrary colors/dimensions, `.card` double borders), `accessibilityOmissions` & `ariaOmissions` (WCAG 2.1 & APCA semantic token contrast pairings, modal `<dialog>` keyboard focus traps, `aria-expanded`/`aria-controls` DOM bindings, landmark/label checks), and actionable `autoFixSuggestions`.
+### 4-Stage Intent-Driven Tooling Layer (Fast Path)
+
+1. `basecoat_page_architect` — Query recipes (`src/macros/authoring/recipes/*.json`) and macro blocks (`src/macros/authoring/blocks/*.json`) by `intent`, `recipe`, or `block`. Delivers full layout scaffolds with explicit `data-slot` markers, semantic HTML skeletons, grid structures, and responsive containers. Fully covers 5 dashboard page archetypes:
+   - **Executive Dashboard** (`workspace-dashboard`, `executive-dashboard`) — KPI stat cards, revenue chart, and recent activity.
+   - **E-commerce Overview** (`ecommerce-overview`) — Sales metrics, revenue analytics, top products card, and order summary.
+   - **Analytics Workspace** (`analytics-workspace`) — Filter toolbar, time-series interactive chart, and cohort analysis breakdown.
+   - **Data Table Detail** (`workspace-detail`, `data-table-detail`) — Paginated data table with search/filters and slide-over inspection drawer.
+   - **Settings Split-Screen** (`workspace-settings`, `settings-split-screen`) — Two-column responsive layout with vertical section navigation and form controls.
+   Supports density controls (`compact` for high-density enterprise tools, `comfortable` for standard interfaces).
+2. `basecoat_rules_enforcer` — Enforces strict technical constraints across `tailwind-v4`, `fsm-contracts`, `tokens`, `semantic-html`, and `dashboard-patterns`:
+   - `MET-01`: KPI numerals require `text-2xl`/`text-3xl` with `tabular-nums` and semantic trend indicators.
+   - `TBL-01`: Data tables require `<div class="overflow-x-auto">` wrapper, sticky blurred `<thead class="sticky top-0 bg-background/90 backdrop-blur">`, and right-aligned numeric cells.
+   - `FRM-01`: Input controls require `<div class="field">` wrappers with associated `<label class="label" for="id">`.
+   - `NAV-01`: Headers must use compact `h-12` or `h-14` (forbidding oversized `h-16`).
+   - `TW4-01`: Rejects deprecated Tailwind v3 utilities (`bg-opacity-*`, `flex-shrink-*`, `@tailwind` directives).
+   - `TOK-01`: Rejects arbitrary bracket dimensions (`w-[327px]`) and hardcoded hex colors (`#ff0000`, `bg-[#123456]`).
+   - `FSM-01`: Enforces finite state machine contracts on interactive primitives (`dialog`, `dropdown-menu`, `accordion`, `tabs`).
+3. `basecoat_creative_director` — Surfaces Kanso minimalism and Basecoat design intelligence:
+   - Density profiles: `compact` (p-4 gap-4, header h-12, table py-2), `standard` (p-6 gap-4/gap-6, header h-14, table py-3), and `comfortable` (p-6 md:p-8, header h-14).
+   - Mathematical 4px/8px optical rhythm grid and typography ladders (`tabular-nums` on all metrics and numeric table cells).
+   - Subtle 1px card ring elevation without conflicting `border` utilities.
+   - WCAG 2.1 AA (contrast >= 4.5:1) and APCA ($L_c \ge 60$) token pairings.
+4. `basecoat_component_syntax` — Delivers copy-pasteable HTML or Astro component markup from `src/registry/components.json` with pre-configured FSM state variants (`default`, `active`, `loading`, `disabled`, `open`, `closed`, `open/closed`), verified inline SVG action icons (`plus`, `edit`, `trash`, `search`, `chevron-down`, `check`, `external-link`), and composite component patterns:
+   - `metric-card` (`metrics-summary`, `kpi-card`) — Stat card with tabular-nums numeral and trend badge.
+   - `data-table` (`datatable`) — Sticky header table wrapped in `overflow-x-auto` with right-aligned numeric cells.
+   - `sidebar-shell` (`sidebar-dashboard-shell`) — Desktop sticky navigation with responsive flyout below `md`.
+5. `basecoat_quality_inspector` — Audits HTML/Astro compositions against dashboard audit rules: `table-overflow-wrapper`, `kpi-metric-tabular-nums`, `table-numeric-alignment`, `a11y-focus-ring` (flagging `outline-none` without focus visible ring), arbitrary color/dimension violations, and WCAG/APCA contrast pairings. Returns `score` (`0–100`), letter `grade` (`A–F`), structured issues, and actionable `autoFixSuggestions`.
 
 ### Component tools
 
@@ -173,17 +195,20 @@ The macro layer is this project's curated, project-specific composition system f
 
 Design sessions persist under `<project-root>/.basecoat/designer/`. Registry revisions are content-addressed; a session keeps using its pinned revision even after the package snapshot changes. Design snapshots use the form `d:<designId>@<revision>`.
 
-Curated block blueprints:
-- **Shells & Navigation**: `app-shell`, `sidebar-dashboard-shell`, `sidebar-inset-shell`, `sidebar-collapsible-icon`, `sidebar-mobile-flyout`, `page-header`.
-- **Authentication**: `auth-recovery`, `auth-reset`, `auth-sign-in`, `auth-sign-up`, `auth-split-screen`.
-- **Application & Workspace**: `dashboard-workspace`, `dashboard-main`, `dashboard-activity`, `data-workspace`, `data-table`, `data-table-detail-layout`, `detail-drawer-panel`, `product-detail-layout`, `settings-workspace`.
-- **Forms & Data**: `data-bulk-actions`, `data-filters`, `data-pager`, `form-section`.
-- **Navigation & Utility**: `sidebar-nav`, `empty-state`, `error-boundary`, `newsletter-waitlist`, `pricing-tiers`, `segmented-toggle`, `svg-area-chart`.
+Curated block blueprints (including translated shadcn/ui v4 blocks):
+- **Dashboards & Workspaces**: `dashboard-01` through `dashboard-07`, `dashboard-workspace`, `dashboard-main`, `dashboard-activity`, `analytics-workspace`, `ecommerce-overview`, `tasks-table-workspace`, `mail-workspace`.
+- **Metrics & Data Tables**: `metrics-summary`, `data-table-rich`, `data-table`, `data-table-detail-layout`, `data-workspace`, `data-bulk-actions`, `data-filters`, `data-pager`.
+- **Forms & Authentication**: `form-field-group`, `forms`, `form-section`, `authentication`, `auth-sign-in`, `auth-sign-up`, `auth-split-screen`, `auth-recovery`, `auth-reset`.
+- **Shells & Navigation**: `sidebar-dashboard-shell`, `sidebar-inset-shell`, `sidebar-collapsible-icon`, `sidebar-mobile-flyout`, `sidebar-nav`, `topbar-shell`, `topbar-nav`, `app-shell`, `page-header`.
+- **Charts & Feedback**: `svg-area-chart`, `empty-state`, `error-boundary`, `newsletter-waitlist`, `pricing-tiers`, `segmented-toggle`, `detail-drawer-panel`, `product-detail-layout`, `settings-workspace`.
 
 Multi-block recipes:
 - `workspace-dashboard` - full analytics dashboard (KPI cards, activity chart, records table).
+- `ecommerce-overview` - e-commerce operational dashboard with order metrics and product highlights.
+- `analytics-workspace` - analytics dashboard with time-series charts and cohort views.
 - `workspace-settings` - application shell with navigation, header, and settings workspace tabs.
-- `workspace-detail` - data table workspace with slide-over detail inspection drawer.
+- `workspace-detail` / `tasks-table-workspace` - data table workspace with slide-over detail inspection drawer.
+- `mail-workspace` - multi-pane email client layout with inbox list and detail view.
 - `auth-flow` - bidirectional authentication flow between sign-in and sign-up cards.
 - `auth-split-flow` - split-screen auth frame pairing sign-in and sign-up with hero media.
 - `data-records` - records page with filters, table, and pager.

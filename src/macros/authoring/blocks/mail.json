@@ -1,0 +1,87 @@
+{
+  "schemaVersion": 1,
+  "id": "mail",
+  "role": "workspace",
+  "family": "workspace",
+  "description": "Shadcn new-york-v4 mail workspace: 3-pane layout with mailbox folders, message list, and reading pane.",
+  "tags": [
+    "mail",
+    "new-york-v4",
+    "workspace",
+    "3-pane"
+  ],
+  "root": "mail-root",
+  "fragments": [
+    {
+      "id": "mail-root",
+      "emmet": "div.flex.flex-1.h-screen.divide-x.divide-border.border.border-border.bg-background[data-role=canvas][data-macro=canvas][data-block=mail]>div[data-slot=mail-nav]+div[data-slot=mail-list]+div[data-slot=mail-reading-pane]"
+    },
+    {
+      "id": "mail-nav",
+      "emmet": "nav.w-64.flex.flex-col.gap-2.p-4[data-slot=mail-nav]>div.flex.items-center.gap-2.pb-2>button.btn.btn-sm.btn-primary.w-full{Compose}^div.flex.flex-col.gap-2>a.btn.btn-ghost.btn-sm.justify-start.w-full[data-state=active]{Inbox}+a.btn.btn-ghost.btn-sm.justify-start.w-full{Drafts}+a.btn.btn-ghost.btn-sm.justify-start.w-full{Sent}+a.btn.btn-ghost.btn-sm.justify-start.w-full{Trash}"
+    },
+    {
+      "id": "mail-list",
+      "emmet": "div.w-96.flex.flex-col.gap-2.p-4[data-slot=mail-list]>input.input.input-sm[type=search][placeholder='Search messages...']+div.flex.flex-col.gap-2.overflow-auto>div.flex.flex-col.gap-2.rounded-lg.border.border-border.p-4.hover:bg-muted[data-state=active]*2>div.flex.items-center.justify-between>span.text-xs.font-semibold{Alice}+span.text-xs.text-muted-foreground{10:42 AM}^span.text-xs.font-medium{Project Update}+p.text-xs.text-muted-foreground{Summary of deliverables...}"
+    },
+    {
+      "id": "mail-reading-pane",
+      "emmet": "section.flex.flex-1.flex-col.gap-4.p-6[data-slot=mail-reading-pane]>header.flex.items-center.justify-between.border-b.border-border.pb-4>div.flex.items-center.gap-2>div.size-8.rounded-full.bg-muted+div.flex.flex-col>span.text-sm.font-semibold{Alice}+span.text-xs.text-muted-foreground{alice@example.com}^^span.text-xs.text-muted-foreground{Oct 14, 2026}^div.flex-1.text-sm.leading-relaxed{Hi team, please find attached the reviewed milestones...}+footer.flex.items-center.gap-2.pt-4.border-t.border-border>button.btn.btn-sm.btn-outline{Reply}+button.btn.btn-sm.btn-outline{Forward}"
+    }
+  ],
+  "mounts": [
+    {
+      "parent": "mail-root",
+      "anchor": "mail-nav",
+      "child": "mail-nav",
+      "order": 0
+    },
+    {
+      "parent": "mail-root",
+      "anchor": "mail-list",
+      "child": "mail-list",
+      "order": 1
+    },
+    {
+      "parent": "mail-root",
+      "anchor": "mail-reading-pane",
+      "child": "mail-reading-pane",
+      "order": 2
+    }
+  ],
+  "slots": [],
+  "ports": [
+    {
+      "id": "main-in",
+      "at": {
+        "fragment": "mail-root",
+        "name": "mail-root"
+      },
+      "direction": "in",
+      "kind": "region",
+      "contract": "main",
+      "minLinks": 0,
+      "maxLinks": 1,
+      "scope": "shell"
+    }
+  ],
+  "componentRefs": [
+    "button",
+    "input",
+    "badge"
+  ],
+  "ruleRefs": [],
+  "dependencyBlockIds": [],
+  "layout": {
+    "frameRef": "mail-root"
+  },
+  "landmarks": {
+    "main": 1,
+    "primaryHeading": 0
+  },
+  "provenance": {
+    "origin": "authored",
+    "sourceHashes": {},
+    "mappingVersion": "1.0.0"
+  }
+}

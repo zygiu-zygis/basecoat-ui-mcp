@@ -13,6 +13,9 @@
     ".cursor/rules/basecoat.mdc",
     "templates/cursor/basecoat-designer.mdc"
   ],
+  "skills": [
+    "skills/basecoat-dashboard/SKILL.md"
+  ],
   "mcpServers": {
     "basecoat-ui": {
       "command": "node",

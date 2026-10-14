@@ -527,3 +527,58 @@ describe('theme consistency', () => {
     assert(!rules('<style>.dark-mode{}@media (prefers-color-scheme: dark){:root{--x:1}}</style>').includes('theme-strategy-mixed'));
   });
 });
+
+describe('dashboard audit rules and modern design tokens', () => {
+  const auditRules = (code: string) =>
+    validateComposition(code, { checkLegacySyntax: true, enforceFsm: true }).issues.map(i => i.rule);
+
+  it('detects missing overflow container on data <table> and passes when wrapped', () => {
+    const unwrapped = '<table class="table"><thead><tr><th>Header</th></tr></thead><tbody><tr><td>Data</td></tr></tbody></table>';
+    assert(auditRules(unwrapped).includes('table-overflow-wrapper'));
+
+    const wrapped = '<div class="overflow-x-auto"><table class="table"><thead><tr><th>Header</th></tr></thead><tbody><tr><td>Data</td></tr></tbody></table></div>';
+    assert(!auditRules(wrapped).includes('table-overflow-wrapper'));
+  });
+
+  it('enforces tabular-nums on large KPI metric numbers and passes when present', () => {
+    const missingTabular = '<div class="card p-6"><strong class="text-3xl font-semibold">$45,231.89</strong></div>';
+    assert(auditRules(missingTabular).includes('kpi-metric-tabular-nums'));
+
+    const withTabular = '<div class="card p-6"><strong class="text-3xl font-semibold tabular-nums">$45,231.89</strong></div>';
+    assert(!auditRules(withTabular).includes('kpi-metric-tabular-nums'));
+  });
+
+  it('enforces text-right numeric alignment on table cells using tabular-nums', () => {
+    const unaligned = '<div class="overflow-x-auto"><table class="table"><tbody><tr><td class="tabular-nums">$250.00</td></tr></tbody></table></div>';
+    assert(auditRules(unaligned).includes('table-numeric-alignment'));
+
+    const rightAligned = '<div class="overflow-x-auto"><table class="table"><tbody><tr><td class="tabular-nums text-right">$250.00</td></tr></tbody></table></div>';
+    assert(!auditRules(rightAligned).includes('table-numeric-alignment'));
+  });
+
+  it('detects keyboard accessibility issue when outline-none is used without focus ring', () => {
+    const nakedOutlineNone = '<button class="btn outline-none" type="button">Action</button>';
+    assert(auditRules(nakedOutlineNone).includes('a11y-focus-ring'));
+
+    const withFocusRing = '<button class="btn outline-none focus-visible:ring-2 focus-visible:ring-ring" type="button">Action</button>';
+    assert(!auditRules(withFocusRing).includes('a11y-focus-ring'));
+  });
+
+  it('rejects arbitrary hex colors in utilities in favor of semantic tokens', () => {
+    const arbitraryHex = '<div class="bg-[#ff0000] text-[#123456]">Content</div>';
+    assert(auditRules(arbitraryHex).includes('arbitrary-color'));
+  });
+
+  it('rejects deprecated Tailwind v3 utilities', () => {
+    const v3Deprecated = '<div class="bg-opacity-50 flex-shrink-0 text-opacity-80">Content</div>';
+    assert(auditRules(v3Deprecated).includes('tailwind-v3-deprecated'));
+  });
+
+  it('enforces WCAG/APCA contrast pairings for semantic surfaces', () => {
+    const badContrast = '<div class="bg-primary text-primary">Unreadable</div>';
+    assert(auditRules(badContrast).includes('color-contrast-wcag'));
+
+    const goodContrast = '<div class="bg-primary text-primary-foreground">Readable high-contrast text</div>';
+    assert(!auditRules(goodContrast).includes('color-contrast-wcag'));
+  });
+});

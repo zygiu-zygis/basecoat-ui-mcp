@@ -50,6 +50,14 @@ function defaultRepairForIssue(issue: CompositionIssue): string {
       return 'Add aria-label="..." to distinguish <nav> and <aside> landmarks.';
     case 'a11y-input-label':
       return 'Wrap control in <div class="field"><label class="label" for="id">...</label><input id="id" ...></div>.';
+    case 'table-overflow-wrapper':
+      return 'Wrap <table> in <div class="overflow-x-auto"> to prevent mobile overflow.';
+    case 'kpi-metric-tabular-nums':
+      return 'Add class "tabular-nums" to large KPI metric values.';
+    case 'table-numeric-alignment':
+      return 'Add class "text-right" (or "text-end") to numeric table cells.';
+    case 'a11y-focus-ring':
+      return 'Add "focus-visible:ring-2 focus-visible:ring-ring" or remove outline-none.';
     default:
       return issue.message;
   }
@@ -118,6 +126,7 @@ export function runQualityInspector(
       score,
       grade,
       valid,
+      passed: valid,
       summary: {
         errors,
         warnings,
@@ -132,6 +141,7 @@ export function runQualityInspector(
       ariaOmissions: accessibilityOmissions.slice(0, cap),
       accessibilityOmissions: accessibilityOmissions.slice(0, cap),
       autoFixSuggestions: autoFixSuggestions.slice(0, fixCap),
+      autoFixes: autoFixSuggestions.slice(0, fixCap),
     };
     if (responseBytes(candidate) <= MAX_DETAIL_BYTES) {
       return candidate;
@@ -143,11 +153,13 @@ export function runQualityInspector(
     score,
     grade,
     valid,
+    passed: valid,
     summary: { errors, warnings, info, truncated: true },
     syntaxViolations: [],
     ariaOmissions: [],
     accessibilityOmissions: [],
     autoFixSuggestions: [],
+    autoFixes: [],
   };
   assertDetailBudget(minimal);
   return minimal;

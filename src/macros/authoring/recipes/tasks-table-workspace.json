@@ -1,0 +1,121 @@
+{
+  "schemaVersion": 1,
+  "id": "tasks-table-workspace",
+  "kind": "page",
+  "profile": "app-default",
+  "entryPage": "tasks",
+  "routeLinks": [],
+  "pages": [
+    {
+      "id": "tasks",
+      "route": "/workspace/tasks",
+      "recipe": "tasks-table-workspace",
+      "root": "shell",
+      "status": "plan-ready",
+      "decisions": {
+        "density": "compact"
+      },
+      "nodes": {
+        "shell": {
+          "id": "shell",
+          "block": "app-shell",
+          "bindings": {}
+        },
+        "nav": {
+          "id": "nav",
+          "block": "sidebar-dashboard-shell",
+          "parent": {
+            "node": "shell",
+            "slot": "navigation",
+            "order": 0
+          },
+          "bindings": {}
+        },
+        "header": {
+          "id": "header",
+          "block": "page-header",
+          "parent": {
+            "node": "shell",
+            "slot": "header",
+            "order": 0
+          },
+          "bindings": {}
+        },
+        "canvas": {
+          "id": "canvas",
+          "block": "tasks",
+          "parent": {
+            "node": "shell",
+            "slot": "content",
+            "order": 0
+          },
+          "bindings": {}
+        },
+        "table": {
+          "id": "table",
+          "block": "data-table-rich",
+          "parent": {
+            "node": "canvas",
+            "slot": "table",
+            "order": 0
+          },
+          "bindings": {}
+        }
+      },
+      "connections": [
+        {
+          "id": "shell-to-canvas",
+          "relation": "controls",
+          "from": {
+            "node": "shell",
+            "port": "main-region"
+          },
+          "to": {
+            "node": "canvas",
+            "port": "main-in"
+          }
+        },
+        {
+          "id": "header-to-nav",
+          "relation": "controls",
+          "from": {
+            "node": "header",
+            "port": "nav-toggle-out"
+          },
+          "to": {
+            "node": "nav",
+            "port": "nav-toggle-in"
+          }
+        }
+      ],
+      "rules": [
+        {
+          "id": "tasks-shell-frame",
+          "type": "same-frame",
+          "nodes": [
+            "header",
+            "canvas"
+          ]
+        },
+        {
+          "id": "tasks-same-shell",
+          "type": "same-shell",
+          "nodes": [
+            "nav",
+            "header",
+            "canvas"
+          ]
+        },
+        {
+          "id": "tasks-shell-gutter",
+          "type": "single-owner",
+          "boundary": "shell-root",
+          "property": "gutter",
+          "nodes": [
+            "shell"
+          ]
+        }
+      ]
+    }
+  ]
+}

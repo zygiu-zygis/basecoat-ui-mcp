@@ -6,17 +6,20 @@ import { INTERACTIVE_PRIMITIVES, SEMANTIC_TAGS, TW3_DEPRECATED_UTILITY } from '.
 
 export const rulesEnforcerInputShape = {
   category: z
-    .enum(['all', 'tailwind-v4', 'fsm-contracts', 'tokens', 'semantic-html'])
+    .enum(['all', 'tailwind-v4', 'fsm-contracts', 'tokens', 'semantic-html', 'dashboard-patterns'])
     .optional(),
   query: z.string().max(120).optional(),
   code: z.string().max(16000).optional(),
+  html: z.string().max(16000).optional(),
 };
 
 export type RulesEnforcerInput = z.infer<z.ZodObject<typeof rulesEnforcerInputShape>>;
 
+export type RuleCategory = 'tailwind-v4' | 'fsm-contracts' | 'tokens' | 'semantic-html' | 'dashboard-patterns';
+
 export interface TechnicalRule {
   id: string;
-  category: 'tailwind-v4' | 'fsm-contracts' | 'tokens' | 'semantic-html';
+  category: RuleCategory;
   rule: string;
   forbidden: string[];
   required: string[];
@@ -105,6 +108,67 @@ const TECHNICAL_RULES: TechnicalRule[] = [
       'Inline SVG icons (size-4, stroke="currentColor") and aria-label on icon buttons',
     ],
   },
+  {
+    id: 'MET-01',
+    category: 'dashboard-patterns',
+    rule: 'Enforce KPI metric card typography hierarchy, tabular numerals, and semantic trend badge indicators.',
+    forbidden: [
+      'KPI numerals without tabular-nums (e.g. text-3xl font-semibold without tabular-nums)',
+      'Ambiguous trend percentages without semantic badge container or aria-label',
+      '.card with border or border-border in Vega style pack',
+    ],
+    required: [
+      'Value typography: text-2xl or text-3xl font-semibold tracking-tight tabular-nums',
+      'Trend indicator: <span class="badge" data-variant="outline"><svg class="size-3" ...><span class="sr-only">Trend</span>',
+      'Card padding: p-4 (compact) or p-6 (standard) without border class',
+    ],
+  },
+  {
+    id: 'TBL-01',
+    category: 'dashboard-patterns',
+    rule: 'Enforce data table geometry: overflow-x-auto wrapper, sticky header, toolbar, row actions, and tabular-nums.',
+    forbidden: [
+      'Bare <table> without <div class="overflow-x-auto"> wrapper container',
+      'Numeric columns without tabular-nums and text-right alignment',
+      'Interactive row action dropdown triggers without aria-expanded and data-state',
+    ],
+    required: [
+      'Container: <div class="overflow-x-auto"><table class="table">',
+      'Sticky header: <thead class="sticky top-0 bg-background/90 backdrop-blur">',
+      'Toolbar: <div class="flex items-center justify-between gap-4"> above table',
+      'Row dropdowns with FSM contract: data-state="closed" aria-expanded="false"',
+    ],
+  },
+  {
+    id: 'FRM-01',
+    category: 'dashboard-patterns',
+    rule: 'Enforce form field wrappers with label association and data-state="loading" submit button handling.',
+    forbidden: [
+      'Native <input> without <div class="field"> and matching <label class="label" for="id">',
+      'Submit buttons without data-state / loading state handling during async submission',
+      'Hardcoded input sizes (e.g. w-[320px]); use w-full or responsive grid columns',
+    ],
+    required: [
+      'Wrapper: <div class="field"><label class="label" for="id">Label</label><input class="input" id="id">',
+      'Submit action: <button type="submit" class="btn" data-state="default" data-loading-variant="spinner">',
+      'Validation helper: <p class="text-xs text-muted-foreground" id="id-help"> bound via aria-describedby',
+    ],
+  },
+  {
+    id: 'NAV-01',
+    category: 'dashboard-patterns',
+    rule: 'Enforce sidebar and shell geometry with collapsible tooltip mode and compact top app bar.',
+    forbidden: [
+      'App headers with h-16 or taller in data-dense dashboards',
+      'Unlabelled <aside> or <nav> landmarks without aria-label or aria-labelledby',
+      'Sidebar container without data-state="expanded"|"collapsed" FSM contract',
+    ],
+    required: [
+      'Sidebar: <aside class="sidebar group/sidebar" data-state="expanded" data-collapsible="tooltip" data-fsm-recipe="navigation" data-fsm-state="expanded" aria-label="Primary navigation">',
+      'Header: <header class="flex h-12 (or h-14) items-center justify-between border-b border-border/60">',
+      'Breadcrumb: <nav aria-label="Breadcrumb" class="breadcrumb text-sm">',
+    ],
+  },
 ];
 
 function stripVariants(token: string): string {
@@ -120,6 +184,7 @@ function stripVariants(token: string): string {
 
 function checkCodeViolations(code: string): Array<{ rule: string; message: string }> {
   const violations: Array<{ rule: string; message: string }> = [];
+  const codeLines = code.split('\n');
 
   if (/@tailwind\s+(?:base|components|utilities)\b/.test(code)) {
     violations.push({
@@ -132,6 +197,11 @@ function checkCodeViolations(code: string): Array<{ rule: string; message: strin
   let tw3Found = false;
   let fsmFound = false;
   let tokFound = false;
+
+  let metFound = false;
+  let tblFound = false;
+  let navFound = false;
+  let frmFound = false;
 
   for (const node of parsed.nodes) {
     const baseClasses = node.classes.map(stripVariants);
@@ -184,6 +254,58 @@ function checkCodeViolations(code: string): Array<{ rule: string; message: strin
         }
       }
     }
+
+    const lineText = codeLines[node.line - 1] ?? '';
+    if (!metFound && baseClasses.some(c => /^(?:text-[2-5]xl)$/.test(c)) && !baseClasses.includes('tabular-nums') && /\d/.test(lineText)) {
+      metFound = true;
+      violations.push({
+        rule: 'MET-01',
+        message: 'KPI metric value missing tabular-nums for numeric alignment.',
+      });
+    }
+
+    if (!tblFound && node.tag === 'table') {
+      let p = node.parent;
+      let hasOverflow = false;
+      while (p !== null) {
+        const parentNode = parsed.nodes[p]!;
+        if (parentNode.classes.map(stripVariants).some(c => c === 'overflow-x-auto' || c === 'overflow-auto')) {
+          hasOverflow = true;
+          break;
+        }
+        p = parentNode.parent;
+      }
+      if (!hasOverflow) {
+        tblFound = true;
+        violations.push({
+          rule: 'TBL-01',
+          message: 'Data <table> missing overflow-x-auto wrapper container.',
+        });
+      }
+    }
+
+    if (!navFound && (node.tag === 'header' || baseClasses.includes('page-header')) && (baseClasses.includes('h-16') || baseClasses.some(c => /^h-(?:1[6-9]|[2-9]\d)/.test(c)))) {
+      navFound = true;
+      violations.push({
+        rule: 'NAV-01',
+        message: 'Dashboard header uses oversized h-16; use compact h-12 or h-14.',
+      });
+    }
+
+    if (!frmFound && (node.tag === 'input' || node.tag === 'textarea' || node.tag === 'select')) {
+      const type = node.attrs.type;
+      if (type !== 'hidden' && type !== 'submit' && type !== 'button') {
+        const parentNode = node.parent !== null ? parsed.nodes[node.parent] : null;
+        const parentHasField = parentNode && parentNode.classes.map(stripVariants).includes('field');
+        if (!parentHasField) {
+          frmFound = true;
+          violations.push({
+            rule: 'FRM-01',
+            message: 'Input control missing <div class="field"> wrapper and associated label.',
+          });
+        }
+      }
+    }
   }
 
   const elementNodes = parsed.nodes.filter(n => !['script', 'style'].includes(n.tag));
@@ -227,10 +349,11 @@ export function runRulesEnforcer(input: RulesEnforcerInput = {}) {
     if (filtered.length > 0) rules = filtered;
   }
 
-  const violations = input.code !== undefined && input.code.trim().length > 0
-    ? checkCodeViolations(input.code)
+  const codeToAudit = input.code ?? input.html;
+  const violations = codeToAudit !== undefined && codeToAudit.trim().length > 0
+    ? checkCodeViolations(codeToAudit)
     : [];
-  const codeReport = input.code !== undefined
+  const codeReport = codeToAudit !== undefined
     ? { valid: violations.length === 0, violations: violations.slice(0, 6) }
     : {};
 
@@ -249,40 +372,42 @@ export function runRulesEnforcer(input: RulesEnforcerInput = {}) {
   }
 
   for (const sliceCount of [2, 1, 0]) {
-    const candidate = {
-      stage: '2a-rules-enforcer',
-      category,
-      ...(input.code !== undefined
-        ? { valid: violations.length === 0, violations: violations.slice(0, 6) }
-        : {}),
-      ruleCount: rules.length,
-      rules: rules.map(r => ({
-        id: r.id,
-        category: r.category,
-        ...(sliceCount > 0 ? { rule: r.rule.slice(0, 80) } : {}),
-        forbidden: r.forbidden.slice(0, Math.max(1, sliceCount)),
-        required: r.required.slice(0, Math.max(1, sliceCount)),
-      })),
-      fsmContracts: fsmRecipes.map(f => sliceCount === 2 ? `${f.recipe}:${f.initialState}` : f.recipe),
-      nextStep: 'Call basecoat_component_syntax for FSM-bound HTML.',
-    };
-    if (responseBytes(candidate) <= MAX_DETAIL_BYTES) {
-      return candidate;
+    for (const ruleLimit of [9, 7, 5, 4, 3]) {
+      const candidate = {
+        stage: '2a-rules-enforcer',
+        category,
+        ...(codeToAudit !== undefined
+          ? { valid: violations.length === 0, violations: violations.slice(0, 6) }
+          : {}),
+        ruleCount: rules.length,
+        rules: rules.slice(0, ruleLimit).map(r => ({
+          id: r.id,
+          category: r.category,
+          ...(sliceCount > 0 ? { rule: r.rule.slice(0, 60) } : {}),
+          forbidden: r.forbidden.slice(0, Math.max(1, sliceCount)).map(s => s.slice(0, 40)),
+          required: r.required.slice(0, Math.max(1, sliceCount)).map(s => s.slice(0, 40)),
+        })),
+        fsmContracts: fsmRecipes.map(f => sliceCount === 2 ? `${f.recipe}:${f.initialState}` : f.recipe),
+        nextStep: 'Call basecoat_component_syntax for FSM-bound HTML.',
+      };
+      if (responseBytes(candidate) <= MAX_DETAIL_BYTES) {
+        return candidate;
+      }
     }
   }
 
   const minimal = {
     stage: '2a-rules-enforcer',
     category,
-    ...(input.code !== undefined
-      ? { valid: violations.length === 0, violations: violations.slice(0, 6) }
+    ...(codeToAudit !== undefined
+      ? { valid: violations.length === 0, violations: violations.slice(0, 4) }
       : {}),
     ruleCount: rules.length,
-    rules: rules.map(r => ({
+    rules: rules.slice(0, 4).map(r => ({
       id: r.id,
       category: r.category,
-      forbidden: r.forbidden.slice(0, 1),
-      required: r.required.slice(0, 1),
+      forbidden: r.forbidden.slice(0, 1).map(s => s.slice(0, 30)),
+      required: r.required.slice(0, 1).map(s => s.slice(0, 30)),
     })),
     fsmContracts: fsmRecipes.map(f => f.recipe),
     nextStep: 'Call basecoat_component_syntax.',

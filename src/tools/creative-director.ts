@@ -7,12 +7,13 @@ import { assertDetailBudget, MAX_DETAIL_BYTES, responseBytes } from './budget.js
 
 export const creativeDirectorInputShape = {
   topic: z
-    .enum(['all', 'typography', 'whitespace', 'hierarchy', 'elevation', 'style-packs'])
+    .enum(['all', 'typography', 'whitespace', 'hierarchy', 'elevation', 'style-packs', 'content-strategy', 'density'])
     .optional(),
   visitorJob: z.enum(['operate', 'persuade', 'read', 'experience']).optional(),
   stylePack: z
     .enum(['vega', 'nova', 'maia', 'lyra', 'mira', 'luma', 'sera', 'rhea'])
     .optional(),
+  density: z.enum(['compact', 'standard', 'comfortable']).optional(),
 };
 
 export type CreativeDirectorInput = z.infer<z.ZodObject<typeof creativeDirectorInputShape>>;
@@ -87,18 +88,23 @@ export function runCreativeDirector(input: CreativeDirectorInput = {}, projectRo
   const sections = {
     typography: {
       ladder: [
+        'kpi: text-2xl or text-3xl font-semibold tracking-tight tabular-nums',
         'h1: text-3xl font-semibold tracking-tight (one per page)',
         'h2: text-xl font-semibold tracking-tight (section headings)',
         'h3: text-lg font-medium (card/sub-group titles)',
         'body: text-base text-foreground (60-75ch prose measure)',
-        'data/meta: text-sm text-muted-foreground (tables, secondary labels)',
+        'data/meta: text-sm text-muted-foreground tabular-nums (tables, secondary labels)',
         'caption: text-xs text-muted-foreground (badges, kbd, timestamps)',
-        'numeric: tabular-nums on KPIs, prices, and table cells',
       ],
-      opticalRules: 'No eyebrow/kicker above headings. More space above a heading than below it.',
+      opticalRules: 'No eyebrow/kicker above headings. More space above a heading than below it. tabular-nums on all numeric data.',
     },
     whitespace: {
       opticalGrid: '4px/8px grid (1 unit = 4px; base rhythm = 8px).',
+      densityProfiles: {
+        compact: 'p-4 gap-4, header h-12, table py-2 (dense data apps, micro-steps: 1, 1.5, 2.5, 3)',
+        standard: 'p-6 gap-4 md:gap-6, header h-14, table py-3 (default admin dashboard)',
+        comfortable: 'p-6 md:p-8 gap-6 md:gap-8, header h-14 (content reading & marketing)',
+      },
       rhythmScale: [
         '4px (p-1 / gap-1): micro-chrome, badge padding, compact toolbar cells',
         '8px (gap-2 / 0.5rem): label/control pairs, inline icon+text, compact actions',
@@ -116,10 +122,23 @@ export function runCreativeDirector(input: CreativeDirectorInput = {}, projectRo
     elevation: {
       palette: 'Neutral oklch zinc/slate (--background, --card, --foreground, --muted-foreground, --border). No decorative gradients.',
       surfaces: 'Cards (.card) carry an intrinsic 1px ring shadow (ring-1 ring-foreground/10)—never add border/border-border. Use bg-muted/50 for subtle row highlights.',
+      surfaceElevation: 'Canvas: bg-background -> Card: bg-card -> Row/Subcard: bg-muted/50 -> Popover/Dialog: bg-popover shadow-md.',
       borderContrast: 'Subtle dividers use border-border/60; text requires WCAG 2.1 AA >= 4.5:1 (APCA Lc >= 60) with paired foreground tokens (--primary-foreground).',
       themingContract: THEMING.includes('window.basecoat.theme') && RHYTHM.includes('Shadcn Aesthetic')
         ? 'Single html.dark class + window.basecoat.theme (localStorage key "themeMode").'
         : 'Class-based html.dark only.',
+    },
+    contentStrategy: {
+      guidelines: [
+        'Realistic data IDs: use structured IDs (INV-2026-001, usr_8a9f) over placeholder strings.',
+        'Zero Lorem Ipsum: use concise, real-world domain labels and realistic metrics.',
+        'Cognitive hierarchy: lead with status/delta badge, followed by primary metric, then timestamp/meta.',
+      ],
+    },
+    density: {
+      compact: 'p-4 gap-4, header h-12, table py-2 (dense data apps, micro-steps: 1, 1.5, 2.5, 3)',
+      standard: 'p-6 gap-4 md:gap-6, header h-14, table py-3 (default admin dashboard)',
+      comfortable: 'p-6 md:p-8 gap-6 md:gap-8, header h-14 (content reading & marketing)',
     },
     stylePack: {
       selected: packKey,
@@ -127,6 +146,17 @@ export function runCreativeDirector(input: CreativeDirectorInput = {}, projectRo
       availablePacks: Object.keys(STYLE_PACKS),
     },
   };
+
+  const topicGuidance =
+    topic === 'content-strategy'
+      ? sections.contentStrategy
+      : topic === 'density'
+        ? sections.density
+        : topic === 'style-packs'
+          ? { selected: sections.stylePack, allPacks: STYLE_PACKS }
+          : topic !== 'all'
+            ? sections[topic]
+            : undefined;
 
   const payload =
     topic === 'all'
@@ -140,10 +170,7 @@ export function runCreativeDirector(input: CreativeDirectorInput = {}, projectRo
       : {
           stage: '2b-creative-director',
           topic,
-          guidance:
-            topic === 'style-packs'
-              ? { selected: sections.stylePack, allPacks: STYLE_PACKS }
-              : sections[topic],
+          guidance: topicGuidance,
           semanticTokens,
           nextStep: 'Fetch exact state-bound component HTML via basecoat_component_syntax.',
         };

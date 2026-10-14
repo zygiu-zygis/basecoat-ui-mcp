@@ -1,0 +1,111 @@
+{
+  "schemaVersion": 1,
+  "id": "mail-workspace",
+  "kind": "page",
+  "profile": "app-default",
+  "entryPage": "mail",
+  "routeLinks": [],
+  "pages": [
+    {
+      "id": "mail",
+      "route": "/workspace/mail",
+      "recipe": "mail-workspace",
+      "root": "shell",
+      "status": "plan-ready",
+      "decisions": {
+        "density": "compact"
+      },
+      "nodes": {
+        "shell": {
+          "id": "shell",
+          "block": "app-shell",
+          "bindings": {}
+        },
+        "nav": {
+          "id": "nav",
+          "block": "sidebar-dashboard-shell",
+          "parent": {
+            "node": "shell",
+            "slot": "navigation",
+            "order": 0
+          },
+          "bindings": {}
+        },
+        "header": {
+          "id": "header",
+          "block": "page-header",
+          "parent": {
+            "node": "shell",
+            "slot": "header",
+            "order": 0
+          },
+          "bindings": {}
+        },
+        "canvas": {
+          "id": "canvas",
+          "block": "mail",
+          "parent": {
+            "node": "shell",
+            "slot": "content",
+            "order": 0
+          },
+          "bindings": {}
+        }
+      },
+      "connections": [
+        {
+          "id": "shell-to-canvas",
+          "relation": "controls",
+          "from": {
+            "node": "shell",
+            "port": "main-region"
+          },
+          "to": {
+            "node": "canvas",
+            "port": "main-in"
+          }
+        },
+        {
+          "id": "header-to-nav",
+          "relation": "controls",
+          "from": {
+            "node": "header",
+            "port": "nav-toggle-out"
+          },
+          "to": {
+            "node": "nav",
+            "port": "nav-toggle-in"
+          }
+        }
+      ],
+      "rules": [
+        {
+          "id": "mail-shell-frame",
+          "type": "same-frame",
+          "nodes": [
+            "header",
+            "canvas"
+          ]
+        },
+        {
+          "id": "mail-same-shell",
+          "type": "same-shell",
+          "nodes": [
+            "nav",
+            "header",
+            "canvas"
+          ]
+        },
+        {
+          "id": "mail-shell-gutter",
+          "type": "single-owner",
+          "boundary": "shell-root",
+          "property": "gutter",
+          "nodes": [
+            "shell"
+          ]
+        }
+      ]
+    }
+  ]
+}
