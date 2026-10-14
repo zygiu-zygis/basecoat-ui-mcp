@@ -20,6 +20,25 @@ export const pageArchitectInputShape = {
     .max(80)
     .optional()
     .describe('Specific block identifier or pattern to retrieve scaffold for (e.g. "sidebar-01".."sidebar-16", "dashboard-01".."dashboard-07", "login-01").'),
+  id: z
+    .string()
+    .max(80)
+    .optional()
+    .describe('Alternative recipe or block identifier alias matching id or recipe.'),
+  componentId: z
+    .string()
+    .max(80)
+    .optional()
+    .describe('Alternative recipe or block identifier alias.'),
+  name: z
+    .string()
+    .max(80)
+    .optional()
+    .describe('Alternative recipe or block identifier alias.'),
+  environment: z
+    .enum(['html', 'astro', 'react', 'vue', 'svelte'])
+    .optional()
+    .describe('Target framework/environment template (defaults to html).'),
   density: z
     .enum(['comfortable', 'compact'])
     .optional()
@@ -381,18 +400,21 @@ function buildBlockResult(
 export function runPageArchitect(input: PageArchitectInput = {}) {
   const registry = getCompiledRegistry();
   const requestedDensity = input.density ?? 'comfortable';
+  const identifier = input.id ?? input.componentId ?? input.name;
+  const targetBlock = input.block ?? (!input.recipe ? identifier : undefined);
+  const targetRecipe = input.recipe ?? (input.block ? undefined : identifier);
 
-  if (input.block && input.block.trim().length > 0) {
-    const block = resolveBlockByQuery(registry, input.block);
+  if (targetBlock && targetBlock.trim().length > 0) {
+    const block = resolveBlockByQuery(registry, targetBlock);
     if (block) {
       return buildBlockResult(block, requestedDensity);
     }
   }
 
-  const matched = resolveRecipe(registry, input.recipe, input.intent);
+  const matched = resolveRecipe(registry, targetRecipe, input.intent);
 
   if (!matched) {
-    const fallbackBlockQuery = input.recipe ?? input.intent;
+    const fallbackBlockQuery = targetRecipe ?? input.intent ?? identifier;
     if (fallbackBlockQuery && fallbackBlockQuery.trim().length > 0) {
       const block = resolveBlockByQuery(registry, fallbackBlockQuery);
       if (block) {

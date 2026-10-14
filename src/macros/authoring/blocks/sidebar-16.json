@@ -14,7 +14,7 @@
   "fragments": [
     {
       "id": "shell-root",
-      "emmet": "div.flex.min-h-screen.flex-col.w-full[data-slot=shell-root][data-component=sidebar]>(header.sticky.top-0.z-30.flex.h-12.items-center.justify-between.border-b.border-border.bg-background.px-4[data-slot=top-header]>div.flex.items-center.gap-2>button.btn.btn-ghost.btn-xs[data-slot=sidebar-toggle]{☰}+span.text-sm.font-semibold{Global Platform}^div.flex.items-center.gap-2>div.size-8.rounded-full.bg-muted)+div.flex.flex-1.min-h-0>aside.sidebar.w-64.border-e.border-border.bg-background.p-4[data-slot=navigation][data-side=left]>nav.flex.flex-col.gap-2>a.btn.btn-ghost.btn-sm.justify-start[data-state=active]{Dashboard}+a.btn.btn-ghost.btn-sm.justify-start{Settings}^^main.flex-1.overflow-auto.p-6[data-slot=content]"
+      "emmet": "div.flex.min-h-screen.flex-col.w-full[data-slot=shell-root][data-component=sidebar]>(header.sticky.top-0.z-30.flex.h-12.items-center.justify-between.border-b.border-border.bg-background.px-4[data-slot=top-header]>div.flex.items-center.gap-2>button.btn.btn-ghost.btn-xs[data-slot=sidebar-toggle]{☰}+span.text-sm.font-semibold{Global Platform}^div.flex.items-center.gap-2>div.size-8.rounded-full.bg-muted)+div.flex.flex-1.min-h-0>aside.sidebar.w-64.border-e.border-border.bg-background.p-4[data-slot=navigation][data-side=left]>nav.flex.flex-col.gap-2>a.btn.btn-ghost.btn-sm.justify-start[data-state=active][aria-current=page]{Dashboard}+a.btn.btn-ghost.btn-sm.justify-start{Settings}^^main.flex-1.overflow-auto.p-6[data-slot=content]"
     }
   ],
   "mounts": [],

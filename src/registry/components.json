@@ -1292,6 +1292,11 @@
       "dropdown-menu",
       "empty",
       "field",
+      "field-description",
+      "field-error",
+      "field-group",
+      "field-label",
+      "field-legend",
       "field-separator",
       "fieldset",
       "input",
@@ -1658,6 +1663,22 @@
         "label",
         "helper",
         "validation"
+      ]
+    },
+    {
+      "id": "field-group",
+      "name": "Field Group",
+      "intent": "Group related fields with semantic fieldset and legend",
+      "categories": [
+        "layout",
+        "fields"
+      ],
+      "keywords": [
+        "fieldset",
+        "legend",
+        "group",
+        "control",
+        "section"
       ]
     },
     {
@@ -2413,8 +2434,18 @@
         ],
         "js": []
       },
-      "markup_template": "<div role=\"group\" class=\"field\">\n  <label for=\"message\">Message</label>\n  <textarea id=\"message\" placeholder=\"Type your message here\"></textarea>\n  <p>Write a short message.</p>\n</div>",
-      "composition_rules": "One control per field. data-orientation=\"horizontal\" or responsive flips label beside control. fieldset/fieldset groups related fields. Wrong: stack multiple unrelated inputs in one field without a group legend."
+      "markup_template": "<div class=\"field grid gap-2\" data-orientation=\"vertical\">\n  <label class=\"label text-sm font-medium\" for=\"username\">Username</label>\n  <input class=\"input\" id=\"username\" type=\"text\" placeholder=\"Enter username\" aria-describedby=\"username-description\">\n  <p id=\"username-description\" class=\"field-description text-sm text-muted-foreground\">Your public display username.</p>\n</div>",
+      "composition_rules": "One control per field. data-orientation=\"vertical\"|\"horizontal\"|\"inline\". Label for matches control id. Control aria-describedby references field-description and field-error IDs. Wrap multiple related fields in field-group."
+    },
+    "field-group": {
+      "dependencies": {
+        "css": [
+          "basecoat-css/base"
+        ],
+        "js": []
+      },
+      "markup_template": "<div role=\"group\" class=\"field-group flex flex-col gap-6\" data-orientation=\"vertical\">\n  <fieldset class=\"fieldset space-y-4\">\n    <legend class=\"field-legend text-sm font-medium leading-none\">Profile Settings</legend>\n    <div class=\"field grid gap-2\" data-orientation=\"vertical\">\n      <label class=\"label text-sm font-medium\" for=\"profile-name\">Name</label>\n      <input class=\"input\" id=\"profile-name\" type=\"text\" placeholder=\"Your name\" aria-describedby=\"profile-name-description\">\n      <p id=\"profile-name-description\" class=\"field-description text-sm text-muted-foreground\">Displayed on your public profile.</p>\n    </div>\n    <div class=\"field grid gap-2\" data-orientation=\"vertical\">\n      <label class=\"label text-sm font-medium\" for=\"profile-email\">Email</label>\n      <input class=\"input\" id=\"profile-email\" type=\"email\" placeholder=\"you@example.com\" aria-describedby=\"profile-email-error\" aria-invalid=\"true\">\n      <p id=\"profile-email-error\" class=\"field-error text-sm font-medium text-destructive\" role=\"alert\">Please enter a valid email address.</p>\n    </div>\n  </fieldset>\n</div>",
+      "composition_rules": "Group related fields in field-group with semantic fieldset and field-legend. Support data-orientation=\"vertical\"|\"horizontal\"|\"inline\". Dual data-invalid and aria-invalid on validation errors."
     },
     "form": {
       "dependencies": {

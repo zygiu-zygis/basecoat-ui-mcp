@@ -9,17 +9,17 @@ MCP client --stdio--> dist/server/stdio.js -> dist/server/index.js
                                                 |- tools/setup-config.js -> boilerplate + style packs
                                                 |- tools/page-architect.js -> recipe + macro scaffolds
                                                 |- tools/compose-stack.js -> shell + stack hydration
-                                                |- tools/rules-enforcer.js -> TW4 / FSM / a11y rules
-                                                |- tools/creative-director.js -> Kanso rhythm / density
-                                                |- tools/component-syntax.js -> FSM states + SVG icons
-                                                |- tools/charts.js -> 56 ApexCharts blueprints
+                                                |- tools/rules-enforcer.js -> TW4 / FSM / a11y rules (33 rules catalog)
+                                                |- tools/creative-director.js -> Kanso rhythm / density (24 principles)
+                                                |- tools/component-syntax.js -> FSM states + SVG icons + field orientations
+                                                |- tools/charts.js -> 56 SVG Bezier & ApexCharts blueprints
                                                 |- tools/quality-inspector.js -> audit score + fixes
-                                                |- tools/search.js -> registry.index (61 components)
+                                                |- tools/search.js -> registry.index (62 components)
                                                 |- tools/details.js -> registry.details[id]
                                                 |- tools/validate.js -> HTML/script lexer
                                                 |- macros/* -> design sessions + 84 block blueprints
                                                 |- semantics/* -> rhythm profiles + FSM recipes
-                                                `- resources -> 3-pillar Skill Vault (95 files) + design
+                                                `- resources -> 3-pillar Skill Vault (96 files) + design
 
 Maintainer only: scripts/sync.ts --HTTPS--> Basecoat GitHub (explicit commit SHA)
                               `- validate -> atomic components.json replacement

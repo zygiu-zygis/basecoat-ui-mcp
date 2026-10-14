@@ -2,6 +2,35 @@
 
 Maintained by **Žygimantas Jasiulionis / Intellmedia**.
 
+## 1.8.0 - 2026-10-14
+
+- **Poka-Yoke Schema Hardening & Dual Tool Aliasing**:
+  - Implemented parameter tolerance across all tools: `id`, `componentId`, and `name` are resolved interchangeably.
+  - Made `environment` strictly optional across all tools, defaulting to `html` (supporting `html`, `astro`, `react`, `vue`, and `svelte`).
+  - Allowed empty object `{}` calls on all list/summary tools (`get_design_rules`, `get_component_details`, `list_blocks`, `list_charts`, `get_component_syntax`, `enforce_rules`, `compose_stack`), returning top-level catalog indexes instead of throwing `-32602`.
+  - Registered dual symmetrical aliases: `list_charts` <-> `basecoat_list_charts`, `get_chart_blueprint` <-> `basecoat_get_chart_blueprint`, `get_page_architect` <-> `basecoat_page_architect`, `enforce_rules` <-> `basecoat_rules_enforcer`, `get_creative_direction` <-> `basecoat_creative_director`, `get_component_syntax` <-> `basecoat_component_syntax`, `inspect_quality` <-> `basecoat_quality_inspector`, `compose_stack` <-> `basecoat_compose_stack`, `setup_config` <-> `basecoat_setup_config`, `get_design_rules`, `list_blocks`.
+- **Zero-Dependency SVG Chart Engine (`get_chart_blueprint`)**:
+  - Native SVG Bezier engine enabled by default (`engine: 'svg'`) producing smooth dual cubic Bezier curves (`M... C...`) with `<linearGradient id="fillDesktop">` and `<linearGradient id="fillMobile">`.
+  - Responsive container with dynamic `ResizeObserver` script preventing wide-viewport distortion.
+  - Linear grid lines (`stroke-border/50`), X-axis month labels, tabular-nums numeric scale, crosshair hover tracking (`stroke-muted-foreground stroke-dashed`), and screen-reader accessible hidden fallback table (`<table class="sr-only">`).
+  - Legacy `engine: 'apexcharts'` preserved for backward compatibility.
+- **Field & FieldGroup Primitive Architecture**:
+  - Added canonical `field` and `field-group` primitives into `src/registry/components.json` and new `src/data/catalog/components-catalog.json` (62 total curated components).
+  - Semantic anatomy: FieldGroup -> FieldSet -> FieldLegend -> Field -> FieldLabel -> Control -> FieldDescription -> FieldError.
+  - Supported orientations: `vertical`, `horizontal` (2-column settings), and `inline` (checkbox/switch/radio), with dual-invalid contract (`data-invalid="true"` + `aria-invalid="true"`).
+  - Extracted and expanded technical rules to 33 rules in `src/data/catalog/implementation-rules.json` with AST linter enforcement (`FRM-02`, `FRM-03`, `FRM-04`).
+- **Sidebar 01-16 Suite & Stack Composer**:
+  - 1:1 structural parity with shadcn new-york-v4 `dashboard-01` (`max-w-7xl`, `lg:grid-cols-7`, `area-interactive` overview chart, and recent sales feed).
+  - Full semantic landmark audit on all 16 navigation layouts (`sidebar-01..16` in `src/macros/authoring/blocks/` and shell stacks).
+  - Enhanced `compose_stack` supporting modular content stacks (`kpi-4-col`, `area-chart-overview`, `data-table-full-crud`, `recent-sales-feed`, `detail-drawer`) as both slot records and auto-mapped arrays.
+- **MCP Resources & Skill Vault Sync**:
+  - Exposing `basecoat://skills/core`, `basecoat://skills/dashboard`, `basecoat://skills/charts`, and dynamic paths `basecoat://skills/files/*`.
+  - Added `field-group.md` and updated `field.md`.
+  - Mirrored skill vault to `~/.cursor/skills/` and `~/.gemini/config/skills/` with permissions 644/755 and zero symlinks.
+- **Verification & Testing**:
+  - 293 automated tests across 26 test suites passing with zero failures.
+  - 27 catalog integrity assertions verified via `npm run test:integrity`.
+
 ## 1.7.1 - 2026-10-14
 
 - **Shadcn v4 Chart Ingestion Engine (`scripts/ingest-shadcn-charts.mjs`)**:

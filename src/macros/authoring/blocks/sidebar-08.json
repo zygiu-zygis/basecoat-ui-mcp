@@ -14,7 +14,7 @@
   "fragments": [
     {
       "id": "shell-root",
-      "emmet": "div.flex.min-h-screen.w-full.bg-muted[data-slot=shell-root][data-component=sidebar][data-variant=inset]>aside.sidebar.w-64.bg-muted.p-4[data-slot=navigation][data-side=left]>div.flex.flex-col.gap-4>div.p-2.text-sm.font-semibold{Acme Inset}+nav.flex.flex-col.gap-2>a.btn.btn-ghost.btn-sm.justify-start[data-state=active]{Dashboard}+a.btn.btn-ghost.btn-sm.justify-start{Documents}+a.btn.btn-ghost.btn-sm.justify-start{Settings}^div.mt-auto.pt-4{User}^^div.flex.flex-1.flex-col.p-2>div.flex.flex-1.flex-col.rounded-xl.border.border-border.bg-background.shadow-sm[data-slot=inset-canvas]>header.flex.h-12.items-center.justify-between.border-b.border-border.px-4[data-slot=header]>span.text-sm.font-medium{Overview}^main.flex-1.overflow-auto.p-6[data-slot=content]"
+      "emmet": "div.flex.min-h-screen.w-full.bg-muted[data-slot=shell-root][data-component=sidebar][data-variant=inset]>aside.sidebar.w-64.bg-muted.p-4[data-slot=navigation][data-side=left]>div.flex.flex-col.gap-4>div.p-2.text-sm.font-semibold{Acme Inset}+nav.flex.flex-col.gap-2>a.btn.btn-ghost.btn-sm.justify-start[data-state=active][aria-current=page]{Dashboard}+a.btn.btn-ghost.btn-sm.justify-start{Documents}+a.btn.btn-ghost.btn-sm.justify-start{Settings}^div.mt-auto.pt-4{User}^^div.flex.flex-1.flex-col.p-2>div.flex.flex-1.flex-col.rounded-xl.border.border-border.bg-background.shadow-sm[data-slot=inset-canvas]>header.flex.h-12.items-center.justify-between.border-b.border-border.px-4[data-slot=header]>span.text-sm.font-medium{Overview}^main.flex-1.overflow-auto.p-6[data-slot=content]"
     }
   ],
   "mounts": [],

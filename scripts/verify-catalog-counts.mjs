@@ -438,6 +438,48 @@ if (skillMarkdownFiles.length < 90) {
 }
 
 // ---------------------------------------------------------------------------
+// 6. Stage 6 Catalogs & Principles Assertions
+// ---------------------------------------------------------------------------
+const componentsCatalog = loadJson("src/data/catalog/components-catalog.json");
+if (componentsCatalog) {
+  const total = componentsCatalog.totalComponents ?? (Array.isArray(componentsCatalog.components) ? componentsCatalog.components.length : 0);
+  if (total < 54) {
+    fail(`components-catalog.json: expected totalComponents >= 54, got ${total}`);
+  } else {
+    ok(`components-catalog.json totalComponents=${total} (>= 54)`);
+  }
+}
+
+const implementationRules = loadJson("src/data/catalog/implementation-rules.json");
+if (implementationRules) {
+  const total = implementationRules.totalRules ?? (Array.isArray(implementationRules.rules) ? implementationRules.rules.length : 0);
+  if (total < 30) {
+    fail(`implementation-rules.json: expected totalRules >= 30, got ${total}`);
+  } else {
+    ok(`implementation-rules.json totalRules=${total} (>= 30)`);
+  }
+}
+
+const creativeDirectorSource = readFileSync(join(ROOT_DIR, "src/tools/creative-director.ts"), "utf8");
+const principlesMatch = creativeDirectorSource.match(/export const CREATIVE_PRINCIPLES(?::\s*[^=]+)?\s*=\s*\[([\s\S]*?)\];/);
+if (principlesMatch) {
+  const count = (principlesMatch[1].match(/id:\s*'[^']+'/g) || []).length;
+  if (count < 20) {
+    fail(`CREATIVE_PRINCIPLES: expected >= 20 principles, got ${count}`);
+  } else {
+    ok(`creative-director.ts CREATIVE_PRINCIPLES count=${count} (>= 20)`);
+  }
+} else {
+  fail("Could not find CREATIVE_PRINCIPLES export in src/tools/creative-director.ts");
+}
+
+if (!existsSync(join(ROOT_DIR, "skills/basecoat/components/field-group.md"))) {
+  fail("Missing skills/basecoat/components/field-group.md");
+} else {
+  ok("skills/basecoat/components/field-group.md exists");
+}
+
+// ---------------------------------------------------------------------------
 // Exit gate
 // ---------------------------------------------------------------------------
 if (process.exitCode) {

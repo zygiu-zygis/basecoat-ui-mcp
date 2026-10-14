@@ -24,12 +24,20 @@ import type {
 export const getRhythmRulesInputShape = {
   profile: idSchema.optional().describe('Rhythm profile identifier to query (e.g. "default", "compact", "comfortable"). Defaults to "default".'),
   family: idSchema.optional().describe('Semantic rhythm family to filter by (e.g. "spacing", "layout", "typography", "colors", "elevation"). Accepts aliases like "layouts".'),
+  id: idSchema.optional().describe('Alternative identifier alias for profile or family.'),
+  componentId: idSchema.optional().describe('Alternative identifier alias for profile or family.'),
+  name: idSchema.optional().describe('Alternative identifier alias for profile or family.'),
+  environment: z.enum(['html', 'astro', 'react', 'vue', 'svelte']).optional().describe('Target environment.'),
   limit: z.number().int().min(1).max(32).optional().describe('Maximum number of rhythm mappings to return per page (1-32, default 10).'),
   cursor: z.string().min(1).max(LIMITS.cursorMaxBytes).optional().describe('Pagination cursor for bounded continuation of rhythm rules.'),
 };
 
 export const getFsmRecipeInputShape = {
   recipe: idSchema.optional().describe('FSM recipe identifier or alias to retrieve (e.g. "dialog", "tabs", "navigation", "collapsible-navigation", "sidebar").'),
+  id: idSchema.optional().describe('Alternative recipe identifier alias.'),
+  componentId: idSchema.optional().describe('Alternative recipe identifier alias.'),
+  name: idSchema.optional().describe('Alternative recipe identifier alias.'),
+  environment: z.enum(['html', 'astro', 'react', 'vue', 'svelte']).optional().describe('Target environment.'),
   section: z.enum(['states', 'events', 'guards', 'actions', 'transitions']).optional().describe('Specific FSM recipe contract section to inspect ("states", "events", "guards", "actions", "transitions").'),
   limit: z.number().int().min(1).max(32).optional().describe('Maximum number of FSM entries to return per page (1-32, default 10).'),
   cursor: z.string().min(1).max(LIMITS.cursorMaxBytes).optional().describe('Pagination cursor for bounded continuation of FSM recipe details.'),
@@ -103,6 +111,14 @@ export async function handleGetRhythmRules(
   try {
     const registry = defaultSemanticsStore.getRegistry();
     let { profile: profileFilter, family: familyFilter, limit, cursor } = input;
+    const identifier = input.id ?? input.componentId ?? input.name;
+    if (identifier) {
+      if (!profileFilter && Object.values(registry.rhythmProfiles).some(p => p.id === identifier)) {
+        profileFilter = identifier;
+      } else if (!familyFilter) {
+        familyFilter = identifier;
+      }
+    }
     const FAMILY_ALIASES: Record<string, string> = {
       surface: 'surfaces',
       border: 'borders',
@@ -238,7 +254,8 @@ export async function handleGetFsmRecipe(
 ): Promise<CallToolResult> {
   try {
     const registry = defaultSemanticsStore.getRegistry();
-    let recipeFilter = input.recipe;
+    const identifier = input.id ?? input.componentId ?? input.name;
+    let recipeFilter = input.recipe ?? identifier;
     if (recipeFilter && FSM_RECIPE_ALIASES[recipeFilter]) {
       recipeFilter = FSM_RECIPE_ALIASES[recipeFilter];
     }

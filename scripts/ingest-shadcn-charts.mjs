@@ -42,72 +42,128 @@ export const LAYOUT_FOOTPRINT = 'w-full aspect-[4/3] md:aspect-[16/9] lg:aspect-
 export function generateChartSvg(category, variantId) {
   switch (category) {
     case 'area':
-      if (variantId === 'area-step') {
-        return `<svg class="h-48 w-full" viewBox="0 0 400 160" role="img" aria-label="Step Area Chart">
-          <path d="M0,140 L80,140 L80,100 L160,100 L160,60 L240,60 L240,80 L320,80 L320,30 L400,30 L400,160 L0,160 Z" fill="var(--chart-1)" fill-opacity="0.2"/>
-          <path d="M0,140 L80,140 L80,100 L160,100 L160,60 L240,60 L240,80 L320,80 L320,30 L400,30" fill="none" stroke="var(--chart-1)" stroke-width="2"/>
-        </svg>`;
-      }
-      if (variantId === 'area-stacked' || variantId === 'area-stacked-expanded') {
-        return `<svg class="h-48 w-full" viewBox="0 0 400 160" role="img" aria-label="Stacked Area Chart">
-          <path d="M0,120 Q100,80 200,90 T400,50 L400,160 L0,160 Z" fill="var(--chart-1)" fill-opacity="0.3"/>
-          <path d="M0,80 Q100,40 200,50 T400,20 L400,120 Q300,90 200,90 T0,120 Z" fill="var(--chart-2)" fill-opacity="0.3"/>
-          <path d="M0,120 Q100,80 200,90 T400,50" fill="none" stroke="var(--chart-1)" stroke-width="2"/>
-          <path d="M0,80 Q100,40 200,50 T400,20" fill="none" stroke="var(--chart-2)" stroke-width="2"/>
-        </svg>`;
-      }
-      return `<svg class="h-48 w-full" viewBox="0 0 400 160" role="img" aria-label="Area Chart">
+      return `<svg class="w-full h-full" viewBox="0 0 600 240" preserveAspectRatio="none" role="img" aria-label="Area Chart">
         <defs>
-          <linearGradient id="grad-${variantId}" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="var(--chart-1)" stop-opacity="0.35"/>
-            <stop offset="100%" stop-color="var(--chart-1)" stop-opacity="0.0"/>
+          <linearGradient id="fillDesktop" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="5%" stop-color="var(--chart-1)" stop-opacity="0.8"/>
+            <stop offset="95%" stop-color="var(--chart-1)" stop-opacity="0.1"/>
+          </linearGradient>
+          <linearGradient id="fillMobile" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="5%" stop-color="var(--chart-2)" stop-opacity="0.8"/>
+            <stop offset="95%" stop-color="var(--chart-2)" stop-opacity="0.1"/>
           </linearGradient>
         </defs>
-        <path d="M0,130 Q100,50 200,90 T400,30 L400,160 L0,160 Z" fill="url(#grad-${variantId})"/>
-        <path d="M0,130 Q100,50 200,90 T400,30" fill="none" stroke="var(--chart-1)" stroke-width="2.5"/>
+        <g class="stroke-border/50" stroke-width="1" stroke-dasharray="3 3">
+          <line x1="50" y1="30" x2="570" y2="30"/>
+          <line x1="50" y1="75" x2="570" y2="75"/>
+          <line x1="50" y1="120" x2="570" y2="120"/>
+          <line x1="50" y1="165" x2="570" y2="165"/>
+          <line x1="50" y1="210" x2="570" y2="210"/>
+        </g>
+        <g class="fill-muted-foreground text-[10px] tabular-nums" text-anchor="end">
+          <text x="42" y="34" class="tabular-nums">500</text>
+          <text x="42" y="79" class="tabular-nums">400</text>
+          <text x="42" y="124" class="tabular-nums">300</text>
+          <text x="42" y="169" class="tabular-nums">200</text>
+          <text x="42" y="214" class="tabular-nums">100</text>
+        </g>
+        <path d="M 60,180 C 130,165 170,175 230,140 C 290,105 330,145 390,120 C 450,95 490,110 560,75 L 560,210 L 60,210 Z" fill="url(#fillMobile)"/>
+        <path d="M 60,180 C 130,165 170,175 230,140 C 290,105 330,145 390,120 C 450,95 490,110 560,75" fill="none" stroke="var(--chart-2)" stroke-width="2"/>
+        <path d="M 60,140 C 130,110 170,130 230,85 C 290,40 330,95 390,60 C 450,25 490,55 560,35 L 560,210 L 60,210 Z" fill="url(#fillDesktop)"/>
+        <path d="M 60,140 C 130,110 170,130 230,85 C 290,40 330,95 390,60 C 450,25 490,55 560,35" fill="none" stroke="var(--chart-1)" stroke-width="2"/>
+        <g class="fill-muted-foreground text-[11px]" text-anchor="middle">
+          <text x="60" y="228">Jan</text>
+          <text x="160" y="228">Feb</text>
+          <text x="260" y="228">Mar</text>
+          <text x="360" y="228">Apr</text>
+          <text x="460" y="228">May</text>
+          <text x="560" y="228">Jun</text>
+        </g>
+        <line data-crosshair x1="260" y1="20" x2="260" y2="210" class="stroke-muted-foreground stroke-dashed opacity-0 transition-opacity" stroke-width="1" stroke-dasharray="4 4"/>
+        <circle data-crosshair-desktop cx="260" cy="85" r="4" fill="var(--chart-1)" class="opacity-0 transition-opacity"/>
+        <circle data-crosshair-mobile cx="260" cy="140" r="4" fill="var(--chart-2)" class="opacity-0 transition-opacity"/>
       </svg>`;
 
     case 'bar':
-      if (variantId === 'bar-horizontal') {
-        return `<svg class="h-48 w-full" viewBox="0 0 400 160" role="img" aria-label="Horizontal Bar Chart">
-          <rect x="0" y="20" width="280" height="18" rx="3" fill="var(--chart-1)"/>
-          <rect x="0" y="55" width="340" height="18" rx="3" fill="var(--chart-1)"/>
-          <rect x="0" y="90" width="210" height="18" rx="3" fill="var(--chart-1)"/>
-          <rect x="0" y="125" width="310" height="18" rx="3" fill="var(--chart-1)"/>
-        </svg>`;
-      }
-      if (variantId === 'bar-negative') {
-        return `<svg class="h-48 w-full" viewBox="0 0 400 160" role="img" aria-label="Negative Bar Chart">
-          <line x1="0" y1="80" x2="400" y2="80" stroke="currentColor" stroke-opacity="0.2"/>
-          <rect x="40" y="30" width="24" height="50" rx="2" fill="var(--chart-1)"/>
-          <rect x="120" y="80" width="24" height="40" rx="2" fill="var(--chart-5)"/>
-          <rect x="200" y="20" width="24" height="60" rx="2" fill="var(--chart-1)"/>
-          <rect x="280" y="80" width="24" height="30" rx="2" fill="var(--chart-5)"/>
-          <rect x="340" y="40" width="24" height="40" rx="2" fill="var(--chart-1)"/>
-        </svg>`;
-      }
-      return `<svg class="h-48 w-full" viewBox="0 0 400 160" role="img" aria-label="Bar Chart">
-        <rect x="30" y="40" width="28" height="120" rx="3" fill="var(--chart-1)"/>
-        <rect x="90" y="20" width="28" height="140" rx="3" fill="var(--chart-1)"/>
-        <rect x="150" y="60" width="28" height="100" rx="3" fill="var(--chart-1)"/>
-        <rect x="210" y="30" width="28" height="130" rx="3" fill="var(--chart-1)"/>
-        <rect x="270" y="70" width="28" height="90" rx="3" fill="var(--chart-1)"/>
-        <rect x="330" y="15" width="28" height="145" rx="3" fill="var(--chart-1)"/>
+      return `<svg class="w-full h-full" viewBox="0 0 600 240" preserveAspectRatio="none" role="img" aria-label="Bar Chart">
+        <g class="stroke-border/50" stroke-width="1" stroke-dasharray="3 3">
+          <line x1="50" y1="30" x2="570" y2="30"/>
+          <line x1="50" y1="75" x2="570" y2="75"/>
+          <line x1="50" y1="120" x2="570" y2="120"/>
+          <line x1="50" y1="165" x2="570" y2="165"/>
+          <line x1="50" y1="210" x2="570" y2="210"/>
+        </g>
+        <g class="fill-muted-foreground text-[10px] tabular-nums" text-anchor="end">
+          <text x="42" y="34" class="tabular-nums">500</text>
+          <text x="42" y="79" class="tabular-nums">400</text>
+          <text x="42" y="124" class="tabular-nums">300</text>
+          <text x="42" y="169" class="tabular-nums">200</text>
+          <text x="42" y="214" class="tabular-nums">100</text>
+        </g>
+        <rect x="52" y="80" width="18" height="130" rx="3" fill="var(--chart-1)"/>
+        <rect x="152" y="45" width="18" height="165" rx="3" fill="var(--chart-1)"/>
+        <rect x="252" y="70" width="18" height="140" rx="3" fill="var(--chart-1)"/>
+        <rect x="352" y="130" width="18" height="80" rx="3" fill="var(--chart-1)"/>
+        <rect x="452" y="60" width="18" height="150" rx="3" fill="var(--chart-1)"/>
+        <rect x="552" y="50" width="18" height="160" rx="3" fill="var(--chart-1)"/>
+        <rect x="74" y="140" width="18" height="70" rx="3" fill="var(--chart-2)"/>
+        <rect x="174" y="95" width="18" height="115" rx="3" fill="var(--chart-2)"/>
+        <rect x="274" y="120" width="18" height="90" rx="3" fill="var(--chart-2)"/>
+        <rect x="374" y="100" width="18" height="110" rx="3" fill="var(--chart-2)"/>
+        <rect x="474" y="115" width="18" height="95" rx="3" fill="var(--chart-2)"/>
+        <rect x="574" y="105" width="18" height="105" rx="3" fill="var(--chart-2)"/>
+        <g class="fill-muted-foreground text-[11px]" text-anchor="middle">
+          <text x="72" y="228">Jan</text>
+          <text x="172" y="228">Feb</text>
+          <text x="272" y="228">Mar</text>
+          <text x="372" y="228">Apr</text>
+          <text x="472" y="228">May</text>
+          <text x="572" y="228">Jun</text>
+        </g>
+        <line data-crosshair x1="272" y1="20" x2="272" y2="210" class="stroke-muted-foreground stroke-dashed opacity-0 transition-opacity" stroke-width="1" stroke-dasharray="4 4"/>
       </svg>`;
 
     case 'line':
-      return `<svg class="h-48 w-full" viewBox="0 0 400 160" role="img" aria-label="Line Chart">
-        <path d="M0,120 Q100,30 200,80 T400,20" fill="none" stroke="var(--chart-1)" stroke-width="2.5"/>
-        <circle cx="100" cy="55" r="4" fill="var(--chart-1)"/>
-        <circle cx="200" cy="80" r="4" fill="var(--chart-1)"/>
-        <circle cx="300" cy="50" r="4" fill="var(--chart-1)"/>
-        <circle cx="400" cy="20" r="4" fill="var(--chart-1)"/>
+      return `<svg class="w-full h-full" viewBox="0 0 600 240" preserveAspectRatio="none" role="img" aria-label="Line Chart">
+        <g class="stroke-border/50" stroke-width="1" stroke-dasharray="3 3">
+          <line x1="50" y1="30" x2="570" y2="30"/>
+          <line x1="50" y1="75" x2="570" y2="75"/>
+          <line x1="50" y1="120" x2="570" y2="120"/>
+          <line x1="50" y1="165" x2="570" y2="165"/>
+          <line x1="50" y1="210" x2="570" y2="210"/>
+        </g>
+        <g class="fill-muted-foreground text-[10px] tabular-nums" text-anchor="end">
+          <text x="42" y="34" class="tabular-nums">500</text>
+          <text x="42" y="79" class="tabular-nums">400</text>
+          <text x="42" y="124" class="tabular-nums">300</text>
+          <text x="42" y="169" class="tabular-nums">200</text>
+          <text x="42" y="214" class="tabular-nums">100</text>
+        </g>
+        <path d="M 60,180 C 130,165 170,175 230,140 C 290,105 330,145 390,120 C 450,95 490,110 560,75" fill="none" stroke="var(--chart-2)" stroke-width="2.5"/>
+        <path d="M 60,140 C 130,110 170,130 230,85 C 290,40 330,95 390,60 C 450,25 490,55 560,35" fill="none" stroke="var(--chart-1)" stroke-width="2.5"/>
+        <circle cx="60" cy="140" r="4" fill="var(--chart-1)"/>
+        <circle cx="160" cy="100" r="4" fill="var(--chart-1)"/>
+        <circle cx="260" cy="85" r="4" fill="var(--chart-1)"/>
+        <circle cx="360" cy="125" r="4" fill="var(--chart-1)"/>
+        <circle cx="460" cy="75" r="4" fill="var(--chart-1)"/>
+        <circle cx="560" cy="35" r="4" fill="var(--chart-1)"/>
+        <g class="fill-muted-foreground text-[11px]" text-anchor="middle">
+          <text x="60" y="228">Jan</text>
+          <text x="160" y="228">Feb</text>
+          <text x="260" y="228">Mar</text>
+          <text x="360" y="228">Apr</text>
+          <text x="460" y="228">May</text>
+          <text x="560" y="228">Jun</text>
+        </g>
+        <line data-crosshair x1="260" y1="20" x2="260" y2="210" class="stroke-muted-foreground stroke-dashed opacity-0 transition-opacity" stroke-width="1" stroke-dasharray="4 4"/>
+        <circle data-crosshair-desktop cx="260" cy="85" r="4" fill="var(--chart-1)" class="opacity-0 transition-opacity"/>
+        <circle data-crosshair-mobile cx="260" cy="140" r="4" fill="var(--chart-2)" class="opacity-0 transition-opacity"/>
       </svg>`;
 
     case 'pie':
       if (variantId.includes('donut')) {
-        return `<div class="flex items-center justify-center h-48 w-full">
-          <div class="relative size-40 flex items-center justify-center">
+        return `<div class="flex items-center justify-center h-full w-full">
+          <div class="relative size-44 flex items-center justify-center">
             <svg class="size-full -rotate-90" viewBox="0 0 100 100" role="img" aria-label="Donut Chart">
               <circle cx="50" cy="50" r="38" fill="none" stroke="var(--chart-1)" stroke-width="14" stroke-dasharray="140 238"/>
               <circle cx="50" cy="50" r="38" fill="none" stroke="var(--chart-2)" stroke-width="14" stroke-dasharray="60 238" stroke-dashoffset="-140"/>
@@ -120,17 +176,17 @@ export function generateChartSvg(category, variantId) {
           </div>
         </div>`;
       }
-      return `<div class="flex items-center justify-center h-48 w-full">
-        <svg class="size-40" viewBox="0 0 100 100" role="img" aria-label="Pie Chart">
-          <circle cx="50" cy="50" r="40" fill="var(--chart-1)"/>
+      return `<div class="flex items-center justify-center h-full w-full">
+        <svg class="size-44" viewBox="0 0 100 100" role="img" aria-label="Pie Chart">
+          <circle cx="50" cy="40" fill="var(--chart-1)"/>
           <path d="M50,50 L50,10 A40,40 0 0,1 90,50 Z" fill="var(--chart-2)"/>
           <path d="M50,50 L90,50 A40,40 0 0,1 50,90 Z" fill="var(--chart-3)"/>
         </svg>
       </div>`;
 
     case 'radar':
-      return `<div class="flex items-center justify-center h-48 w-full">
-        <svg class="size-44" viewBox="0 0 120 120" role="img" aria-label="Radar Chart">
+      return `<div class="flex items-center justify-center h-full w-full">
+        <svg class="size-48" viewBox="0 0 120 120" role="img" aria-label="Radar Chart">
           <polygon points="60,10 105,38 105,82 60,110 15,82 15,38" fill="none" stroke="currentColor" stroke-opacity="0.15" stroke-width="1"/>
           <polygon points="60,25 90,44 90,76 60,95 30,76 30,44" fill="none" stroke="currentColor" stroke-opacity="0.15" stroke-width="1"/>
           <polygon points="60,20 95,40 85,80 60,90 25,70 35,42" fill="var(--chart-1)" fill-opacity="0.25" stroke="var(--chart-1)" stroke-width="2"/>
@@ -138,8 +194,8 @@ export function generateChartSvg(category, variantId) {
       </div>`;
 
     case 'radial':
-      return `<div class="flex items-center justify-center h-48 w-full">
-        <div class="relative size-40 flex items-center justify-center">
+      return `<div class="flex items-center justify-center h-full w-full">
+        <div class="relative size-44 flex items-center justify-center">
           <svg class="size-full -rotate-90" viewBox="0 0 100 100" role="img" aria-label="Radial Gauge">
             <circle cx="50" cy="50" r="36" fill="none" stroke="currentColor" stroke-opacity="0.1" stroke-width="8"/>
             <circle cx="50" cy="50" r="36" fill="none" stroke="var(--chart-1)" stroke-width="8" stroke-dasharray="226" stroke-dashoffset="60" stroke-linecap="round"/>
@@ -152,16 +208,50 @@ export function generateChartSvg(category, variantId) {
       </div>`;
 
     case 'tooltip':
-      return `<div class="relative h-48 w-full flex items-center justify-center">
-        <svg class="h-full w-full" viewBox="0 0 400 160" role="img" aria-label="Interactive Chart with Tooltip">
-          <path d="M0,130 Q100,50 200,90 T400,30" fill="none" stroke="var(--chart-1)" stroke-width="2.5"/>
-          <line x1="200" y1="0" x2="200" y2="160" stroke="currentColor" stroke-opacity="0.3" stroke-dasharray="4"/>
-          <circle cx="200" cy="90" r="5" fill="var(--chart-1)"/>
-        </svg>
-      </div>`;
+      return `<svg class="w-full h-full" viewBox="0 0 600 240" preserveAspectRatio="none" role="img" aria-label="Interactive Chart with Tooltip">
+        <defs>
+          <linearGradient id="fillDesktop" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="5%" stop-color="var(--chart-1)" stop-opacity="0.8"/>
+            <stop offset="95%" stop-color="var(--chart-1)" stop-opacity="0.1"/>
+          </linearGradient>
+          <linearGradient id="fillMobile" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="5%" stop-color="var(--chart-2)" stop-opacity="0.8"/>
+            <stop offset="95%" stop-color="var(--chart-2)" stop-opacity="0.1"/>
+          </linearGradient>
+        </defs>
+        <g class="stroke-border/50" stroke-width="1" stroke-dasharray="3 3">
+          <line x1="50" y1="30" x2="570" y2="30"/>
+          <line x1="50" y1="75" x2="570" y2="75"/>
+          <line x1="50" y1="120" x2="570" y2="120"/>
+          <line x1="50" y1="165" x2="570" y2="165"/>
+          <line x1="50" y1="210" x2="570" y2="210"/>
+        </g>
+        <g class="fill-muted-foreground text-[10px] tabular-nums" text-anchor="end">
+          <text x="42" y="34" class="tabular-nums">500</text>
+          <text x="42" y="79" class="tabular-nums">400</text>
+          <text x="42" y="124" class="tabular-nums">300</text>
+          <text x="42" y="169" class="tabular-nums">200</text>
+          <text x="42" y="214" class="tabular-nums">100</text>
+        </g>
+        <path d="M 60,180 C 130,165 170,175 230,140 C 290,105 330,145 390,120 C 450,95 490,110 560,75 L 560,210 L 60,210 Z" fill="url(#fillMobile)"/>
+        <path d="M 60,180 C 130,165 170,175 230,140 C 290,105 330,145 390,120 C 450,95 490,110 560,75" fill="none" stroke="var(--chart-2)" stroke-width="2"/>
+        <path d="M 60,140 C 130,110 170,130 230,85 C 290,40 330,95 390,60 C 450,25 490,55 560,35 L 560,210 L 60,210 Z" fill="url(#fillDesktop)"/>
+        <path d="M 60,140 C 130,110 170,130 230,85 C 290,40 330,95 390,60 C 450,25 490,55 560,35" fill="none" stroke="var(--chart-1)" stroke-width="2"/>
+        <g class="fill-muted-foreground text-[11px]" text-anchor="middle">
+          <text x="60" y="228">Jan</text>
+          <text x="160" y="228">Feb</text>
+          <text x="260" y="228">Mar</text>
+          <text x="360" y="228">Apr</text>
+          <text x="460" y="228">May</text>
+          <text x="560" y="228">Jun</text>
+        </g>
+        <line data-crosshair x1="260" y1="20" x2="260" y2="210" class="stroke-muted-foreground stroke-dashed opacity-0 transition-opacity" stroke-width="1" stroke-dasharray="4 4"/>
+        <circle data-crosshair-desktop cx="260" cy="85" r="4" fill="var(--chart-1)" class="opacity-0 transition-opacity"/>
+        <circle data-crosshair-mobile cx="260" cy="140" r="4" fill="var(--chart-2)" class="opacity-0 transition-opacity"/>
+      </svg>`;
 
     default:
-      return `<svg class="h-48 w-full" viewBox="0 0 400 160"><rect width="400" height="160" fill="var(--chart-1)" fill-opacity="0.1"/></svg>`;
+      return `<svg class="w-full h-full" viewBox="0 0 600 240"><rect width="600" height="240" fill="var(--chart-1)" fill-opacity="0.1"/></svg>`;
   }
 }
 
@@ -431,12 +521,513 @@ export function generateChartOptions(category, variantId) {
   }
 }
 
-export function generateFrameworkMounts(id, name, description, chartHtml, options) {
+export function generateFrameworkMounts(id, name, description, chartHtml) {
+  const componentName = id.split('-').map(s => s.charAt(0).toUpperCase() + s.slice(1)).join('') + 'Chart';
+
+  // Vanilla
+  const vanilla = `// Native SVG Bezier Chart - ${name}
+// Desktop: var(--chart-1), Mobile: var(--chart-2)
+const container = document.getElementById("${id}");
+if (container) {
+  const svg = container.querySelector('svg');
+  const tooltip = container.querySelector('[data-chart-tooltip]');
+  const crosshair = container.querySelector('[data-crosshair]');
+  const dotDesktop = container.querySelector('[data-crosshair-desktop]');
+  const dotMobile = container.querySelector('[data-crosshair-mobile]');
+
+  if (svg) {
+    const ro = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        const { width, height } = entry.contentRect;
+        if (width > 0 && height > 0) {
+          svg.setAttribute('viewBox', \`0 0 \${Math.round(width)} \${Math.round(height)}\`);
+        }
+      }
+    });
+    ro.observe(container);
+
+    const dataPoints = [
+      { month: 'Jan', x: 60, desktop: 186, mobile: 80, yD: 140, yM: 180 },
+      { month: 'Feb', x: 160, desktop: 305, mobile: 200, yD: 100, yM: 155 },
+      { month: 'Mar', x: 260, desktop: 237, mobile: 120, yD: 85, yM: 140 },
+      { month: 'Apr', x: 360, desktop: 73, mobile: 190, yD: 125, yM: 130 },
+      { month: 'May', x: 460, desktop: 209, mobile: 130, yD: 75, yM: 110 },
+      { month: 'Jun', x: 560, desktop: 214, mobile: 140, yD: 35, yM: 75 }
+    ];
+
+    svg.addEventListener('mousemove', (e) => {
+      const rect = svg.getBoundingClientRect();
+      const mouseX = ((e.clientX - rect.left) / rect.width) * 600;
+      let closest = dataPoints[0];
+      let minDist = Infinity;
+      for (const pt of dataPoints) {
+        const dist = Math.abs(pt.x - mouseX);
+        if (dist < minDist) {
+          minDist = dist;
+          closest = pt;
+        }
+      }
+      if (crosshair) {
+        crosshair.setAttribute('x1', String(closest.x));
+        crosshair.setAttribute('x2', String(closest.x));
+        crosshair.classList.remove('opacity-0');
+      }
+      if (dotDesktop) {
+        dotDesktop.setAttribute('cx', String(closest.x));
+        dotDesktop.setAttribute('cy', String(closest.yD));
+        dotDesktop.classList.remove('opacity-0');
+      }
+      if (dotMobile) {
+        dotMobile.setAttribute('cx', String(closest.x));
+        dotMobile.setAttribute('cy', String(closest.yM));
+        dotMobile.classList.remove('opacity-0');
+      }
+      if (tooltip) {
+        tooltip.classList.remove('opacity-0');
+        tooltip.style.left = \`\${(closest.x / 600) * 100}%\`;
+        tooltip.style.transform = 'translateX(-50%)';
+      }
+    });
+
+    svg.addEventListener('mouseleave', () => {
+      if (crosshair) crosshair.classList.add('opacity-0');
+      if (dotDesktop) dotDesktop.classList.add('opacity-0');
+      if (dotMobile) dotMobile.classList.add('opacity-0');
+      if (tooltip) tooltip.classList.add('opacity-0');
+    });
+  }
+}`;
+
+  // Astro
+  const astro = `---
+// ${componentName}.astro
+// Native SVG Bezier Chart - ${name}
+// Desktop: var(--chart-1), Mobile: var(--chart-2)
+interface Props {
+  title?: string;
+  description?: string;
+  class?: string;
+}
+const { title = "${name}", description = "${description}", class: className = "" } = Astro.props;
+---
+<div id="${id}" class:list={["w-full", className]}>
+  ${chartHtml}
+</div>
+<script>
+  const root = document.getElementById("${id}");
+  if (root) {
+    const svg = root.querySelector('svg');
+    const tooltip = root.querySelector('[data-chart-tooltip]');
+    const crosshair = root.querySelector('[data-crosshair]');
+    const dotDesktop = root.querySelector('[data-crosshair-desktop]');
+    const dotMobile = root.querySelector('[data-crosshair-mobile]');
+
+    if (svg) {
+      const ro = new ResizeObserver((entries) => {
+        for (const entry of entries) {
+          const { width, height } = entry.contentRect;
+          if (width > 0 && height > 0) {
+            svg.setAttribute('viewBox', \`0 0 \${Math.round(width)} \${Math.round(height)}\`);
+          }
+        }
+      });
+      ro.observe(root);
+
+      const dataPoints = [
+        { month: 'Jan', x: 60, desktop: 186, mobile: 80, yD: 140, yM: 180 },
+        { month: 'Feb', x: 160, desktop: 305, mobile: 200, yD: 100, yM: 155 },
+        { month: 'Mar', x: 260, desktop: 237, mobile: 120, yD: 85, yM: 140 },
+        { month: 'Apr', x: 360, desktop: 73, mobile: 190, yD: 125, yM: 130 },
+        { month: 'May', x: 460, desktop: 209, mobile: 130, yD: 75, yM: 110 },
+        { month: 'Jun', x: 560, desktop: 214, mobile: 140, yD: 35, yM: 75 }
+      ];
+
+      svg.addEventListener('mousemove', (e) => {
+        const rect = svg.getBoundingClientRect();
+        const mouseX = ((e.clientX - rect.left) / rect.width) * 600;
+        let closest = dataPoints[0];
+        let minDist = Infinity;
+        for (const pt of dataPoints) {
+          const dist = Math.abs(pt.x - mouseX);
+          if (dist < minDist) {
+            minDist = dist;
+            closest = pt;
+          }
+        }
+        if (crosshair) {
+          crosshair.setAttribute('x1', String(closest.x));
+          crosshair.setAttribute('x2', String(closest.x));
+          crosshair.classList.remove('opacity-0');
+        }
+        if (dotDesktop) {
+          dotDesktop.setAttribute('cx', String(closest.x));
+          dotDesktop.setAttribute('cy', String(closest.yD));
+          dotDesktop.classList.remove('opacity-0');
+        }
+        if (dotMobile) {
+          dotMobile.setAttribute('cx', String(closest.x));
+          dotMobile.setAttribute('cy', String(closest.yM));
+          dotMobile.classList.remove('opacity-0');
+        }
+        if (tooltip) {
+          tooltip.classList.remove('opacity-0');
+          (tooltip as HTMLElement).style.left = \`\${(closest.x / 600) * 100}%\`;
+          (tooltip as HTMLElement).style.transform = 'translateX(-50%)';
+        }
+      });
+
+      svg.addEventListener('mouseleave', () => {
+        if (crosshair) crosshair.classList.add('opacity-0');
+        if (dotDesktop) dotDesktop.classList.add('opacity-0');
+        if (dotMobile) dotMobile.classList.add('opacity-0');
+        if (tooltip) tooltip.classList.add('opacity-0');
+      });
+    }
+  }
+</script>`;
+
+  // Strip <script>...</script> for React/Vue/Svelte
+  const markupWithoutScript = chartHtml.replace(/<script[\s\S]*?<\/script>/gi, '').trim();
+
+  // React JSX conversion
+  const reactHtml = markupWithoutScript
+    .replace(/class=/g, 'className=')
+    .replace(/viewbox=/gi, 'viewBox=')
+    .replace(/preserveaspectratio=/gi, 'preserveAspectRatio=')
+    .replace(/stroke-width=/g, 'strokeWidth=')
+    .replace(/stroke-linecap=/g, 'strokeLinecap=')
+    .replace(/stroke-linejoin=/g, 'strokeLinejoin=')
+    .replace(/stroke-dasharray=/g, 'strokeDasharray=')
+    .replace(/stroke-dashoffset=/g, 'strokeDashoffset=')
+    .replace(/stroke-opacity=/g, 'strokeOpacity=')
+    .replace(/fill-opacity=/g, 'fillOpacity=')
+    .replace(/stop-color=/g, 'stopColor=')
+    .replace(/stop-opacity=/g, 'stopOpacity=')
+    .replace(/text-anchor=/g, 'textAnchor=')
+    .replace(/aria-label=/g, 'aria-label=')
+    .replace(/style="([^"]*)"/g, (match, styleStr) => {
+      const rules = styleStr.split(';').map(s => s.trim()).filter(Boolean);
+      const objEntries = rules.map(r => {
+        const [prop, ...valParts] = r.split(':');
+        const val = valParts.join(':').trim();
+        const camelProp = prop.trim().replace(/-([a-z])/g, (_, letter) => letter.toUpperCase());
+        return `${camelProp}: "${val}"`;
+      });
+      return `style={{ ${objEntries.join(', ')} }}`;
+    });
+
+  const react = `import React, { useEffect, useRef } from 'react';
+
+// Native SVG Bezier Chart - ${name}
+// Desktop: var(--chart-1), Mobile: var(--chart-2)
+interface ${componentName}Props {
+  title?: string;
+  description?: string;
+  className?: string;
+}
+
+export function ${componentName}({
+  title = "${name}",
+  description = "${description}",
+  className = ""
+}: ${componentName}Props) {
+  const chartRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const container = chartRef.current;
+    if (!container) return;
+    const svg = container.querySelector('svg');
+    const tooltip = container.querySelector<HTMLElement>('[data-chart-tooltip]');
+    const crosshair = container.querySelector('[data-crosshair]');
+    const dotDesktop = container.querySelector('[data-crosshair-desktop]');
+    const dotMobile = container.querySelector('[data-crosshair-mobile]');
+    if (!svg) return;
+
+    const ro = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        const { width, height } = entry.contentRect;
+        if (width > 0 && height > 0) {
+          svg.setAttribute('viewBox', \`0 0 \${Math.round(width)} \${Math.round(height)}\`);
+        }
+      }
+    });
+    ro.observe(container);
+
+    const dataPoints = [
+      { month: 'Jan', x: 60, desktop: 186, mobile: 80, yD: 140, yM: 180 },
+      { month: 'Feb', x: 160, desktop: 305, mobile: 200, yD: 100, yM: 155 },
+      { month: 'Mar', x: 260, desktop: 237, mobile: 120, yD: 85, yM: 140 },
+      { month: 'Apr', x: 360, desktop: 73, mobile: 190, yD: 125, yM: 130 },
+      { month: 'May', x: 460, desktop: 209, mobile: 130, yD: 75, yM: 110 },
+      { month: 'Jun', x: 560, desktop: 214, mobile: 140, yD: 35, yM: 75 }
+    ];
+
+    const onMouseMove = (e: MouseEvent) => {
+      const rect = svg.getBoundingClientRect();
+      const mouseX = ((e.clientX - rect.left) / rect.width) * 600;
+      let closest = dataPoints[0];
+      let minDist = Infinity;
+      for (const pt of dataPoints) {
+        const dist = Math.abs(pt.x - mouseX);
+        if (dist < minDist) {
+          minDist = dist;
+          closest = pt;
+        }
+      }
+      if (crosshair) {
+        crosshair.setAttribute('x1', String(closest.x));
+        crosshair.setAttribute('x2', String(closest.x));
+        crosshair.classList.remove('opacity-0');
+      }
+      if (dotDesktop) {
+        dotDesktop.setAttribute('cx', String(closest.x));
+        dotDesktop.setAttribute('cy', String(closest.yD));
+        dotDesktop.classList.remove('opacity-0');
+      }
+      if (dotMobile) {
+        dotMobile.setAttribute('cx', String(closest.x));
+        dotMobile.setAttribute('cy', String(closest.yM));
+        dotMobile.classList.remove('opacity-0');
+      }
+      if (tooltip) {
+        tooltip.classList.remove('opacity-0');
+        tooltip.style.left = \`\${(closest.x / 600) * 100}%\`;
+        tooltip.style.transform = 'translateX(-50%)';
+      }
+    };
+
+    const onMouseLeave = () => {
+      if (crosshair) crosshair.classList.add('opacity-0');
+      if (dotDesktop) dotDesktop.classList.add('opacity-0');
+      if (dotMobile) dotMobile.classList.add('opacity-0');
+      if (tooltip) tooltip.classList.add('opacity-0');
+    };
+
+    svg.addEventListener('mousemove', onMouseMove);
+    svg.addEventListener('mouseleave', onMouseLeave);
+
+    return () => {
+      ro.disconnect();
+      svg.removeEventListener('mousemove', onMouseMove);
+      svg.removeEventListener('mouseleave', onMouseLeave);
+    };
+  }, []);
+
+  return (
+    <div id="${id}" ref={chartRef} className={\`w-full \${className}\`}>
+      ${reactHtml}
+    </div>
+  );
+}`;
+
+  // Vue
+  const vue = `<script setup lang="ts">
+import { onMounted, onUnmounted, ref } from 'vue';
+
+// Native SVG Bezier Chart - ${name}
+// Desktop: var(--chart-1), Mobile: var(--chart-2)
+const props = withDefaults(defineProps<{
+  title?: string;
+  description?: string;
+  class?: string;
+}>(), {
+  title: "${name}",
+  description: "${description}",
+  class: ""
+});
+
+const chartRoot = ref<HTMLElement | null>(null);
+let ro: ResizeObserver | null = null;
+
+onMounted(() => {
+  const container = chartRoot.value;
+  if (!container) return;
+  const svg = container.querySelector('svg');
+  const tooltip = container.querySelector<HTMLElement>('[data-chart-tooltip]');
+  const crosshair = container.querySelector('[data-crosshair]');
+  const dotDesktop = container.querySelector('[data-crosshair-desktop]');
+  const dotMobile = container.querySelector('[data-crosshair-mobile]');
+  if (!svg) return;
+
+  ro = new ResizeObserver((entries) => {
+    for (const entry of entries) {
+      const { width, height } = entry.contentRect;
+      if (width > 0 && height > 0) {
+        svg.setAttribute('viewBox', \`0 0 \${Math.round(width)} \${Math.round(height)}\`);
+      }
+    }
+  });
+  ro.observe(container);
+
+  const dataPoints = [
+    { month: 'Jan', x: 60, desktop: 186, mobile: 80, yD: 140, yM: 180 },
+    { month: 'Feb', x: 160, desktop: 305, mobile: 200, yD: 100, yM: 155 },
+    { month: 'Mar', x: 260, desktop: 237, mobile: 120, yD: 85, yM: 140 },
+    { month: 'Apr', x: 360, desktop: 73, mobile: 190, yD: 125, yM: 130 },
+    { month: 'May', x: 460, desktop: 209, mobile: 130, yD: 75, yM: 110 },
+    { month: 'Jun', x: 560, desktop: 214, mobile: 140, yD: 35, yM: 75 }
+  ];
+
+  svg.addEventListener('mousemove', (e) => {
+    const rect = svg.getBoundingClientRect();
+    const mouseX = ((e.clientX - rect.left) / rect.width) * 600;
+    let closest = dataPoints[0];
+    let minDist = Infinity;
+    for (const pt of dataPoints) {
+      const dist = Math.abs(pt.x - mouseX);
+      if (dist < minDist) {
+        minDist = dist;
+        closest = pt;
+      }
+    }
+    if (crosshair) {
+      crosshair.setAttribute('x1', String(closest.x));
+      crosshair.setAttribute('x2', String(closest.x));
+      crosshair.classList.remove('opacity-0');
+    }
+    if (dotDesktop) {
+      dotDesktop.setAttribute('cx', String(closest.x));
+      dotDesktop.setAttribute('cy', String(closest.yD));
+      dotDesktop.classList.remove('opacity-0');
+    }
+    if (dotMobile) {
+      dotMobile.setAttribute('cx', String(closest.x));
+      dotMobile.setAttribute('cy', String(closest.yM));
+      dotMobile.classList.remove('opacity-0');
+    }
+    if (tooltip) {
+      tooltip.classList.remove('opacity-0');
+      tooltip.style.left = \`\${(closest.x / 600) * 100}%\`;
+      tooltip.style.transform = 'translateX(-50%)';
+    }
+  });
+
+  svg.addEventListener('mouseleave', () => {
+    if (crosshair) crosshair.classList.add('opacity-0');
+    if (dotDesktop) dotDesktop.classList.add('opacity-0');
+    if (dotMobile) dotMobile.classList.add('opacity-0');
+    if (tooltip) tooltip.classList.add('opacity-0');
+  });
+});
+
+onUnmounted(() => {
+  if (ro) ro.disconnect();
+});
+</script>
+
+<template>
+  <div :id="'${id}'" ref="chartRoot" :class="['w-full', props.class]">
+    ${markupWithoutScript}
+  </div>
+</template>`;
+
+  // Svelte
+  const svelte = `<script lang="ts">
+  import { onMount } from 'svelte';
+
+  // Native SVG Bezier Chart - ${name}
+  // Desktop: var(--chart-1), Mobile: var(--chart-2)
+  export let title: string = "${name}";
+  export let description: string = "${description}";
+  export let className: string = "";
+
+  let chartRoot: HTMLElement;
+  let ro: ResizeObserver;
+
+  onMount(() => {
+    const container = chartRoot;
+    if (!container) return;
+    const svg = container.querySelector('svg');
+    const tooltip = container.querySelector<HTMLElement>('[data-chart-tooltip]');
+    const crosshair = container.querySelector('[data-crosshair]');
+    const dotDesktop = container.querySelector('[data-crosshair-desktop]');
+    const dotMobile = container.querySelector('[data-crosshair-mobile]');
+    if (!svg) return;
+
+    ro = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        const { width, height } = entry.contentRect;
+        if (width > 0 && height > 0) {
+          svg.setAttribute('viewBox', \`0 0 \${Math.round(width)} \${Math.round(height)}\`);
+        }
+      }
+    });
+    ro.observe(container);
+
+    const dataPoints = [
+      { month: 'Jan', x: 60, desktop: 186, mobile: 80, yD: 140, yM: 180 },
+      { month: 'Feb', x: 160, desktop: 305, mobile: 200, yD: 100, yM: 155 },
+      { month: 'Mar', x: 260, desktop: 237, mobile: 120, yD: 85, yM: 140 },
+      { month: 'Apr', x: 360, desktop: 73, mobile: 190, yD: 125, yM: 130 },
+      { month: 'May', x: 460, desktop: 209, mobile: 130, yD: 75, yM: 110 },
+      { month: 'Jun', x: 560, desktop: 214, mobile: 140, yD: 35, yM: 75 }
+    ];
+
+    const onMouseMove = (e: MouseEvent) => {
+      const rect = svg.getBoundingClientRect();
+      const mouseX = ((e.clientX - rect.left) / rect.width) * 600;
+      let closest = dataPoints[0];
+      let minDist = Infinity;
+      for (const pt of dataPoints) {
+        const dist = Math.abs(pt.x - mouseX);
+        if (dist < minDist) {
+          minDist = dist;
+          closest = pt;
+        }
+      }
+      if (crosshair) {
+        crosshair.setAttribute('x1', String(closest.x));
+        crosshair.setAttribute('x2', String(closest.x));
+        crosshair.classList.remove('opacity-0');
+      }
+      if (dotDesktop) {
+        dotDesktop.setAttribute('cx', String(closest.x));
+        dotDesktop.setAttribute('cy', String(closest.yD));
+        dotDesktop.classList.remove('opacity-0');
+      }
+      if (dotMobile) {
+        dotMobile.setAttribute('cx', String(closest.x));
+        dotMobile.setAttribute('cy', String(closest.yM));
+        dotMobile.classList.remove('opacity-0');
+      }
+      if (tooltip) {
+        tooltip.classList.remove('opacity-0');
+        tooltip.style.left = \`\${(closest.x / 600) * 100}%\`;
+        tooltip.style.transform = 'translateX(-50%)';
+      }
+    };
+
+    const onMouseLeave = () => {
+      if (crosshair) crosshair.classList.add('opacity-0');
+      if (dotDesktop) dotDesktop.classList.add('opacity-0');
+      if (dotMobile) dotMobile.classList.add('opacity-0');
+      if (tooltip) tooltip.classList.add('opacity-0');
+    };
+
+    svg.addEventListener('mousemove', onMouseMove);
+    svg.addEventListener('mouseleave', onMouseLeave);
+
+    return () => {
+      if (ro) ro.disconnect();
+      svg.removeEventListener('mousemove', onMouseMove);
+      svg.removeEventListener('mouseleave', onMouseLeave);
+    };
+  });
+</script>
+
+<div id="${id}" bind:this={chartRoot} class="w-full {className}">
+  ${markupWithoutScript}
+</div>`;
+
+  return { vanilla, astro, react, vue, svelte };
+}
+
+export function generateApexFrameworkMounts(id, name, description, chartHtml, options) {
   const componentName = id.split('-').map(s => s.charAt(0).toUpperCase() + s.slice(1)).join('') + 'Chart';
   const optionsJson = JSON.stringify(options, null, 2);
 
   // Vanilla
-  const vanilla = `// Mount and bind ${name}
+  const vanilla = `// Mount and bind ${name} (ApexCharts)
 import ApexCharts from 'apexcharts';
 
 const chartOptions = ${optionsJson};
@@ -681,44 +1272,215 @@ export function generateChartsCatalog() {
       const tooltipHtml = generateChartTooltipHtml(item.id, cat);
       const options = generateChartOptions(cat, item.id);
 
-      const html = `<div class="chart-container card p-6 flex flex-col gap-4 w-full" role="img" aria-label="${item.name} - ${item.description}">
+      const html = `<div class="chart-container card p-6 flex flex-col gap-4 w-full bg-background/95 backdrop-blur-sm" role="img" aria-label="${item.name} - ${item.description}" id="${item.id}">
+  <div class="border-b border-border pb-3 flex items-center justify-between">
+    <div>
+      <h3 class="text-base font-semibold text-foreground">${item.name}</h3>
+      <p class="text-sm text-muted-foreground">${item.description}</p>
+    </div>
+    <div class="flex items-center gap-4 text-xs">
+      <div class="flex items-center gap-1.5">
+        <span class="size-2.5 rounded-full" style="background-color: var(--chart-1)"></span>
+        <span class="text-muted-foreground">Desktop</span>
+      </div>
+      <div class="flex items-center gap-1.5">
+        <span class="size-2.5 rounded-full" style="background-color: var(--chart-2)"></span>
+        <span class="text-muted-foreground">Mobile</span>
+      </div>
+    </div>
+  </div>
+  <div class="w-full aspect-[4/3] md:aspect-[16/9] lg:aspect-[2/1] min-h-[240px] relative flex items-center justify-center overflow-hidden" data-chart-viewport>
+    ${svg}
+    ${tooltipHtml}
+    <table class="sr-only">
+      <caption>${item.name} - Desktop and Mobile Data</caption>
+      <thead>
+        <tr>
+          <th scope="col">Month</th>
+          <th scope="col">Desktop</th>
+          <th scope="col">Mobile</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>January</td>
+          <td>186</td>
+          <td>80</td>
+        </tr>
+        <tr>
+          <td>February</td>
+          <td>305</td>
+          <td>200</td>
+        </tr>
+        <tr>
+          <td>March</td>
+          <td>237</td>
+          <td>120</td>
+        </tr>
+        <tr>
+          <td>April</td>
+          <td>73</td>
+          <td>190</td>
+        </tr>
+        <tr>
+          <td>May</td>
+          <td>209</td>
+          <td>130</td>
+        </tr>
+        <tr>
+          <td>June</td>
+          <td>214</td>
+          <td>140</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="flex items-center justify-between border-t border-border pt-3 text-xs text-muted-foreground">
+    <span>Trending up by 5.2% this month</span>
+    <strong class="tabular-nums font-semibold text-foreground">January - June 2026</strong>
+  </div>
+  <script>
+    (function() {
+      const container = document.getElementById("${item.id}");
+      if (!container) return;
+      const svg = container.querySelector('svg');
+      const tooltip = container.querySelector('[data-chart-tooltip]');
+      const crosshair = container.querySelector('[data-crosshair]');
+      const dotDesktop = container.querySelector('[data-crosshair-desktop]');
+      const dotMobile = container.querySelector('[data-crosshair-mobile]');
+      if (!svg) return;
+
+      const ro = new ResizeObserver((entries) => {
+        for (const entry of entries) {
+          const width = Math.round(entry.contentRect.width);
+          const height = Math.round(entry.contentRect.height);
+          if (width > 0 && height > 0) {
+            svg.setAttribute('viewBox', \`0 0 \${width} \${height}\`);
+          }
+        }
+      });
+      ro.observe(container);
+
+      const dataPoints = [
+        { month: 'Jan', x: 60, desktop: 186, mobile: 80, yD: 140, yM: 180 },
+        { month: 'Feb', x: 160, desktop: 305, mobile: 200, yD: 100, yM: 155 },
+        { month: 'Mar', x: 260, desktop: 237, mobile: 120, yD: 85, yM: 140 },
+        { month: 'Apr', x: 360, desktop: 73, mobile: 190, yD: 125, yM: 130 },
+        { month: 'May', x: 460, desktop: 209, mobile: 130, yD: 75, yM: 110 },
+        { month: 'Jun', x: 560, desktop: 214, mobile: 140, yD: 35, yM: 75 }
+      ];
+
+      svg.addEventListener('mousemove', (e) => {
+        const rect = svg.getBoundingClientRect();
+        const mouseX = ((e.clientX - rect.left) / rect.width) * 600;
+        let closest = dataPoints[0];
+        let minDist = Infinity;
+        for (const pt of dataPoints) {
+          const dist = Math.abs(pt.x - mouseX);
+          if (dist < minDist) {
+            minDist = dist;
+            closest = pt;
+          }
+        }
+        if (crosshair) {
+          crosshair.setAttribute('x1', String(closest.x));
+          crosshair.setAttribute('x2', String(closest.x));
+          crosshair.classList.remove('opacity-0');
+        }
+        if (dotDesktop) {
+          dotDesktop.setAttribute('cx', String(closest.x));
+          dotDesktop.setAttribute('cy', String(closest.yD));
+          dotDesktop.classList.remove('opacity-0');
+        }
+        if (dotMobile) {
+          dotMobile.setAttribute('cx', String(closest.x));
+          dotMobile.setAttribute('cy', String(closest.yM));
+          dotMobile.classList.remove('opacity-0');
+        }
+        if (tooltip) {
+          tooltip.classList.remove('opacity-0');
+          tooltip.style.left = \`\${(closest.x / 600) * 100}%\`;
+          tooltip.style.transform = 'translateX(-50%)';
+        }
+      });
+
+      svg.addEventListener('mouseleave', () => {
+        if (crosshair) crosshair.classList.add('opacity-0');
+        if (dotDesktop) dotDesktop.classList.add('opacity-0');
+        if (dotMobile) dotMobile.classList.add('opacity-0');
+        if (tooltip) tooltip.classList.add('opacity-0');
+      });
+    })();
+  </script>
+</div>`;
+
+      const apexHtml = `<div class="chart-container card p-6 flex flex-col gap-4 w-full bg-background/95 backdrop-blur-sm" role="img" aria-label="${item.name} - ${item.description}" id="${item.id}">
   <div class="border-b border-border pb-3">
-    <h3 class="text-base font-semibold">${item.name}</h3>
+    <h3 class="text-base font-semibold text-foreground">${item.name}</h3>
     <p class="text-sm text-muted-foreground">${item.description}</p>
   </div>
   <div class="w-full aspect-[4/3] md:aspect-[16/9] lg:aspect-[2/1] min-h-[240px] relative flex items-center justify-center" data-chart-viewport>
     ${svg}
     ${tooltipHtml}
     <table class="sr-only">
-      <caption>${item.name}</caption>
+      <caption>${item.name} - Desktop and Mobile Data</caption>
       <thead>
         <tr>
-          <th scope="col">Series</th>
-          <th scope="col">Period</th>
-          <th scope="col">Value</th>
+          <th scope="col">Month</th>
+          <th scope="col">Desktop</th>
+          <th scope="col">Mobile</th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td>Series 1</td>
-          <td>Jan</td>
-          <td>14,250</td>
+          <td>January</td>
+          <td>186</td>
+          <td>80</td>
         </tr>
         <tr>
-          <td>Series 2</td>
-          <td>Jan</td>
-          <td>8,420</td>
+          <td>February</td>
+          <td>305</td>
+          <td>200</td>
+        </tr>
+        <tr>
+          <td>March</td>
+          <td>237</td>
+          <td>120</td>
+        </tr>
+        <tr>
+          <td>April</td>
+          <td>73</td>
+          <td>190</td>
+        </tr>
+        <tr>
+          <td>May</td>
+          <td>209</td>
+          <td>130</td>
+        </tr>
+        <tr>
+          <td>June</td>
+          <td>214</td>
+          <td>140</td>
         </tr>
       </tbody>
     </table>
   </div>
   <div class="flex items-center justify-between border-t border-border pt-3 text-xs text-muted-foreground">
-    <span>Series Total</span>
-    <strong class="tabular-nums font-semibold text-foreground">$14,250.00</strong>
+    <span>Trending up by 5.2% this month</span>
+    <strong class="tabular-nums font-semibold text-foreground">January - June 2026</strong>
   </div>
 </div>`;
 
-      const frameworks = generateFrameworkMounts(item.id, item.name, item.description, html, options);
+      const svgFrameworks = generateFrameworkMounts(item.id, item.name, item.description, html);
+      const apexFrameworks = generateApexFrameworkMounts(item.id, item.name, item.description, apexHtml, options);
+
+      const accessibilitySpec = {
+        role: 'img',
+        ariaLabel: `${item.name} - ${item.description}`,
+        tableFallback: true,
+        headers: ['Month', 'Desktop', 'Mobile'],
+        summary: `Monthly metrics and comparative trends for ${item.name} covering January through June.`
+      };
 
       charts.push({
         id: item.id,
@@ -730,9 +1492,13 @@ export function generateChartsCatalog() {
         cssTokens: [...CSS_TOKENS],
         requiredTokens: [...CSS_TOKENS],
         layoutFootprint: LAYOUT_FOOTPRINT,
+        accessibilitySpec,
         options,
         html,
-        frameworks
+        apexHtml,
+        frameworks: svgFrameworks,
+        svgFrameworks,
+        apexFrameworks
       });
     }
   }

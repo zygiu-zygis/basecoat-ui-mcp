@@ -1,0 +1,454 @@
+{
+  "schemaVersion": 1,
+  "totalRules": 33,
+  "categories": [
+    "tailwind-v4",
+    "fsm-contracts",
+    "tokens",
+    "semantic-html",
+    "dashboard-patterns"
+  ],
+  "rules": [
+    {
+      "id": "TW4-01",
+      "category": "tailwind-v4",
+      "rule": "Use strict Tailwind CSS v4 syntax, @import directives, and deterministic class ordering.",
+      "forbidden": [
+        "bg-opacity-*",
+        "flex-shrink-*",
+        "flex-grow-*",
+        "overflow-ellipsis",
+        "@tailwind base/components/utilities"
+      ],
+      "required": [
+        "@import \"tailwindcss\"; @import \"basecoat-css/vega\";",
+        "bg-primary/80 (slash alpha)",
+        "shrink-0 / grow / text-ellipsis",
+        "Order: layout->flex/grid->size->space->type->bg->border->state"
+      ]
+    },
+    {
+      "id": "TW4-02",
+      "category": "tailwind-v4",
+      "rule": "Respect .card 1px ring shadow and 4px/8px spacing scale; forbid arbitrary dimensions/colors.",
+      "forbidden": [
+        ".card with border or border-border",
+        "w-[327px], h-[412px] (arbitrary bracket sizing)",
+        "bg-[#...], text-[rgb(...)], bg-gradient-*",
+        "gap-3, gap-5, p-5, p-7 (in comfortable mode)"
+      ],
+      "required": [
+        "class=\"card\" (no border class)",
+        "spacing steps: 0, 2, 4, 6, 8, 12 (compact adds 1, 1.5, 2.5, 3, 5)"
+      ]
+    },
+    {
+      "id": "FSM-01",
+      "category": "fsm-contracts",
+      "rule": "Interactive primitives (dialog, dropdown-menu, accordion, tabs, navigation) require FSM data-state and ARIA bindings.",
+      "forbidden": [
+        "Unbound interactive containers without data-state or data-fsm-*",
+        "import \"basecoat-css/all\""
+      ],
+      "required": [
+        "dialog: <dialog class=\"dialog\" data-state=\"closed\" data-fsm-recipe=\"dialog\" data-fsm-state=\"closed\">",
+        "dropdown: <div class=\"dropdown-menu\" data-state=\"closed\"> + trigger aria-expanded=\"false\" aria-controls=\"id\"",
+        "accordion: <section class=\"accordion\" data-state=\"open|closed\"> using <details>/<summary>",
+        "tabs: <div class=\"tabs\" data-state=\"active\" data-fsm-recipe=\"tabs\" data-fsm-state=\"active\">"
+      ]
+    },
+    {
+      "id": "TOK-01",
+      "category": "tokens",
+      "rule": "Enforce semantic tokens (--color-primary, --color-surface), WCAG/APCA contrast pairings, and html.dark resolver.",
+      "forbidden": [
+        "Hardcoded hex (#fff, #09090b), rgb(), or w-[327px] in markup",
+        "Low-contrast pairings (bg-primary with text-primary)",
+        "@media (prefers-color-scheme: dark) mixed with .dark class",
+        "<meta name=\"color-scheme\" content=\"light dark\">",
+        "Custom localStorage theme keys other than \"themeMode\""
+      ],
+      "required": [
+        "CSS variables: --color-primary (--primary), --color-surface (--background, --card), --foreground, --muted, --border",
+        "Paired classes: bg-primary + text-primary-foreground, bg-card + text-card-foreground, bg-background + text-foreground",
+        "Single theme resolver: window.basecoat.theme.toggle() + localStorage \"themeMode\"",
+        "Native <select> dark CSS: .dark select, .dark select option { background-color: var(--card); color: var(--foreground); color-scheme: dark; }"
+      ]
+    },
+    {
+      "id": "SEM-01",
+      "category": "semantic-html",
+      "rule": "Use semantic HTML5 landmarks and native controls over generic <div> wrappers; forbid emojis and external CDNs.",
+      "forbidden": [
+        "Generic <div> soup or duplicate wrapper <div> containers",
+        "Multiple <main> or multiple <h1> elements",
+        "Nested .card inside .card without data-variant=\"subcard\"",
+        "Unicode emojis or external CDN <script>/<link>"
+      ],
+      "required": [
+        "Landmarks in order: <header>, <nav aria-label=\"...\">, <main>, <aside aria-label=\"...\">, <footer>",
+        "Forms: <div class=\"field\"><label class=\"label\" for=\"id\"> + <input class=\"input\" id=\"id\">",
+        "Inline SVG icons (size-4, stroke=\"currentColor\") and aria-label on icon buttons"
+      ]
+    },
+    {
+      "id": "MET-01",
+      "category": "dashboard-patterns",
+      "rule": "Enforce KPI metric card typography hierarchy, tabular numerals, and semantic trend badge indicators.",
+      "forbidden": [
+        "KPI numerals without tabular-nums (e.g. text-3xl font-semibold without tabular-nums)",
+        "Ambiguous trend percentages without semantic badge container or aria-label",
+        ".card with border or border-border in Vega style pack"
+      ],
+      "required": [
+        "Value typography: text-2xl or text-3xl font-semibold tracking-tight tabular-nums",
+        "Trend indicator: <span class=\"badge\" data-variant=\"outline\"><svg class=\"size-3\" ...><span class=\"sr-only\">Trend</span>",
+        "Card padding: p-4 (compact) or p-6 (standard) without border class"
+      ]
+    },
+    {
+      "id": "TBL-01",
+      "category": "dashboard-patterns",
+      "rule": "Enforce data table geometry: overflow-x-auto wrapper, sticky header, toolbar, row actions, and tabular-nums.",
+      "forbidden": [
+        "Bare <table> without <div class=\"overflow-x-auto\"> wrapper container",
+        "Numeric columns without tabular-nums and text-right alignment",
+        "Interactive row action dropdown triggers without aria-expanded and data-state"
+      ],
+      "required": [
+        "Container: <div class=\"overflow-x-auto\"><table class=\"table\">",
+        "Sticky header: <thead class=\"sticky top-0 bg-background/90 backdrop-blur\">",
+        "Toolbar: <div class=\"flex items-center justify-between gap-4\"> above table",
+        "Row dropdowns with FSM contract: data-state=\"closed\" aria-expanded=\"false\""
+      ]
+    },
+    {
+      "id": "FRM-01",
+      "category": "dashboard-patterns",
+      "rule": "Enforce form field wrappers with label association and data-state=\"loading\" submit button handling.",
+      "forbidden": [
+        "Native <input> without <div class=\"field\"> and matching <label class=\"label\" for=\"id\">",
+        "Submit buttons without data-state / loading state handling during async submission",
+        "Hardcoded input sizes (e.g. w-[320px]); use w-full or responsive grid columns"
+      ],
+      "required": [
+        "Wrapper: <div class=\"field\"><label class=\"label\" for=\"id\">Label</label><input class=\"input\" id=\"id\">",
+        "Submit action: <button type=\"submit\" class=\"btn\" data-state=\"default\" data-loading-variant=\"spinner\">",
+        "Validation helper: <p class=\"text-xs text-muted-foreground\" id=\"id-help\"> bound via aria-describedby"
+      ]
+    },
+    {
+      "id": "NAV-01",
+      "category": "dashboard-patterns",
+      "rule": "Enforce sidebar and shell geometry with collapsible tooltip mode and compact top app bar.",
+      "forbidden": [
+        "App headers with h-16 or taller in data-dense dashboards",
+        "Unlabelled <aside> or <nav> landmarks without aria-label or aria-labelledby",
+        "Sidebar container without data-state=\"expanded\"|\"collapsed\" FSM contract"
+      ],
+      "required": [
+        "Sidebar: <aside class=\"sidebar group/sidebar\" data-state=\"expanded\" data-collapsible=\"tooltip\" data-fsm-recipe=\"navigation\" data-fsm-state=\"expanded\" aria-label=\"Primary navigation\">",
+        "Header: <header class=\"flex h-12 (or h-14) items-center justify-between border-b border-border/60\">",
+        "Breadcrumb: <nav aria-label=\"Breadcrumb\" class=\"breadcrumb text-sm\">"
+      ]
+    },
+    {
+      "id": "no-space-xy",
+      "category": "tailwind-v4",
+      "rule": "Forbid space-x-* and space-y-* utility classes; enforce flex gap-* or flex flex-col gap-*.",
+      "forbidden": [
+        "space-x-* (legacy margin injection)",
+        "space-y-* (causes flex layout bleed)"
+      ],
+      "required": [
+        "flex gap-* (horizontal flex child spacing)",
+        "flex flex-col gap-* (vertical flex stack spacing)"
+      ]
+    },
+    {
+      "id": "enforce-size-shorthand",
+      "category": "tailwind-v4",
+      "rule": "Use modern Tailwind size-* utility instead of matching pairs of w-* and h-*.",
+      "forbidden": [
+        "w-4 h-4 (redundant dimension pair)",
+        "w-8 h-8, w-10 h-10, w-12 h-12"
+      ],
+      "required": [
+        "size-4, size-8, size-10, size-12 shorthand utilities"
+      ]
+    },
+    {
+      "id": "no-manual-dark",
+      "category": "tokens",
+      "rule": "Forbid manual dark: class overrides; rely exclusively on semantic CSS variables.",
+      "forbidden": [
+        "dark:bg-slate-900 (manual dark class override)",
+        "dark:text-white, dark:border-zinc-800"
+      ],
+      "required": [
+        "Semantic CSS variables: bg-background, text-foreground, border-border, bg-card",
+        "HTML root .dark class managed by single theme controller"
+      ]
+    },
+    {
+      "id": "semantic-color-tokens",
+      "category": "tokens",
+      "rule": "Forbid raw Tailwind palette colors (e.g. bg-blue-500, text-gray-600); enforce semantic theme tokens.",
+      "forbidden": [
+        "bg-blue-500, bg-red-600, text-gray-600, bg-slate-100",
+        "Non-semantic color utilities outside badge semantic variants"
+      ],
+      "required": [
+        "bg-primary, text-primary-foreground, bg-muted, text-muted-foreground",
+        "bg-destructive, text-destructive-foreground, border-border"
+      ]
+    },
+    {
+      "id": "field-group-hierarchy",
+      "category": "dashboard-patterns",
+      "rule": "Enforce FieldGroup (data-component=\"field-group\") and Field (data-component=\"field\" / .field) with label association and dual data-invalid / aria-invalid contracts.",
+      "forbidden": [
+        "Raw input stacked with label in plain space-y-* div",
+        "data-invalid on container without aria-invalid on input control"
+      ],
+      "required": [
+        "<div class=\"field\" data-component=\"field\"><label class=\"label\" for=\"id\">...<input class=\"input\" id=\"id\">",
+        "Dual invalid contract: container data-invalid=\"true\" + control aria-invalid=\"true\""
+      ]
+    },
+    {
+      "id": "input-group-addon",
+      "category": "dashboard-patterns",
+      "rule": "Enforce InputGroup structure (data-component=\"input-group\") with explicit addons (data-slot=\"input-group-addon\").",
+      "forbidden": [
+        "Unstructured inline icons floating over inputs without input-group slot",
+        "Ad-hoc absolute positioned icon overlays inside raw text inputs"
+      ],
+      "required": [
+        "<div class=\"input-group\" data-component=\"input-group\"><span data-slot=\"input-group-addon\">...</span><input class=\"input\"></div>"
+      ]
+    },
+    {
+      "id": "select-and-menu-groups",
+      "category": "semantic-html",
+      "rule": "Enforce grouped selections inside <optgroup>, SelectGroup, DropdownMenuGroup, or CommandGroup wrappers.",
+      "forbidden": [
+        "Flat lists of options or menu items without categorical grouping",
+        "Ad-hoc divider divs separating option lists"
+      ],
+      "required": [
+        "<optgroup label=\"...\"> in native <select>",
+        "<div data-slot=\"select-group\" role=\"group\"> with group label in custom menus"
+      ]
+    },
+    {
+      "id": "icon-data-attribute-no-size",
+      "category": "semantic-html",
+      "rule": "Enforce data-icon=\"inline-start|inline-end\" on button icons without manual size-4 / w-4 h-4 classes.",
+      "forbidden": [
+        "<button class=\"btn\"><svg class=\"size-4\" data-icon=\"inline-start\"> (redundant sizing)",
+        "<button class=\"btn\"><svg class=\"w-4 h-4\"> (missing data-icon attribute)"
+      ],
+      "required": [
+        "<button class=\"btn\"><svg data-icon=\"inline-start\" ...> (automatic CSS sizing)",
+        "data-icon=\"inline-start\" for leading icons, data-icon=\"inline-end\" for trailing"
+      ]
+    },
+    {
+      "id": "dialog-accessible-title",
+      "category": "fsm-contracts",
+      "rule": "Require DialogTitle / <h2> with aria-labelledby on <dialog>, drawer, and sheet overlays.",
+      "forbidden": [
+        "<dialog class=\"dialog\"> without aria-labelledby or visible accessible title",
+        "Sheet / drawer panels with missing modal title heading"
+      ],
+      "required": [
+        "<dialog id=\"dlg\" class=\"dialog\" aria-labelledby=\"dlg-title\"><h2 id=\"dlg-title\" class=\"text-lg font-semibold\">Title</h2></dialog>"
+      ]
+    },
+    {
+      "id": "empty-and-skeleton-primitives",
+      "category": "dashboard-patterns",
+      "rule": "Require .empty state containers and .skeleton primitives instead of custom animate-pulse divs.",
+      "forbidden": [
+        "Ad-hoc <div class=\"animate-pulse bg-gray-200\"> loading placeholders",
+        "Empty table/card fallback without .empty landmark structure"
+      ],
+      "required": [
+        "<div class=\"skeleton h-4 w-full\"> or <div class=\"skeleton size-10 rounded-full\">",
+        "<div class=\"empty text-center p-8\"><p class=\"text-sm text-muted-foreground\">No records</p></div>"
+      ]
+    },
+    {
+      "id": "FRM-02",
+      "category": "dashboard-patterns",
+      "rule": "Reject orphaned <input>, <select>, <textarea> controls without an enclosing Field (.field) or FieldGroup (.field-group / <fieldset>).",
+      "forbidden": [
+        "Orphaned <input> controls without ancestor .field, .field-group, or <fieldset>",
+        "Bare <textarea> or <select> elements outside semantic form containers"
+      ],
+      "required": [
+        "<div class=\"field\"><label class=\"label\" for=\"id\">...<input id=\"id\" class=\"input\"></div>",
+        "<div role=\"group\" class=\"field-group\"><fieldset class=\"fieldset\"><legend>...</legend>...</fieldset></div>"
+      ]
+    },
+    {
+      "id": "FRM-03",
+      "category": "dashboard-patterns",
+      "rule": "Enforce explicit for / id matching between <label> and control, and aria-describedby linking to description/error nodes.",
+      "forbidden": [
+        "<label> with missing or mismatched for attribute inside .field",
+        "Control missing aria-describedby when .field-description or .field-error is present"
+      ],
+      "required": [
+        "<label class=\"label\" for=\"email\">Email</label><input id=\"email\" class=\"input\" aria-describedby=\"email-desc email-err\">",
+        "<p id=\"email-desc\" class=\"field-description\">...<p id=\"email-err\" class=\"field-error\">..."
+      ]
+    },
+    {
+      "id": "FRM-04",
+      "category": "semantic-html",
+      "rule": "Enforce FieldSet (<fieldset>) + FieldLegend (<legend>) for multiple related radio/checkbox controls.",
+      "forbidden": [
+        "Multiple <input type=\"radio\"> or checkbox controls without an enclosing <fieldset>",
+        "<fieldset> containers missing an accessible <legend> element"
+      ],
+      "required": [
+        "<fieldset class=\"fieldset space-y-4\"><legend class=\"field-legend\">Choice</legend><div class=\"field\" ...>...</div></fieldset>"
+      ]
+    },
+    {
+      "id": "CHART-01",
+      "category": "dashboard-patterns",
+      "rule": "SVG and canvas charts require a companion accessible data table <table class=\"sr-only\"> for screen readers.",
+      "forbidden": [
+        "Bare SVG or canvas chart containers without accessible text/table fallback",
+        "Charts with missing role=\"img\" or missing accessible label"
+      ],
+      "required": [
+        "<div class=\"chart-container\" role=\"img\" aria-label=\"...\"><svg>...</svg><table class=\"sr-only\">...</table></div>"
+      ]
+    },
+    {
+      "id": "CHART-02",
+      "category": "dashboard-patterns",
+      "rule": "Responsive SVG charts must define viewBox and bind a ResizeObserver container without fixed pixel dimensions.",
+      "forbidden": [
+        "SVG charts with hardcoded width=\"600\" height=\"400\" without viewBox",
+        "Unresponsive chart canvases that cause horizontal viewport overflow"
+      ],
+      "required": [
+        "<svg viewBox=\"0 0 500 300\" class=\"w-full h-auto\"> with container ResizeObserver binding"
+      ]
+    },
+    {
+      "id": "NAV-02",
+      "category": "semantic-html",
+      "rule": "Navigation links within sidebar and breadcrumbs must indicate active route via aria-current=\"page\".",
+      "forbidden": [
+        "Active navigation links marked only with CSS visual classes (e.g. bg-muted font-bold)",
+        "Multiple conflicting aria-current=\"page\" items in the same navigation scope"
+      ],
+      "required": [
+        "<a href=\"/dashboard\" class=\"btn\" aria-current=\"page\">Dashboard</a>"
+      ]
+    },
+    {
+      "id": "NAV-03",
+      "category": "dashboard-patterns",
+      "rule": "Collapsible sidebars in icon mode must specify data-collapsible=\"icon\" and render tooltips for icon-only buttons.",
+      "forbidden": [
+        "Sidebar collapsing to icon-only without data-collapsible=\"icon\"",
+        "Icon-only collapsed sidebar buttons without accessible tooltip or sr-only label"
+      ],
+      "required": [
+        "<aside class=\"sidebar\" data-collapsible=\"icon\"> with <span class=\"sr-only\"> on icon actions"
+      ]
+    },
+    {
+      "id": "NAV-04",
+      "category": "dashboard-patterns",
+      "rule": "Inset sidebar layouts must define data-variant=\"inset\" on the sidebar container.",
+      "forbidden": [
+        "Inset sidebar layouts with ad-hoc margins instead of canonical variant attribute",
+        "Conflicting layout variants on the primary navigation shell"
+      ],
+      "required": [
+        "<aside class=\"sidebar\" data-variant=\"inset\">"
+      ]
+    },
+    {
+      "id": "MET-02",
+      "category": "dashboard-patterns",
+      "rule": "KPI scale ticks, gauges, and comparison delta percentages must apply tabular-nums for layout stability.",
+      "forbidden": [
+        "Dynamic metric numbers or delta badges rendered with proportional numerals",
+        "Flickering layouts caused by fluctuating numeral glyph widths"
+      ],
+      "required": [
+        "tabular-nums utility on all dynamic counts, percentages, and metrics"
+      ]
+    },
+    {
+      "id": "A11Y-01",
+      "category": "semantic-html",
+      "rule": "Icon-only action buttons without text content must provide an explicit aria-label or <span class=\"sr-only\">.",
+      "forbidden": [
+        "<button class=\"btn\"><svg ... /></button> with empty accessible text",
+        "Buttons with only title attribute (unreliable for screen readers)"
+      ],
+      "required": [
+        "<button class=\"btn\" aria-label=\"Delete item\"><svg ... /></button>",
+        "<button class=\"btn\"><svg ... /><span class=\"sr-only\">Delete item</span></button>"
+      ]
+    },
+    {
+      "id": "TOK-02",
+      "category": "tokens",
+      "rule": "SVG charts and data visualizations must strictly reference CSS variables var(--chart-1) through var(--chart-5).",
+      "forbidden": [
+        "Hardcoded stroke=\"#3b82f6\" or fill=\"rgb(59, 130, 246)\" on chart paths",
+        "Arbitrary non-standard chart color palettes outside theme tokens"
+      ],
+      "required": [
+        "stroke=\"var(--chart-1)\", fill=\"var(--chart-2)\" up to var(--chart-5)"
+      ]
+    },
+    {
+      "id": "FSM-02",
+      "category": "fsm-contracts",
+      "rule": "Accordion items using native <details> must synchronize data-state=\"open\" or data-state=\"closed\" attributes.",
+      "forbidden": [
+        "<details class=\"accordion\"> without dynamic data-state synchronization",
+        "Accordion headers without keyboard expand/collapse support"
+      ],
+      "required": [
+        "<details class=\"accordion\" data-state=\"open|closed\"> with <summary class=\"accordion-trigger\">"
+      ]
+    },
+    {
+      "id": "SEM-02",
+      "category": "semantic-html",
+      "rule": "Status badges and icon-only indicator chips must provide accessible text via <span class=\"sr-only\">.",
+      "forbidden": [
+        "Colored status dots (<span class=\"size-2 rounded-full bg-green-500\">) without screen reader text",
+        "Visual-only indicators that fail accessibility audits"
+      ],
+      "required": [
+        "<span class=\"badge\"><span class=\"size-2 rounded-full bg-emerald-500\"></span><span class=\"sr-only\">Active status</span>Active</span>"
+      ]
+    },
+    {
+      "id": "TBL-02",
+      "category": "dashboard-patterns",
+      "rule": "Table pagination bars must be enclosed in <nav aria-label=\"Pagination\"> with aria-disabled=\"true\" on disabled controls.",
+      "forbidden": [
+        "Pagination controls rendered as a flat div soup without nav landmark",
+        "Disabled previous/next buttons lacking aria-disabled attribute"
+      ],
+      "required": [
+        "<nav aria-label=\"Pagination\" class=\"pagination flex items-center justify-between\">"
+      ]
+    }
+  ]
+}

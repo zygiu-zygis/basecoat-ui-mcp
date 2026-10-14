@@ -15,7 +15,7 @@
   "fragments": [
     {
       "id": "shell-root",
-      "emmet": "div.flex.min-h-screen.w-full[data-slot=shell-root][data-component=sidebar]>(aside.sidebar.w-64.border-e.border-border.bg-background.p-4[data-slot=nav-left][data-side=left]>div.flex.flex-col.gap-4>span.text-sm.font-semibold{Left Nav}+nav.flex.flex-col.gap-2>a.btn.btn-ghost.btn-sm.justify-start{Files}+a.btn.btn-ghost.btn-sm.justify-start{Assets})+div.flex.flex-1.flex-col.min-w-0>header.flex.h-12.items-center.border-b.border-border.px-4[data-slot=header]>span.text-sm.font-medium{Editor Workspace}^main.flex-1.overflow-auto.p-6[data-slot=content]^^aside.sidebar.w-64.border-s.border-border.bg-background.p-4[data-slot=nav-right][data-side=right]>div.flex.flex-col.gap-4>span.text-sm.font-semibold{Right Panel}+div.flex.flex-col.gap-2>span.text-xs.text-muted-foreground{Properties}"
+      "emmet": "div.flex.min-h-screen.w-full[data-slot=shell-root][data-component=sidebar]>(aside.sidebar.w-64.border-e.border-border.bg-background.p-4[data-slot=nav-left][data-side=left]>div.flex.flex-col.gap-4>span.text-sm.font-semibold{Left Nav}+nav.flex.flex-col.gap-2>a.btn.btn-ghost.btn-sm.justify-start[aria-current=page]{Files}+a.btn.btn-ghost.btn-sm.justify-start{Assets})+div.flex.flex-1.flex-col.min-w-0>header.flex.h-12.items-center.border-b.border-border.px-4[data-slot=header]>span.text-sm.font-medium{Editor Workspace}^main.flex-1.overflow-auto.p-6[data-slot=content]^^aside.sidebar.w-64.border-s.border-border.bg-background.p-4[data-slot=nav-right][data-side=right]>div.flex.flex-col.gap-4>span.text-sm.font-semibold{Right Panel}+div.flex.flex-col.gap-2>span.text-xs.text-muted-foreground{Properties}"
     }
   ],
   "mounts": [],

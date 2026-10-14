@@ -6,6 +6,15 @@ import { z } from 'zod';
 export type ChartCategory = 'area' | 'bar' | 'line' | 'pie' | 'radar' | 'radial' | 'tooltip';
 export type ChartFramework = 'vanilla' | 'astro' | 'react' | 'vue' | 'svelte';
 
+export interface ChartAccessibilitySpec {
+  role: string;
+  ariaLabel: string;
+  tableFallback: boolean;
+  describedBy?: string;
+  headers?: string[];
+  summary?: string;
+}
+
 export interface ChartCatalogItem {
   id: string;
   category: ChartCategory;
@@ -18,7 +27,11 @@ export interface ChartCatalogItem {
   layoutFootprint?: string;
   options?: Record<string, unknown>;
   html: string;
+  apexHtml?: string;
   frameworks: Record<ChartFramework, string>;
+  apexFrameworks?: Record<ChartFramework, string>;
+  svgFrameworks?: Record<ChartFramework, string>;
+  accessibilitySpec?: ChartAccessibilitySpec;
 }
 
 export interface ChartsCatalog {
@@ -59,6 +72,21 @@ export const listChartsInputShape = {
     .max(120)
     .optional()
     .describe('Search keyword alias for search.'),
+  id: z
+    .string()
+    .max(120)
+    .optional()
+    .describe('Filter or match by specific chart ID.'),
+  componentId: z
+    .string()
+    .max(120)
+    .optional()
+    .describe('Alias for chart ID filter.'),
+  name: z
+    .string()
+    .max(120)
+    .optional()
+    .describe('Filter or match by chart name.'),
 };
 
 export type ListChartsInput = z.infer<z.ZodObject<typeof listChartsInputShape>>;
@@ -73,6 +101,7 @@ export interface ListChartsSummary {
   cssTokens: string[];
   layoutFootprint: string;
   tags: string[];
+  accessibilitySpec?: ChartAccessibilitySpec;
 }
 
 export interface ListChartsOutput {
@@ -81,11 +110,27 @@ export interface ListChartsOutput {
   charts: ListChartsSummary[];
 }
 
-export function runListCharts(input: ListChartsInput): ListChartsOutput {
+export function runListCharts(input: ListChartsInput = {}): ListChartsOutput {
   let filtered = chartsCatalog.charts;
 
   if (input.category) {
     filtered = filtered.filter(c => c.category === input.category);
+  }
+
+  const rawId = input.id ?? input.componentId;
+  if (rawId && rawId.trim().length > 0) {
+    const targetId = rawId.trim().toLowerCase();
+    filtered = filtered.filter(c =>
+      c.id.toLowerCase() === targetId || c.id.toLowerCase().includes(targetId)
+    );
+  }
+
+  if (input.name && input.name.trim().length > 0) {
+    const targetName = input.name.trim().toLowerCase();
+    filtered = filtered.filter(c =>
+      c.name.toLowerCase().includes(targetName) ||
+      (c.title && c.title.toLowerCase().includes(targetName))
+    );
   }
 
   const rawSearch = input.search ?? input.query;
@@ -112,6 +157,7 @@ export function runListCharts(input: ListChartsInput): ListChartsOutput {
     cssTokens: c.cssTokens,
     layoutFootprint: c.layoutFootprint ?? 'w-full aspect-[4/3] md:aspect-[16/9] lg:aspect-[2/1] min-h-[240px]',
     tags: c.tags,
+    accessibilitySpec: c.accessibilitySpec,
   }));
 
   return {

@@ -39,6 +39,13 @@ export const qualityInspectorInputShape = {
     .boolean()
     .optional()
     .describe('Whether to strictly enforce FSM data-state bindings and field-group hierarchies on interactive controls.'),
+  id: z.string().optional().describe('Alternative component identifier alias to inspect.'),
+  componentId: z.string().optional().describe('Alternative component identifier alias to inspect.'),
+  name: z.string().optional().describe('Alternative component identifier alias to inspect.'),
+  environment: z
+    .enum(['html', 'astro', 'react', 'vue', 'svelte'])
+    .optional()
+    .describe('Target environment for inspection (defaults to html).'),
 };
 
 export type QualityInspectorInput = z.infer<z.ZodObject<typeof qualityInspectorInputShape>>;

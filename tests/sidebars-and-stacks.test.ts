@@ -350,3 +350,149 @@ describe('Slot Hydration and Semantic Basecoat HTML Guardrails', () => {
     assert.deepEqual(errors, [], 'Composed HTML must have 0 validation errors');
   });
 });
+
+describe('Stage 4 Fidelity: Dashboard-01, Sidebar Semantics, and Modular Stack Composition', () => {
+  it('asserts dashboard-01 blueprint matches 1:1 structural fidelity with new-york-v4', () => {
+    const registry = ensureMacroRegistryLoaded();
+    const d1 = getBlock(registry, 'dashboard-01');
+    assert(d1, 'dashboard-01 block must exist in registry');
+    assert.equal(d1.role, 'dashboard');
+
+    const emmet = d1.fragments.map(f => f.emmet).join(' ');
+    // Responsive shell with container constraint
+    assert(emmet.includes('max-w-7xl'), 'dashboard-01 must contain container constraint max-w-7xl');
+    assert(emmet.includes('mx-auto'), 'dashboard-01 must contain mx-auto');
+    assert(emmet.includes('w-full'), 'dashboard-01 must contain w-full');
+    assert(emmet.includes('px-6'), 'dashboard-01 must contain px-6');
+    assert(emmet.includes('py-8'), 'dashboard-01 must contain py-8');
+
+    // 2-column grid
+    assert(emmet.includes('lg:grid-cols-7'), 'dashboard-01 must contain 2-column grid lg:grid-cols-7');
+    assert(emmet.includes('lg:col-span-4'), 'dashboard-01 must contain Column 1 lg:col-span-4');
+    assert(emmet.includes('lg:col-span-3'), 'dashboard-01 must contain Column 2 lg:col-span-3');
+
+    // Interactive chart & recent sales slots
+    assert(emmet.includes('data-slot=chart') || emmet.includes('chart'), 'dashboard-01 must contain chart slot');
+    assert(emmet.includes('data-chart-id=area-interactive'), 'dashboard-01 must contain area-interactive chart id');
+    assert(emmet.includes('data-slot=recent-sales') || emmet.includes('recent-sales'), 'dashboard-01 must contain recent-sales slot');
+    assert(emmet.includes('kpi'), 'dashboard-01 must contain kpi slot');
+
+    // Slot definitions
+    const slotIds = d1.slots.map(s => s.id);
+    assert(slotIds.includes('topbar'), 'dashboard-01 must define topbar slot');
+    assert(slotIds.includes('kpi'), 'dashboard-01 must define kpi slot');
+    assert(slotIds.includes('chart'), 'dashboard-01 must define chart slot');
+    assert(slotIds.includes('recent-sales'), 'dashboard-01 must define recent-sales slot');
+
+    // Mounts
+    assert.equal(d1.mounts.length, 3, 'dashboard-01 must define 3 mounts for modular fragments');
+  });
+
+  it('verifies all 16 sidebar macro blocks and shell stacks include semantic HTML landmarks', () => {
+    const registry = ensureMacroRegistryLoaded();
+
+    for (let i = 1; i <= 16; i++) {
+      const pad = String(i).padStart(2, '0');
+      const sidebarId = `sidebar-${pad}`;
+
+      // 1. Macro block check
+      const block = getBlock(registry, sidebarId);
+      assert(block, `Macro block ${sidebarId} must exist`);
+      const blockEmmet = block.fragments.map(f => f.emmet).join(' ');
+      assert(blockEmmet.includes('aside'), `Macro block ${sidebarId} must include <aside>`);
+      assert(blockEmmet.includes('nav'), `Macro block ${sidebarId} must include <nav>`);
+      assert(
+        blockEmmet.includes('aria-current=page'),
+        `Macro block ${sidebarId} must include aria-current=page landmark`,
+      );
+
+      // 2. Shell stack check
+      const shellOutput = runComposeStack({ shellId: sidebarId });
+      assert(shellOutput.html.includes('<aside'), `Shell stack ${sidebarId} must include <aside>`);
+      assert(shellOutput.html.includes('<nav'), `Shell stack ${sidebarId} must include <nav>`);
+      assert(
+        shellOutput.html.includes('aria-current="page"'),
+        `Shell stack ${sidebarId} must include aria-current="page" on active item`,
+      );
+    }
+
+    // Verify presence of specific landmark attributes across sidebar suite
+    const s7 = runComposeStack({ shellId: 'sidebar-07' });
+    assert(s7.html.includes('data-collapsible="icon"'), 'sidebar-07 must specify data-collapsible="icon"');
+
+    const s8 = runComposeStack({ shellId: 'sidebar-08' });
+    assert(s8.html.includes('data-variant="inset"'), 'sidebar-08 must specify data-variant="inset"');
+
+    const s1 = runComposeStack({ shellId: 'sidebar-01' });
+    assert(s1.html.includes('<details'), 'sidebar-01 must specify <details> for collapsible sections');
+  });
+
+  it('runs runComposeStack with empty object {} returning default sidebar-01 and hydrated stacks', () => {
+    const res = runComposeStack({});
+    assert.equal(res.shellId, 'sidebar-01', 'Default shell must be sidebar-01');
+    assert.equal(res.environment, 'html', 'Default environment must be html');
+    assert(res.appliedStacks.length >= 3, 'Empty invocation must hydrate default modular stacks');
+    assert(res.html.includes('sidebar'), 'Composed HTML must contain sidebar shell');
+    assert(res.html.includes('tabular-nums'), 'Composed HTML must contain hydrated metrics/table');
+  });
+
+  it('supports Poka-Yoke aliases for shellId: id, componentId, name, shell', () => {
+    assert.equal(runComposeStack({ id: 'sidebar-02' }).shellId, 'sidebar-02');
+    assert.equal(runComposeStack({ componentId: 'sidebar-03' }).shellId, 'sidebar-03');
+    assert.equal(runComposeStack({ name: 'sidebar-04' }).shellId, 'sidebar-04');
+    assert.equal(runComposeStack({ shell: 'sidebar-05' }).shellId, 'sidebar-05');
+  });
+
+  it('composes modular stacks as an array across sidebar-01..16, topbar-shell, and inset-shell', () => {
+    const modularStacks = [
+      'kpi-4-col',
+      'area-chart-overview',
+      'data-table-full-crud',
+      'recent-sales-feed',
+      'detail-drawer',
+    ];
+
+    const shellsToTest = [
+      'sidebar-01',
+      'sidebar-07',
+      'sidebar-16',
+      'topbar-shell',
+      'inset-shell',
+    ];
+
+    for (const shellId of shellsToTest) {
+      const res = runComposeStack({ shellId, stacks: modularStacks });
+      assert.equal(res.shellId, shellId);
+      assert(res.appliedStacks.includes('recent-sales-feed'), 'recent-sales-feed must be in appliedStacks');
+      assert(res.html.includes('Recent Sales'), 'Recent Sales heading must be hydrated');
+      assert(res.html.includes('Olivia Martin'), 'Customer avatar/name must be hydrated in feed');
+      assert(res.html.includes('+$1,999.00'), 'Tabular-nums transaction amount must be hydrated');
+      assert(res.html.includes('Order Details'), 'Drawer content must be hydrated');
+    }
+  });
+
+  it('composes modular stacks as a record mapping slots to stack IDs', () => {
+    const recordStacks = {
+      kpi: 'kpi-4-col',
+      chart: 'area-chart-overview',
+      table: 'data-table-full-crud',
+      'recent-sales': 'recent-sales-feed',
+      drawer: 'detail-drawer',
+    };
+
+    const res = runComposeStack({
+      shellId: 'sidebar-01',
+      stacks: recordStacks,
+    });
+
+    assert.equal(res.shellId, 'sidebar-01');
+    assert(res.appliedStacks.includes('kpi-4-col'));
+    assert(res.appliedStacks.includes('area-chart-overview'));
+    assert(res.appliedStacks.includes('data-table-full-crud'));
+    assert(res.appliedStacks.includes('recent-sales-feed'));
+    assert(res.appliedStacks.includes('detail-drawer'));
+    assert(res.html.includes('Recent Sales'), 'Recent sales feed must be hydrated');
+    assert(res.html.includes('Olivia Martin'), 'Feed customer must be hydrated');
+    assert(res.html.includes('Order Details'), 'Drawer must be hydrated');
+  });
+});

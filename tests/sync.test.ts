@@ -22,7 +22,7 @@ test('sync extracts variants/classes deterministically and retains curated skele
   assert.deepEqual(first, second);
   assert.deepEqual(first.details, registry.details);
   assert.equal(first.upstream.revision, 'a'.repeat(40));
-  assert.equal(first.upstream.components.length, 41);
+  assert.equal(first.upstream.components.length, 42);
   assert.deepEqual(first.upstream.css_classes, ['accordion', 'alert', 'alert-dialog', 'avatar', 'badge', 'breadcrumb', 'btn', 'button-group', 'card', 'chart', 'checkbox', 'combobox', 'command', 'dialog', 'drawer', 'dropdown-menu', 'empty', 'field', 'input', 'input-group', 'item', 'kbd', 'label', 'native-select', 'popover', 'progress', 'radio-group', 'scroll-area', 'select', 'sidebar', 'skeleton', 'slider', 'switch', 'table', 'tabs', 'textarea', 'theme-switcher', 'toast', 'tooltip']);
   const scraped = scrapeComponent('button', '# Button\n<button class="btn btn" data-variant="outline|primary">');
   assert.deepEqual(scraped.variants, ['outline', 'primary']);

@@ -325,3 +325,119 @@ test('dashboard-01 correctly references and resolves its embedded chart (area-in
   assert.ok(chartBlueprint.html.includes('chart-container'));
   assert.ok(chartBlueprint.html.includes('role="img"'));
 });
+
+test('engine: svg (default) outputs native SVG cubic Bezier paths, ResizeObserver, gradients, and a11y', () => {
+  // Empty call defaults to area-default, engine: 'svg', environment: 'html'
+  const bp = runGetChartBlueprint({});
+  assert.equal(bp.id, 'area-default');
+  assert.equal(bp.engine, 'svg');
+  assert.equal(bp.environment, 'html');
+  assert.equal(bp.framework, 'vanilla');
+
+  // Verify all required tokens and engine output markers in html
+  assert.ok(bp.html.includes('ResizeObserver'), 'HTML must include ResizeObserver script');
+  assert.ok(bp.html.includes('viewBox'), 'HTML must include viewBox on SVG');
+  assert.ok(bp.html.includes('stroke-border/50'), 'HTML must include stroke-border/50 linear grid lines');
+  assert.ok(bp.html.includes('tabular-nums'), 'HTML must include tabular-nums');
+  assert.ok(bp.html.includes('stroke-muted-foreground stroke-dashed'), 'HTML must include crosshair line with dashed muted-foreground');
+  assert.ok(bp.html.includes('<table class="sr-only">'), 'HTML must include screen-reader accessible hidden fallback table');
+  assert.ok(bp.html.includes('var(--chart-1)'), 'HTML must bind desktop color to var(--chart-1)');
+  assert.ok(bp.html.includes('var(--chart-2)'), 'HTML must bind mobile color to var(--chart-2)');
+  assert.ok(bp.html.includes('url(#fillDesktop)'), 'HTML must bind fill="url(#fillDesktop)"');
+  assert.ok(bp.html.includes('url(#fillMobile)'), 'HTML must bind fill="url(#fillMobile)"');
+
+  // Verify cubic Bezier M... C... paths
+  assert.match(bp.html, /<path[^>]*d="M[^"]*C[^"]*"/, 'HTML must contain smooth cubic Bezier paths (M... C...)');
+
+  // Verify mountCode contains zero-dependency ResizeObserver and hover tracking
+  assert.ok(bp.mountCode.includes('ResizeObserver'), 'mountCode must include ResizeObserver');
+  assert.equal(bp.code, bp.mountCode);
+
+  // Verify accessibilitySpec
+  assert.ok(bp.accessibilitySpec, 'Must include accessibilitySpec metadata');
+  assert.equal(bp.accessibilitySpec?.role, 'img');
+  assert.equal(bp.accessibilitySpec?.tableFallback, true);
+});
+
+test('engine: apexcharts outputs ApexCharts configuration options and mount code across all frameworks', () => {
+  for (const fw of FRAMEWORKS) {
+    const bp = runGetChartBlueprint({ id: 'area-default', engine: 'apexcharts', framework: fw });
+    assert.equal(bp.id, 'area-default');
+    assert.equal(bp.engine, 'apexcharts');
+    assert.equal(bp.framework, fw);
+
+    // Verify ApexCharts options
+    assert.ok(bp.options && typeof bp.options === 'object', 'Must provide ApexCharts options');
+    const chartConfig = bp.options.chart as Record<string, unknown> | undefined;
+    assert.ok(chartConfig, 'ApexCharts options must define chart object');
+    assert.equal(chartConfig.type, 'area');
+
+    // Verify ApexCharts mount code
+    assert.ok(bp.mountCode.includes('ApexCharts'), `Framework ${fw} mount code must reference ApexCharts`);
+    assert.ok(bp.mountCode.includes('new ApexCharts'), `Framework ${fw} mount code must instantiate ApexCharts`);
+  }
+});
+
+test('parameter aliases id, chartId, componentId, name and environment work seamlessly', () => {
+  // Empty call succeeds
+  const emptyBp = runGetChartBlueprint({});
+  assert.equal(emptyBp.id, 'area-default');
+  assert.equal(emptyBp.engine, 'svg');
+  assert.equal(emptyBp.environment, 'html');
+  assert.equal(emptyBp.framework, 'vanilla');
+
+  // ID aliases in runGetChartBlueprint
+  const byId = runGetChartBlueprint({ id: 'area-stacked' });
+  assert.equal(byId.id, 'area-stacked');
+
+  const byChartId = runGetChartBlueprint({ chartId: 'area-stacked' });
+  assert.equal(byChartId.id, 'area-stacked');
+
+  const byComponentId = runGetChartBlueprint({ componentId: 'area-stacked' });
+  assert.equal(byComponentId.id, 'area-stacked');
+
+  const byName = runGetChartBlueprint({ name: 'Area Chart Stacked' });
+  assert.equal(byName.id, 'area-stacked');
+
+  // Environment and framework resolution
+  const envHtml = runGetChartBlueprint({ environment: 'html' });
+  assert.equal(envHtml.environment, 'html');
+  assert.equal(envHtml.framework, 'vanilla');
+
+  const fwHtml = runGetChartBlueprint({ framework: 'html' });
+  assert.equal(fwHtml.environment, 'html');
+  assert.equal(fwHtml.framework, 'vanilla');
+
+  const envAstro = runGetChartBlueprint({ environment: 'astro' });
+  assert.equal(envAstro.environment, 'astro');
+  assert.equal(envAstro.framework, 'astro');
+
+  const envReact = runGetChartBlueprint({ environment: 'react' });
+  assert.equal(envReact.environment, 'react');
+  assert.equal(envReact.framework, 'react');
+
+  const envVue = runGetChartBlueprint({ environment: 'vue' });
+  assert.equal(envVue.environment, 'vue');
+  assert.equal(envVue.framework, 'vue');
+
+  const envSvelte = runGetChartBlueprint({ environment: 'svelte' });
+  assert.equal(envSvelte.environment, 'svelte');
+  assert.equal(envSvelte.framework, 'svelte');
+
+  // Filter aliases in runListCharts
+  const listById = runListCharts({ id: 'bar-default' });
+  assert.equal(listById.total, 1);
+  assert.equal(listById.charts[0]!.id, 'bar-default');
+
+  const listByCompId = runListCharts({ componentId: 'line-default' });
+  assert.equal(listByCompId.total, 1);
+  assert.equal(listByCompId.charts[0]!.id, 'line-default');
+
+  const listByName = runListCharts({ name: 'Pie Donut Chart' });
+  assert.ok(listByName.total >= 1);
+  assert.ok(listByName.charts.some(c => c.id === 'pie-donut'));
+
+  const listEmpty = runListCharts({});
+  assert.equal(listEmpty.total, 56);
+  assert.equal(listEmpty.categories.length, 7);
+});

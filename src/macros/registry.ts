@@ -5,15 +5,18 @@ import { readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import {
   MacroError,
+  MAX_DETAIL_BYTES,
   createCursorFactory,
   pageRecords,
+  rawMacroResult,
+  resultBytes,
   validateMacroCursor,
 } from './packets.js';
 import { registrySnapshotId } from './compiler.js';
-import { compiledMacroRegistrySchema } from './schema.js';
+import { compiledMacroRegistrySchema, type BlockSection } from './schema.js';
 import type {
   BlockManifest,
-  BlockSection,
+  BlockSection as CompiledBlockSection,
   CompiledMacroRegistry,
   Id,
   MacroBlock,
@@ -96,7 +99,7 @@ export function getBlock(
   return block;
 }
 
-function sectionCounts(block: MacroBlock): Record<BlockSection, number> {
+function sectionCounts(block: MacroBlock): Record<CompiledBlockSection, number> {
   return {
     manifest: 1,
     structure: block.fragments.length + block.mounts.length,
@@ -130,6 +133,27 @@ export type SectionRecord = Record<string, unknown>;
 
 function sectionRecords(block: MacroBlock, section: BlockSection): SectionRecord[] {
   switch (section) {
+    case 'all':
+      return [
+        {
+          kind: 'manifest' as const,
+          id: block.id,
+          role: block.role,
+          family: block.family,
+          description: block.description,
+          root: block.root,
+          tags: block.tags,
+          layout: block.layout,
+          landmarks: block.landmarks,
+        },
+        ...block.fragments.map(fragment => ({ kind: 'fragment' as const, ...fragment })),
+        ...block.mounts.map(mount => ({ kind: 'mount' as const, ...mount })),
+        ...block.slots.map(slot => ({ kind: 'slot' as const, ...slot })),
+        ...block.ports.map(port => ({ ...port })),
+        ...block.ruleRefs.map(ref => ({ kind: 'rule' as const, ref })),
+        ...block.dependencyRefs.map(ref => ({ kind: 'macro-block' as const, ref })),
+        ...block.componentRefs.map(id => ({ kind: 'component' as const, id })),
+      ];
     case 'manifest':
       return [
         {
@@ -242,17 +266,64 @@ export function getBlockSection(
     section: input.section,
   });
 
+  const baseHeader: Record<string, unknown> = {
+    kind: 'macro-block',
+    ref,
+    id: block.id,
+    section: input.section,
+    registryRevision: registry.revision,
+    total: records.length,
+  };
+
+  let header = baseHeader;
+
+  if (input.section === 'all') {
+    const candidateManifest = {
+      id: block.id,
+      role: block.role,
+      family: block.family,
+      description: block.description,
+      root: block.root,
+      tags: block.tags,
+      layout: block.layout,
+      landmarks: block.landmarks,
+    };
+    const candidateStructure = {
+      fragments: block.fragments,
+      mounts: block.mounts,
+    };
+    const candidateHeader = {
+      ...baseHeader,
+      manifest: candidateManifest,
+      structure: candidateStructure,
+    };
+    const candidateTest = rawMacroResult({
+      ...candidateHeader,
+      items: records.length > 0 ? [records[0]!] : [],
+      next: records.length > 1 ? cursorFor(1) : null,
+    });
+    if (resultBytes(candidateTest) <= MAX_DETAIL_BYTES) {
+      header = candidateHeader;
+    } else {
+      const manifestOnly = {
+        ...baseHeader,
+        manifest: candidateManifest,
+      };
+      const manifestTest = rawMacroResult({
+        ...manifestOnly,
+        items: records.length > 0 ? [records[0]!] : [],
+        next: records.length > 1 ? cursorFor(1) : null,
+      });
+      if (resultBytes(manifestTest) <= MAX_DETAIL_BYTES) {
+        header = manifestOnly;
+      }
+    }
+  }
+
   return pageRecords(
     records,
     start,
-    {
-      kind: 'macro-block',
-      ref,
-      id: block.id,
-      section: input.section,
-      registryRevision: registry.revision,
-      total: records.length,
-    },
+    header,
     cursorFor,
   );
 }

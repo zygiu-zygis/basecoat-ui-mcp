@@ -22,9 +22,47 @@ export const creativeDirectorInputShape = {
     .enum(['compact', 'standard', 'comfortable'])
     .optional()
     .describe('Interface spatial density profile: "compact" (dense table/data tool, p-4/h-12), "standard" (balanced dashboard, p-6/h-14), or "comfortable" (generous whitespace reading, p-8/h-14).'),
+  id: z.string().max(80).optional().describe('Principle ID or component ID alias.'),
+  componentId: z.string().max(80).optional().describe('Component ID alias.'),
+  name: z.string().max(80).optional().describe('Component name or principle name alias.'),
+  environment: z.enum(['html', 'astro', 'react', 'vue', 'svelte']).optional().describe('Target environment (defaults to "html").'),
 };
 
 export type CreativeDirectorInput = z.infer<z.ZodObject<typeof creativeDirectorInputShape>>;
+
+export interface CreativePrinciple {
+  id: string;
+  name: string;
+  principle: string;
+  domain: string;
+}
+
+export const CREATIVE_PRINCIPLES: CreativePrinciple[] = [
+  { id: 'KP-01', name: 'Kanso (Simplicity)', principle: 'Eliminate decorative clutter; beauty emerges from purposeful function and restraint.', domain: 'kanso' },
+  { id: 'KP-02', name: 'Shibui (Subtlety)', principle: 'Favor subtle 1px ring shadows over heavy drop-shadows or jarring border contrasts.', domain: 'elevation' },
+  { id: 'KP-03', name: 'Fukinsei (Asymmetry)', principle: 'Balance functional density with dynamic focal asymmetry rather than monotonous grid clones.', domain: 'hierarchy' },
+  { id: 'KP-04', name: 'Seijaku (Tranquility)', principle: 'Quiet slate/zinc chrome surfaces let user data and primary metrics command attention.', domain: 'tokens' },
+  { id: 'KP-05', name: 'Yugen (Subtle Depth)', principle: 'Communicate elevation through surface token gradation (canvas to card to popover).', domain: 'elevation' },
+  { id: 'KP-06', name: 'Datsuzoku (Freedom)', principle: 'Break layout conventions intelligently based on user operational mental models.', domain: 'hierarchy' },
+  { id: 'KP-07', name: 'Shizen (Naturalness)', principle: 'Ensure interactive transitions feel natural and bound by deterministic FSM contracts.', domain: 'fsm' },
+  { id: 'BC-01', name: 'Optical Spacing Scale', principle: 'Strict adherence to 4px/8px modular rhythm scale (0, 2, 4, 6, 8, 12).', domain: 'whitespace' },
+  { id: 'BC-02', name: 'Compact Density First', principle: 'In data-dense dashboards, enforce compact headers (h-12 or h-14, never h-16).', domain: 'density' },
+  { id: 'BC-03', name: 'Internal Spacing Ratio', principle: 'Internal group spacing must remain <= 1/3 of inter-section spacing.', domain: 'whitespace' },
+  { id: 'BC-04', name: 'Single Primary Action', principle: 'Exactly one primary button per visual decision context; use secondary/ghost for others.', domain: 'hierarchy' },
+  { id: 'BC-05', name: 'Left-Aligned Foundation', principle: 'Left-align copy, data tables, and input labels; reserve center-alignment for hero/empty states.', domain: 'hierarchy' },
+  { id: 'BC-06', name: 'Tabular Numeral Stability', principle: 'Enforce tabular-nums on all metrics, timers, percentages, and financial values.', domain: 'typography' },
+  { id: 'BC-07', name: 'Semantic Contrast Pairs', principle: 'Always pair surface and foreground tokens (e.g. bg-primary with text-primary-foreground).', domain: 'tokens' },
+  { id: 'BC-08', name: 'Zero Hardcoded Palettes', principle: 'Never write raw hex or rgb utilities; resolve colors via semantic CSS custom properties.', domain: 'tokens' },
+  { id: 'BC-09', name: 'Single Theme Resolver', principle: 'Resolve themes via single html.dark root class and window.basecoat.theme controller.', domain: 'tokens' },
+  { id: 'BC-10', name: 'Semantic HTML5 Landmarks', principle: 'Structure pages with standard landmarks: <header>, <nav>, <main>, <aside>, <footer>.', domain: 'semantics' },
+  { id: 'BC-11', name: 'Automatic Icon Sizing', principle: 'Use data-icon="inline-start|inline-end" with automatic CSS geometry instead of manual sizing.', domain: 'semantics' },
+  { id: 'BC-12', name: 'Deterministic FSM States', principle: 'Interactive primitives must bind data-state and recipe contracts for testability and styling.', domain: 'fsm' },
+  { id: 'BC-13', name: 'Encapsulated Form Fields', principle: 'Encapsulate controls in Field (.field) or FieldGroup (.field-group) with linked labels.', domain: 'forms' },
+  { id: 'BC-14', name: 'Dual Validation Contract', principle: 'Validation errors must synchronize container data-invalid with control aria-invalid.', domain: 'forms' },
+  { id: 'BC-15', name: 'Choice Group Fieldsets', principle: 'Group multiple related radio or checkbox options within a semantic fieldset and legend.', domain: 'forms' },
+  { id: 'BC-16', name: 'Accessible Chart Twins', principle: 'SVG and canvas data visualizations must provide companion screen-reader table data.', domain: 'accessibility' },
+  { id: 'BC-17', name: 'Realistic Domain Data', principle: 'Use authentic domain identifiers and realistic metrics; forbid Lorem Ipsum filler text.', domain: 'content' },
+];
 
 const STYLE_PACKS: Record<string, { importCss: string; aesthetic: string }> = {
   vega: {
@@ -171,6 +209,7 @@ export function runCreativeDirector(input: CreativeDirectorInput = {}, projectRo
       ? {
           stage: '2b-creative-director',
           philosophy: 'Kanso minimalism + Shadcn New York v4 precision',
+          principlesCount: CREATIVE_PRINCIPLES.length,
           ...sections,
           semanticTokens,
           nextStep: 'Fetch exact state-bound component HTML via basecoat_component_syntax.',
@@ -178,6 +217,7 @@ export function runCreativeDirector(input: CreativeDirectorInput = {}, projectRo
       : {
           stage: '2b-creative-director',
           topic,
+          principlesCount: CREATIVE_PRINCIPLES.length,
           guidance: topicGuidance,
           semanticTokens,
           nextStep: 'Fetch exact state-bound component HTML via basecoat_component_syntax.',
@@ -195,7 +235,8 @@ export function runCreativeDirector(input: CreativeDirectorInput = {}, projectRo
   const compact = {
     stage: '2b-creative-director',
     philosophy: 'Kanso minimalism + Shadcn New York v4 precision',
-    typography: sections.typography.ladder.slice(0, 5),
+    principlesCount: CREATIVE_PRINCIPLES.length,
+    typography: sections.typography.ladder.slice(0, 4),
     whitespace: sections.whitespace.rhythmScale.slice(0, 4),
     hierarchy: sections.hierarchy,
     elevation: {

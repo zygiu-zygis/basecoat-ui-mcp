@@ -360,6 +360,7 @@ export const designSessionSchema = z
   });
 
 export const blockSectionSchema = z.enum([
+  'all',
   'manifest',
   'structure',
   'slots',
@@ -368,6 +369,8 @@ export const blockSectionSchema = z.enum([
   'dependencies',
   'provenance',
 ]);
+
+export type BlockSection = z.infer<typeof blockSectionSchema>;
 
 export const decisionSpecSchema = z
   .object({

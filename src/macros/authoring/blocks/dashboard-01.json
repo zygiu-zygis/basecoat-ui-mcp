@@ -3,23 +3,54 @@
   "id": "dashboard-01",
   "role": "dashboard",
   "family": "workspace",
-  "description": "A dashboard with sidebar, charts and data table.",
+  "description": "Shadcn new-york-v4 dashboard-01 blueprint with top navigation bar, KPI summary cards, interactive overview chart, and recent sales feed.",
   "tags": [
     "dashboard",
     "workspace",
     "new-york-v4",
     "metrics",
     "chart",
-    "table"
+    "recent-sales"
   ],
   "root": "content-frame",
   "fragments": [
     {
       "id": "content-frame",
-      "emmet": "div.flex.flex-1.flex-col[data-role=canvas][data-macro=canvas][data-block=dashboard-01]>header.flex.h-14.items-center.justify-between.border-b.border-border.px-6[data-slot=topbar]>nav.flex.items-center.gap-4>a.text-sm.font-medium{Overview}+a.text-sm.text-muted{Customers}+a.text-sm.text-muted{Products}^^div.flex.items-center.gap-4>input.input.input-sm[placeholder=Search]+button.btn.btn-sm.btn-ghost{Alerts}+div.size-8.rounded-full.bg-muted[data-slot=avatar]^^^main.flex.flex-1.flex-col.gap-6.p-6>section.grid.grid-cols-1.gap-4.sm:grid-cols-2.lg:grid-cols-4[data-slot=kpi]>div.card.p-4>span.text-xs.text-muted{Total Revenue}+strong.text-2xl.font-semibold{$45,231.89}+span.badge{+20.1%}^div.card.p-4>span.text-xs.text-muted{Subscriptions}+strong.text-2xl.font-semibold{+2,350}+span.badge{+180.1%}^div.card.p-4>span.text-xs.text-muted{Sales}+strong.text-2xl.font-semibold{+12,234}+span.badge{+19%}^div.card.p-4>span.text-xs.text-muted{Active Now}+strong.text-2xl.font-semibold{+573}+span.badge{+201}^^section.grid.grid-cols-1.gap-6.lg:grid-cols-7>div.lg:col-span-4[data-slot=chart][data-chart-id=area-interactive]+div.lg:col-span-3[data-slot=recent-sales]+div[data-slot=table]"
+      "emmet": "div.flex.flex-1.flex-col[data-role=canvas][data-macro=canvas][data-block=dashboard-01]>header.flex.h-14.items-center.justify-between.border-b.border-border.px-6[data-slot=topbar]>(nav[aria-label=Breadcrumb].breadcrumb.flex.items-center.gap-2.text-sm>ol.flex.items-center.gap-2>li>a{Dashboard}+span{/}+li>span.font-medium{Overview})+(div.flex.items-center.gap-4>div.relative>input.input.input-sm[placeholder=Search][data-slot=search]^^button.btn.btn-ghost.btn-sm[aria-label=Notifications]{Alerts}+div.dropdown[data-slot=avatar-dropdown]>button.size-8.rounded-full.bg-muted[data-slot=avatar][aria-label=User-menu])^^^main.max-w-7xl.mx-auto.w-full.px-6.py-8.flex.flex-col.gap-6>(section.grid.grid-cols-1.gap-4.sm:grid-cols-2.lg:grid-cols-4[data-slot=kpi])+section.grid.grid-cols-1.gap-6.lg:grid-cols-7>(div.lg:col-span-4[data-slot=chart][data-chart-id=area-interactive]+div.card.p-6.lg:col-span-3[data-slot=recent-sales])"
+    },
+    {
+      "id": "kpi-cards",
+      "emmet": "(div.card.p-4>div.flex.items-center.justify-between>span.text-xs.text-muted-foreground{Total Revenue}+span.icon{💵}^strong.text-2xl.font-semibold{$45,231.89}+span.badge{+20.1%})+(div.card.p-4>div.flex.items-center.justify-between>span.text-xs.text-muted-foreground{Subscriptions}+span.icon{👥}^strong.text-2xl.font-semibold{+2,350}+span.badge{+180.1%})+(div.card.p-4>div.flex.items-center.justify-between>span.text-xs.text-muted-foreground{Sales}+span.icon{💳}^strong.text-2xl.font-semibold{+12,234}+span.badge{+19%})+(div.card.p-4>div.flex.items-center.justify-between>span.text-xs.text-muted-foreground{Active Now}+span.icon{⚡}^strong.text-2xl.font-semibold{+573}+span.badge{+201})"
+    },
+    {
+      "id": "overview-chart",
+      "emmet": "div.card.p-6>div.flex.flex-col.gap-2>h3.font-semibold{Overview}+p.text-xs.text-muted-foreground{Monthly revenue trajectory}^div.chart-container.relative.h-64.w-full.flex.items-center.justify-center.rounded-lg.bg-muted.text-xs[data-chart-id=area-interactive]{Interactive Area Chart}"
+    },
+    {
+      "id": "recent-sales-feed",
+      "emmet": "div.flex.flex-col.gap-2>h3.font-semibold{Recent Sales}+p.text-xs.text-muted-foreground{You made 265 sales this month.}^div.flex.flex-col.gap-4.mt-4>(div.flex.items-center.gap-4>div.size-8.rounded-full.bg-muted[data-slot=avatar]+div.flex.flex-col>span.text-sm.font-medium{Olivia Martin}+span.text-xs.text-muted-foreground{olivia@email.com}^span.ml-auto.font-medium.tabular-nums{+$1,999.00})+(div.flex.items-center.gap-4>div.size-8.rounded-full.bg-muted[data-slot=avatar]+div.flex.flex-col>span.text-sm.font-medium{Jackson Lee}+span.text-xs.text-muted-foreground{jackson@email.com}^span.ml-auto.font-medium.tabular-nums{+$39.00})+(div.flex.items-center.gap-4>div.size-8.rounded-full.bg-muted[data-slot=avatar]+div.flex.flex-col>span.text-sm.font-medium{Isabella Nguyen}+span.text-xs.text-muted-foreground{isabella@email.com}^span.ml-auto.font-medium.tabular-nums{+$299.00})"
     }
   ],
-  "mounts": [],
+  "mounts": [
+    {
+      "parent": "content-frame",
+      "anchor": "kpi",
+      "child": "kpi-cards",
+      "order": 0
+    },
+    {
+      "parent": "content-frame",
+      "anchor": "chart",
+      "child": "overview-chart",
+      "order": 1
+    },
+    {
+      "parent": "content-frame",
+      "anchor": "recent-sales",
+      "child": "recent-sales-feed",
+      "order": 2
+    }
+  ],
   "slots": [
     {
       "id": "topbar",
@@ -74,19 +105,6 @@
       ],
       "min": 0,
       "max": 1
-    },
-    {
-      "id": "table",
-      "at": {
-        "fragment": "content-frame",
-        "name": "table"
-      },
-      "accepts": [
-        "table",
-        "data"
-      ],
-      "min": 0,
-      "max": 1
     }
   ],
   "ports": [
@@ -108,14 +126,15 @@
     "card",
     "button",
     "badge",
-    "table",
-    "chart"
+    "chart",
+    "avatar",
+    "breadcrumb",
+    "input"
   ],
   "ruleRefs": [],
   "dependencyBlockIds": [
     "metrics-summary",
-    "svg-area-chart",
-    "data-table-rich"
+    "svg-area-chart"
   ],
   "layout": {
     "frameRef": "content-frame"

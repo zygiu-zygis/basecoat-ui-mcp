@@ -330,6 +330,10 @@ function compatibleRoleFilter(
 
 export const searchMacroBlocksInputShape = {
   q: z.string().max(200).optional().describe('Full-text search query across macro block IDs, descriptions, and tag sets.'),
+  id: z.string().max(80).optional().describe('Alternative identifier or query alias.'),
+  componentId: z.string().max(80).optional().describe('Alternative identifier or query alias.'),
+  name: z.string().max(80).optional().describe('Alternative identifier or query alias.'),
+  environment: z.enum(['html', 'astro', 'react', 'vue', 'svelte']).optional().describe('Target environment.'),
   role: z.string().max(LIMITS.roleMax).optional().describe('Macro role filter (e.g. "navigation", "canvas", "header", "region", "form").'),
   family: z.string().max(LIMITS.idMax).optional().describe('Block family filter (e.g. "layout", "workspace", "auth", "detail").'),
   tag: z.string().max(LIMITS.tagMax).optional().describe('Specific functional tag to filter by (e.g. "sidebar", "data-table", "kpi").'),
@@ -369,9 +373,11 @@ export async function handleSearchMacroBlocks(
       }
     }
 
+    const identifier = input.id ?? input.componentId ?? input.name;
+    const query = input.q ?? identifier;
     const roleFilter = compatibleRoleFilter(input.role, slotAccepts);
     const packet = searchMacroBlocks(registry, {
-      q: input.q,
+      q: query,
       ...roleFilter,
       family: input.family,
       tag: input.tag,
@@ -388,7 +394,10 @@ export async function handleSearchMacroBlocks(
 export const getMacroBlockInputShape = {
   idOrRef: z.string().min(1).max(80).optional().describe('Canonical macro block ID or SHA-256 content reference hash.'),
   id: z.string().min(1).max(80).optional().describe('Alternative block identifier alias matching idOrRef.'),
-  section: blockSectionSchema.optional().describe('Specific block section to retrieve: "manifest", "fragments", "slots", "ports", "mounts", or "all". Defaults to "manifest".'),
+  componentId: z.string().min(1).max(80).optional().describe('Alternative block identifier alias matching idOrRef.'),
+  name: z.string().min(1).max(80).optional().describe('Alternative block identifier alias matching idOrRef.'),
+  environment: z.enum(['html', 'astro', 'react', 'vue', 'svelte']).optional().describe('Target environment (defaults to html).'),
+  section: blockSectionSchema.optional().describe('Specific block section to retrieve: "all", "manifest", "structure", "slots", "ports", "rules", "dependencies", or "provenance". Defaults to "all".'),
   designId: z.string().max(LIMITS.idMax).optional().describe('Active design session ID to retrieve session-bound block variants.'),
   cursor: z.string().max(LIMITS.cursorMaxBytes).optional().describe('Pagination cursor for large section reads exceeding packet limits.'),
 };
@@ -407,13 +416,13 @@ export async function handleGetMacroBlock(
       const session = await store.read(designId);
       registry = await loadSessionRegistry(store, session, packaged);
     }
-    const targetIdOrRef = input.idOrRef || input.id;
-    if (!targetIdOrRef) {
-      throw new MacroError('INVALID_INPUT', 'idOrRef (or id) is required');
+    const targetIdOrRef = input.idOrRef || input.id || input.componentId || input.name;
+    if (!targetIdOrRef || targetIdOrRef.trim().length === 0) {
+      return searchMacroBlocks(registry, { limit: 32 });
     }
     return getBlockSection(registry, {
       idOrRef: targetIdOrRef,
-      section: input.section || 'manifest',
+      section: input.section || 'all',
       cursor: input.cursor,
     });
   } catch (error) {
@@ -470,7 +479,11 @@ export async function handleBeginDesign(
 }
 
 export const getDesignContextInputShape = {
-  view: contextViewSchema.describe('Context perspective to retrieve: "sessions", "summary", "outline", "tree", "page", or "node".'),
+  view: contextViewSchema.optional().describe('Context perspective to retrieve: "sessions", "overview", "decisions", "graph", "rules", "focus", or "next". Defaults to "sessions".'),
+  id: z.string().max(LIMITS.idMax).optional().describe('Alternative design session ID alias matching designId.'),
+  componentId: z.string().max(LIMITS.idMax).optional().describe('Alternative design session ID alias matching designId.'),
+  name: z.string().max(LIMITS.idMax).optional().describe('Alternative design session ID alias matching designId.'),
+  environment: z.enum(['html', 'astro', 'react', 'vue', 'svelte']).optional().describe('Target environment.'),
   designId: z.string().max(LIMITS.idMax).optional().describe('Target design session ID (required for all views except "sessions").'),
   pageId: z.string().max(LIMITS.idMax).optional().describe('Target page ID within the design session (for "page" or "node" view).'),
   nodeId: z.string().max(LIMITS.idMax).optional().describe('Target node ID within the page (for "node" view).'),
@@ -483,9 +496,10 @@ export async function handleGetDesignContext(
   projectRoot: string,
 ): Promise<CallToolResult> {
   try {
+    const view = input.view ?? 'sessions';
     const packaged = getCompiledRegistry();
 
-    if (input.view === 'sessions') {
+    if (view === 'sessions') {
       const store = await openStoreForRead(projectRoot);
       const summaries = store ? await store.listSessions() : [];
       const records = buildSessionsView(summaries);
@@ -520,11 +534,12 @@ export async function handleGetDesignContext(
       );
     }
 
-    if (!input.designId) {
+    const rawDesignId = input.designId ?? input.id ?? input.componentId ?? input.name;
+    if (!rawDesignId) {
       throw new MacroError('INVALID_INPUT', 'designId is required unless view is sessions');
     }
 
-    const designId = idSchema.parse(input.designId);
+    const designId = idSchema.parse(rawDesignId);
     const store = await openStoreForRead(projectRoot);
     if (!store) throw new MacroError('NOT_FOUND', `Design session not found: ${designId}`);
 
@@ -535,7 +550,7 @@ export async function handleGetDesignContext(
     const snapshot = encodeDesignSnapshot(session.id, session.revision);
     const fingerprint = compactFingerprint([
       'context',
-      input.view,
+      view,
       input.pageId ?? '',
       input.nodeId ?? '',
     ]);
@@ -543,7 +558,7 @@ export async function handleGetDesignContext(
     const records = buildContextView(
       session,
       {
-        view: input.view,
+        view,
         designId,
         pageId: input.pageId ? idSchema.parse(input.pageId) : undefined,
         nodeId: input.nodeId ? idSchema.parse(input.nodeId) : undefined,
@@ -558,7 +573,7 @@ export async function handleGetDesignContext(
       const payload = validateMacroCursor(input.cursor, {
         fingerprint,
         snapshot,
-        view: input.view,
+        view,
         designRevision: session.revision,
         snapshotExists: true,
       });
@@ -569,7 +584,7 @@ export async function handleGetDesignContext(
       v: 1,
       fingerprint,
       snapshot,
-      view: input.view,
+      view,
       designRevision: session.revision,
     });
 
@@ -578,7 +593,7 @@ export async function handleGetDesignContext(
       start,
       {
         kind: 'context',
-        view: input.view,
+        view,
         designId: session.id,
         designRevision: session.revision,
         registryRevision: session.registryRevision,

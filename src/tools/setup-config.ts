@@ -8,6 +8,13 @@ export const setupConfigInputShape = {
     .describe(
       'Target framework or environment for setup instructions and boilerplate (astro, vanilla, nextjs, sveltekit, vite, htmx). Defaults to astro.',
     ),
+  environment: z
+    .enum(['html', 'astro', 'react', 'vue', 'svelte'])
+    .optional()
+    .describe('Target environment alias (html, astro, react, vue, svelte).'),
+  id: z.string().optional().describe('Framework or style pack identifier alias.'),
+  componentId: z.string().optional().describe('Framework or style pack identifier alias.'),
+  name: z.string().optional().describe('Framework or style pack identifier alias.'),
   stylePack: z
     .enum(['vega', 'nova', 'maia', 'lyra', 'mira', 'luma', 'sera', 'rhea'])
     .optional()
@@ -421,9 +428,29 @@ npm install basecoat-css tailwindcss@4 @tailwindcss/vite@4
   }
 }
 
-export function runSetupConfig(input: SetupConfigInput): SetupConfigOutput {
-  const framework = input.framework ?? 'astro';
-  const stylePack = input.stylePack ?? 'vega';
+export function runSetupConfig(input: SetupConfigInput = {}): SetupConfigOutput {
+  const identifier = (input.id ?? input.componentId ?? input.name ?? '').toLowerCase();
+  const KNOWN_FRAMEWORKS = ['astro', 'vanilla', 'nextjs', 'sveltekit', 'vite', 'htmx'] as const;
+  const KNOWN_STYLE_PACKS = ['vega', 'nova', 'maia', 'lyra', 'mira', 'luma', 'sera', 'rhea'] as const;
+
+  let framework: 'astro' | 'vanilla' | 'nextjs' | 'sveltekit' | 'vite' | 'htmx' = input.framework ?? 'astro';
+  if (!input.framework) {
+    if (identifier && (KNOWN_FRAMEWORKS as readonly string[]).includes(identifier)) {
+      framework = identifier as typeof framework;
+    } else if (input.environment) {
+      if (input.environment === 'react') framework = 'nextjs';
+      else if (input.environment === 'svelte') framework = 'sveltekit';
+      else if (input.environment === 'html') framework = 'vanilla';
+      else if (input.environment === 'astro') framework = 'astro';
+      else framework = 'vite';
+    }
+  }
+
+  let stylePack: 'vega' | 'nova' | 'maia' | 'lyra' | 'mira' | 'luma' | 'sera' | 'rhea' = input.stylePack ?? 'vega';
+  if (!input.stylePack && identifier && (KNOWN_STYLE_PACKS as readonly string[]).includes(identifier)) {
+    stylePack = identifier as typeof stylePack;
+  }
+
   const includeDarkThemeScript = input.includeDarkThemeScript ?? true;
 
   const cssImports = `@import "tailwindcss";\n@import "basecoat-css";\n@import "basecoat-css/${stylePack}";`;

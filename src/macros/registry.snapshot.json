@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "revision": "851c62f2fd4a3d3ccfcf9a0f9ab499528c97d2625551397130a2435a708b0d0b",
+  "revision": "1b57b0b3f5f40613e1d5c4840d3a00e5932142570ce970ba44c6f2321791bd9d",
   "blocks": {
     "cbe0f152631792d61e6ebb46d791ae123dd45d83b58f2105e1c8f38e1bf283a7": {
       "schemaVersion": 1,
@@ -3441,7 +3441,7 @@
         "mappingVersion": "1.0.0"
       }
     },
-    "6f84d1c3802fbaf26cab121cabec1035992b59c629728608e07b9a835e3d1642": {
+    "4225bb065f122ea46c09063f49e78dbb8dc4a70ecfd6a0034d0e5d4daebe6d0d": {
       "schemaVersion": 1,
       "id": "sidebar-01",
       "role": "navigation",
@@ -3458,7 +3458,7 @@
       "fragments": [
         {
           "id": "nav-root",
-          "emmet": "aside.sidebar.w-64.border-e.border-border.bg-background.md:sticky.md:top-0.md:h-screen[aria-label=Sidebar][data-slot=sidebar-host][data-component=sidebar][data-side=left]>nav.flex.h-full.flex-col.justify-between.p-2>(div.flex.flex-col.gap-2>div.flex.items-center.gap-2.p-2.text-sm.font-semibold[data-slot=workspace-switcher]{Acme Corp}+details.group[open]>summary.flex.items-center.justify-between.p-2.text-xs.font-medium.cursor-pointer.hover:bg-muted{Getting Started+span{▾}}+div.flex.flex-col.gap-2.pl-4>a.btn.btn-ghost.btn-sm.justify-start[data-state=active]{Installation}+a.btn.btn-ghost.btn-sm.justify-start{Structure}^details.group[open]>summary.flex.items-center.justify-between.p-2.text-xs.font-medium.cursor-pointer.hover:bg-muted{Building Apps+span{▾}}+div.flex.flex-col.gap-2.pl-4>a.btn.btn-ghost.btn-sm.justify-start{Routing}+a.btn.btn-ghost.btn-sm.justify-start{Fetching})+(div.mt-auto.p-2.border-t.border-border[data-slot=user-footer]>div.flex.items-center.gap-2>div.size-8.rounded.bg-muted+div.text-xs>span.font-medium{shadcn})"
+          "emmet": "aside.sidebar.w-64.border-e.border-border.bg-background.md:sticky.md:top-0.md:h-screen[aria-label=Sidebar][data-slot=sidebar-host][data-component=sidebar][data-side=left]>nav.flex.h-full.flex-col.justify-between.p-2>(div.flex.flex-col.gap-2>div.flex.items-center.gap-2.p-2.text-sm.font-semibold[data-slot=workspace-switcher]{Acme Corp}+details.group[open]>summary.flex.items-center.justify-between.p-2.text-xs.font-medium.cursor-pointer.hover:bg-muted{Getting Started+span{▾}}+div.flex.flex-col.gap-2.pl-4>a.btn.btn-ghost.btn-sm.justify-start[data-state=active][aria-current=page]{Installation}+a.btn.btn-ghost.btn-sm.justify-start{Structure}^details.group[open]>summary.flex.items-center.justify-between.p-2.text-xs.font-medium.cursor-pointer.hover:bg-muted{Building Apps+span{▾}}+div.flex.flex-col.gap-2.pl-4>a.btn.btn-ghost.btn-sm.justify-start{Routing}+a.btn.btn-ghost.btn-sm.justify-start{Fetching})+(div.mt-auto.p-2.border-t.border-border[data-slot=user-footer]>div.flex.items-center.gap-2>div.size-8.rounded.bg-muted+div.text-xs>span.font-medium{shadcn})"
         }
       ],
       "mounts": [],
@@ -3524,7 +3524,7 @@
         "mappingVersion": "1.0.0"
       }
     },
-    "aad31f456aa3927cba0fd6d646aa31d7faa7629e930cc890fb7ecbc23ec44e16": {
+    "792526c86416d4077d8a3699e0a9a60f9ca0533463e2d74aee9dfca0116e572f": {
       "schemaVersion": 1,
       "id": "sidebar-02",
       "role": "navigation",
@@ -3540,7 +3540,7 @@
       "fragments": [
         {
           "id": "nav-root",
-          "emmet": "aside.sidebar.w-64.border-e.border-border.bg-background.md:sticky.md:top-0.md:h-screen[aria-label=Sidebar][data-slot=sidebar-host][data-component=sidebar][data-side=left]>nav.flex.h-full.flex-col.justify-between.p-2>(div.flex.flex-col.gap-4>div.flex.items-center.justify-between.rounded-lg.border.border-border.p-2.text-sm.font-semibold[data-slot=workspace-switcher]>div.flex.items-center.gap-2>div.size-6.rounded.bg-primary+span{Workspace}^button.btn.btn-ghost.btn-xs{↕}^section.flex.flex-col.gap-2>span.px-2.text-xs.text-muted-foreground{Platform}+details.group[open]>summary.flex.items-center.justify-between.p-2.text-xs.cursor-pointer.hover:bg-muted{Playground+span{▾}}+div.flex.flex-col.gap-2.pl-4>a.btn.btn-ghost.btn-sm.justify-start{History}+a.btn.btn-ghost.btn-sm.justify-start{Starred}^^section.flex.flex-col.gap-2>span.px-2.text-xs.text-muted-foreground{Projects}+a.btn.btn-ghost.btn-sm.justify-start{Design}+a.btn.btn-ghost.btn-sm.justify-start{Sales})+(div.mt-auto.p-2.border-t.border-border[data-slot=user-footer]>div.flex.items-center.gap-2>div.size-8.rounded.bg-muted+div.text-xs>span.font-medium{User})"
+          "emmet": "aside.sidebar.w-64.border-e.border-border.bg-background.md:sticky.md:top-0.md:h-screen[aria-label=Sidebar][data-slot=sidebar-host][data-component=sidebar][data-side=left]>nav.flex.h-full.flex-col.justify-between.p-2>(div.flex.flex-col.gap-4>div.flex.items-center.justify-between.rounded-lg.border.border-border.p-2.text-sm.font-semibold[data-slot=workspace-switcher]>div.flex.items-center.gap-2>div.size-6.rounded.bg-primary+span{Workspace}^button.btn.btn-ghost.btn-xs{↕}^section.flex.flex-col.gap-2>span.px-2.text-xs.text-muted-foreground{Platform}+details.group[open]>summary.flex.items-center.justify-between.p-2.text-xs.cursor-pointer.hover:bg-muted{Playground+span{▾}}+div.flex.flex-col.gap-2.pl-4>a.btn.btn-ghost.btn-sm.justify-start[aria-current=page]{History}+a.btn.btn-ghost.btn-sm.justify-start{Starred}^^section.flex.flex-col.gap-2>span.px-2.text-xs.text-muted-foreground{Projects}+a.btn.btn-ghost.btn-sm.justify-start{Design}+a.btn.btn-ghost.btn-sm.justify-start{Sales})+(div.mt-auto.p-2.border-t.border-border[data-slot=user-footer]>div.flex.items-center.gap-2>div.size-8.rounded.bg-muted+div.text-xs>span.font-medium{User})"
         }
       ],
       "mounts": [],
@@ -3606,7 +3606,7 @@
         "mappingVersion": "1.0.0"
       }
     },
-    "5f3950cbe0b5308f07454b8a5d0974dea8314baaae2ea5851d1f4b6e1466c915": {
+    "10f76adb0b956c1612b069d988d39f42bd3c08586d74d845ed1074594abdacbf": {
       "schemaVersion": 1,
       "id": "sidebar-03",
       "role": "navigation",
@@ -3622,7 +3622,7 @@
       "fragments": [
         {
           "id": "nav-root",
-          "emmet": "aside.sidebar.w-64.border-e.border-border.bg-background.md:sticky.md:top-0.md:h-screen[aria-label=Sidebar][data-slot=sidebar-host][data-component=sidebar][data-side=left]>nav.flex.h-full.flex-col.justify-between.p-2>(div.flex.flex-col.gap-4>div.p-2.text-sm.font-semibold[data-slot=header]{Documentation}+div.flex.flex-col.gap-2[data-slot=nav-tree]>div.flex.flex-col.gap-2>span.px-2.text-xs.font-semibold{Core Concepts}+a.btn.btn-ghost.btn-sm.justify-start.pl-4[data-state=active]{Overview}+div.flex.flex-col.gap-2.pl-6>a.text-xs.text-muted-foreground.hover:underline{Architecture}+a.text-xs.text-muted-foreground.hover:underline{Rendering}^a.btn.btn-ghost.btn-sm.justify-start.pl-4{State Machines}+div.flex.flex-col.gap-2.pl-6>a.text-xs.text-muted-foreground.hover:underline{FSM Patterns}+a.text-xs.text-muted-foreground.hover:underline{Transitions}})+(div.mt-auto.p-2.border-t.border-border[data-slot=user-footer]>a.btn.btn-ghost.btn-sm.w-full.justify-start{Support})"
+          "emmet": "aside.sidebar.w-64.border-e.border-border.bg-background.md:sticky.md:top-0.md:h-screen[aria-label=Sidebar][data-slot=sidebar-host][data-component=sidebar][data-side=left]>nav.flex.h-full.flex-col.justify-between.p-2>(div.flex.flex-col.gap-4>div.p-2.text-sm.font-semibold[data-slot=header]{Documentation}+div.flex.flex-col.gap-2[data-slot=nav-tree]>div.flex.flex-col.gap-2>span.px-2.text-xs.font-semibold{Core Concepts}+a.btn.btn-ghost.btn-sm.justify-start.pl-4[data-state=active][aria-current=page]{Overview}+div.flex.flex-col.gap-2.pl-6>a.text-xs.text-muted-foreground.hover:underline{Architecture}+a.text-xs.text-muted-foreground.hover:underline{Rendering}^a.btn.btn-ghost.btn-sm.justify-start.pl-4{State Machines}+div.flex.flex-col.gap-2.pl-6>a.text-xs.text-muted-foreground.hover:underline{FSM Patterns}+a.text-xs.text-muted-foreground.hover:underline{Transitions}})+(div.mt-auto.p-2.border-t.border-border[data-slot=user-footer]>a.btn.btn-ghost.btn-sm.w-full.justify-start{Support})"
         }
       ],
       "mounts": [],
@@ -3689,7 +3689,7 @@
         "mappingVersion": "1.0.0"
       }
     },
-    "1d363c3b5f3d7a4ff19ac29c7a3a0a7ef7517a5ed6f53021e5f8e665f054437a": {
+    "aa3440a16d2fa19abb766246c3b42b4f1a07ac71ce0c88349710da5b8ec823ef": {
       "schemaVersion": 1,
       "id": "sidebar-04",
       "role": "navigation",
@@ -3705,7 +3705,7 @@
       "fragments": [
         {
           "id": "nav-root",
-          "emmet": "aside.sidebar.p-4.md:sticky.md:top-0.md:h-screen[aria-label=Sidebar][data-slot=sidebar-host][data-component=sidebar][data-variant=floating][data-side=left]>div.card.flex.h-full.w-64.flex-col.justify-between.rounded-xl.border.border-border.bg-card.p-4.shadow-md>div.flex.flex-col.gap-4>(div.flex.items-center.gap-2.p-2.text-sm.font-semibold[data-slot=workspace-switcher]>div.size-6.rounded.bg-primary+span{Acme Inc})+nav.flex.flex-col.gap-2[aria-label=FloatingNav]>a.btn.btn-ghost.btn-sm.justify-start[data-state=active]{Dashboard}+a.btn.btn-ghost.btn-sm.justify-start{Analytics}+a.btn.btn-ghost.btn-sm.justify-start{Projects}+a.btn.btn-ghost.btn-sm.justify-start{Settings}^div.mt-auto.flex.flex-col.gap-2.border-t.border-border.pt-2[data-slot=user-footer]>div.flex.items-center.gap-2.p-2>div.size-8.rounded-full.bg-muted+div.flex-1.text-xs>span.font-medium{Alex}+span.text-muted-foreground{alex@acme.inc}"
+          "emmet": "aside.sidebar.p-4.md:sticky.md:top-0.md:h-screen[aria-label=Sidebar][data-slot=sidebar-host][data-component=sidebar][data-variant=floating][data-side=left]>div.card.flex.h-full.w-64.flex-col.justify-between.rounded-xl.border.border-border.bg-card.p-4.shadow-md>div.flex.flex-col.gap-4>(div.flex.items-center.gap-2.p-2.text-sm.font-semibold[data-slot=workspace-switcher]>div.size-6.rounded.bg-primary+span{Acme Inc})+nav.flex.flex-col.gap-2[aria-label=FloatingNav]>a.btn.btn-ghost.btn-sm.justify-start[data-state=active][aria-current=page]{Dashboard}+a.btn.btn-ghost.btn-sm.justify-start{Analytics}+a.btn.btn-ghost.btn-sm.justify-start{Projects}+a.btn.btn-ghost.btn-sm.justify-start{Settings}^div.mt-auto.flex.flex-col.gap-2.border-t.border-border.pt-2[data-slot=user-footer]>div.flex.items-center.gap-2.p-2>div.size-8.rounded-full.bg-muted+div.flex-1.text-xs>span.font-medium{Alex}+span.text-muted-foreground{alex@acme.inc}"
         }
       ],
       "mounts": [],
@@ -3772,7 +3772,7 @@
         "mappingVersion": "1.0.0"
       }
     },
-    "60e8db1dc2ae8d41c8a187f78792a3b3d0c4e137ea48fdad7b9966477b4c5be0": {
+    "56b8e1bab30d1b1b6486f9a600efae13db2d334a2b9629e31f91e756270e879b": {
       "schemaVersion": 1,
       "id": "sidebar-05",
       "role": "navigation",
@@ -3788,7 +3788,7 @@
       "fragments": [
         {
           "id": "nav-root",
-          "emmet": "aside.sidebar.w-64.border-e.border-border.bg-background.md:sticky.md:top-0.md:h-screen[aria-label=Sidebar][data-slot=sidebar-host][data-component=sidebar][data-side=left]>nav.flex.h-full.flex-col.justify-between.p-2>(div.flex.flex-col.gap-2>div.p-2.text-sm.font-semibold[data-slot=brand]{Enterprise App}+div.flex.flex-col.gap-2[data-slot=menu-tree]>details.group[open]>summary.flex.items-center.justify-between.p-2.text-xs.font-medium.cursor-pointer.hover:bg-muted{Analytics+span{▾}}+div.flex.flex-col.gap-2.pl-4>a.btn.btn-ghost.btn-sm.justify-start.border-l-2.border-primary.pl-2[data-state=active]{Realtime}+a.btn.btn-ghost.btn-sm.justify-start.pl-2{Conversions}^details.group>summary.flex.items-center.justify-between.p-2.text-xs.font-medium.cursor-pointer.hover:bg-muted{Reports+span{▾}}+div.flex.flex-col.gap-2.pl-4>a.btn.btn-ghost.btn-sm.justify-start.pl-2{Scheduled}+a.btn.btn-ghost.btn-sm.justify-start.pl-2{Custom})+(div.mt-auto.p-2.border-t.border-border[data-slot=user-footer]>span.text-xs.text-muted-foreground{v2.4.0-stable})"
+          "emmet": "aside.sidebar.w-64.border-e.border-border.bg-background.md:sticky.md:top-0.md:h-screen[aria-label=Sidebar][data-slot=sidebar-host][data-component=sidebar][data-side=left]>nav.flex.h-full.flex-col.justify-between.p-2>(div.flex.flex-col.gap-2>div.p-2.text-sm.font-semibold[data-slot=brand]{Enterprise App}+div.flex.flex-col.gap-2[data-slot=menu-tree]>details.group[open]>summary.flex.items-center.justify-between.p-2.text-xs.font-medium.cursor-pointer.hover:bg-muted{Analytics+span{▾}}+div.flex.flex-col.gap-2.pl-4>a.btn.btn-ghost.btn-sm.justify-start.border-l-2.border-primary.pl-2[data-state=active][aria-current=page]{Realtime}+a.btn.btn-ghost.btn-sm.justify-start.pl-2{Conversions}^details.group>summary.flex.items-center.justify-between.p-2.text-xs.font-medium.cursor-pointer.hover:bg-muted{Reports+span{▾}}+div.flex.flex-col.gap-2.pl-4>a.btn.btn-ghost.btn-sm.justify-start.pl-2{Scheduled}+a.btn.btn-ghost.btn-sm.justify-start.pl-2{Custom})+(div.mt-auto.p-2.border-t.border-border[data-slot=user-footer]>span.text-xs.text-muted-foreground{v2.4.0-stable})"
         }
       ],
       "mounts": [],
@@ -3854,7 +3854,7 @@
         "mappingVersion": "1.0.0"
       }
     },
-    "a81210b5fc165eb35c8a02b96fff538011ec81bfe1ccfc2393ac808abc5254f4": {
+    "5468f3bf84e72f7bfcedb947d30860a58ff3bcfa8d96be061a74b0ba21729134": {
       "schemaVersion": 1,
       "id": "sidebar-06",
       "role": "navigation",
@@ -3871,7 +3871,7 @@
       "fragments": [
         {
           "id": "nav-root",
-          "emmet": "aside.sidebar.w-56.border-e.border-border.bg-background.md:sticky.md:top-0.md:h-screen[aria-label=Sidebar][data-slot=sidebar-host][data-component=sidebar][data-variant=compact][data-side=left]>nav.flex.h-full.flex-col.justify-between.p-2>(div.flex.flex-col.gap-2>div.flex.items-center.gap-2.p-2[data-slot=header]>div.size-6.rounded.bg-primary+span.text-sm.font-semibold{SaaS Kit}+div.flex.flex-col.gap-2[data-slot=nav-items]>div.relative>button.btn.btn-ghost.btn-sm.w-full.justify-between[data-slot=menu-trigger][aria-haspopup=menu]{Workspace+span{▸}}+div.relative>button.btn.btn-ghost.btn-sm.w-full.justify-between[data-slot=menu-trigger][aria-haspopup=menu]{Billing+span{▸}}+div.relative>button.btn.btn-ghost.btn-sm.w-full.justify-between[data-slot=menu-trigger][aria-haspopup=menu]{Integrations+span{▸}})+(div.mt-auto.p-2.border-t.border-border[data-slot=user-footer]>button.btn.btn-ghost.btn-sm.w-full.justify-start{Settings})"
+          "emmet": "aside.sidebar.w-56.border-e.border-border.bg-background.md:sticky.md:top-0.md:h-screen[aria-label=Sidebar][data-slot=sidebar-host][data-component=sidebar][data-variant=compact][data-side=left]>nav.flex.h-full.flex-col.justify-between.p-2>(div.flex.flex-col.gap-2>div.flex.items-center.gap-2.p-2[data-slot=header]>div.size-6.rounded.bg-primary+span.text-sm.font-semibold{SaaS Kit}+div.flex.flex-col.gap-2[data-slot=nav-items]>div.relative>button.btn.btn-ghost.btn-sm.w-full.justify-between[data-slot=menu-trigger][aria-haspopup=menu][aria-current=page]{Workspace+span{▸}}+div.relative>button.btn.btn-ghost.btn-sm.w-full.justify-between[data-slot=menu-trigger][aria-haspopup=menu]{Billing+span{▸}}+div.relative>button.btn.btn-ghost.btn-sm.w-full.justify-between[data-slot=menu-trigger][aria-haspopup=menu]{Integrations+span{▸}})+(div.mt-auto.p-2.border-t.border-border[data-slot=user-footer]>button.btn.btn-ghost.btn-sm.w-full.justify-start{Settings})"
         }
       ],
       "mounts": [],
@@ -3937,7 +3937,7 @@
         "mappingVersion": "1.0.0"
       }
     },
-    "6a21faf2d344fb35b453436901124b9e156fe15959b333d688aa35dd7b2b2257": {
+    "b1f0f8a0ef746a52ba7c11e00e72ef5321d7728a3bfdc7e466b63761a89ec3d5": {
       "schemaVersion": 1,
       "id": "sidebar-07",
       "role": "navigation",
@@ -3953,7 +3953,7 @@
       "fragments": [
         {
           "id": "nav-root",
-          "emmet": "aside.sidebar.w-16.border-e.border-border.bg-background.flex.flex-col.items-center.py-4.gap-4.md:sticky.md:top-0.md:h-screen[aria-label=Sidebar][data-slot=sidebar-host][data-component=sidebar][data-collapsible=icon][data-side=left]>(button.btn.btn-ghost.size-10.rounded-lg[data-slot=workspace-switcher][aria-label=Home]>div.size-6.rounded.bg-primary)+nav.flex.flex-col.gap-2.flex-1.items-center[aria-label=IconNav]>button.btn.btn-ghost.size-10.rounded-lg[data-state=active][aria-label=Dashboard]>span{D}^button.btn.btn-ghost.size-10.rounded-lg.relative[aria-label=Notifications]>span{N}+span.badge.size-4.rounded-full.p-0.text-xs{3}^button.btn.btn-ghost.size-10.rounded-lg[aria-label=Analytics]>span{A}^button.btn.btn-ghost.size-10.rounded-lg[aria-label=Settings]>span{S}^div.mt-auto.flex.flex-col.gap-2.items-center[data-slot=user-footer]>div.size-8.rounded-full.bg-muted[aria-label=User]"
+          "emmet": "aside.sidebar.w-16.border-e.border-border.bg-background.flex.flex-col.items-center.py-4.gap-4.md:sticky.md:top-0.md:h-screen[aria-label=Sidebar][data-slot=sidebar-host][data-component=sidebar][data-collapsible=icon][data-side=left]>(button.btn.btn-ghost.size-10.rounded-lg[data-slot=workspace-switcher][aria-label=Home]>div.size-6.rounded.bg-primary)+nav.flex.flex-col.gap-2.flex-1.items-center[aria-label=IconNav]>button.btn.btn-ghost.size-10.rounded-lg[data-state=active][aria-current=page][aria-label=Dashboard]>span{D}^button.btn.btn-ghost.size-10.rounded-lg.relative[aria-label=Notifications]>span{N}+span.badge.size-4.rounded-full.p-0.text-xs{3}^button.btn.btn-ghost.size-10.rounded-lg[aria-label=Analytics]>span{A}^button.btn.btn-ghost.size-10.rounded-lg[aria-label=Settings]>span{S}^div.mt-auto.flex.flex-col.gap-2.items-center[data-slot=user-footer]>div.size-8.rounded-full.bg-muted[aria-label=User]"
         }
       ],
       "mounts": [],
@@ -4019,7 +4019,7 @@
         "mappingVersion": "1.0.0"
       }
     },
-    "b52b80219d2aed07f188f0462e6cfcb751a97b878a9ed43210cd221acb294c74": {
+    "94f7c3fd20620f6e2e17fe2ff224ee6f3a77df9a23f2e559e922ad2a6f72c321": {
       "schemaVersion": 1,
       "id": "sidebar-08",
       "role": "application-shell",
@@ -4035,7 +4035,7 @@
       "fragments": [
         {
           "id": "shell-root",
-          "emmet": "div.flex.min-h-screen.w-full.bg-muted[data-slot=shell-root][data-component=sidebar][data-variant=inset]>aside.sidebar.w-64.bg-muted.p-4[data-slot=navigation][data-side=left]>div.flex.flex-col.gap-4>div.p-2.text-sm.font-semibold{Acme Inset}+nav.flex.flex-col.gap-2>a.btn.btn-ghost.btn-sm.justify-start[data-state=active]{Dashboard}+a.btn.btn-ghost.btn-sm.justify-start{Documents}+a.btn.btn-ghost.btn-sm.justify-start{Settings}^div.mt-auto.pt-4{User}^^div.flex.flex-1.flex-col.p-2>div.flex.flex-1.flex-col.rounded-xl.border.border-border.bg-background.shadow-sm[data-slot=inset-canvas]>header.flex.h-12.items-center.justify-between.border-b.border-border.px-4[data-slot=header]>span.text-sm.font-medium{Overview}^main.flex-1.overflow-auto.p-6[data-slot=content]"
+          "emmet": "div.flex.min-h-screen.w-full.bg-muted[data-slot=shell-root][data-component=sidebar][data-variant=inset]>aside.sidebar.w-64.bg-muted.p-4[data-slot=navigation][data-side=left]>div.flex.flex-col.gap-4>div.p-2.text-sm.font-semibold{Acme Inset}+nav.flex.flex-col.gap-2>a.btn.btn-ghost.btn-sm.justify-start[data-state=active][aria-current=page]{Dashboard}+a.btn.btn-ghost.btn-sm.justify-start{Documents}+a.btn.btn-ghost.btn-sm.justify-start{Settings}^div.mt-auto.pt-4{User}^^div.flex.flex-1.flex-col.p-2>div.flex.flex-1.flex-col.rounded-xl.border.border-border.bg-background.shadow-sm[data-slot=inset-canvas]>header.flex.h-12.items-center.justify-between.border-b.border-border.px-4[data-slot=header]>span.text-sm.font-medium{Overview}^main.flex-1.overflow-auto.p-6[data-slot=content]"
         }
       ],
       "mounts": [],
@@ -4119,7 +4119,7 @@
         "mappingVersion": "1.0.0"
       }
     },
-    "2cb0f37a916f4503dc51bc548768854ed2e073c942e9e0fa6d86eae79e1ef890": {
+    "4008d8eed4dc19355cafdd124e96b39fe853212ad93dc67d878bbc6501fa2cc0": {
       "schemaVersion": 1,
       "id": "sidebar-09",
       "role": "navigation",
@@ -4136,7 +4136,7 @@
       "fragments": [
         {
           "id": "nav-root",
-          "emmet": "div.flex.h-screen.border-e.border-border[data-slot=sidebar-host][data-component=sidebar]>(aside.w-16.border-e.border-border.bg-muted.flex.flex-col.items-center.py-4.gap-4[data-slot=rail]>button.btn.btn-ghost.size-10.rounded-lg[data-state=active]{M}+button.btn.btn-ghost.size-10.rounded-lg{F}+button.btn.btn-ghost.size-10.rounded-lg{T}+div.mt-auto>div.size-8.rounded-full.bg-muted)+aside.w-64.bg-background.flex.flex-col.justify-between.p-4[data-slot=secondary-pane]>(div.flex.flex-col.gap-4>div.flex.items-center.justify-between>span.text-sm.font-semibold{Mailboxes}+button.btn.btn-ghost.btn-xs{+}^nav.flex.flex-col.gap-2>a.btn.btn-ghost.btn-sm.justify-start[data-state=active]{All Inboxes}+a.btn.btn-ghost.btn-sm.justify-start{Primary}+a.btn.btn-ghost.btn-sm.justify-start{Promotions}+a.btn.btn-ghost.btn-sm.justify-start{Updates}+a.btn.btn-ghost.btn-sm.justify-start{Spam})+(div.mt-auto.border-t.border-border.pt-2>span.text-xs.text-muted-foreground{Storage: 12GB of 15GB})"
+          "emmet": "div.flex.h-screen.border-e.border-border[data-slot=sidebar-host][data-component=sidebar]>(aside.w-16.border-e.border-border.bg-muted.flex.flex-col.items-center.py-4.gap-4[data-slot=rail]>button.btn.btn-ghost.size-10.rounded-lg[data-state=active][aria-current=page]{M}+button.btn.btn-ghost.size-10.rounded-lg{F}+button.btn.btn-ghost.size-10.rounded-lg{T}+div.mt-auto>div.size-8.rounded-full.bg-muted)+aside.w-64.bg-background.flex.flex-col.justify-between.p-4[data-slot=secondary-pane]>(div.flex.flex-col.gap-4>div.flex.items-center.justify-between>span.text-sm.font-semibold{Mailboxes}+button.btn.btn-ghost.btn-xs{+}^nav.flex.flex-col.gap-2>a.btn.btn-ghost.btn-sm.justify-start[data-state=active]{All Inboxes}+a.btn.btn-ghost.btn-sm.justify-start{Primary}+a.btn.btn-ghost.btn-sm.justify-start{Promotions}+a.btn.btn-ghost.btn-sm.justify-start{Updates}+a.btn.btn-ghost.btn-sm.justify-start{Spam})+(div.mt-auto.border-t.border-border.pt-2>span.text-xs.text-muted-foreground{Storage: 12GB of 15GB})"
         }
       ],
       "mounts": [],
@@ -4202,7 +4202,7 @@
         "mappingVersion": "1.0.0"
       }
     },
-    "c0ae9563b4285a24b3d7905449c245090cd46ab495fd45b9b960722ff24594cf": {
+    "b8d3af086334cf0166f8833aa54c9c14c8e00319e46eaa471b752f4417d27e4f": {
       "schemaVersion": 1,
       "id": "sidebar-10",
       "role": "navigation",
@@ -4219,7 +4219,7 @@
       "fragments": [
         {
           "id": "nav-root",
-          "emmet": "div[data-slot=sidebar-host][data-component=sidebar]>(div.flex.items-center.gap-2.p-4.border-b.border-border>button.btn.btn-sm.btn-outline[data-slot=toggle-btn]{Toggle Navigation}+span.text-sm.font-semibold{Project Space})+aside.fixed.inset-y-0.left-0.z-40.w-72.border-e.border-border.bg-background.p-4.shadow-xl.flex.flex-col.justify-between[data-slot=popover-sidebar][data-state=open]>(div.flex.flex-col.gap-4>div.flex.items-center.justify-between>span.text-sm.font-semibold{Quick Nav}+button.btn.btn-ghost.btn-xs{✕}^nav.flex.flex-col.gap-2>a.btn.btn-ghost.btn-sm.justify-start{Recent Files}+a.btn.btn-ghost.btn-sm.justify-start{Shared With Me}+a.btn.btn-ghost.btn-sm.justify-start{Archived})+(div.mt-auto.border-t.border-border.pt-2>span.text-xs.text-muted-foreground{Press Esc to close})"
+          "emmet": "div[data-slot=sidebar-host][data-component=sidebar]>(div.flex.items-center.gap-2.p-4.border-b.border-border>button.btn.btn-sm.btn-outline[data-slot=toggle-btn]{Toggle Navigation}+span.text-sm.font-semibold{Project Space})+aside.fixed.inset-y-0.left-0.z-40.w-72.border-e.border-border.bg-background.p-4.shadow-xl.flex.flex-col.justify-between[data-slot=popover-sidebar][data-state=open]>(div.flex.flex-col.gap-4>div.flex.items-center.justify-between>span.text-sm.font-semibold{Quick Nav}+button.btn.btn-ghost.btn-xs{✕}^nav.flex.flex-col.gap-2>a.btn.btn-ghost.btn-sm.justify-start[aria-current=page]{Recent Files}+a.btn.btn-ghost.btn-sm.justify-start{Shared With Me}+a.btn.btn-ghost.btn-sm.justify-start{Archived})+(div.mt-auto.border-t.border-border.pt-2>span.text-xs.text-muted-foreground{Press Esc to close})"
         }
       ],
       "mounts": [],
@@ -4285,7 +4285,7 @@
         "mappingVersion": "1.0.0"
       }
     },
-    "9c2bdf11b973698db429417c1cdc1e36494d4a53e3fe6623159add6d9e6b5294": {
+    "1a638b96cc184493249461f0c3ce0f3d27b7ba09781d92e1a533f124e0fff200": {
       "schemaVersion": 1,
       "id": "sidebar-11",
       "role": "navigation",
@@ -4302,7 +4302,7 @@
       "fragments": [
         {
           "id": "nav-root",
-          "emmet": "aside.sidebar.w-64.border-e.border-border.bg-background.md:sticky.md:top-0.md:h-screen[aria-label=FileExplorer][data-slot=sidebar-host][data-component=sidebar][data-side=left]>nav.flex.h-full.flex-col.justify-between.p-2>(div.flex.flex-col.gap-2>div.flex.items-center.justify-between.p-2>span.text-xs.font-semibold.uppercase.text-muted-foreground{Explorer}+button.btn.btn-ghost.btn-xs{+}^div.flex.flex-col.gap-2[role=tree][aria-label=Files]>details.group[open]>summary.flex.items-center.gap-2.p-2.text-xs.cursor-pointer.hover:bg-muted{📁+span{src}+span{▾}}+div.flex.flex-col.gap-2.pl-4>details.group[open]>summary.flex.items-center.gap-2.p-2.text-xs.cursor-pointer.hover:bg-muted{📁+span{ui}}+div.flex.flex-col.gap-2.pl-4>a.flex.items-center.gap-2.p-2.text-xs.hover:bg-muted[data-state=active]{📄+button.tsx}^a.flex.items-center.gap-2.p-2.text-xs.hover:bg-muted{📄+index.ts}^a.flex.items-center.gap-2.p-2.text-xs.hover:bg-muted{📄+package.json})+(div.mt-auto.p-2.border-t.border-border>span.text-xs.text-muted-foreground{main})"
+          "emmet": "aside.sidebar.w-64.border-e.border-border.bg-background.md:sticky.md:top-0.md:h-screen[aria-label=FileExplorer][data-slot=sidebar-host][data-component=sidebar][data-side=left]>nav.flex.h-full.flex-col.justify-between.p-2>(div.flex.flex-col.gap-2>div.flex.items-center.justify-between.p-2>span.text-xs.font-semibold.uppercase.text-muted-foreground{Explorer}+button.btn.btn-ghost.btn-xs{+}^div.flex.flex-col.gap-2[role=tree][aria-label=Files]>details.group[open]>summary.flex.items-center.gap-2.p-2.text-xs.cursor-pointer.hover:bg-muted{📁+span{src}+span{▾}}+div.flex.flex-col.gap-2.pl-4>details.group[open]>summary.flex.items-center.gap-2.p-2.text-xs.cursor-pointer.hover:bg-muted{📁+span{ui}}+div.flex.flex-col.gap-2.pl-4>a.flex.items-center.gap-2.p-2.text-xs.hover:bg-muted[data-state=active][aria-current=page]{📄+button.tsx}^a.flex.items-center.gap-2.p-2.text-xs.hover:bg-muted{📄+index.ts}^a.flex.items-center.gap-2.p-2.text-xs.hover:bg-muted{📄+package.json})+(div.mt-auto.p-2.border-t.border-border>span.text-xs.text-muted-foreground{main})"
         }
       ],
       "mounts": [],
@@ -4356,7 +4356,7 @@
         "mappingVersion": "1.0.0"
       }
     },
-    "af776258f398186fc5cec7191288e1dd76568aa8f5f76ae102fd5b5adee05d1d": {
+    "a3a7aea2c11d0f253e0751387c7bd6627992dccb08b39e4a7d98c1fc6e428031": {
       "schemaVersion": 1,
       "id": "sidebar-12",
       "role": "navigation",
@@ -4373,7 +4373,7 @@
       "fragments": [
         {
           "id": "nav-root",
-          "emmet": "aside.sidebar.w-72.border-e.border-border.bg-background.md:sticky.md:top-0.md:h-screen[aria-label=CalendarSidebar][data-slot=sidebar-host][data-component=sidebar][data-side=left]>nav.flex.h-full.flex-col.justify-between.p-4>(div.flex.flex-col.gap-4>div.flex.items-center.justify-between>span.text-sm.font-semibold{Schedule}+button.btn.btn-sm.btn-primary{+ Event}^div.rounded-lg.border.border-border.p-2[data-slot=calendar-widget]>div.flex.items-center.justify-between.p-2.text-xs.font-semibold{<span>Oct 2026</span>+div.flex.gap-2>button.btn.btn-ghost.btn-xs{‹}+button.btn.btn-ghost.btn-xs{›}}^div.grid.grid-cols-7.gap-2.text-center.text-xs>span.text-muted-foreground*7{D}+span.p-2.hover:bg-muted*14{$}^^div.flex.flex-col.gap-2[data-slot=upcoming-events]>span.text-xs.font-semibold.text-muted-foreground{Upcoming}+div.flex.flex-col.gap-2.rounded-lg.border.border-border.p-2.text-xs>strong{Sprint Review}+span.text-muted-foreground{10:00 AM})+(div.mt-auto.pt-2.border-t.border-border>span.text-xs.text-muted-foreground{UTC+3})"
+          "emmet": "aside.sidebar.w-72.border-e.border-border.bg-background.md:sticky.md:top-0.md:h-screen[aria-label=CalendarSidebar][data-slot=sidebar-host][data-component=sidebar][data-side=left]>nav.flex.h-full.flex-col.justify-between.p-4>(div.flex.flex-col.gap-4>div.flex.items-center.justify-between>span.text-sm.font-semibold{Schedule}+button.btn.btn-sm.btn-primary[aria-current=page]{+ Event}^div.rounded-lg.border.border-border.p-2[data-slot=calendar-widget]>div.flex.items-center.justify-between.p-2.text-xs.font-semibold{<span>Oct 2026</span>+div.flex.gap-2>button.btn.btn-ghost.btn-xs{‹}+button.btn.btn-ghost.btn-xs{›}}^div.grid.grid-cols-7.gap-2.text-center.text-xs>span.text-muted-foreground*7{D}+span.p-2.hover:bg-muted*14{$}^^div.flex.flex-col.gap-2[data-slot=upcoming-events]>span.text-xs.font-semibold.text-muted-foreground{Upcoming}+div.flex.flex-col.gap-2.rounded-lg.border.border-border.p-2.text-xs>strong{Sprint Review}+span.text-muted-foreground{10:00 AM})+(div.mt-auto.pt-2.border-t.border-border>span.text-xs.text-muted-foreground{UTC+3})"
         }
       ],
       "mounts": [],
@@ -4439,7 +4439,7 @@
         "mappingVersion": "1.0.0"
       }
     },
-    "b75e8f7ee3e10a12d08c0a467ebe5af18e55e0490100389f19ddcce9c776c087": {
+    "887c415b3274f6198360c7f6fe55e9230336e40da3ad7e9fb58d2563236b2b55": {
       "schemaVersion": 1,
       "id": "sidebar-13",
       "role": "details",
@@ -4456,7 +4456,7 @@
       "fragments": [
         {
           "id": "dialog-root",
-          "emmet": "div.card.flex.w-full.max-w-4xl.overflow-hidden.rounded-xl.border.border-border.bg-card.shadow-2xl[data-slot=settings-dialog][data-component=sidebar]>(aside.w-48.border-e.border-border.bg-muted.p-4.flex.flex-col.justify-between[data-slot=settings-nav]>div.flex.flex-col.gap-2>span.text-xs.font-semibold.uppercase.text-muted-foreground.px-2{Settings}+a.btn.btn-ghost.btn-sm.justify-start[data-state=active]{General}+a.btn.btn-ghost.btn-sm.justify-start{Account}+a.btn.btn-ghost.btn-sm.justify-start{Billing}^div.mt-auto>button.btn.btn-ghost.btn-xs.w-full.justify-start{Log Out})+section.flex.flex-1.flex-col.gap-4.p-6[data-slot=settings-content]>(header.flex.flex-col.gap-2.border-b.border-border.pb-4>h2.text-lg.font-semibold{General Settings}+p.text-xs.text-muted-foreground{Manage workspace details.})+div.flex.flex-col.gap-4[data-slot=settings-fields]>div.flex.flex-col.gap-2>label.text-xs.font-medium{Workspace Name}+input.input.input-sm[value='Acme Labs']^footer.mt-auto.flex.justify-end.gap-2.pt-4.border-t.border-border>button.btn.btn-sm.btn-ghost{Cancel}+button.btn.btn-sm.btn-primary{Save Changes})"
+          "emmet": "div.card.flex.w-full.max-w-4xl.overflow-hidden.rounded-xl.border.border-border.bg-card.shadow-2xl[data-slot=settings-dialog][data-component=sidebar]>(aside.w-48.border-e.border-border.bg-muted.p-4.flex.flex-col.justify-between[data-slot=settings-nav]>div.flex.flex-col.gap-2>span.text-xs.font-semibold.uppercase.text-muted-foreground.px-2{Settings}+a.btn.btn-ghost.btn-sm.justify-start[data-state=active][aria-current=page]{General}+a.btn.btn-ghost.btn-sm.justify-start{Account}+a.btn.btn-ghost.btn-sm.justify-start{Billing}^div.mt-auto>button.btn.btn-ghost.btn-xs.w-full.justify-start{Log Out})+section.flex.flex-1.flex-col.gap-4.p-6[data-slot=settings-content]>(header.flex.flex-col.gap-2.border-b.border-border.pb-4>h2.text-lg.font-semibold{General Settings}+p.text-xs.text-muted-foreground{Manage workspace details.})+div.flex.flex-col.gap-4[data-slot=settings-fields]>div.flex.flex-col.gap-2>label.text-xs.font-medium{Workspace Name}+input.input.input-sm[value='Acme Labs']^footer.mt-auto.flex.justify-end.gap-2.pt-4.border-t.border-border>button.btn.btn-sm.btn-ghost{Cancel}+button.btn.btn-sm.btn-primary{Save Changes})"
         }
       ],
       "mounts": [],
@@ -4510,7 +4510,7 @@
         "mappingVersion": "1.0.0"
       }
     },
-    "2b7abef1751574da62562e85d5eccda13e309797b42ad187a7196ec8ffbe1979": {
+    "f620a2cd6f8120775221bb5b929aee713bbfe6671a43a89f0376b570591e1ed4": {
       "schemaVersion": 1,
       "id": "sidebar-14",
       "role": "navigation",
@@ -4527,7 +4527,7 @@
       "fragments": [
         {
           "id": "nav-root",
-          "emmet": "aside.sidebar.w-72.border-s.border-border.bg-background.md:sticky.md:top-0.md:h-screen[aria-label=Inspector][data-slot=sidebar-host][data-component=sidebar][data-side=right]>div.flex.h-full.flex-col.justify-between.p-4>(div.flex.flex-col.gap-4>div.flex.items-center.justify-between.border-b.border-border.pb-2>span.text-sm.font-semibold{Inspector}+button.btn.btn-ghost.btn-xs{✕}^div.flex.flex-col.gap-4[data-slot=inspector-properties]>div.flex.flex-col.gap-2>label.text-xs.font-medium{Component ID}+input.input.input-sm[value='hero-card'][readonly]^^div.flex.flex-col.gap-2>label.text-xs.font-medium{Layout}+select.select.select-sm>option{Center}+option{Left}+option{Right}^^div.flex.flex-col.gap-2>span.text-xs.font-semibold.text-muted-foreground{Metadata}+div.flex.justify-between.text-xs>span.text-muted-foreground{Modified}+span{2 mins ago})+(div.mt-auto.flex.flex-col.gap-2.pt-4.border-t.border-border>button.btn.btn-sm.btn-primary.w-full{Apply}+button.btn.btn-sm.btn-outline.w-full{Revert})"
+          "emmet": "aside.sidebar.w-72.border-s.border-border.bg-background.md:sticky.md:top-0.md:h-screen[aria-label=Inspector][data-slot=sidebar-host][data-component=sidebar][data-side=right]>div.flex.h-full.flex-col.justify-between.p-4>(div.flex.flex-col.gap-4>div.flex.items-center.justify-between.border-b.border-border.pb-2>span.text-sm.font-semibold{Inspector}+button.btn.btn-ghost.btn-xs{✕}^nav.flex.flex-col.gap-4[data-slot=inspector-properties][aria-label=InspectorProperties]>div.flex.flex-col.gap-2>label.text-xs.font-medium{Component ID}+input.input.input-sm[value='hero-card'][readonly]^^div.flex.flex-col.gap-2>label.text-xs.font-medium{Layout}+select.select.select-sm>option{Center}+option{Left}+option{Right}^^div.flex.flex-col.gap-2>span.text-xs.font-semibold.text-muted-foreground{Metadata}+div.flex.justify-between.text-xs>span.text-muted-foreground{Modified}+span{2 mins ago})+(div.mt-auto.flex.flex-col.gap-2.pt-4.border-t.border-border>button.btn.btn-sm.btn-primary.w-full[aria-current=page]{Apply}+button.btn.btn-sm.btn-outline.w-full{Revert})"
         }
       ],
       "mounts": [],
@@ -4584,7 +4584,7 @@
         "mappingVersion": "1.0.0"
       }
     },
-    "5a4098cfe06c8eea06314c8385a16afaee8a1adbd64be313f1b24e27b592282b": {
+    "9a4fac4d7e3985f86026cd53da83b0b3474c059dcdbd708a5e6e561d514d1349": {
       "schemaVersion": 1,
       "id": "sidebar-15",
       "role": "application-shell",
@@ -4601,7 +4601,7 @@
       "fragments": [
         {
           "id": "shell-root",
-          "emmet": "div.flex.min-h-screen.w-full[data-slot=shell-root][data-component=sidebar]>(aside.sidebar.w-64.border-e.border-border.bg-background.p-4[data-slot=nav-left][data-side=left]>div.flex.flex-col.gap-4>span.text-sm.font-semibold{Left Nav}+nav.flex.flex-col.gap-2>a.btn.btn-ghost.btn-sm.justify-start{Files}+a.btn.btn-ghost.btn-sm.justify-start{Assets})+div.flex.flex-1.flex-col.min-w-0>header.flex.h-12.items-center.border-b.border-border.px-4[data-slot=header]>span.text-sm.font-medium{Editor Workspace}^main.flex-1.overflow-auto.p-6[data-slot=content]^^aside.sidebar.w-64.border-s.border-border.bg-background.p-4[data-slot=nav-right][data-side=right]>div.flex.flex-col.gap-4>span.text-sm.font-semibold{Right Panel}+div.flex.flex-col.gap-2>span.text-xs.text-muted-foreground{Properties}"
+          "emmet": "div.flex.min-h-screen.w-full[data-slot=shell-root][data-component=sidebar]>(aside.sidebar.w-64.border-e.border-border.bg-background.p-4[data-slot=nav-left][data-side=left]>div.flex.flex-col.gap-4>span.text-sm.font-semibold{Left Nav}+nav.flex.flex-col.gap-2>a.btn.btn-ghost.btn-sm.justify-start[aria-current=page]{Files}+a.btn.btn-ghost.btn-sm.justify-start{Assets})+div.flex.flex-1.flex-col.min-w-0>header.flex.h-12.items-center.border-b.border-border.px-4[data-slot=header]>span.text-sm.font-medium{Editor Workspace}^main.flex-1.overflow-auto.p-6[data-slot=content]^^aside.sidebar.w-64.border-s.border-border.bg-background.p-4[data-slot=nav-right][data-side=right]>div.flex.flex-col.gap-4>span.text-sm.font-semibold{Right Panel}+div.flex.flex-col.gap-2>span.text-xs.text-muted-foreground{Properties}"
         }
       ],
       "mounts": [],
@@ -4697,7 +4697,7 @@
         "mappingVersion": "1.0.0"
       }
     },
-    "6697de84636083e3f5bdaebefc0dff39ad76b2d5ad816aa45e05a87fa93630c4": {
+    "9efb84e947efa5de3bb6c1e07ae3fd4fc03a2649209b52c2082a4ec575b7d200": {
       "schemaVersion": 1,
       "id": "sidebar-16",
       "role": "application-shell",
@@ -4713,7 +4713,7 @@
       "fragments": [
         {
           "id": "shell-root",
-          "emmet": "div.flex.min-h-screen.flex-col.w-full[data-slot=shell-root][data-component=sidebar]>(header.sticky.top-0.z-30.flex.h-12.items-center.justify-between.border-b.border-border.bg-background.px-4[data-slot=top-header]>div.flex.items-center.gap-2>button.btn.btn-ghost.btn-xs[data-slot=sidebar-toggle]{☰}+span.text-sm.font-semibold{Global Platform}^div.flex.items-center.gap-2>div.size-8.rounded-full.bg-muted)+div.flex.flex-1.min-h-0>aside.sidebar.w-64.border-e.border-border.bg-background.p-4[data-slot=navigation][data-side=left]>nav.flex.flex-col.gap-2>a.btn.btn-ghost.btn-sm.justify-start[data-state=active]{Dashboard}+a.btn.btn-ghost.btn-sm.justify-start{Settings}^^main.flex-1.overflow-auto.p-6[data-slot=content]"
+          "emmet": "div.flex.min-h-screen.flex-col.w-full[data-slot=shell-root][data-component=sidebar]>(header.sticky.top-0.z-30.flex.h-12.items-center.justify-between.border-b.border-border.bg-background.px-4[data-slot=top-header]>div.flex.items-center.gap-2>button.btn.btn-ghost.btn-xs[data-slot=sidebar-toggle]{☰}+span.text-sm.font-semibold{Global Platform}^div.flex.items-center.gap-2>div.size-8.rounded-full.bg-muted)+div.flex.flex-1.min-h-0>aside.sidebar.w-64.border-e.border-border.bg-background.p-4[data-slot=navigation][data-side=left]>nav.flex.flex-col.gap-2>a.btn.btn-ghost.btn-sm.justify-start[data-state=active][aria-current=page]{Dashboard}+a.btn.btn-ghost.btn-sm.justify-start{Settings}^^main.flex-1.overflow-auto.p-6[data-slot=content]"
         }
       ],
       "mounts": [],
@@ -5613,28 +5613,59 @@
         "mappingVersion": "1.0.0"
       }
     },
-    "cf097363d15a335bc47cd41833fe6b32f161dd96df3acf593032f7832d9a158b": {
+    "9a1e22f49a26fcc2e0f1fecd0a1e5fdf6dafde569e593cd17125707f85a0a26e": {
       "schemaVersion": 1,
       "id": "dashboard-01",
       "role": "dashboard",
       "family": "workspace",
-      "description": "A dashboard with sidebar, charts and data table.",
+      "description": "Shadcn new-york-v4 dashboard-01 blueprint with top navigation bar, KPI summary cards, interactive overview chart, and recent sales feed.",
       "tags": [
         "dashboard",
         "workspace",
         "new-york-v4",
         "metrics",
         "chart",
-        "table"
+        "recent-sales"
       ],
       "root": "content-frame",
       "fragments": [
         {
           "id": "content-frame",
-          "emmet": "div.flex.flex-1.flex-col[data-role=canvas][data-macro=canvas][data-block=dashboard-01]>header.flex.h-14.items-center.justify-between.border-b.border-border.px-6[data-slot=topbar]>nav.flex.items-center.gap-4>a.text-sm.font-medium{Overview}+a.text-sm.text-muted{Customers}+a.text-sm.text-muted{Products}^^div.flex.items-center.gap-4>input.input.input-sm[placeholder=Search]+button.btn.btn-sm.btn-ghost{Alerts}+div.size-8.rounded-full.bg-muted[data-slot=avatar]^^^main.flex.flex-1.flex-col.gap-6.p-6>section.grid.grid-cols-1.gap-4.sm:grid-cols-2.lg:grid-cols-4[data-slot=kpi]>div.card.p-4>span.text-xs.text-muted{Total Revenue}+strong.text-2xl.font-semibold{$45,231.89}+span.badge{+20.1%}^div.card.p-4>span.text-xs.text-muted{Subscriptions}+strong.text-2xl.font-semibold{+2,350}+span.badge{+180.1%}^div.card.p-4>span.text-xs.text-muted{Sales}+strong.text-2xl.font-semibold{+12,234}+span.badge{+19%}^div.card.p-4>span.text-xs.text-muted{Active Now}+strong.text-2xl.font-semibold{+573}+span.badge{+201}^^section.grid.grid-cols-1.gap-6.lg:grid-cols-7>div.lg:col-span-4[data-slot=chart][data-chart-id=area-interactive]+div.lg:col-span-3[data-slot=recent-sales]+div[data-slot=table]"
+          "emmet": "div.flex.flex-1.flex-col[data-role=canvas][data-macro=canvas][data-block=dashboard-01]>header.flex.h-14.items-center.justify-between.border-b.border-border.px-6[data-slot=topbar]>(nav[aria-label=Breadcrumb].breadcrumb.flex.items-center.gap-2.text-sm>ol.flex.items-center.gap-2>li>a{Dashboard}+span{/}+li>span.font-medium{Overview})+(div.flex.items-center.gap-4>div.relative>input.input.input-sm[placeholder=Search][data-slot=search]^^button.btn.btn-ghost.btn-sm[aria-label=Notifications]{Alerts}+div.dropdown[data-slot=avatar-dropdown]>button.size-8.rounded-full.bg-muted[data-slot=avatar][aria-label=User-menu])^^^main.max-w-7xl.mx-auto.w-full.px-6.py-8.flex.flex-col.gap-6>(section.grid.grid-cols-1.gap-4.sm:grid-cols-2.lg:grid-cols-4[data-slot=kpi])+section.grid.grid-cols-1.gap-6.lg:grid-cols-7>(div.lg:col-span-4[data-slot=chart][data-chart-id=area-interactive]+div.card.p-6.lg:col-span-3[data-slot=recent-sales])"
+        },
+        {
+          "id": "kpi-cards",
+          "emmet": "(div.card.p-4>div.flex.items-center.justify-between>span.text-xs.text-muted-foreground{Total Revenue}+span.icon{💵}^strong.text-2xl.font-semibold{$45,231.89}+span.badge{+20.1%})+(div.card.p-4>div.flex.items-center.justify-between>span.text-xs.text-muted-foreground{Subscriptions}+span.icon{👥}^strong.text-2xl.font-semibold{+2,350}+span.badge{+180.1%})+(div.card.p-4>div.flex.items-center.justify-between>span.text-xs.text-muted-foreground{Sales}+span.icon{💳}^strong.text-2xl.font-semibold{+12,234}+span.badge{+19%})+(div.card.p-4>div.flex.items-center.justify-between>span.text-xs.text-muted-foreground{Active Now}+span.icon{⚡}^strong.text-2xl.font-semibold{+573}+span.badge{+201})"
+        },
+        {
+          "id": "overview-chart",
+          "emmet": "div.card.p-6>div.flex.flex-col.gap-2>h3.font-semibold{Overview}+p.text-xs.text-muted-foreground{Monthly revenue trajectory}^div.chart-container.relative.h-64.w-full.flex.items-center.justify-center.rounded-lg.bg-muted.text-xs[data-chart-id=area-interactive]{Interactive Area Chart}"
+        },
+        {
+          "id": "recent-sales-feed",
+          "emmet": "div.flex.flex-col.gap-2>h3.font-semibold{Recent Sales}+p.text-xs.text-muted-foreground{You made 265 sales this month.}^div.flex.flex-col.gap-4.mt-4>(div.flex.items-center.gap-4>div.size-8.rounded-full.bg-muted[data-slot=avatar]+div.flex.flex-col>span.text-sm.font-medium{Olivia Martin}+span.text-xs.text-muted-foreground{olivia@email.com}^span.ml-auto.font-medium.tabular-nums{+$1,999.00})+(div.flex.items-center.gap-4>div.size-8.rounded-full.bg-muted[data-slot=avatar]+div.flex.flex-col>span.text-sm.font-medium{Jackson Lee}+span.text-xs.text-muted-foreground{jackson@email.com}^span.ml-auto.font-medium.tabular-nums{+$39.00})+(div.flex.items-center.gap-4>div.size-8.rounded-full.bg-muted[data-slot=avatar]+div.flex.flex-col>span.text-sm.font-medium{Isabella Nguyen}+span.text-xs.text-muted-foreground{isabella@email.com}^span.ml-auto.font-medium.tabular-nums{+$299.00})"
         }
       ],
-      "mounts": [],
+      "mounts": [
+        {
+          "parent": "content-frame",
+          "anchor": "kpi",
+          "child": "kpi-cards",
+          "order": 0
+        },
+        {
+          "parent": "content-frame",
+          "anchor": "chart",
+          "child": "overview-chart",
+          "order": 1
+        },
+        {
+          "parent": "content-frame",
+          "anchor": "recent-sales",
+          "child": "recent-sales-feed",
+          "order": 2
+        }
+      ],
       "slots": [
         {
           "id": "topbar",
@@ -5689,19 +5720,6 @@
           ],
           "min": 0,
           "max": 1
-        },
-        {
-          "id": "table",
-          "at": {
-            "fragment": "content-frame",
-            "name": "table"
-          },
-          "accepts": [
-            "table",
-            "data"
-          ],
-          "min": 0,
-          "max": 1
         }
       ],
       "ports": [
@@ -5723,14 +5741,15 @@
         "card",
         "button",
         "badge",
-        "table",
-        "chart"
+        "chart",
+        "avatar",
+        "breadcrumb",
+        "input"
       ],
       "ruleRefs": [],
       "dependencyRefs": [
         "bb9894899b8d66b96ecf5b7e20c6ec6b50fa4ba6b73d87558c04642025df6d00",
-        "e786ef4df23aef0a8a961f18050952659b8126fb94cedd6ee3841bced8a6c066",
-        "9fd839dafa3ad90f5eb8223898c1d0d7b69a68bb16af66c595b6977c2d9db8ad"
+        "e786ef4df23aef0a8a961f18050952659b8126fb94cedd6ee3841bced8a6c066"
       ],
       "layout": {
         "frameRef": "content-frame"
@@ -6153,7 +6172,7 @@
     }
   },
   "recipes": {
-    "1808acb5f6553b54c62deedfa992646312ab16f013fbf796d22994da0bad84c0": {
+    "d97d2b499758eef66f8aa9bd3dd599a0a582d9abc7a5019adf0ac313eb87f34c": {
       "schemaVersion": 1,
       "id": "analytics-workspace",
       "kind": "page",
@@ -6162,7 +6181,7 @@
         {
           "id": "analytics",
           "route": "/workspace/analytics",
-          "recipe": "1808acb5f6553b54c62deedfa992646312ab16f013fbf796d22994da0bad84c0",
+          "recipe": "d97d2b499758eef66f8aa9bd3dd599a0a582d9abc7a5019adf0ac313eb87f34c",
           "root": "shell",
           "nodes": {
             "shell": {
@@ -6192,7 +6211,7 @@
             },
             "canvas": {
               "id": "canvas",
-              "block": "cf097363d15a335bc47cd41833fe6b32f161dd96df3acf593032f7832d9a158b",
+              "block": "9a1e22f49a26fcc2e0f1fecd0a1e5fdf6dafde569e593cd17125707f85a0a26e",
               "parent": {
                 "node": "shell",
                 "slot": "content",
@@ -7823,22 +7842,22 @@
     "segmented-toggle": "aa973b7c26d26f157693ad3a693e98375230fa704481d4853814c7d021d223c1",
     "settings": "6f76fd377664b66591fb77567f111f07eaaa460a413f07429ab84594cbf86e8f",
     "settings-workspace": "5307b337028dfb9f6fe1ece8975ad6a6857d3fe9fc1b41d1df2c28c709dc8cc8",
-    "sidebar-01": "6f84d1c3802fbaf26cab121cabec1035992b59c629728608e07b9a835e3d1642",
-    "sidebar-02": "aad31f456aa3927cba0fd6d646aa31d7faa7629e930cc890fb7ecbc23ec44e16",
-    "sidebar-03": "5f3950cbe0b5308f07454b8a5d0974dea8314baaae2ea5851d1f4b6e1466c915",
-    "sidebar-04": "1d363c3b5f3d7a4ff19ac29c7a3a0a7ef7517a5ed6f53021e5f8e665f054437a",
-    "sidebar-05": "60e8db1dc2ae8d41c8a187f78792a3b3d0c4e137ea48fdad7b9966477b4c5be0",
-    "sidebar-06": "a81210b5fc165eb35c8a02b96fff538011ec81bfe1ccfc2393ac808abc5254f4",
-    "sidebar-07": "6a21faf2d344fb35b453436901124b9e156fe15959b333d688aa35dd7b2b2257",
-    "sidebar-08": "b52b80219d2aed07f188f0462e6cfcb751a97b878a9ed43210cd221acb294c74",
-    "sidebar-09": "2cb0f37a916f4503dc51bc548768854ed2e073c942e9e0fa6d86eae79e1ef890",
-    "sidebar-10": "c0ae9563b4285a24b3d7905449c245090cd46ab495fd45b9b960722ff24594cf",
-    "sidebar-11": "9c2bdf11b973698db429417c1cdc1e36494d4a53e3fe6623159add6d9e6b5294",
-    "sidebar-12": "af776258f398186fc5cec7191288e1dd76568aa8f5f76ae102fd5b5adee05d1d",
-    "sidebar-13": "b75e8f7ee3e10a12d08c0a467ebe5af18e55e0490100389f19ddcce9c776c087",
-    "sidebar-14": "2b7abef1751574da62562e85d5eccda13e309797b42ad187a7196ec8ffbe1979",
-    "sidebar-15": "5a4098cfe06c8eea06314c8385a16afaee8a1adbd64be313f1b24e27b592282b",
-    "sidebar-16": "6697de84636083e3f5bdaebefc0dff39ad76b2d5ad816aa45e05a87fa93630c4",
+    "sidebar-01": "4225bb065f122ea46c09063f49e78dbb8dc4a70ecfd6a0034d0e5d4daebe6d0d",
+    "sidebar-02": "792526c86416d4077d8a3699e0a9a60f9ca0533463e2d74aee9dfca0116e572f",
+    "sidebar-03": "10f76adb0b956c1612b069d988d39f42bd3c08586d74d845ed1074594abdacbf",
+    "sidebar-04": "aa3440a16d2fa19abb766246c3b42b4f1a07ac71ce0c88349710da5b8ec823ef",
+    "sidebar-05": "56b8e1bab30d1b1b6486f9a600efae13db2d334a2b9629e31f91e756270e879b",
+    "sidebar-06": "5468f3bf84e72f7bfcedb947d30860a58ff3bcfa8d96be061a74b0ba21729134",
+    "sidebar-07": "b1f0f8a0ef746a52ba7c11e00e72ef5321d7728a3bfdc7e466b63761a89ec3d5",
+    "sidebar-08": "94f7c3fd20620f6e2e17fe2ff224ee6f3a77df9a23f2e559e922ad2a6f72c321",
+    "sidebar-09": "4008d8eed4dc19355cafdd124e96b39fe853212ad93dc67d878bbc6501fa2cc0",
+    "sidebar-10": "b8d3af086334cf0166f8833aa54c9c14c8e00319e46eaa471b752f4417d27e4f",
+    "sidebar-11": "1a638b96cc184493249461f0c3ce0f3d27b7ba09781d92e1a533f124e0fff200",
+    "sidebar-12": "a3a7aea2c11d0f253e0751387c7bd6627992dccb08b39e4a7d98c1fc6e428031",
+    "sidebar-13": "887c415b3274f6198360c7f6fe55e9230336e40da3ad7e9fb58d2563236b2b55",
+    "sidebar-14": "f620a2cd6f8120775221bb5b929aee713bbfe6671a43a89f0376b570591e1ed4",
+    "sidebar-15": "9a4fac4d7e3985f86026cd53da83b0b3474c059dcdbd708a5e6e561d514d1349",
+    "sidebar-16": "9efb84e947efa5de3bb6c1e07ae3fd4fc03a2649209b52c2082a4ec575b7d200",
     "sidebar-collapsible-icon": "8a79b7ec1e26b7522a1d32d85d3d5c0a924b1ab21c32252b5d3207eefd0e5274",
     "sidebar-dashboard-shell": "72804bd89e0100488d25d1610c25cf18499e14acaceda5c4061b8e3bb7762a92",
     "sidebar-inset-shell": "036d12c586a0dacff01c67cc745856d2eb02092f9ce096c44336f3034a8fe71d",
@@ -7851,13 +7870,13 @@
     "signup-05": "3723bfddfd290bc3546e56995036328711d7ef41e71f61d9dd983da2b2d5e940",
     "svg-area-chart": "e786ef4df23aef0a8a961f18050952659b8126fb94cedd6ee3841bced8a6c066",
     "analytics": "d3e41e3ae29ec6577bed2b977e8031fb5ef5c55e96390261e3ec17d77c4da87f",
-    "dashboard-01": "cf097363d15a335bc47cd41833fe6b32f161dd96df3acf593032f7832d9a158b",
+    "dashboard-01": "9a1e22f49a26fcc2e0f1fecd0a1e5fdf6dafde569e593cd17125707f85a0a26e",
     "dashboard-02": "bbdf1d0413c73b33f9e92c09fe8f225ddba04da2f5ee622c7ed9c0046ba8bb24",
     "dashboard-activity": "13be7facca3a0967667187251aec175271de8de21d3da8e3eb9d388cb1783121",
     "tasks": "32844e61382361ac6a12cc6a5493226cf3acb053f09bbdd1332d268678b57ab1",
     "topbar-nav": "b35d8b3cac346f8036359903ae96b06608b28747a38f8ea835083281de2c0c6f",
     "topbar-shell": "73094237dc12a88c4ea33ff78c32157694afcf74998993acbdc933f823abcad0",
-    "analytics-workspace": "1808acb5f6553b54c62deedfa992646312ab16f013fbf796d22994da0bad84c0",
+    "analytics-workspace": "d97d2b499758eef66f8aa9bd3dd599a0a582d9abc7a5019adf0ac313eb87f34c",
     "auth-flow": "9bf7cdd02ccaa4b26cfa92274aeeb6be1b1583793f349c97ebe5fa96baebd528",
     "auth-split-flow": "d929b9d4d54a7db7284e7478f596db39e8bbe05d7240555409b24eba33347b58",
     "data-records": "90200d4832214c0348cee75a1cf703b1edef0a4c8a18303904fc1a380891299a",

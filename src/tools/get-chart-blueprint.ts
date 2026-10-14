@@ -1,6 +1,7 @@
 // Author & maintainer: Žygimantas Jasiulionis / Intellmedia.
 import { z } from 'zod';
 import {
+  type ChartAccessibilitySpec,
   type ChartCategory,
   type ChartFramework,
   chartsCatalog,
@@ -19,17 +20,37 @@ export const getChartBlueprintInputShape = {
     .max(80)
     .optional()
     .describe('Alias for chartId. Defaults to "area-default" if neither chartId nor id is provided.'),
-  framework: z
-    .enum(['vanilla', 'astro', 'react', 'vue', 'svelte'])
+  componentId: z
+    .string()
+    .max(80)
     .optional()
-    .describe('Target framework mount generator (vanilla, astro, react, vue, svelte). Defaults to vanilla.'),
+    .describe('Alias for chartId/id.'),
+  name: z
+    .string()
+    .max(80)
+    .optional()
+    .describe('Alias for chartId/name.'),
+  environment: z
+    .enum(['html', 'astro', 'react', 'vue', 'svelte'])
+    .optional()
+    .default('html')
+    .describe('Target environment (html, astro, react, vue, svelte). Defaults to html.'),
+  framework: z
+    .enum(['vanilla', 'astro', 'react', 'vue', 'svelte', 'html'])
+    .optional()
+    .describe('Target framework mount generator (vanilla, astro, react, vue, svelte, html). When html or omitted, resolves to vanilla.'),
+  engine: z
+    .enum(['svg', 'apexcharts'])
+    .optional()
+    .default('svg')
+    .describe('Chart rendering engine (svg or apexcharts). Defaults to svg.'),
   themeTokens: z
     .record(z.string(), z.string())
     .optional()
     .describe('Optional CSS theme token overrides (e.g. { "var(--chart-1)": "var(--color-primary)" }).'),
 };
 
-export type GetChartBlueprintInput = z.infer<z.ZodObject<typeof getChartBlueprintInputShape>>;
+export type GetChartBlueprintInput = z.input<z.ZodObject<typeof getChartBlueprintInputShape>>;
 
 export interface GetChartBlueprintOutput {
   id: string;
@@ -39,10 +60,13 @@ export interface GetChartBlueprintOutput {
   category: ChartCategory;
   description: string;
   tags: string[];
+  engine: 'svg' | 'apexcharts';
+  environment: 'html' | 'astro' | 'react' | 'vue' | 'svelte';
   framework: ChartFramework;
   layoutFootprint: string;
   requiredTokens: string[];
   cssTokens: string[];
+  accessibilitySpec?: ChartAccessibilitySpec;
   options: Record<string, unknown>;
   html: string;
   code: string;
@@ -97,8 +121,8 @@ function applyThemeTokensToOptions(
   }
 }
 
-export function runGetChartBlueprint(input: GetChartBlueprintInput): GetChartBlueprintOutput {
-  const rawId = (input.chartId ?? input.id ?? 'area-default').trim();
+export function runGetChartBlueprint(input: GetChartBlueprintInput = {}): GetChartBlueprintOutput {
+  const rawId = (input.chartId ?? input.id ?? input.componentId ?? input.name ?? 'area-default').trim();
   const lowerId = rawId.toLowerCase();
 
   const targetId =
@@ -107,12 +131,12 @@ export function runGetChartBlueprint(input: GetChartBlueprintInput): GetChartBlu
     rawId;
 
   let chart = chartsCatalog.charts.find(
-    c => c.id === targetId || c.id.toLowerCase() === targetId.toLowerCase(),
+    c => c.id === targetId || c.id.toLowerCase() === targetId.toLowerCase() || c.name.toLowerCase() === targetId.toLowerCase(),
   );
 
   if (!chart) {
     chart = chartsCatalog.charts.find(
-      c => c.tags.includes(lowerId) || c.id.toLowerCase().includes(lowerId),
+      c => c.tags.includes(lowerId) || c.id.toLowerCase().includes(lowerId) || c.name.toLowerCase().includes(lowerId),
     );
   }
 
@@ -123,11 +147,34 @@ export function runGetChartBlueprint(input: GetChartBlueprintInput): GetChartBlu
     );
   }
 
-  const framework: ChartFramework = input.framework ?? 'vanilla';
-  const rawMountCode = chart.frameworks[framework] ?? chart.frameworks.vanilla ?? '';
+  // Resolve environment and framework
+  let environment: 'html' | 'astro' | 'react' | 'vue' | 'svelte';
+  let framework: ChartFramework;
 
-  const html = applyThemeTokens(chart.html, input.themeTokens);
+  if (input.framework && input.framework !== 'html') {
+    framework = input.framework as ChartFramework;
+    environment = input.framework === 'vanilla' ? 'html' : (input.framework as 'astro' | 'react' | 'vue' | 'svelte');
+  } else if (input.environment && input.environment !== 'html') {
+    environment = input.environment;
+    framework = input.environment as ChartFramework;
+  } else {
+    // Both omitted or 'html'
+    environment = 'html';
+    framework = 'vanilla';
+  }
+
+  const engine: 'svg' | 'apexcharts' = input.engine ?? 'svg';
+
+  const frameworkMap = engine === 'apexcharts'
+    ? (chart.apexFrameworks ?? chart.frameworks)
+    : (chart.svgFrameworks ?? chart.frameworks);
+
+  const rawMountCode = frameworkMap[framework] ?? frameworkMap.vanilla ?? '';
+  const rawHtml = (engine === 'apexcharts' && chart.apexHtml) ? chart.apexHtml : chart.html;
+
+  const html = applyThemeTokens(rawHtml, input.themeTokens);
   const code = applyThemeTokens(rawMountCode, input.themeTokens);
+  const mountCode = code;
   const options = applyThemeTokensToOptions(chart.options ?? {}, input.themeTokens);
 
   const requiredTokens = (chart.requiredTokens ?? chart.cssTokens).map(t => {
@@ -145,14 +192,17 @@ export function runGetChartBlueprint(input: GetChartBlueprintInput): GetChartBlu
     category: chart.category,
     description: chart.description,
     tags: chart.tags,
+    engine,
+    environment,
     framework,
     layoutFootprint: chart.layoutFootprint ?? 'w-full aspect-[4/3] md:aspect-[16/9] lg:aspect-[2/1] min-h-[240px]',
     requiredTokens,
     cssTokens,
+    accessibilitySpec: chart.accessibilitySpec,
     options,
     html,
     code,
-    mountCode: code,
+    mountCode,
     allFrameworksAvailable: ['vanilla', 'astro', 'react', 'vue', 'svelte'],
   };
 }

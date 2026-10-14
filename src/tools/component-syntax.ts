@@ -24,12 +24,26 @@ export const componentSyntaxInputShape = {
     .string()
     .max(80)
     .optional()
-    .describe('Component name or alias to retrieve canonical FSM-bound syntax for (e.g. "dialog", "tabs", "button", "input", "select", "metric-card", "data-table", "sidebar-shell").'),
+    .describe('Component name or alias to retrieve canonical FSM-bound syntax for (e.g. "dialog", "tabs", "button", "input", "select", "metric-card", "data-table", "sidebar-shell", "field", "field-group").'),
   id: z
     .string()
     .max(80)
     .optional()
     .describe('Alternative identifier alias for the component (matches component argument).'),
+  componentId: z
+    .string()
+    .max(80)
+    .optional()
+    .describe('Alternative identifier alias for the component.'),
+  name: z
+    .string()
+    .max(80)
+    .optional()
+    .describe('Alternative identifier alias for the component.'),
+  orientation: z
+    .enum(['vertical', 'horizontal', 'inline'])
+    .optional()
+    .describe('Spatial orientation: "vertical" (standard stacked), "horizontal" (grid 2-column for settings), or "inline" (checkbox/switch/radio).'),
   state: z
     .enum(COMPONENT_STATES)
     .optional()
@@ -38,11 +52,11 @@ export const componentSyntaxInputShape = {
     .string()
     .max(40)
     .optional()
-    .describe('Visual variant token (e.g. "outline", "ghost", "secondary", "destructive", "subcard").'),
+    .describe('Visual variant token (e.g. "outline", "ghost", "secondary", "destructive", "subcard", "horizontal", "inline", "error").'),
   environment: z
-    .enum(['html', 'astro'])
+    .enum(['html', 'astro', 'react', 'vue', 'svelte'])
     .optional()
-    .describe('Target output environment: "html" emits script tags; "astro" emits client directives and clean imports.'),
+    .describe('Target output environment: "html", "astro", "react", "vue", or "svelte". Defaults to "html".'),
   icon: z
     .enum(['plus', 'edit', 'trash', 'search', 'chevron-down', 'check', 'external-link'])
     .optional()
@@ -287,15 +301,209 @@ export function applyStateVariant(
   return result;
 }
 
+function getFieldMarkupTemplate(orientation: 'vertical' | 'horizontal' | 'inline', isInvalid: boolean): string {
+  if (orientation === 'horizontal') {
+    return isInvalid
+      ? `<div class="field grid grid-cols-2 items-center gap-4" data-orientation="horizontal" data-invalid="true">
+  <label class="label text-sm font-medium" for="username">Username</label>
+  <div class="grid gap-1.5">
+    <input class="input" id="username" type="text" placeholder="Enter username" aria-describedby="username-description username-error" aria-invalid="true">
+    <p id="username-description" class="field-description text-sm text-muted-foreground">Your public display username.</p>
+    <p id="username-error" class="field-error text-sm font-medium text-destructive" role="alert">Please enter a valid username.</p>
+  </div>
+</div>`
+      : `<div class="field grid grid-cols-2 items-center gap-4" data-orientation="horizontal">
+  <label class="label text-sm font-medium" for="username">Username</label>
+  <div class="grid gap-1.5">
+    <input class="input" id="username" type="text" placeholder="Enter username" aria-describedby="username-description">
+    <p id="username-description" class="field-description text-sm text-muted-foreground">Your public display username.</p>
+  </div>
+</div>`;
+  }
+  if (orientation === 'inline') {
+    return isInvalid
+      ? `<div class="field flex items-start gap-2" data-orientation="inline" data-invalid="true">
+  <input class="checkbox" id="terms" type="checkbox" aria-describedby="terms-description terms-error" aria-invalid="true">
+  <div class="grid gap-1 leading-none">
+    <label class="label text-sm font-medium" for="terms">Accept terms and conditions</label>
+    <p id="terms-description" class="field-description text-sm text-muted-foreground">You agree to our terms of service.</p>
+    <p id="terms-error" class="field-error text-sm font-medium text-destructive" role="alert">You must accept the terms.</p>
+  </div>
+</div>`
+      : `<div class="field flex items-center gap-2" data-orientation="inline">
+  <input class="checkbox" id="terms" type="checkbox" aria-describedby="terms-description">
+  <div class="grid gap-1 leading-none">
+    <label class="label text-sm font-medium" for="terms">Accept terms and conditions</label>
+    <p id="terms-description" class="field-description text-sm text-muted-foreground">You agree to our terms of service.</p>
+  </div>
+</div>`;
+  }
+  return isInvalid
+    ? `<div class="field grid gap-2" data-orientation="vertical" data-invalid="true">
+  <label class="label text-sm font-medium" for="username">Username</label>
+  <input class="input" id="username" type="text" placeholder="Enter username" aria-describedby="username-description username-error" aria-invalid="true">
+  <p id="username-description" class="field-description text-sm text-muted-foreground">Your public display username.</p>
+  <p id="username-error" class="field-error text-sm font-medium text-destructive" role="alert">Please enter a valid username.</p>
+</div>`
+    : `<div class="field grid gap-2" data-orientation="vertical">
+  <label class="label text-sm font-medium" for="username">Username</label>
+  <input class="input" id="username" type="text" placeholder="Enter username" aria-describedby="username-description">
+  <p id="username-description" class="field-description text-sm text-muted-foreground">Your public display username.</p>
+</div>`;
+}
+
+function getFieldGroupMarkupTemplate(orientation: 'vertical' | 'horizontal' | 'inline', isInvalid: boolean): string {
+  if (orientation === 'horizontal') {
+    return isInvalid
+      ? `<div role="group" class="field-group flex flex-col gap-6" data-orientation="horizontal" data-invalid="true">
+  <fieldset class="fieldset space-y-4">
+    <legend class="field-legend text-sm font-medium leading-none">Account Settings</legend>
+    <div class="field grid grid-cols-2 items-center gap-4" data-orientation="horizontal" data-invalid="true">
+      <label class="label text-sm font-medium" for="account-name">Account Name</label>
+      <div class="grid gap-1.5">
+        <input class="input" id="account-name" type="text" placeholder="Account name" aria-describedby="account-name-description account-name-error" aria-invalid="true">
+        <p id="account-name-description" class="field-description text-sm text-muted-foreground">Team account name.</p>
+        <p id="account-name-error" class="field-error text-sm font-medium text-destructive" role="alert">Account name is required.</p>
+      </div>
+    </div>
+  </fieldset>
+</div>`
+      : `<div role="group" class="field-group flex flex-col gap-6" data-orientation="horizontal">
+  <fieldset class="fieldset space-y-4">
+    <legend class="field-legend text-sm font-medium leading-none">Account Settings</legend>
+    <div class="field grid grid-cols-2 items-center gap-4" data-orientation="horizontal">
+      <label class="label text-sm font-medium" for="account-name">Account Name</label>
+      <div class="grid gap-1.5">
+        <input class="input" id="account-name" type="text" placeholder="Account name" aria-describedby="account-name-description">
+        <p id="account-name-description" class="field-description text-sm text-muted-foreground">Team account name.</p>
+      </div>
+    </div>
+  </fieldset>
+</div>`;
+  }
+  if (orientation === 'inline') {
+    return isInvalid
+      ? `<div role="group" class="field-group flex flex-wrap gap-4" data-orientation="inline" data-invalid="true">
+  <fieldset class="fieldset space-y-4">
+    <legend class="field-legend text-sm font-medium leading-none">Notifications</legend>
+    <div class="field flex items-start gap-2" data-orientation="inline" data-invalid="true">
+      <input class="checkbox" id="pref-email" type="checkbox" aria-describedby="pref-email-desc pref-email-error" aria-invalid="true">
+      <div class="grid gap-1 leading-none">
+        <label class="label text-sm font-medium" for="pref-email">Email Notifications</label>
+        <p id="pref-email-desc" class="field-description text-sm text-muted-foreground">Receive weekly digests.</p>
+        <p id="pref-email-error" class="field-error text-sm font-medium text-destructive" role="alert">Please verify notification settings.</p>
+      </div>
+    </div>
+  </fieldset>
+</div>`
+      : `<div role="group" class="field-group flex flex-wrap gap-4" data-orientation="inline">
+  <fieldset class="fieldset space-y-4">
+    <legend class="field-legend text-sm font-medium leading-none">Notifications</legend>
+    <div class="field flex items-center gap-2" data-orientation="inline">
+      <input class="checkbox" id="pref-email" type="checkbox" aria-describedby="pref-email-desc">
+      <div class="grid gap-1 leading-none">
+        <label class="label text-sm font-medium" for="pref-email">Email Notifications</label>
+        <p id="pref-email-desc" class="field-description text-sm text-muted-foreground">Receive weekly digests.</p>
+      </div>
+    </div>
+  </fieldset>
+</div>`;
+  }
+  return isInvalid
+    ? `<div role="group" class="field-group flex flex-col gap-6" data-orientation="vertical" data-invalid="true">
+  <fieldset class="fieldset space-y-4">
+    <legend class="field-legend text-sm font-medium leading-none">Profile Settings</legend>
+    <div class="field grid gap-2" data-orientation="vertical" data-invalid="true">
+      <label class="label text-sm font-medium" for="profile-name">Name</label>
+      <input class="input" id="profile-name" type="text" placeholder="Your name" aria-describedby="profile-name-description profile-name-error" aria-invalid="true">
+      <p id="profile-name-description" class="field-description text-sm text-muted-foreground">Displayed on your public profile.</p>
+      <p id="profile-name-error" class="field-error text-sm font-medium text-destructive" role="alert">Please enter your profile name.</p>
+    </div>
+  </fieldset>
+</div>`
+    : `<div role="group" class="field-group flex flex-col gap-6" data-orientation="vertical">
+  <fieldset class="fieldset space-y-4">
+    <legend class="field-legend text-sm font-medium leading-none">Profile Settings</legend>
+    <div class="field grid gap-2" data-orientation="vertical">
+      <label class="label text-sm font-medium" for="profile-name">Name</label>
+      <input class="input" id="profile-name" type="text" placeholder="Your name" aria-describedby="profile-name-description">
+      <p id="profile-name-description" class="field-description text-sm text-muted-foreground">Displayed on your public profile.</p>
+    </div>
+    <div class="field grid gap-2" data-orientation="vertical">
+      <label class="label text-sm font-medium" for="profile-email">Email</label>
+      <input class="input" id="profile-email" type="email" placeholder="you@example.com" aria-describedby="profile-email-error" aria-invalid="true">
+      <p id="profile-email-error" class="field-error text-sm font-medium text-destructive" role="alert">Please enter a valid email address.</p>
+    </div>
+  </fieldset>
+</div>`;
+}
+
 export const injectRootAttributes = applyStateVariant;
 
+export interface ComponentSyntaxOutput {
+  stage?: string;
+  id: string;
+  environment: string;
+  state: string;
+  markup: string;
+  dependencies: {
+    css: string[];
+    js: string[];
+  };
+  composition_rules: string;
+  orientation?: string;
+  toggleStates?: string[];
+  availableStates?: readonly string[];
+  fsmContract?: {
+    recipe: string;
+    boundState?: string;
+    validStates: string[];
+  };
+  fsm?: { recipe: string; state?: string };
+  icon?: string;
+  iconSvg?: string;
+  nextStep?: string;
+}
+
+export interface ComponentSyntaxCatalogIndex {
+  stage: string;
+  totalComponents: number;
+  components: string[];
+  availableStates: readonly string[];
+  supportedEnvironments: readonly string[];
+  supportedOrientations: readonly string[];
+  nextStep: string;
+}
+
 export function runComponentSyntax(
-  input: ComponentSyntaxInput,
+  input: ComponentSyntaxInput & ({ component: string } | { id: string } | { componentId: string } | { name: string }),
+  source?: Registry,
+): ComponentSyntaxOutput;
+export function runComponentSyntax(
+  input?: ComponentSyntaxInput,
+  source?: Registry,
+): ComponentSyntaxOutput | ComponentSyntaxCatalogIndex;
+export function runComponentSyntax(
+  input: ComponentSyntaxInput = {},
   source: Registry = registry,
-) {
-  const rawId = (input.component ?? input.id ?? '').trim();
+): ComponentSyntaxOutput | ComponentSyntaxCatalogIndex {
+  const rawId = (input.component ?? input.id ?? input.componentId ?? input.name ?? '').trim();
   if (!rawId) {
-    throw new Error('Provide component (e.g. "dialog", "tabs", "button", "dropdown-menu").');
+    const allIds = Array.from(new Set([
+      ...source.index.map(c => c.id),
+      ...Object.keys(COMPOSITE_PATTERNS),
+    ])).sort();
+    const catalogIndex = {
+      stage: '3-component-syntax',
+      totalComponents: allIds.length,
+      components: allIds,
+      availableStates: COMPONENT_STATES,
+      supportedEnvironments: ['html', 'astro', 'react', 'vue', 'svelte'] as const,
+      supportedOrientations: ['vertical', 'horizontal', 'inline'] as const,
+      nextStep: 'Provide id or component (e.g. { id: "field", orientation: "vertical" }).',
+    };
+    assertDetailBudget(catalogIndex);
+    return catalogIndex;
   }
   const needle = rawId.toLowerCase();
   const isDirectRegistryMatch = input.state !== undefined && (needle in source.details || needle in COMPOSITE_PATTERNS);
@@ -314,9 +522,22 @@ export function runComponentSyntax(
     : ('id' in entry && typeof (entry as { id?: unknown }).id === 'string'
         ? (entry as { id: string }).id
         : aliasResolved);
-  const state: ComponentStateVariant = input.state ?? 'default';
+  let state: ComponentStateVariant = input.state ?? 'default';
+  if ((input.variant === 'error' || input.state === 'invalid') && state !== 'invalid') {
+    state = 'invalid';
+  }
   const effectiveState = state === 'open/closed' ? 'open' : state;
   const environment = input.environment ?? 'html';
+  const orientation = input.orientation ?? (input.variant === 'horizontal' ? 'horizontal' : input.variant === 'inline' ? 'inline' : 'vertical');
+  const isInvalid = effectiveState === 'invalid' || input.variant === 'error';
+
+  let rawTemplate = entry.markup_template;
+  if (id === 'field') {
+    rawTemplate = getFieldMarkupTemplate(orientation, isInvalid);
+  } else if (id === 'field-group') {
+    rawTemplate = getFieldGroupMarkupTemplate(orientation, isInvalid);
+  }
+
   const fsmRecipeId = COMPONENT_TO_FSM_RECIPE[id];
   const semantics = defaultSemanticsStore.getRegistry();
   const fsmRecipeRef = fsmRecipeId ? semantics.aliases[fsmRecipeId] : undefined;
@@ -324,7 +545,7 @@ export function runComponentSyntax(
   const fsmState = fsmRecipeId ? mapToFsmState(fsmRecipeId, effectiveState) : undefined;
 
   const transformedTemplate = injectRootAttributes(
-    entry.markup_template,
+    rawTemplate,
     effectiveState,
     fsmRecipeId,
     fsmState,
@@ -343,13 +564,24 @@ export function runComponentSyntax(
           .map(path => `<script src="/assets/${path.split('/').at(-1)}.min.js" defer></script>`)
           .join('\n')
       : '';
+  const frameworkComment =
+    environment === 'react'
+      ? `<!-- React: replace class with className; import styles in layout -->`
+      : environment === 'vue'
+        ? `<!-- Vue: place in template section; import styles in main.ts -->`
+        : environment === 'svelte'
+          ? `<!-- Svelte: place in component markup; import styles in +layout.svelte -->`
+          : '';
   const markup = [
+    frameworkComment,
     transformedTemplate,
     assets,
     inline
       ? environment === 'astro'
         ? `<!-- Add to your layout or component script, not <head> -->\n<script>\n${inline}\n</script>`
-        : `<script>\n${inline}\n</script>`
+        : environment === 'html'
+          ? `<script>\n${inline}\n</script>`
+          : `<!-- Framework script setup: ${entry.dependencies.js.join(', ')} -->`
       : '',
   ]
     .filter(Boolean)
@@ -363,6 +595,7 @@ export function runComponentSyntax(
     environment,
     state,
     ...(state === 'open/closed' ? { toggleStates: ['open', 'closed'] } : {}),
+    ...(input.orientation || id === 'field' || id === 'field-group' ? { orientation } : {}),
     availableStates: COMPONENT_STATES,
     ...(fsmRecipe
       ? {

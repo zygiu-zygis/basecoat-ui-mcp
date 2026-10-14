@@ -22,8 +22,8 @@ test('registry links metadata and details, preserves upstream provenance', () =>
 test('registry preserves the exact curated and discovered component boundary', () => {
   const curatedIds = new Set(registry.index.map(component => component.id));
   const discoveredIds = new Set(registry.upstream.components.map(component => component.id));
-  assert.equal(registry.index.length, 61);
-  assert.equal(Object.keys(registry.details).length, 61);
+  assert.equal(registry.index.length, 62);
+  assert.equal(Object.keys(registry.details).length, 62);
   assert.equal(registry.upstream.components.length, 41);
   for (const id of ['pagination', 'spinner']) {
     assert.equal(curatedIds.has(id), true);

@@ -44,8 +44,28 @@ export const composeStackInputShape = {
     .max(80)
     .optional()
     .describe(
-      'Shell architecture ID from shell-stacks: sidebar-01..sidebar-16, topbar-shell, inset-shell, or split-shell. Defaults to sidebar-07.',
+      'Shell architecture ID from shell-stacks: sidebar-01..sidebar-16, topbar-shell, inset-shell, or split-shell. Defaults to sidebar-01.',
     ),
+  id: z
+    .string()
+    .max(80)
+    .optional()
+    .describe('Poka-Yoke alias for shellId.'),
+  componentId: z
+    .string()
+    .max(80)
+    .optional()
+    .describe('Poka-Yoke alias for shellId.'),
+  name: z
+    .string()
+    .max(80)
+    .optional()
+    .describe('Poka-Yoke alias for shellId.'),
+  shell: z
+    .string()
+    .max(80)
+    .optional()
+    .describe('Poka-Yoke alias for shellId.'),
   headerId: z
     .string()
     .max(80)
@@ -54,12 +74,18 @@ export const composeStackInputShape = {
       'Optional header stack ID from header-stacks: breadcrumb-command-header, tabs-filter-header, or date-range-export-header.',
     ),
   stacks: z
-    .array(z.string().max(80))
-    .max(12)
+    .union([
+      z.array(z.string().max(80)).max(12),
+      z.record(z.string(), z.string().max(80)),
+    ])
     .optional()
     .describe(
-      'Ordered list of component stack IDs to hydrate into the shell slots (e.g., ["kpi-4-col-delta", "area-revenue-stack", "data-table-full-crud", "detail-inspector-drawer", "field-group-settings"]). Also accepts category shorthands: "kpi", "chart", "table", "form", "overlay".',
+      'Ordered list or record of component stack IDs to hydrate into the shell slots (e.g., ["kpi-4-col", "area-chart-overview", "data-table-full-crud", "recent-sales-feed", "detail-drawer"]). Also accepts category shorthands: "kpi", "chart", "table", "form", "overlay".',
     ),
+  environment: z
+    .enum(['html', 'astro', 'react', 'vue', 'svelte'])
+    .optional()
+    .describe('Target output environment/framework. Defaults to html.'),
   title: z
     .string()
     .max(120)
@@ -78,6 +104,7 @@ export interface ComposeStackOutput {
   headerId?: string;
   appliedStacks: string[];
   density: 'compact' | 'standard' | 'comfortable';
+  environment?: 'html' | 'astro' | 'react' | 'vue' | 'svelte';
   componentsUsed: string[];
   fsmContracts: string[];
   dependencies: { js: string[]; css?: string[] };
@@ -86,14 +113,87 @@ export interface ComposeStackOutput {
   nextStep: string;
 }
 
-const CATEGORY_SHORTHANDS: Record<string, string> = {
+const STACK_ALIASES: Record<string, string> = {
+  'kpi-4-col': 'kpi-4-col',
+  'kpi-4-col-delta': 'kpi-4-col-delta',
+  'area-chart-overview': 'area-chart-overview',
+  'area-revenue-stack': 'area-revenue-stack',
+  'data-table-full-crud': 'data-table-full-crud',
+  'recent-sales-feed': 'recent-sales-feed',
+  'recent-sales': 'recent-sales-feed',
+  'detail-drawer': 'detail-drawer',
+  'detail-inspector-drawer': 'detail-inspector-drawer',
   kpi: 'kpi-4-col-delta',
   chart: 'area-revenue-stack',
   table: 'data-table-full-crud',
   form: 'field-group-settings',
   overlay: 'detail-inspector-drawer',
+  drawer: 'detail-inspector-drawer',
   header: 'breadcrumb-command-header',
 };
+
+const CANONICAL_SLOT_MAP: Record<string, string> = {
+  'kpi-4-col': 'kpi',
+  'kpi-4-col-delta': 'kpi',
+  'kpi-sparkline-grid': 'kpi',
+  'kpi-compact-strip': 'kpi',
+  'kpi-progress-goals': 'kpi',
+  kpi: 'kpi',
+  'area-chart-overview': 'chart',
+  'area-revenue-stack': 'chart',
+  'bar-comparison-stack': 'chart',
+  'radial-gauge-stack': 'chart',
+  'mixed-analytics-grid': 'chart',
+  chart: 'chart',
+  'data-table-full-crud': 'table',
+  'activity-feed-table': 'table',
+  'expandable-row-table': 'table',
+  table: 'table',
+  'recent-sales-feed': 'recent-sales',
+  'recent-sales': 'recent-sales',
+  'detail-drawer': 'drawer',
+  'detail-inspector-drawer': 'drawer',
+  'command-palette-dialog': 'drawer',
+  'multi-step-wizard-modal': 'drawer',
+  'confirmation-alert-dialog': 'drawer',
+  drawer: 'drawer',
+  overlay: 'drawer',
+  'field-group-settings': 'form',
+  'input-group-search-addons': 'form',
+  'segmented-toggle-bar': 'form',
+  'auth-card-stack': 'form',
+  form: 'form',
+  'breadcrumb-command-header': 'header',
+  'tabs-filter-header': 'header',
+  'date-range-export-header': 'header',
+  header: 'header',
+};
+
+const SLOT_CANDIDATES: Record<string, string[]> = {
+  kpi: ['kpi', 'metrics'],
+  metrics: ['metrics', 'kpi'],
+  chart: ['chart', 'charts'],
+  charts: ['charts', 'chart'],
+  table: ['table'],
+  'recent-sales': ['recent-sales'],
+  drawer: ['drawer', 'overlays'],
+  overlay: ['overlays', 'drawer'],
+  overlays: ['overlays', 'drawer'],
+  form: ['form', 'forms'],
+  forms: ['forms', 'form'],
+  header: ['header', 'topbar'],
+  topbar: ['topbar', 'header'],
+};
+
+function resolveStack(idOrAlias: string): ComponentStackItem | undefined {
+  const normalized = idOrAlias.toLowerCase();
+  const aliased = STACK_ALIASES[normalized] ?? idOrAlias;
+  return (
+    stacksCatalog.stacks.find(s => s.id === aliased) ??
+    stacksCatalog.stacks.find(s => s.id.toLowerCase() === normalized) ??
+    stacksCatalog.stacks.find(s => s.id === idOrAlias)
+  );
+}
 
 function replaceSlot(
   html: string,
@@ -138,6 +238,18 @@ function replaceSlot(
     }
   }
 
+  return { html, replaced: false };
+}
+
+function replaceAnySlot(
+  html: string,
+  slotNames: string[],
+  replacementHtml: string,
+): { html: string; replaced: boolean } {
+  for (const name of slotNames) {
+    const res = replaceSlot(html, name, replacementHtml);
+    if (res.replaced) return res;
+  }
   return { html, replaced: false };
 }
 
@@ -187,7 +299,16 @@ export function runComposeStack(input: ComposeStackInput): ComposeStackOutput {
   const shellStacks = stacksCatalog.stacks.filter(s => s.category === 'shell-stacks');
   const validShellIds = shellStacks.map(s => s.id);
 
-  const rawShellId = input.shellId ?? 'sidebar-07';
+  const hasExplicitShell = Boolean(
+    input.shellId || input.id || input.componentId || input.name || input.shell,
+  );
+  const rawShellId =
+    input.shellId ??
+    input.id ??
+    input.componentId ??
+    input.name ??
+    input.shell ??
+    'sidebar-01';
   const shell = shellStacks.find(s => s.id === rawShellId);
   if (!shell) {
     throw new Error(
@@ -202,7 +323,7 @@ export function runComposeStack(input: ComposeStackInput): ComposeStackOutput {
   let headerStack: ComponentStackItem | undefined = undefined;
   if (input.headerId) {
     const rawHeaderId =
-      CATEGORY_SHORTHANDS[input.headerId.toLowerCase()] ?? input.headerId;
+      STACK_ALIASES[input.headerId.toLowerCase()] ?? input.headerId;
     headerStack = headerStacks.find(s => s.id === rawHeaderId);
     if (!headerStack) {
       throw new Error(
@@ -233,42 +354,73 @@ export function runComposeStack(input: ComposeStackInput): ComposeStackOutput {
     for (const js of headerStack.dependencies?.js ?? []) jsDependencies.add(js);
   }
 
+  // Determine stack items to hydrate
+  interface HydrationTarget {
+    targetSlot: string;
+    stackId: string;
+  }
+  const itemsToHydrate: HydrationTarget[] = [];
+
+  if (input.stacks === undefined) {
+    if (!hasExplicitShell && !input.headerId) {
+      // Empty object call: default shell sidebar-01 with default hydrated stacks
+      const defaultStackIds = ['kpi-4-col', 'area-chart-overview', 'data-table-full-crud'];
+      for (const id of defaultStackIds) {
+        const slot = CANONICAL_SLOT_MAP[id] ?? 'main-content';
+        itemsToHydrate.push({ targetSlot: slot, stackId: id });
+      }
+    }
+  } else if (Array.isArray(input.stacks)) {
+    for (const rawStackId of input.stacks) {
+      const slot = CANONICAL_SLOT_MAP[rawStackId.toLowerCase()] ?? 'main-content';
+      itemsToHydrate.push({ targetSlot: slot, stackId: rawStackId });
+    }
+  } else if (typeof input.stacks === 'object') {
+    for (const [slot, rawStackId] of Object.entries(input.stacks)) {
+      itemsToHydrate.push({ targetSlot: slot, stackId: rawStackId });
+    }
+  }
+
   // Hydrate content stacks
-  const requestedStacks = input.stacks ?? [];
-  for (const rawStackId of requestedStacks) {
-    const normalizedId =
-      CATEGORY_SHORTHANDS[rawStackId.toLowerCase()] ?? rawStackId;
-    const stack = stacksCatalog.stacks.find(s => s.id === normalizedId);
+  for (const { targetSlot, stackId } of itemsToHydrate) {
+    const stack = resolveStack(stackId);
     if (!stack) {
       const validIds = stacksCatalog.stacks
         .filter(s => s.category !== 'shell-stacks')
         .map(s => s.id);
       throw new Error(
-        `Unknown stack ID: "${rawStackId}". Valid stack IDs: ${validIds.join(', ')} (or shorthands: ${Object.keys(CATEGORY_SHORTHANDS).join(', ')})`,
+        `Unknown stack ID: "${stackId}". Valid stack IDs: ${validIds.join(', ')} (or shorthands: ${Object.keys(STACK_ALIASES).join(', ')})`,
       );
     }
 
-    const slotTarget = stack.slotTarget ?? 'main-content';
+    const candidateSlots =
+      SLOT_CANDIDATES[targetSlot.toLowerCase()] ??
+      (stack.slotTarget ? [targetSlot, stack.slotTarget] : [targetSlot]);
 
-    if (slotTarget === 'overlays') {
-      const overlayInsert = insertInsideSlot(composedHtml, 'overlays', stack.html);
-      if (overlayInsert.inserted) {
-        composedHtml = overlayInsert.html;
+    if (targetSlot === 'drawer' || targetSlot === 'overlay' || stack.slotTarget === 'overlays') {
+      const slotReplace = replaceAnySlot(composedHtml, candidateSlots, stack.html);
+      if (slotReplace.replaced) {
+        composedHtml = slotReplace.html;
       } else {
-        const lastDiv = composedHtml.lastIndexOf('</div>');
-        if (lastDiv !== -1) {
-          composedHtml =
-            composedHtml.slice(0, lastDiv) +
-            '\n' +
-            stack.html +
-            '\n' +
-            composedHtml.slice(lastDiv);
+        const overlayInsert = insertInsideSlot(composedHtml, 'overlays', stack.html);
+        if (overlayInsert.inserted) {
+          composedHtml = overlayInsert.html;
         } else {
-          composedHtml += '\n' + stack.html;
+          const lastDiv = composedHtml.lastIndexOf('</div>');
+          if (lastDiv !== -1) {
+            composedHtml =
+              composedHtml.slice(0, lastDiv) +
+              '\n' +
+              stack.html +
+              '\n' +
+              composedHtml.slice(lastDiv);
+          } else {
+            composedHtml += '\n' + stack.html;
+          }
         }
       }
     } else {
-      const slotReplace = replaceSlot(composedHtml, slotTarget, stack.html);
+      const slotReplace = replaceAnySlot(composedHtml, candidateSlots, stack.html);
       if (slotReplace.replaced) {
         composedHtml = slotReplace.html;
       } else {
@@ -334,11 +486,14 @@ export function runComposeStack(input: ComposeStackInput): ComposeStackOutput {
       .map(s => s.id);
   }
 
+  const environment = input.environment ?? 'html';
+
   return {
     shellId: shell.id,
     headerId: resolvedHeaderId,
     appliedStacks,
     density,
+    environment,
     componentsUsed: Array.from(componentsUsed).sort(),
     fsmContracts: Array.from(fsmContracts).sort(),
     dependencies: {
