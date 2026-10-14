@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "id": "otp-04",
+  "role": "page",
+  "family": "auth",
+  "description": "Security modal dialog OTP verification with automatic submit on completion and cancel button.",
+  "tags": [
+    "auth",
+    "otp",
+    "modal",
+    "dialog"
+  ],
+  "root": "auth-root",
+  "fragments": [
+    {
+      "id": "auth-root",
+      "emmet": "main.flex.min-h-screen.items-center.justify-center.p-6.bg-muted-80[data-slot=auth-page]>div.card.w-full.max-w-md.rounded-xl.border.border-border.bg-card.p-6.shadow-2xl[data-fsm-recipe=auth-flow][data-fsm-state=idle]>(header.flex.flex-col.gap-2>h2.text-lg.font-semibold{Confirm High-Risk Action}+p.text-xs.text-muted-foreground{Please enter your one-time code to authorize this transfer.})+form.flex.flex-col.gap-4.pt-4>(div.flex.justify-center.gap-2>input.input.input-sm.size-10.text-center.font-mono.text-lg[type=text][maxlength=1]*6)+(div.flex.justify-end.gap-2.pt-2>button.btn.btn-sm.btn-ghost[type=button]{Cancel}+button.btn.btn-sm.btn-primary[type=submit]{Authorize})"
+    }
+  ],
+  "mounts": [],
+  "slots": [],
+  "ports": [],
+  "componentRefs": [
+    "card",
+    "button",
+    "input",
+    "label"
+  ],
+  "ruleRefs": [],
+  "dependencyBlockIds": [],
+  "layout": {
+    "frameRef": "auth-root"
+  },
+  "landmarks": {
+    "main": 1,
+    "primaryHeading": 1
+  },
+  "provenance": {
+    "origin": "authored",
+    "sourceHashes": {},
+    "mappingVersion": "1.0.0"
+  }
+}

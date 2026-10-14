@@ -329,16 +329,16 @@ function compatibleRoleFilter(
 }
 
 export const searchMacroBlocksInputShape = {
-  q: z.string().max(200).optional(),
-  role: z.string().max(LIMITS.roleMax).optional(),
-  family: z.string().max(LIMITS.idMax).optional(),
-  tag: z.string().max(LIMITS.tagMax).optional(),
-  designId: z.string().max(LIMITS.idMax).optional(),
-  pageId: z.string().max(LIMITS.idMax).optional(),
-  slotId: z.string().max(LIMITS.idMax).optional(),
-  parentNodeId: z.string().max(LIMITS.idMax).optional(),
-  limit: z.number().int().min(1).max(32).optional(),
-  cursor: z.string().max(LIMITS.cursorMaxBytes).optional(),
+  q: z.string().max(200).optional().describe('Full-text search query across macro block IDs, descriptions, and tag sets.'),
+  role: z.string().max(LIMITS.roleMax).optional().describe('Macro role filter (e.g. "navigation", "canvas", "header", "region", "form").'),
+  family: z.string().max(LIMITS.idMax).optional().describe('Block family filter (e.g. "layout", "workspace", "auth", "detail").'),
+  tag: z.string().max(LIMITS.tagMax).optional().describe('Specific functional tag to filter by (e.g. "sidebar", "data-table", "kpi").'),
+  designId: z.string().max(LIMITS.idMax).optional().describe('Active design session ID to search with session-specific block registry overrides.'),
+  pageId: z.string().max(LIMITS.idMax).optional().describe('Target page ID in the design session when scoping to a slot.'),
+  slotId: z.string().max(LIMITS.idMax).optional().describe('Target parent slot ID to filter compatible blocks by role.'),
+  parentNodeId: z.string().max(LIMITS.idMax).optional().describe('Parent node ID hosting the target slot.'),
+  limit: z.number().int().min(1).max(32).optional().describe('Maximum number of block manifests to return per page (1-32, default 10).'),
+  cursor: z.string().max(LIMITS.cursorMaxBytes).optional().describe('Pagination cursor returned from a previous search.'),
 };
 
 export async function handleSearchMacroBlocks(
@@ -386,11 +386,11 @@ export async function handleSearchMacroBlocks(
 }
 
 export const getMacroBlockInputShape = {
-  idOrRef: z.string().min(1).max(80).optional(),
-  id: z.string().min(1).max(80).optional(),
-  section: blockSectionSchema.optional(),
-  designId: z.string().max(LIMITS.idMax).optional(),
-  cursor: z.string().max(LIMITS.cursorMaxBytes).optional(),
+  idOrRef: z.string().min(1).max(80).optional().describe('Canonical macro block ID or SHA-256 content reference hash.'),
+  id: z.string().min(1).max(80).optional().describe('Alternative block identifier alias matching idOrRef.'),
+  section: blockSectionSchema.optional().describe('Specific block section to retrieve: "manifest", "fragments", "slots", "ports", "mounts", or "all". Defaults to "manifest".'),
+  designId: z.string().max(LIMITS.idMax).optional().describe('Active design session ID to retrieve session-bound block variants.'),
+  cursor: z.string().max(LIMITS.cursorMaxBytes).optional().describe('Pagination cursor for large section reads exceeding packet limits.'),
 };
 
 export async function handleGetMacroBlock(
@@ -422,15 +422,16 @@ export async function handleGetMacroBlock(
 }
 
 export const beginDesignInputShape = {
-  designId: z.string().min(1).max(LIMITS.idMax),
-  profile: z.string().min(1).max(64),
-  operationId: z.string().min(1).max(LIMITS.idMax),
+  designId: z.string().min(1).max(LIMITS.idMax).describe('Unique identifier for the new design session (slug format, e.g. "workspace-v1").'),
+  profile: z.string().min(1).max(64).describe('Target rhythm/scaffold profile or recipe alias (e.g. "workspace-dashboard", "executive-dashboard").'),
+  operationId: z.string().min(1).max(LIMITS.idMax).describe('Idempotency key for session creation.'),
   decisions: z
     .record(
       z.string().min(1).max(LIMITS.decisionKeyMax),
       z.union([z.string().max(LIMITS.scalarStringMax), z.number(), z.boolean(), z.null()]),
     )
-    .optional(),
+    .optional()
+    .describe('Initial architectural decisions for the session (e.g. density, stylePack, responsive breakpoints).'),
 };
 
 export async function handleBeginDesign(
@@ -469,12 +470,12 @@ export async function handleBeginDesign(
 }
 
 export const getDesignContextInputShape = {
-  view: contextViewSchema,
-  designId: z.string().max(LIMITS.idMax).optional(),
-  pageId: z.string().max(LIMITS.idMax).optional(),
-  nodeId: z.string().max(LIMITS.idMax).optional(),
-  revision: z.number().int().min(0).max(LIMITS.revisionMax).optional(),
-  cursor: z.string().max(LIMITS.cursorMaxBytes).optional(),
+  view: contextViewSchema.describe('Context perspective to retrieve: "sessions", "summary", "outline", "tree", "page", or "node".'),
+  designId: z.string().max(LIMITS.idMax).optional().describe('Target design session ID (required for all views except "sessions").'),
+  pageId: z.string().max(LIMITS.idMax).optional().describe('Target page ID within the design session (for "page" or "node" view).'),
+  nodeId: z.string().max(LIMITS.idMax).optional().describe('Target node ID within the page (for "node" view).'),
+  revision: z.number().int().min(0).max(LIMITS.revisionMax).optional().describe('Target design session revision to inspect (defaults to latest).'),
+  cursor: z.string().max(LIMITS.cursorMaxBytes).optional().describe('Pagination cursor for paginated context listings.'),
 };
 
 export async function handleGetDesignContext(
@@ -593,10 +594,10 @@ export async function handleGetDesignContext(
 }
 
 export const applyDesignPatchInputShape = {
-  designId: z.string().min(1).max(LIMITS.idMax),
-  expectedRevision: z.number().int().min(0).max(LIMITS.revisionMax),
-  operationId: z.string().min(1).max(LIMITS.idMax),
-  operations: z.array(softPatchOpSchema).min(1).max(LIMITS.operationsMax),
+  designId: z.string().min(1).max(LIMITS.idMax).describe('Identifier of the design session to mutate.'),
+  expectedRevision: z.number().int().min(0).max(LIMITS.revisionMax).describe('Expected current revision of the session to guarantee optimistic concurrency.'),
+  operationId: z.string().min(1).max(LIMITS.idMax).describe('Idempotency key for this patch transaction.'),
+  operations: z.array(softPatchOpSchema).min(1).max(LIMITS.operationsMax).describe('Ordered array of patch operations (add_node, remove_node, move_node, connect, disconnect, set_decision, set_binding).'),
 };
 
 export async function handleApplyDesignPatch(
@@ -644,11 +645,11 @@ export async function handleApplyDesignPatch(
 }
 
 export const validateDesignInputShape = {
-  designId: z.string().min(1).max(LIMITS.idMax),
-  revision: z.number().int().min(0).max(LIMITS.revisionMax).optional(),
-  pageId: z.string().max(LIMITS.idMax).optional(),
-  mode: z.enum(['draft', 'complete']).default('draft'),
-  cursor: z.string().max(LIMITS.cursorMaxBytes).optional(),
+  designId: z.string().min(1).max(LIMITS.idMax).describe('Identifier of the design session to validate.'),
+  revision: z.number().int().min(0).max(LIMITS.revisionMax).optional().describe('Specific revision to validate (defaults to latest).'),
+  pageId: z.string().max(LIMITS.idMax).optional().describe('Optionally scope validation to a single page within the session.'),
+  mode: z.enum(['draft', 'complete']).default('draft').describe('Validation strictness mode: "draft" allows unbound slots; "complete" enforces zero open slots and full port connectivity.'),
+  cursor: z.string().max(LIMITS.cursorMaxBytes).optional().describe('Pagination cursor if validation diagnostics exceed single response limit.'),
 };
 
 export async function handleValidateDesign(

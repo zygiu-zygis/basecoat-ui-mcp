@@ -1,0 +1,71 @@
+{
+  "schemaVersion": 1,
+  "id": "sidebar-11",
+  "role": "navigation",
+  "family": "layout",
+  "description": "A sidebar with a collapsible file tree.",
+  "tags": [
+    "navigation",
+    "sidebar",
+    "file-tree",
+    "explorer",
+    "tree"
+  ],
+  "root": "nav-root",
+  "fragments": [
+    {
+      "id": "nav-root",
+      "emmet": "aside.sidebar.w-64.border-e.border-border.bg-background.md:sticky.md:top-0.md:h-screen[aria-label=FileExplorer][data-slot=sidebar-host][data-component=sidebar][data-side=left]>nav.flex.h-full.flex-col.justify-between.p-2>(div.flex.flex-col.gap-2>div.flex.items-center.justify-between.p-2>span.text-xs.font-semibold.uppercase.text-muted-foreground{Explorer}+button.btn.btn-ghost.btn-xs{+}^div.flex.flex-col.gap-2[role=tree][aria-label=Files]>details.group[open]>summary.flex.items-center.gap-2.p-2.text-xs.cursor-pointer.hover:bg-muted{📁+span{src}+span{▾}}+div.flex.flex-col.gap-2.pl-4>details.group[open]>summary.flex.items-center.gap-2.p-2.text-xs.cursor-pointer.hover:bg-muted{📁+span{ui}}+div.flex.flex-col.gap-2.pl-4>a.flex.items-center.gap-2.p-2.text-xs.hover:bg-muted[data-state=active]{📄+button.tsx}^a.flex.items-center.gap-2.p-2.text-xs.hover:bg-muted{📄+index.ts}^a.flex.items-center.gap-2.p-2.text-xs.hover:bg-muted{📄+package.json})+(div.mt-auto.p-2.border-t.border-border>span.text-xs.text-muted-foreground{main})"
+    }
+  ],
+  "mounts": [],
+  "slots": [
+    {
+      "id": "user-footer",
+      "at": {
+        "fragment": "nav-root",
+        "name": "user-footer"
+      },
+      "accepts": [
+        "action"
+      ],
+      "min": 0,
+      "max": 1
+    }
+  ],
+  "ports": [
+    {
+      "id": "nav-toggle-in",
+      "at": {
+        "fragment": "nav-root",
+        "name": "nav-root"
+      },
+      "direction": "in",
+      "kind": "control",
+      "contract": "nav-toggle",
+      "minLinks": 0,
+      "maxLinks": 1,
+      "scope": "shell"
+    }
+  ],
+  "componentRefs": [
+    "sidebar",
+    "button"
+  ],
+  "ruleRefs": [],
+  "dependencyBlockIds": [],
+  "layout": {
+    "frameRef": "nav-root"
+  },
+  "landmarks": {
+    "main": 0,
+    "primaryHeading": 0
+  },
+  "provenance": {
+    "origin": "authored",
+    "sourceHashes": {
+      "upstream:sidebar-11": "e1900434fa050e7a25e15c24f122fb17f5257af9e3317dec330a73bb2688500e"
+    },
+    "mappingVersion": "1.0.0"
+  }
+}

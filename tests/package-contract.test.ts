@@ -85,6 +85,7 @@ test('npm package contains runtime, snapshots, source contracts, and no workflow
     'src/macros/registry.snapshot.json',
     'src/semantics/semantics.snapshot.json',
     'templates/cursor/basecoat-designer.mdc',
+    'skills/basecoat/SKILL.md',
     'README.md',
     'ARCHITECTURE.md',
     'LICENSE',
@@ -146,10 +147,14 @@ test('packed MCP bin starts offline from a read-only installed package tree', { 
     assert.deepEqual(toolNames, [
       'apply_design_patch',
       'basecoat_component_syntax',
+      'basecoat_compose_stack',
       'basecoat_creative_director',
+      'basecoat_get_chart_blueprint',
+      'basecoat_list_charts',
       'basecoat_page_architect',
       'basecoat_quality_inspector',
       'basecoat_rules_enforcer',
+      'basecoat_setup_config',
       'begin_design',
       'get_component_details',
       'get_component_html',
@@ -161,6 +166,7 @@ test('packed MCP bin starts offline from a read-only installed package tree', { 
       'search_macro_blocks',
       'validate_composition',
       'validate_design',
+      'validate_markup',
     ]);
     for (const tool of tools) {
       assert(tool.annotations, `${tool.name} missing annotations`);
@@ -168,15 +174,20 @@ test('packed MCP bin starts offline from a read-only installed package tree', { 
     }
 
     const { resources } = await client.listResources();
-    assert.deepEqual(
-      resources.map(resource => resource.uri).sort(),
-      [
-        'basecoat://design/rhythm',
-        'basecoat://design/theming',
-        'basecoat://integration/frameworks',
-        'basecoat://project/context',
-      ],
-    );
+    const resourceUris = new Set(resources.map(resource => resource.uri));
+    for (const required of [
+      'basecoat://design/rhythm',
+      'basecoat://design/theming',
+      'basecoat://integration/frameworks',
+      'basecoat://project/context',
+      'basecoat://skills/core',
+      'basecoat://skills/dashboard',
+      'basecoat://skills/charts',
+      'basecoat://skills/files/basecoat/rules/styling.md',
+    ]) {
+      assert(resourceUris.has(required), `packed resource missing: ${required}`);
+    }
+    assert(resources.length >= 95, `expected at least 95 packed resources, got ${resources.length}`);
 
     const rhythm = await client.callTool({
       name: 'get_rhythm_rules',

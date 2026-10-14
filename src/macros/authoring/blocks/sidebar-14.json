@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 1,
+  "id": "sidebar-14",
+  "role": "navigation",
+  "family": "layout",
+  "description": "A sidebar on the right.",
+  "tags": [
+    "navigation",
+    "sidebar",
+    "inspector",
+    "right-side",
+    "properties"
+  ],
+  "root": "nav-root",
+  "fragments": [
+    {
+      "id": "nav-root",
+      "emmet": "aside.sidebar.w-72.border-s.border-border.bg-background.md:sticky.md:top-0.md:h-screen[aria-label=Inspector][data-slot=sidebar-host][data-component=sidebar][data-side=right]>div.flex.h-full.flex-col.justify-between.p-4>(div.flex.flex-col.gap-4>div.flex.items-center.justify-between.border-b.border-border.pb-2>span.text-sm.font-semibold{Inspector}+button.btn.btn-ghost.btn-xs{✕}^div.flex.flex-col.gap-4[data-slot=inspector-properties]>div.flex.flex-col.gap-2>label.text-xs.font-medium{Component ID}+input.input.input-sm[value='hero-card'][readonly]^^div.flex.flex-col.gap-2>label.text-xs.font-medium{Layout}+select.select.select-sm>option{Center}+option{Left}+option{Right}^^div.flex.flex-col.gap-2>span.text-xs.font-semibold.text-muted-foreground{Metadata}+div.flex.justify-between.text-xs>span.text-muted-foreground{Modified}+span{2 mins ago})+(div.mt-auto.flex.flex-col.gap-2.pt-4.border-t.border-border>button.btn.btn-sm.btn-primary.w-full{Apply}+button.btn.btn-sm.btn-outline.w-full{Revert})"
+    }
+  ],
+  "mounts": [],
+  "slots": [
+    {
+      "id": "inspector-properties",
+      "at": {
+        "fragment": "nav-root",
+        "name": "inspector-properties"
+      },
+      "accepts": [
+        "details",
+        "settings"
+      ],
+      "min": 0,
+      "max": 1
+    }
+  ],
+  "ports": [
+    {
+      "id": "nav-toggle-in",
+      "at": {
+        "fragment": "nav-root",
+        "name": "nav-root"
+      },
+      "direction": "in",
+      "kind": "control",
+      "contract": "nav-toggle",
+      "minLinks": 0,
+      "maxLinks": 1,
+      "scope": "shell"
+    }
+  ],
+  "componentRefs": [
+    "sidebar",
+    "button",
+    "input",
+    "select"
+  ],
+  "ruleRefs": [],
+  "dependencyBlockIds": [],
+  "layout": {
+    "frameRef": "nav-root"
+  },
+  "landmarks": {
+    "main": 0,
+    "primaryHeading": 0
+  },
+  "provenance": {
+    "origin": "authored",
+    "sourceHashes": {
+      "upstream:sidebar-14": "29fa8a6f3284bdd4bf943af61d9fe1bf93b642d7fe47d9dfb7750ffb372acc36"
+    },
+    "mappingVersion": "1.0.0"
+  }
+}

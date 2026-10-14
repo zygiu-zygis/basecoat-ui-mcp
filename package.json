@@ -52,6 +52,7 @@
   "files": [
     "dist",
     "src",
+    "skills",
     "assets/logo.svg",
     "templates",
     ".cursor-plugin",
@@ -66,9 +67,10 @@
   "scripts": {
     "prepack": "npm run build",
     "build": "tsc -p tsconfig.json",
-    "check": "npm run typecheck && npm run compile:semantics:check && npm run compile:blocks:check && npm test && git diff --check origin/main",
+    "check": "npm run typecheck && npm run compile:semantics:check && npm run compile:blocks:check && npm run test:integrity && npm test && git diff --check origin/main",
     "start": "node dist/server/stdio.js",
     "test": "npm run build && node --import tsx --test tests/*.test.ts",
+    "test:integrity": "node scripts/verify-catalog-counts.mjs",
     "typecheck": "tsc -p tsconfig.check.json",
     "sync": "node --import tsx scripts/sync.ts",
     "compile:blocks": "node --import tsx scripts/compile-blocks.ts",

@@ -1,0 +1,83 @@
+{
+  "schemaVersion": 1,
+  "id": "sidebar-09",
+  "role": "navigation",
+  "family": "layout",
+  "description": "Collapsible nested sidebars.",
+  "tags": [
+    "navigation",
+    "sidebar",
+    "dual-sidebar",
+    "nested-sidebars",
+    "rail"
+  ],
+  "root": "nav-root",
+  "fragments": [
+    {
+      "id": "nav-root",
+      "emmet": "div.flex.h-screen.border-e.border-border[data-slot=sidebar-host][data-component=sidebar]>(aside.w-16.border-e.border-border.bg-muted.flex.flex-col.items-center.py-4.gap-4[data-slot=rail]>button.btn.btn-ghost.size-10.rounded-lg[data-state=active]{M}+button.btn.btn-ghost.size-10.rounded-lg{F}+button.btn.btn-ghost.size-10.rounded-lg{T}+div.mt-auto>div.size-8.rounded-full.bg-muted)+aside.w-64.bg-background.flex.flex-col.justify-between.p-4[data-slot=secondary-pane]>(div.flex.flex-col.gap-4>div.flex.items-center.justify-between>span.text-sm.font-semibold{Mailboxes}+button.btn.btn-ghost.btn-xs{+}^nav.flex.flex-col.gap-2>a.btn.btn-ghost.btn-sm.justify-start[data-state=active]{All Inboxes}+a.btn.btn-ghost.btn-sm.justify-start{Primary}+a.btn.btn-ghost.btn-sm.justify-start{Promotions}+a.btn.btn-ghost.btn-sm.justify-start{Updates}+a.btn.btn-ghost.btn-sm.justify-start{Spam})+(div.mt-auto.border-t.border-border.pt-2>span.text-xs.text-muted-foreground{Storage: 12GB of 15GB})"
+    }
+  ],
+  "mounts": [],
+  "slots": [
+    {
+      "id": "rail",
+      "at": {
+        "fragment": "nav-root",
+        "name": "rail"
+      },
+      "accepts": [
+        "action"
+      ],
+      "min": 0,
+      "max": 1
+    },
+    {
+      "id": "secondary-pane",
+      "at": {
+        "fragment": "nav-root",
+        "name": "secondary-pane"
+      },
+      "accepts": [
+        "navigation"
+      ],
+      "min": 0,
+      "max": 1
+    }
+  ],
+  "ports": [
+    {
+      "id": "nav-toggle-in",
+      "at": {
+        "fragment": "nav-root",
+        "name": "nav-root"
+      },
+      "direction": "in",
+      "kind": "control",
+      "contract": "nav-toggle",
+      "minLinks": 0,
+      "maxLinks": 1,
+      "scope": "shell"
+    }
+  ],
+  "componentRefs": [
+    "sidebar",
+    "button"
+  ],
+  "ruleRefs": [],
+  "dependencyBlockIds": [],
+  "layout": {
+    "frameRef": "nav-root"
+  },
+  "landmarks": {
+    "main": 0,
+    "primaryHeading": 0
+  },
+  "provenance": {
+    "origin": "authored",
+    "sourceHashes": {
+      "upstream:sidebar-09": "d18cbd0f669ceb13105c84e29ffb62911e7a3c95e04a19eac85fc0a259ec68ed"
+    },
+    "mappingVersion": "1.0.0"
+  }
+}

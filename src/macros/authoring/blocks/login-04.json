@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "id": "login-04",
+  "role": "page",
+  "family": "auth",
+  "description": "A login page with form and image.",
+  "tags": [
+    "auth",
+    "login",
+    "horizontal-card",
+    "marketing"
+  ],
+  "root": "auth-root",
+  "fragments": [
+    {
+      "id": "auth-root",
+      "emmet": "main.flex.min-h-screen.items-center.justify-center.p-6.bg-muted[data-slot=auth-page]>div.card.grid.w-full.max-w-3xl.grid-cols-1.overflow-hidden.rounded-xl.border.border-border.bg-card.shadow-xl.md:grid-cols-2[data-fsm-recipe=auth-flow][data-fsm-state=idle]>(div.p-8.flex.flex-col.justify-between>(header.flex.flex-col.gap-2>h1.text-2xl.font-semibold{Welcome back}+p.text-xs.text-muted-foreground{Sign in to access your dashboard})+form.flex.flex-col.gap-4.py-4>(div.flex.flex-col.gap-2>label.text-xs.font-medium{Email}+input.input.input-sm[type=email][required])+(div.flex.flex-col.gap-2>label.text-xs.font-medium{Password}+input.input.input-sm[type=password][required])+button.btn.btn-sm.btn-primary.w-full[type=submit]{Login})+footer.text-xs.text-muted-foreground>a.underline{Terms & Privacy})^div.hidden.bg-muted.p-8.flex.flex-col.justify-between.md:flex>span.text-sm.font-semibold{Acme Platform}+p.text-xs.text-muted-foreground{Fast, secure enterprise design system.}"
+    }
+  ],
+  "mounts": [],
+  "slots": [],
+  "ports": [],
+  "componentRefs": [
+    "card",
+    "button",
+    "input",
+    "label",
+    "field"
+  ],
+  "ruleRefs": [],
+  "dependencyBlockIds": [],
+  "layout": {
+    "frameRef": "auth-root"
+  },
+  "landmarks": {
+    "main": 1,
+    "primaryHeading": 1
+  },
+  "provenance": {
+    "origin": "authored",
+    "sourceHashes": {
+      "upstream:login-04": "e99ece2d6c1198df1e2ec91764afec11bfb783f08cb4f1b5b758090d91aa5ffb"
+    },
+    "mappingVersion": "1.0.0"
+  }
+}

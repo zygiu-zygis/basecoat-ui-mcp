@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "id": "otp-02",
+  "role": "page",
+  "family": "auth",
+  "description": "Two-column split security verification page with recovery code option and authenticator helper.",
+  "tags": [
+    "auth",
+    "otp",
+    "split-screen",
+    "recovery-code"
+  ],
+  "root": "auth-root",
+  "fragments": [
+    {
+      "id": "auth-root",
+      "emmet": "main.grid.min-h-screen.grid-cols-1.lg:grid-cols-2[data-slot=auth-page]>(div.relative.hidden.h-full.flex-col.justify-between.bg-muted.p-12.text-foreground.lg:flex>div.flex.items-center.gap-2.text-lg.font-medium>div.size-6.rounded.bg-primary+span{Security Check}^p.text-sm.text-muted-foreground{Protecting your workspace with hardware-backed encryption.})+div.flex.items-center.justify-center.p-6>div.mx-auto.flex.w-full.max-w-sm.flex-col.gap-6[data-fsm-recipe=auth-flow][data-fsm-state=idle]>(header.flex.flex-col.gap-2.text-center>h1.text-2xl.font-semibold{Enter OTP Code}+p.text-xs.text-muted-foreground{Open your authenticator app to view your code})+form.flex.flex-col.gap-4>(div.flex.justify-center.gap-2>input.input.input-sm.size-10.text-center.font-mono.text-lg[type=text][maxlength=1]*6)+button.btn.btn-sm.btn-primary.w-full[type=submit]{Verify Identity}+div.text-center.text-xs>a.text-primary.hover:underline[href='#recovery']{Use emergency backup code}"
+    }
+  ],
+  "mounts": [],
+  "slots": [],
+  "ports": [],
+  "componentRefs": [
+    "card",
+    "button",
+    "input",
+    "label"
+  ],
+  "ruleRefs": [],
+  "dependencyBlockIds": [],
+  "layout": {
+    "frameRef": "auth-root"
+  },
+  "landmarks": {
+    "main": 1,
+    "primaryHeading": 1
+  },
+  "provenance": {
+    "origin": "authored",
+    "sourceHashes": {},
+    "mappingVersion": "1.0.0"
+  }
+}

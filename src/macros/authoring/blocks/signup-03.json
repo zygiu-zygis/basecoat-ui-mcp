@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "id": "signup-03",
+  "role": "page",
+  "family": "auth",
+  "description": "A signup page with a muted background color.",
+  "tags": [
+    "auth",
+    "signup",
+    "card",
+    "oauth"
+  ],
+  "root": "auth-root",
+  "fragments": [
+    {
+      "id": "auth-root",
+      "emmet": "main.flex.min-h-screen.items-center.justify-center.bg-muted.p-6[data-slot=auth-page]>div.card.w-full.max-w-md.rounded-xl.border.border-border.bg-card.p-8.shadow-lg[data-fsm-recipe=auth-flow][data-fsm-state=idle]>(header.flex.flex-col.gap-2.text-center>h1.text-2xl.font-semibold{Sign Up for Acme}+p.text-xs.text-muted-foreground{Choose your preferred sign up method})+(div.grid.grid-cols-2.gap-4.pt-4>button.btn.btn-sm.btn-outline.w-full{GitHub}+button.btn.btn-sm.btn-outline.w-full{Google})+(div.relative.flex.items-center.justify-center.py-2>hr.w-full.border-border+span.bg-card.px-2.text-xs.text-muted-foreground{or})+form.flex.flex-col.gap-4>(div.flex.flex-col.gap-2>label.text-xs.font-medium{Email}+input.input.input-sm[type=email][required])+(div.flex.flex-col.gap-2>label.text-xs.font-medium{Password}+input.input.input-sm[type=password][required])+button.btn.btn-sm.btn-primary.w-full[type=submit]{Continue with Email}"
+    }
+  ],
+  "mounts": [],
+  "slots": [],
+  "ports": [],
+  "componentRefs": [
+    "card",
+    "button",
+    "input",
+    "label",
+    "field",
+    "checkbox"
+  ],
+  "ruleRefs": [],
+  "dependencyBlockIds": [],
+  "layout": {
+    "frameRef": "auth-root"
+  },
+  "landmarks": {
+    "main": 1,
+    "primaryHeading": 1
+  },
+  "provenance": {
+    "origin": "authored",
+    "sourceHashes": {
+      "upstream:signup-03": "aa1102b7d2c08a7d397092951e32d9d07ad82df0d0156be554dafddab0193358"
+    },
+    "mappingVersion": "1.0.0"
+  }
+}

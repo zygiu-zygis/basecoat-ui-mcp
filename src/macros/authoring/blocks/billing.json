@@ -1,0 +1,99 @@
+{
+  "schemaVersion": 1,
+  "id": "billing",
+  "role": "workspace",
+  "family": "workspace",
+  "description": "Subscription and billing workspace with active plan card, payment method list, invoice history table, and upgrade CTA.",
+  "tags": [
+    "workspace",
+    "billing",
+    "subscription",
+    "invoices",
+    "payment"
+  ],
+  "root": "content-frame",
+  "fragments": [
+    {
+      "id": "content-frame",
+      "emmet": "div.flex.flex-1.flex-col.gap-6.p-6[data-role=canvas][data-macro=canvas][data-block=billing]>div.flex.items-center.justify-between.gap-4[data-slot=header]>div.flex.flex-col.gap-2>h2.text-xl.font-semibold{Billing & Subscription}+p.text-xs.text-muted-foreground{Manage your plan, payment methods, and invoice history.}^button.btn.btn-sm.btn-primary{Upgrade Plan}^^div.grid.grid-cols-1.gap-6.md:grid-cols-2>div.card.p-6.border.border-border.rounded-xl.bg-card[data-slot=plan-card]>span.text-xs.text-muted-foreground{Current Plan}+h3.text-xl.font-semibold.pt-2{Pro Team Plan}+p.text-xs.text-muted-foreground{Renews on Nov 1, 2026}^div.card.p-6.border.border-border.rounded-xl.bg-card[data-slot=payment-card]>span.text-xs.text-muted-foreground{Payment Method}+h3.text-lg.font-semibold.pt-2{Visa ending in 4242}+button.btn.btn-xs.btn-outline.mt-2{Update}^^div[data-slot=invoice-table]"
+    }
+  ],
+  "mounts": [],
+  "slots": [
+    {
+      "id": "plan-card",
+      "at": {
+        "fragment": "content-frame",
+        "name": "plan-card"
+      },
+      "accepts": [
+        "card",
+        "workspace"
+      ],
+      "min": 0,
+      "max": 1
+    },
+    {
+      "id": "payment-card",
+      "at": {
+        "fragment": "content-frame",
+        "name": "payment-card"
+      },
+      "accepts": [
+        "card",
+        "workspace"
+      ],
+      "min": 0,
+      "max": 1
+    },
+    {
+      "id": "invoice-table",
+      "at": {
+        "fragment": "content-frame",
+        "name": "invoice-table"
+      },
+      "accepts": [
+        "table",
+        "data"
+      ],
+      "min": 0,
+      "max": 1
+    }
+  ],
+  "ports": [
+    {
+      "id": "main-in",
+      "at": {
+        "fragment": "content-frame",
+        "name": "content-frame"
+      },
+      "direction": "in",
+      "kind": "region",
+      "contract": "main",
+      "minLinks": 0,
+      "maxLinks": 1,
+      "scope": "shell"
+    }
+  ],
+  "componentRefs": [
+    "card",
+    "table",
+    "button"
+  ],
+  "ruleRefs": [],
+  "dependencyBlockIds": [
+    "data-table-rich"
+  ],
+  "layout": {
+    "frameRef": "content-frame"
+  },
+  "landmarks": {
+    "main": 1,
+    "primaryHeading": 0
+  },
+  "provenance": {
+    "origin": "authored",
+    "sourceHashes": {},
+    "mappingVersion": "1.0.0"
+  }
+}

@@ -1,0 +1,83 @@
+{
+  "schemaVersion": 1,
+  "id": "sidebar-04",
+  "role": "navigation",
+  "family": "layout",
+  "description": "A floating sidebar with submenus.",
+  "tags": [
+    "navigation",
+    "sidebar",
+    "floating",
+    "card-container"
+  ],
+  "root": "nav-root",
+  "fragments": [
+    {
+      "id": "nav-root",
+      "emmet": "aside.sidebar.p-4.md:sticky.md:top-0.md:h-screen[aria-label=Sidebar][data-slot=sidebar-host][data-component=sidebar][data-variant=floating][data-side=left]>div.card.flex.h-full.w-64.flex-col.justify-between.rounded-xl.border.border-border.bg-card.p-4.shadow-md>div.flex.flex-col.gap-4>(div.flex.items-center.gap-2.p-2.text-sm.font-semibold[data-slot=workspace-switcher]>div.size-6.rounded.bg-primary+span{Acme Inc})+nav.flex.flex-col.gap-2[aria-label=FloatingNav]>a.btn.btn-ghost.btn-sm.justify-start[data-state=active]{Dashboard}+a.btn.btn-ghost.btn-sm.justify-start{Analytics}+a.btn.btn-ghost.btn-sm.justify-start{Projects}+a.btn.btn-ghost.btn-sm.justify-start{Settings}^div.mt-auto.flex.flex-col.gap-2.border-t.border-border.pt-2[data-slot=user-footer]>div.flex.items-center.gap-2.p-2>div.size-8.rounded-full.bg-muted+div.flex-1.text-xs>span.font-medium{Alex}+span.text-muted-foreground{alex@acme.inc}"
+    }
+  ],
+  "mounts": [],
+  "slots": [
+    {
+      "id": "workspace-switcher",
+      "at": {
+        "fragment": "nav-root",
+        "name": "workspace-switcher"
+      },
+      "accepts": [
+        "action"
+      ],
+      "min": 0,
+      "max": 1
+    },
+    {
+      "id": "user-footer",
+      "at": {
+        "fragment": "nav-root",
+        "name": "user-footer"
+      },
+      "accepts": [
+        "action"
+      ],
+      "min": 0,
+      "max": 1
+    }
+  ],
+  "ports": [
+    {
+      "id": "nav-toggle-in",
+      "at": {
+        "fragment": "nav-root",
+        "name": "nav-root"
+      },
+      "direction": "in",
+      "kind": "control",
+      "contract": "nav-toggle",
+      "minLinks": 0,
+      "maxLinks": 1,
+      "scope": "shell"
+    }
+  ],
+  "componentRefs": [
+    "sidebar",
+    "button",
+    "card"
+  ],
+  "ruleRefs": [],
+  "dependencyBlockIds": [],
+  "layout": {
+    "frameRef": "nav-root"
+  },
+  "landmarks": {
+    "main": 0,
+    "primaryHeading": 0
+  },
+  "provenance": {
+    "origin": "authored",
+    "sourceHashes": {
+      "upstream:sidebar-04": "a56818b9490189a3bc18760d431cf8d3b81ba567b1ae3e839c8101442e14ac58"
+    },
+    "mappingVersion": "1.0.0"
+  }
+}

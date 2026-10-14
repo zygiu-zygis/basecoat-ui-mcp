@@ -5,10 +5,25 @@ import type { CompiledMacroRegistry, MacroBlock, Recipe } from '../macros/types.
 import { assertDetailBudget, MAX_DETAIL_BYTES, responseBytes } from './budget.js';
 
 export const pageArchitectInputShape = {
-  intent: z.string().max(200).optional(),
-  recipe: z.string().max(80).optional(),
-  block: z.string().max(80).optional(),
-  density: z.enum(['comfortable', 'compact']).optional(),
+  intent: z
+    .string()
+    .max(200)
+    .optional()
+    .describe('User or business intent for page scaffolding (e.g. "workspace-dashboard", "executive-dashboard", "sidebar-07", "data-table-detail", "auth-split-flow").'),
+  recipe: z
+    .string()
+    .max(80)
+    .optional()
+    .describe('Macro recipe identifier to resolve directly (e.g. "workspace-dashboard", "workspace-detail", "workspace-settings", "auth-split-flow").'),
+  block: z
+    .string()
+    .max(80)
+    .optional()
+    .describe('Specific block identifier or pattern to retrieve scaffold for (e.g. "sidebar-01".."sidebar-16", "dashboard-01".."dashboard-07", "login-01").'),
+  density: z
+    .enum(['comfortable', 'compact'])
+    .optional()
+    .describe('Visual layout density: "comfortable" (standard SaaS spacing, p-6/h-14) or "compact" (dense data tools, p-4/h-12).'),
 };
 
 export type PageArchitectInput = z.infer<z.ZodObject<typeof pageArchitectInputShape>>;
@@ -293,16 +308,20 @@ function buildBlockResult(
   }));
   const pad = density === 'compact' ? 'p-4 gap-4' : 'p-6 gap-6';
   const hdr = density === 'compact' ? 'h-12 px-4' : 'h-14 px-6';
-  const slotsComment = block.slots.slice(0, 3).map(s => `<!-- SLOT: ${s.id} -->`).join(' ');
+  const explicitSlotMarkers = block.slots.length > 0
+    ? block.slots.slice(0, 4).map(s => `<div data-slot="${s.id}"><!-- SLOT: ${s.id} --></div>`).join('')
+    : `<!-- SLOT: ${block.id} -->`;
   let scaffoldHtml: string;
-  if (block.id.includes('topbar') || block.id.includes('header')) {
-    scaffoldHtml = `<header class="flex ${hdr} items-center justify-between border-b border-border/60" data-slot="header"><nav aria-label="Breadcrumb" class="breadcrumb text-sm flex gap-1 text-muted-foreground"><span>App</span>/<span>Overview</span></nav><div class="flex gap-2" data-slot="header-actions">${slotsComment}</div></header>`;
-  } else if (block.id.includes('sidebar') || block.id.includes('nav')) {
-    scaffoldHtml = `<aside class="sidebar group/sidebar" data-state="expanded" data-collapsible="tooltip" data-fsm-recipe="navigation" data-fsm-state="expanded" aria-label="Primary navigation" data-slot="nav">${slotsComment}</aside>`;
+  if (block.id.startsWith('sidebar-') || block.id.includes('sidebar') || block.id.includes('nav')) {
+    scaffoldHtml = `<aside class="sidebar group/sidebar" data-state="expanded" data-collapsible="tooltip" data-fsm-recipe="navigation" data-fsm-state="expanded" aria-label="Primary navigation" data-slot="nav">${explicitSlotMarkers}</aside>`;
+  } else if (block.id.startsWith('dashboard-') || block.id.includes('dashboard')) {
+    scaffoldHtml = `<div class="flex flex-1 flex-col ${pad}" data-slot="${block.id}">${explicitSlotMarkers}</div>`;
+  } else if (block.id.includes('topbar') || block.id.includes('header')) {
+    scaffoldHtml = `<header class="flex ${hdr} items-center justify-between border-b border-border/60" data-slot="header"><nav aria-label="Breadcrumb" class="breadcrumb text-sm flex gap-1 text-muted-foreground"><span>App</span>/<span>Overview</span></nav><div class="flex gap-2" data-slot="header-actions">${explicitSlotMarkers}</div></header>`;
   } else if (block.id.includes('card') || block.id.includes('table') || block.id.includes('chart') || block.id.includes('metric')) {
-    scaffoldHtml = `<section class="card ${pad}" data-slot="${block.id}">${slotsComment}</section>`;
+    scaffoldHtml = `<section class="card ${pad}" data-slot="${block.id}">${explicitSlotMarkers}</section>`;
   } else {
-    scaffoldHtml = `<div class="${pad}" data-slot="${block.id}">${slotsComment}</div>`;
+    scaffoldHtml = `<div class="${pad}" data-slot="${block.id}">${explicitSlotMarkers}</div>`;
   }
 
   const containerContract = {
@@ -327,7 +346,7 @@ function buildBlockResult(
     slots: block.slots.slice(0, 4).map(s => ({ id: s.id, accepts: s.accepts })),
     components: block.componentRefs.slice(0, 4),
     landmarks: block.landmarks,
-    nextStep: 'Call basecoat_rules_enforcer and basecoat_creative_director before writing markup.',
+    nextStep: 'Call basecoat_compose_stack or basecoat_rules_enforcer next before assembling markup.',
   };
 
   if (responseBytes(blockResult) <= MAX_DETAIL_BYTES) {
@@ -340,6 +359,7 @@ function buildBlockResult(
     components: block.componentRefs.slice(0, 3),
     slotTopology: slotTopology.slice(0, 2),
     slots: block.slots.slice(0, 2).map(s => ({ id: s.id, accepts: s.accepts })),
+    nextStep: 'Call basecoat_compose_stack or basecoat_rules_enforcer next.',
   };
 
   if (responseBytes(blockResult) <= MAX_DETAIL_BYTES) {
@@ -352,6 +372,7 @@ function buildBlockResult(
     components: block.componentRefs.slice(0, 2),
     slotTopology: slotTopology.slice(0, 2),
     slots: block.slots.slice(0, 2).map(s => ({ id: s.id, accepts: s.accepts })),
+    nextStep: 'Call basecoat_compose_stack or basecoat_rules_enforcer next.',
   };
   assertDetailBudget(minimalBlockResult);
   return minimalBlockResult;

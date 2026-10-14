@@ -5,6 +5,7 @@ import { createHash } from 'node:crypto';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { execSync } from 'node:child_process';
 
 const ROOT = fileURLToPath(new URL('..', import.meta.url));
 const BLOCKS_DIR = join(ROOT, 'src/macros/authoring/blocks');
@@ -144,13 +145,49 @@ function normalizeSpacingUtilities(emmet) {
   );
 }
 
+const APPROVED_MACRO_SPACING = new Set(['0', '2', '4', '6', '8', '12']);
+const EMMET_SPACING =
+  /(?:^|[.>+*^()\[\],\s])(?:(?:sm|md|lg|xl|2xl):)?(!?)(-?)(gap(?:-[xy])?|space-[xy]|[mp][trblxyse]?)-(\d+(?:\.\d+)?)(?=[.>+*^()\[\],\s]|$)/g;
+
+function assertValidSpacing(emmet, blockId, fragId) {
+  EMMET_SPACING.lastIndex = 0;
+  let match;
+  while ((match = EMMET_SPACING.exec(emmet)) !== null) {
+    const family = match[3];
+    const val = match[4];
+    if (family.startsWith('m') && val === 'auto') continue;
+    if (!APPROVED_MACRO_SPACING.has(val)) {
+      throw new Error(`Block ${blockId} fragment ${fragId} uses unapproved spacing '${match[0]}'`);
+    }
+  }
+}
+
+function makeProvenance(upstream, blockId) {
+  if (upstream) {
+    return {
+      origin: 'authored',
+      sourceHashes: { [`upstream:${blockId}`]: sha256(upstream.raw) },
+      mappingVersion: '1.0.0',
+    };
+  }
+  return {
+    origin: 'authored',
+    sourceHashes: {},
+    mappingVersion: '1.0.0',
+  };
+}
+
 /**
  * Registry of Curated Authoring Blocks for Ingestion & Synthesis
  */
 function buildAuthoringBlocks(upstreamMap) {
   const blocks = {};
 
-  // 1. KPI/metric summary cards
+  // -------------------------------------------------------------------------
+  // 1. Core / Helper Authoring Blocks
+  // -------------------------------------------------------------------------
+
+  // KPI/metric summary cards
   blocks['metrics-summary'] = {
     schemaVersion: 1,
     id: 'metrics-summary',
@@ -183,7 +220,7 @@ function buildAuthoringBlocks(upstreamMap) {
     provenance: { origin: 'authored', sourceHashes: {}, mappingVersion: '1.0.0' },
   };
 
-  // 2. Data table with filter toolbar, bulk action bar, row action dropdown, sticky header & pagination
+  // Data table rich
   blocks['data-table-rich'] = {
     schemaVersion: 1,
     id: 'data-table-rich',
@@ -218,7 +255,7 @@ function buildAuthoringBlocks(upstreamMap) {
     provenance: { origin: 'authored', sourceHashes: {}, mappingVersion: '1.0.0' },
   };
 
-  // 3. Form field group with validation & loading FSM
+  // Form field group
   blocks['form-field-group'] = {
     schemaVersion: 1,
     id: 'form-field-group',
@@ -250,7 +287,511 @@ function buildAuthoringBlocks(upstreamMap) {
     provenance: { origin: 'authored', sourceHashes: {}, mappingVersion: '1.0.0' },
   };
 
-  // 4. shadcn v4 dashboard-01
+  // -------------------------------------------------------------------------
+  // 2. Sidebar Architectures (sidebar-01 through sidebar-16)
+  // -------------------------------------------------------------------------
+
+  // sidebar-01: Grouped navigation sidebar with <details> collapsible sections
+  blocks['sidebar-01'] = {
+    schemaVersion: 1,
+    id: 'sidebar-01',
+    role: 'navigation',
+    family: 'layout',
+    description: upstreamMap['sidebar-01']?.data?.description ?? 'Grouped navigation sidebar with <details> collapsible sections, workspace switcher header, and user profile footer.',
+    tags: ['navigation', 'sidebar', 'collapsible', 'details', 'grouped'],
+    root: 'nav-root',
+    fragments: [
+      {
+        id: 'nav-root',
+        emmet: 'aside.sidebar.w-64.border-e.border-border.bg-background.md:sticky.md:top-0.md:h-screen[aria-label=Sidebar][data-slot=sidebar-host][data-component=sidebar][data-side=left]>nav.flex.h-full.flex-col.justify-between.p-2>(div.flex.flex-col.gap-2>div.flex.items-center.gap-2.p-2.text-sm.font-semibold[data-slot=workspace-switcher]{Acme Corp}+details.group[open]>summary.flex.items-center.justify-between.p-2.text-xs.font-medium.cursor-pointer.hover:bg-muted{Getting Started+span{▾}}+div.flex.flex-col.gap-2.pl-4>a.btn.btn-ghost.btn-sm.justify-start[data-state=active]{Installation}+a.btn.btn-ghost.btn-sm.justify-start{Structure}^details.group[open]>summary.flex.items-center.justify-between.p-2.text-xs.font-medium.cursor-pointer.hover:bg-muted{Building Apps+span{▾}}+div.flex.flex-col.gap-2.pl-4>a.btn.btn-ghost.btn-sm.justify-start{Routing}+a.btn.btn-ghost.btn-sm.justify-start{Fetching})+(div.mt-auto.p-2.border-t.border-border[data-slot=user-footer]>div.flex.items-center.gap-2>div.size-8.rounded.bg-muted+div.text-xs>span.font-medium{shadcn})',
+      },
+    ],
+    mounts: [],
+    slots: [
+      { id: 'workspace-switcher', at: { fragment: 'nav-root', name: 'workspace-switcher' }, accepts: ['action'], min: 0, max: 1 },
+      { id: 'user-footer', at: { fragment: 'nav-root', name: 'user-footer' }, accepts: ['action'], min: 0, max: 1 },
+    ],
+    ports: [
+      { id: 'nav-toggle-in', at: { fragment: 'nav-root', name: 'nav-root' }, direction: 'in', kind: 'control', contract: 'nav-toggle', minLinks: 0, maxLinks: 1, scope: 'shell' },
+    ],
+    componentRefs: ['sidebar', 'button'],
+    ruleRefs: [],
+    dependencyBlockIds: [],
+    layout: { frameRef: 'nav-root' },
+    landmarks: { main: 0, primaryHeading: 0 },
+    provenance: makeProvenance(upstreamMap['sidebar-01'], 'sidebar-01'),
+  };
+
+  // sidebar-02: Collapsible sections sidebar with workspace switcher header
+  blocks['sidebar-02'] = {
+    schemaVersion: 1,
+    id: 'sidebar-02',
+    role: 'navigation',
+    family: 'layout',
+    description: upstreamMap['sidebar-02']?.data?.description ?? 'Collapsible sections sidebar with workspace switcher header, chevron triggers, and collapsible nav groups.',
+    tags: ['navigation', 'sidebar', 'collapsible-sections', 'workspace-switcher'],
+    root: 'nav-root',
+    fragments: [
+      {
+        id: 'nav-root',
+        emmet: 'aside.sidebar.w-64.border-e.border-border.bg-background.md:sticky.md:top-0.md:h-screen[aria-label=Sidebar][data-slot=sidebar-host][data-component=sidebar][data-side=left]>nav.flex.h-full.flex-col.justify-between.p-2>(div.flex.flex-col.gap-4>div.flex.items-center.justify-between.rounded-lg.border.border-border.p-2.text-sm.font-semibold[data-slot=workspace-switcher]>div.flex.items-center.gap-2>div.size-6.rounded.bg-primary+span{Workspace}^button.btn.btn-ghost.btn-xs{↕}^section.flex.flex-col.gap-2>span.px-2.text-xs.text-muted-foreground{Platform}+details.group[open]>summary.flex.items-center.justify-between.p-2.text-xs.cursor-pointer.hover:bg-muted{Playground+span{▾}}+div.flex.flex-col.gap-2.pl-4>a.btn.btn-ghost.btn-sm.justify-start{History}+a.btn.btn-ghost.btn-sm.justify-start{Starred}^^section.flex.flex-col.gap-2>span.px-2.text-xs.text-muted-foreground{Projects}+a.btn.btn-ghost.btn-sm.justify-start{Design}+a.btn.btn-ghost.btn-sm.justify-start{Sales})+(div.mt-auto.p-2.border-t.border-border[data-slot=user-footer]>div.flex.items-center.gap-2>div.size-8.rounded.bg-muted+div.text-xs>span.font-medium{User})',
+      },
+    ],
+    mounts: [],
+    slots: [
+      { id: 'workspace-switcher', at: { fragment: 'nav-root', name: 'workspace-switcher' }, accepts: ['action'], min: 0, max: 1 },
+      { id: 'user-footer', at: { fragment: 'nav-root', name: 'user-footer' }, accepts: ['action'], min: 0, max: 1 },
+    ],
+    ports: [
+      { id: 'nav-toggle-in', at: { fragment: 'nav-root', name: 'nav-root' }, direction: 'in', kind: 'control', contract: 'nav-toggle', minLinks: 0, maxLinks: 1, scope: 'shell' },
+    ],
+    componentRefs: ['sidebar', 'button'],
+    ruleRefs: [],
+    dependencyBlockIds: [],
+    layout: { frameRef: 'nav-root' },
+    landmarks: { main: 0, primaryHeading: 0 },
+    provenance: makeProvenance(upstreamMap['sidebar-02'], 'sidebar-02'),
+  };
+
+  // sidebar-03: Nested submenu navigation sidebar
+  blocks['sidebar-03'] = {
+    schemaVersion: 1,
+    id: 'sidebar-03',
+    role: 'navigation',
+    family: 'layout',
+    description: upstreamMap['sidebar-03']?.data?.description ?? 'Nested submenu navigation sidebar with multi-level hierarchical link trees and active state indicators.',
+    tags: ['navigation', 'sidebar', 'nested-submenu', 'hierarchy'],
+    root: 'nav-root',
+    fragments: [
+      {
+        id: 'nav-root',
+        emmet: 'aside.sidebar.w-64.border-e.border-border.bg-background.md:sticky.md:top-0.md:h-screen[aria-label=Sidebar][data-slot=sidebar-host][data-component=sidebar][data-side=left]>nav.flex.h-full.flex-col.justify-between.p-2>(div.flex.flex-col.gap-4>div.p-2.text-sm.font-semibold[data-slot=header]{Documentation}+div.flex.flex-col.gap-2[data-slot=nav-tree]>div.flex.flex-col.gap-2>span.px-2.text-xs.font-semibold{Core Concepts}+a.btn.btn-ghost.btn-sm.justify-start.pl-4[data-state=active]{Overview}+div.flex.flex-col.gap-2.pl-6>a.text-xs.text-muted-foreground.hover:underline{Architecture}+a.text-xs.text-muted-foreground.hover:underline{Rendering}^a.btn.btn-ghost.btn-sm.justify-start.pl-4{State Machines}+div.flex.flex-col.gap-2.pl-6>a.text-xs.text-muted-foreground.hover:underline{FSM Patterns}+a.text-xs.text-muted-foreground.hover:underline{Transitions}})+(div.mt-auto.p-2.border-t.border-border[data-slot=user-footer]>a.btn.btn-ghost.btn-sm.w-full.justify-start{Support})',
+      },
+    ],
+    mounts: [],
+    slots: [
+      { id: 'header', at: { fragment: 'nav-root', name: 'header' }, accepts: ['action', 'navigation'], min: 0, max: 1 },
+      { id: 'user-footer', at: { fragment: 'nav-root', name: 'user-footer' }, accepts: ['action'], min: 0, max: 1 },
+    ],
+    ports: [
+      { id: 'nav-toggle-in', at: { fragment: 'nav-root', name: 'nav-root' }, direction: 'in', kind: 'control', contract: 'nav-toggle', minLinks: 0, maxLinks: 1, scope: 'shell' },
+    ],
+    componentRefs: ['sidebar', 'button'],
+    ruleRefs: [],
+    dependencyBlockIds: [],
+    layout: { frameRef: 'nav-root' },
+    landmarks: { main: 0, primaryHeading: 0 },
+    provenance: makeProvenance(upstreamMap['sidebar-03'], 'sidebar-03'),
+  };
+
+  // sidebar-04: Floating sidebar with rounded card container (data-variant="floating")
+  blocks['sidebar-04'] = {
+    schemaVersion: 1,
+    id: 'sidebar-04',
+    role: 'navigation',
+    family: 'layout',
+    description: upstreamMap['sidebar-04']?.data?.description ?? 'Floating sidebar with rounded card container (data-variant="floating") detached from viewport edges.',
+    tags: ['navigation', 'sidebar', 'floating', 'card-container'],
+    root: 'nav-root',
+    fragments: [
+      {
+        id: 'nav-root',
+        emmet: 'aside.sidebar.p-4.md:sticky.md:top-0.md:h-screen[aria-label=Sidebar][data-slot=sidebar-host][data-component=sidebar][data-variant=floating][data-side=left]>div.card.flex.h-full.w-64.flex-col.justify-between.rounded-xl.border.border-border.bg-card.p-4.shadow-md>div.flex.flex-col.gap-4>(div.flex.items-center.gap-2.p-2.text-sm.font-semibold[data-slot=workspace-switcher]>div.size-6.rounded.bg-primary+span{Acme Inc})+nav.flex.flex-col.gap-2[aria-label=FloatingNav]>a.btn.btn-ghost.btn-sm.justify-start[data-state=active]{Dashboard}+a.btn.btn-ghost.btn-sm.justify-start{Analytics}+a.btn.btn-ghost.btn-sm.justify-start{Projects}+a.btn.btn-ghost.btn-sm.justify-start{Settings}^div.mt-auto.flex.flex-col.gap-2.border-t.border-border.pt-2[data-slot=user-footer]>div.flex.items-center.gap-2.p-2>div.size-8.rounded-full.bg-muted+div.flex-1.text-xs>span.font-medium{Alex}+span.text-muted-foreground{alex@acme.inc}',
+      },
+    ],
+    mounts: [],
+    slots: [
+      { id: 'workspace-switcher', at: { fragment: 'nav-root', name: 'workspace-switcher' }, accepts: ['action'], min: 0, max: 1 },
+      { id: 'user-footer', at: { fragment: 'nav-root', name: 'user-footer' }, accepts: ['action'], min: 0, max: 1 },
+    ],
+    ports: [
+      { id: 'nav-toggle-in', at: { fragment: 'nav-root', name: 'nav-root' }, direction: 'in', kind: 'control', contract: 'nav-toggle', minLinks: 0, maxLinks: 1, scope: 'shell' },
+    ],
+    componentRefs: ['sidebar', 'button', 'card'],
+    ruleRefs: [],
+    dependencyBlockIds: [],
+    layout: { frameRef: 'nav-root' },
+    landmarks: { main: 0, primaryHeading: 0 },
+    provenance: makeProvenance(upstreamMap['sidebar-04'], 'sidebar-04'),
+  };
+
+  // sidebar-05: Collapsible submenu tree sidebar with active state indicators
+  blocks['sidebar-05'] = {
+    schemaVersion: 1,
+    id: 'sidebar-05',
+    role: 'navigation',
+    family: 'layout',
+    description: upstreamMap['sidebar-05']?.data?.description ?? 'Collapsible submenu tree sidebar with active state indicators and nested route accordions.',
+    tags: ['navigation', 'sidebar', 'collapsible-tree', 'active-indicators'],
+    root: 'nav-root',
+    fragments: [
+      {
+        id: 'nav-root',
+        emmet: 'aside.sidebar.w-64.border-e.border-border.bg-background.md:sticky.md:top-0.md:h-screen[aria-label=Sidebar][data-slot=sidebar-host][data-component=sidebar][data-side=left]>nav.flex.h-full.flex-col.justify-between.p-2>(div.flex.flex-col.gap-2>div.p-2.text-sm.font-semibold[data-slot=brand]{Enterprise App}+div.flex.flex-col.gap-2[data-slot=menu-tree]>details.group[open]>summary.flex.items-center.justify-between.p-2.text-xs.font-medium.cursor-pointer.hover:bg-muted{Analytics+span{▾}}+div.flex.flex-col.gap-2.pl-4>a.btn.btn-ghost.btn-sm.justify-start.border-l-2.border-primary.pl-2[data-state=active]{Realtime}+a.btn.btn-ghost.btn-sm.justify-start.pl-2{Conversions}^details.group>summary.flex.items-center.justify-between.p-2.text-xs.font-medium.cursor-pointer.hover:bg-muted{Reports+span{▾}}+div.flex.flex-col.gap-2.pl-4>a.btn.btn-ghost.btn-sm.justify-start.pl-2{Scheduled}+a.btn.btn-ghost.btn-sm.justify-start.pl-2{Custom})+(div.mt-auto.p-2.border-t.border-border[data-slot=user-footer]>span.text-xs.text-muted-foreground{v2.4.0-stable})',
+      },
+    ],
+    mounts: [],
+    slots: [
+      { id: 'brand', at: { fragment: 'nav-root', name: 'brand' }, accepts: ['action'], min: 0, max: 1 },
+      { id: 'user-footer', at: { fragment: 'nav-root', name: 'user-footer' }, accepts: ['action'], min: 0, max: 1 },
+    ],
+    ports: [
+      { id: 'nav-toggle-in', at: { fragment: 'nav-root', name: 'nav-root' }, direction: 'in', kind: 'control', contract: 'nav-toggle', minLinks: 0, maxLinks: 1, scope: 'shell' },
+    ],
+    componentRefs: ['sidebar', 'button'],
+    ruleRefs: [],
+    dependencyBlockIds: [],
+    layout: { frameRef: 'nav-root' },
+    landmarks: { main: 0, primaryHeading: 0 },
+    provenance: makeProvenance(upstreamMap['sidebar-05'], 'sidebar-05'),
+  };
+
+  // sidebar-06: Compact sidebar with popover/dropdown submenus
+  blocks['sidebar-06'] = {
+    schemaVersion: 1,
+    id: 'sidebar-06',
+    role: 'navigation',
+    family: 'layout',
+    description: upstreamMap['sidebar-06']?.data?.description ?? 'Compact sidebar with popover/dropdown submenus for dense navigation spaces.',
+    tags: ['navigation', 'sidebar', 'compact', 'popover-menus', 'dropdown'],
+    root: 'nav-root',
+    fragments: [
+      {
+        id: 'nav-root',
+        emmet: 'aside.sidebar.w-56.border-e.border-border.bg-background.md:sticky.md:top-0.md:h-screen[aria-label=Sidebar][data-slot=sidebar-host][data-component=sidebar][data-variant=compact][data-side=left]>nav.flex.h-full.flex-col.justify-between.p-2>(div.flex.flex-col.gap-2>div.flex.items-center.gap-2.p-2[data-slot=header]>div.size-6.rounded.bg-primary+span.text-sm.font-semibold{SaaS Kit}+div.flex.flex-col.gap-2[data-slot=nav-items]>div.relative>button.btn.btn-ghost.btn-sm.w-full.justify-between[data-slot=menu-trigger][aria-haspopup=menu]{Workspace+span{▸}}+div.relative>button.btn.btn-ghost.btn-sm.w-full.justify-between[data-slot=menu-trigger][aria-haspopup=menu]{Billing+span{▸}}+div.relative>button.btn.btn-ghost.btn-sm.w-full.justify-between[data-slot=menu-trigger][aria-haspopup=menu]{Integrations+span{▸}})+(div.mt-auto.p-2.border-t.border-border[data-slot=user-footer]>button.btn.btn-ghost.btn-sm.w-full.justify-start{Settings})',
+      },
+    ],
+    mounts: [],
+    slots: [
+      { id: 'header', at: { fragment: 'nav-root', name: 'header' }, accepts: ['action'], min: 0, max: 1 },
+      { id: 'user-footer', at: { fragment: 'nav-root', name: 'user-footer' }, accepts: ['action'], min: 0, max: 1 },
+    ],
+    ports: [
+      { id: 'nav-toggle-in', at: { fragment: 'nav-root', name: 'nav-root' }, direction: 'in', kind: 'control', contract: 'nav-toggle', minLinks: 0, maxLinks: 1, scope: 'shell' },
+    ],
+    componentRefs: ['sidebar', 'button'],
+    ruleRefs: [],
+    dependencyBlockIds: [],
+    layout: { frameRef: 'nav-root' },
+    landmarks: { main: 0, primaryHeading: 0 },
+    provenance: makeProvenance(upstreamMap['sidebar-06'], 'sidebar-06'),
+  };
+
+  // sidebar-07: Collapsible icon-rail sidebar (data-collapsible="icon")
+  blocks['sidebar-07'] = {
+    schemaVersion: 1,
+    id: 'sidebar-07',
+    role: 'navigation',
+    family: 'layout',
+    description: upstreamMap['sidebar-07']?.data?.description ?? 'Collapsible icon-rail sidebar (data-collapsible="icon") with icon button targets, badge notifications, and profile avatar.',
+    tags: ['navigation', 'sidebar', 'icon-rail', 'collapsible-icon'],
+    root: 'nav-root',
+    fragments: [
+      {
+        id: 'nav-root',
+        emmet: 'aside.sidebar.w-16.border-e.border-border.bg-background.flex.flex-col.items-center.py-4.gap-4.md:sticky.md:top-0.md:h-screen[aria-label=Sidebar][data-slot=sidebar-host][data-component=sidebar][data-collapsible=icon][data-side=left]>(button.btn.btn-ghost.size-10.rounded-lg[data-slot=workspace-switcher][aria-label=Home]>div.size-6.rounded.bg-primary)+nav.flex.flex-col.gap-2.flex-1.items-center[aria-label=IconNav]>button.btn.btn-ghost.size-10.rounded-lg[data-state=active][aria-label=Dashboard]>span{D}^button.btn.btn-ghost.size-10.rounded-lg.relative[aria-label=Notifications]>span{N}+span.badge.size-4.rounded-full.p-0.text-xs{3}^button.btn.btn-ghost.size-10.rounded-lg[aria-label=Analytics]>span{A}^button.btn.btn-ghost.size-10.rounded-lg[aria-label=Settings]>span{S}^div.mt-auto.flex.flex-col.gap-2.items-center[data-slot=user-footer]>div.size-8.rounded-full.bg-muted[aria-label=User]',
+      },
+    ],
+    mounts: [],
+    slots: [
+      { id: 'workspace-switcher', at: { fragment: 'nav-root', name: 'workspace-switcher' }, accepts: ['action'], min: 0, max: 1 },
+      { id: 'user-footer', at: { fragment: 'nav-root', name: 'user-footer' }, accepts: ['action'], min: 0, max: 1 },
+    ],
+    ports: [
+      { id: 'nav-toggle-in', at: { fragment: 'nav-root', name: 'nav-root' }, direction: 'in', kind: 'control', contract: 'nav-toggle', minLinks: 0, maxLinks: 1, scope: 'shell' },
+    ],
+    componentRefs: ['sidebar', 'button'],
+    ruleRefs: [],
+    dependencyBlockIds: [],
+    layout: { frameRef: 'nav-root' },
+    landmarks: { main: 0, primaryHeading: 0 },
+    provenance: makeProvenance(upstreamMap['sidebar-07'], 'sidebar-07'),
+  };
+
+  // sidebar-08: Inset sidebar shell (data-variant="inset") with rounded main viewport
+  blocks['sidebar-08'] = {
+    schemaVersion: 1,
+    id: 'sidebar-08',
+    role: 'application-shell',
+    family: 'layout',
+    description: upstreamMap['sidebar-08']?.data?.description ?? 'Inset sidebar shell (data-variant="inset") with rounded main viewport canvas, header breadcrumb, and navigation slots.',
+    tags: ['shell', 'sidebar', 'inset', 'workspace-shell'],
+    root: 'shell-root',
+    fragments: [
+      {
+        id: 'shell-root',
+        emmet: 'div.flex.min-h-screen.w-full.bg-muted[data-slot=shell-root][data-component=sidebar][data-variant=inset]>aside.sidebar.w-64.bg-muted.p-4[data-slot=navigation][data-side=left]>div.flex.flex-col.gap-4>div.p-2.text-sm.font-semibold{Acme Inset}+nav.flex.flex-col.gap-2>a.btn.btn-ghost.btn-sm.justify-start[data-state=active]{Dashboard}+a.btn.btn-ghost.btn-sm.justify-start{Documents}+a.btn.btn-ghost.btn-sm.justify-start{Settings}^div.mt-auto.pt-4{User}^^div.flex.flex-1.flex-col.p-2>div.flex.flex-1.flex-col.rounded-xl.border.border-border.bg-background.shadow-sm[data-slot=inset-canvas]>header.flex.h-12.items-center.justify-between.border-b.border-border.px-4[data-slot=header]>span.text-sm.font-medium{Overview}^main.flex-1.overflow-auto.p-6[data-slot=content]',
+      },
+    ],
+    mounts: [],
+    slots: [
+      { id: 'navigation', at: { fragment: 'shell-root', name: 'navigation' }, accepts: ['navigation'], min: 1, max: 1 },
+      { id: 'header', at: { fragment: 'shell-root', name: 'header' }, accepts: ['header', 'workspace-header'], min: 1, max: 1 },
+      { id: 'content', at: { fragment: 'shell-root', name: 'content' }, accepts: ['dashboard', 'workspace', 'table'], min: 1, max: 1 },
+    ],
+    ports: [
+      { id: 'main-region', at: { fragment: 'shell-root', name: 'content' }, direction: 'out', kind: 'region', contract: 'main', minLinks: 0, maxLinks: 1, scope: 'shell' },
+    ],
+    componentRefs: ['sidebar', 'breadcrumb', 'button'],
+    ruleRefs: [],
+    dependencyBlockIds: [],
+    layout: { frameRef: 'shell-root', gutterBoundary: 'shell-root', scrollBoundary: 'shell-root' },
+    landmarks: { main: 1, primaryHeading: 0 },
+    provenance: makeProvenance(upstreamMap['sidebar-08'], 'sidebar-08'),
+  };
+
+  // sidebar-09: Dual nested sidebars (icon rail + secondary list pane)
+  blocks['sidebar-09'] = {
+    schemaVersion: 1,
+    id: 'sidebar-09',
+    role: 'navigation',
+    family: 'layout',
+    description: upstreamMap['sidebar-09']?.data?.description ?? 'Dual nested sidebars (icon rail primary sidebar + secondary collapsible folder list pane).',
+    tags: ['navigation', 'sidebar', 'dual-sidebar', 'nested-sidebars', 'rail'],
+    root: 'nav-root',
+    fragments: [
+      {
+        id: 'nav-root',
+        emmet: 'div.flex.h-screen.border-e.border-border[data-slot=sidebar-host][data-component=sidebar]>(aside.w-16.border-e.border-border.bg-muted.flex.flex-col.items-center.py-4.gap-4[data-slot=rail]>button.btn.btn-ghost.size-10.rounded-lg[data-state=active]{M}+button.btn.btn-ghost.size-10.rounded-lg{F}+button.btn.btn-ghost.size-10.rounded-lg{T}+div.mt-auto>div.size-8.rounded-full.bg-muted)+aside.w-64.bg-background.flex.flex-col.justify-between.p-4[data-slot=secondary-pane]>(div.flex.flex-col.gap-4>div.flex.items-center.justify-between>span.text-sm.font-semibold{Mailboxes}+button.btn.btn-ghost.btn-xs{+}^nav.flex.flex-col.gap-2>a.btn.btn-ghost.btn-sm.justify-start[data-state=active]{All Inboxes}+a.btn.btn-ghost.btn-sm.justify-start{Primary}+a.btn.btn-ghost.btn-sm.justify-start{Promotions}+a.btn.btn-ghost.btn-sm.justify-start{Updates}+a.btn.btn-ghost.btn-sm.justify-start{Spam})+(div.mt-auto.border-t.border-border.pt-2>span.text-xs.text-muted-foreground{Storage: 12GB of 15GB})',
+      },
+    ],
+    mounts: [],
+    slots: [
+      { id: 'rail', at: { fragment: 'nav-root', name: 'rail' }, accepts: ['action'], min: 0, max: 1 },
+      { id: 'secondary-pane', at: { fragment: 'nav-root', name: 'secondary-pane' }, accepts: ['navigation'], min: 0, max: 1 },
+    ],
+    ports: [
+      { id: 'nav-toggle-in', at: { fragment: 'nav-root', name: 'nav-root' }, direction: 'in', kind: 'control', contract: 'nav-toggle', minLinks: 0, maxLinks: 1, scope: 'shell' },
+    ],
+    componentRefs: ['sidebar', 'button'],
+    ruleRefs: [],
+    dependencyBlockIds: [],
+    layout: { frameRef: 'nav-root' },
+    landmarks: { main: 0, primaryHeading: 0 },
+    provenance: makeProvenance(upstreamMap['sidebar-09'], 'sidebar-09'),
+  };
+
+  // sidebar-10: Floating popover/drawer sidebar container
+  blocks['sidebar-10'] = {
+    schemaVersion: 1,
+    id: 'sidebar-10',
+    role: 'navigation',
+    family: 'layout',
+    description: upstreamMap['sidebar-10']?.data?.description ?? 'Floating popover/drawer sidebar container with trigger toggles and mobile slide-over sheet behavior.',
+    tags: ['navigation', 'sidebar', 'popover', 'drawer', 'slide-over'],
+    root: 'nav-root',
+    fragments: [
+      {
+        id: 'nav-root',
+        emmet: 'div[data-slot=sidebar-host][data-component=sidebar]>(div.flex.items-center.gap-2.p-4.border-b.border-border>button.btn.btn-sm.btn-outline[data-slot=toggle-btn]{Toggle Navigation}+span.text-sm.font-semibold{Project Space})+aside.fixed.inset-y-0.left-0.z-40.w-72.border-e.border-border.bg-background.p-4.shadow-xl.flex.flex-col.justify-between[data-slot=popover-sidebar][data-state=open]>(div.flex.flex-col.gap-4>div.flex.items-center.justify-between>span.text-sm.font-semibold{Quick Nav}+button.btn.btn-ghost.btn-xs{✕}^nav.flex.flex-col.gap-2>a.btn.btn-ghost.btn-sm.justify-start{Recent Files}+a.btn.btn-ghost.btn-sm.justify-start{Shared With Me}+a.btn.btn-ghost.btn-sm.justify-start{Archived})+(div.mt-auto.border-t.border-border.pt-2>span.text-xs.text-muted-foreground{Press Esc to close})',
+      },
+    ],
+    mounts: [],
+    slots: [
+      { id: 'toggle-btn', at: { fragment: 'nav-root', name: 'toggle-btn' }, accepts: ['action'], min: 0, max: 1 },
+      { id: 'popover-sidebar', at: { fragment: 'nav-root', name: 'popover-sidebar' }, accepts: ['navigation'], min: 0, max: 1 },
+    ],
+    ports: [
+      { id: 'nav-toggle-in', at: { fragment: 'nav-root', name: 'nav-root' }, direction: 'in', kind: 'control', contract: 'nav-toggle', minLinks: 0, maxLinks: 1, scope: 'shell' },
+    ],
+    componentRefs: ['sidebar', 'button'],
+    ruleRefs: [],
+    dependencyBlockIds: [],
+    layout: { frameRef: 'nav-root' },
+    landmarks: { main: 0, primaryHeading: 0 },
+    provenance: makeProvenance(upstreamMap['sidebar-10'], 'sidebar-10'),
+  };
+
+  // sidebar-11: File tree directory browser sidebar (role="tree")
+  blocks['sidebar-11'] = {
+    schemaVersion: 1,
+    id: 'sidebar-11',
+    role: 'navigation',
+    family: 'layout',
+    description: upstreamMap['sidebar-11']?.data?.description ?? 'File tree directory browser sidebar (role="tree") with expandable directories and file node items.',
+    tags: ['navigation', 'sidebar', 'file-tree', 'explorer', 'tree'],
+    root: 'nav-root',
+    fragments: [
+      {
+        id: 'nav-root',
+        emmet: 'aside.sidebar.w-64.border-e.border-border.bg-background.md:sticky.md:top-0.md:h-screen[aria-label=FileExplorer][data-slot=sidebar-host][data-component=sidebar][data-side=left]>nav.flex.h-full.flex-col.justify-between.p-2>(div.flex.flex-col.gap-2>div.flex.items-center.justify-between.p-2>span.text-xs.font-semibold.uppercase.text-muted-foreground{Explorer}+button.btn.btn-ghost.btn-xs{+}^div.flex.flex-col.gap-2[role=tree][aria-label=Files]>details.group[open]>summary.flex.items-center.gap-2.p-2.text-xs.cursor-pointer.hover:bg-muted{📁+span{src}+span{▾}}+div.flex.flex-col.gap-2.pl-4>details.group[open]>summary.flex.items-center.gap-2.p-2.text-xs.cursor-pointer.hover:bg-muted{📁+span{ui}}+div.flex.flex-col.gap-2.pl-4>a.flex.items-center.gap-2.p-2.text-xs.hover:bg-muted[data-state=active]{📄+button.tsx}^a.flex.items-center.gap-2.p-2.text-xs.hover:bg-muted{📄+index.ts}^a.flex.items-center.gap-2.p-2.text-xs.hover:bg-muted{📄+package.json})+(div.mt-auto.p-2.border-t.border-border>span.text-xs.text-muted-foreground{main})',
+      },
+    ],
+    mounts: [],
+    slots: [
+      { id: 'user-footer', at: { fragment: 'nav-root', name: 'user-footer' }, accepts: ['action'], min: 0, max: 1 },
+    ],
+    ports: [
+      { id: 'nav-toggle-in', at: { fragment: 'nav-root', name: 'nav-root' }, direction: 'in', kind: 'control', contract: 'nav-toggle', minLinks: 0, maxLinks: 1, scope: 'shell' },
+    ],
+    componentRefs: ['sidebar', 'button'],
+    ruleRefs: [],
+    dependencyBlockIds: [],
+    layout: { frameRef: 'nav-root' },
+    landmarks: { main: 0, primaryHeading: 0 },
+    provenance: makeProvenance(upstreamMap['sidebar-11'], 'sidebar-11'),
+  };
+
+  // sidebar-12: Calendar & schedule sidebar
+  blocks['sidebar-12'] = {
+    schemaVersion: 1,
+    id: 'sidebar-12',
+    role: 'navigation',
+    family: 'layout',
+    description: upstreamMap['sidebar-12']?.data?.description ?? 'Calendar & schedule sidebar with inline mini monthly calendar widget, upcoming events list, and quick add action.',
+    tags: ['navigation', 'sidebar', 'calendar', 'schedule', 'events'],
+    root: 'nav-root',
+    fragments: [
+      {
+        id: 'nav-root',
+        emmet: 'aside.sidebar.w-72.border-e.border-border.bg-background.md:sticky.md:top-0.md:h-screen[aria-label=CalendarSidebar][data-slot=sidebar-host][data-component=sidebar][data-side=left]>nav.flex.h-full.flex-col.justify-between.p-4>(div.flex.flex-col.gap-4>div.flex.items-center.justify-between>span.text-sm.font-semibold{Schedule}+button.btn.btn-sm.btn-primary{+ Event}^div.rounded-lg.border.border-border.p-2[data-slot=calendar-widget]>div.flex.items-center.justify-between.p-2.text-xs.font-semibold{<span>Oct 2026</span>+div.flex.gap-2>button.btn.btn-ghost.btn-xs{‹}+button.btn.btn-ghost.btn-xs{›}}^div.grid.grid-cols-7.gap-2.text-center.text-xs>span.text-muted-foreground*7{D}+span.p-2.hover:bg-muted*14{$}^^div.flex.flex-col.gap-2[data-slot=upcoming-events]>span.text-xs.font-semibold.text-muted-foreground{Upcoming}+div.flex.flex-col.gap-2.rounded-lg.border.border-border.p-2.text-xs>strong{Sprint Review}+span.text-muted-foreground{10:00 AM})+(div.mt-auto.pt-2.border-t.border-border>span.text-xs.text-muted-foreground{UTC+3})',
+      },
+    ],
+    mounts: [],
+    slots: [
+      { id: 'calendar-widget', at: { fragment: 'nav-root', name: 'calendar-widget' }, accepts: ['details'], min: 0, max: 1 },
+      { id: 'upcoming-events', at: { fragment: 'nav-root', name: 'upcoming-events' }, accepts: ['workspace'], min: 0, max: 1 },
+    ],
+    ports: [
+      { id: 'nav-toggle-in', at: { fragment: 'nav-root', name: 'nav-root' }, direction: 'in', kind: 'control', contract: 'nav-toggle', minLinks: 0, maxLinks: 1, scope: 'shell' },
+    ],
+    componentRefs: ['sidebar', 'button'],
+    ruleRefs: [],
+    dependencyBlockIds: [],
+    layout: { frameRef: 'nav-root' },
+    landmarks: { main: 0, primaryHeading: 0 },
+    provenance: makeProvenance(upstreamMap['sidebar-12'], 'sidebar-12'),
+  };
+
+  // sidebar-13: Settings dialog modal with embedded sidebar navigation
+  blocks['sidebar-13'] = {
+    schemaVersion: 1,
+    id: 'sidebar-13',
+    role: 'details',
+    family: 'workspace',
+    description: upstreamMap['sidebar-13']?.data?.description ?? 'Settings dialog modal with embedded sidebar navigation, category tabs, and active settings panel.',
+    tags: ['modal', 'dialog', 'sidebar', 'settings', 'embedded-nav'],
+    root: 'dialog-root',
+    fragments: [
+      {
+        id: 'dialog-root',
+        emmet: 'div.card.flex.w-full.max-w-4xl.overflow-hidden.rounded-xl.border.border-border.bg-card.shadow-2xl[data-slot=settings-dialog][data-component=sidebar]>(aside.w-48.border-e.border-border.bg-muted.p-4.flex.flex-col.justify-between[data-slot=settings-nav]>div.flex.flex-col.gap-2>span.text-xs.font-semibold.uppercase.text-muted-foreground.px-2{Settings}+a.btn.btn-ghost.btn-sm.justify-start[data-state=active]{General}+a.btn.btn-ghost.btn-sm.justify-start{Account}+a.btn.btn-ghost.btn-sm.justify-start{Billing}^div.mt-auto>button.btn.btn-ghost.btn-xs.w-full.justify-start{Log Out})+section.flex.flex-1.flex-col.gap-4.p-6[data-slot=settings-content]>(header.flex.flex-col.gap-2.border-b.border-border.pb-4>h2.text-lg.font-semibold{General Settings}+p.text-xs.text-muted-foreground{Manage workspace details.})+div.flex.flex-col.gap-4[data-slot=settings-fields]>div.flex.flex-col.gap-2>label.text-xs.font-medium{Workspace Name}+input.input.input-sm[value=\'Acme Labs\']^footer.mt-auto.flex.justify-end.gap-2.pt-4.border-t.border-border>button.btn.btn-sm.btn-ghost{Cancel}+button.btn.btn-sm.btn-primary{Save Changes})',
+      },
+    ],
+    mounts: [],
+    slots: [
+      { id: 'settings-nav', at: { fragment: 'dialog-root', name: 'settings-nav' }, accepts: ['navigation'], min: 0, max: 1 },
+      { id: 'settings-content', at: { fragment: 'dialog-root', name: 'settings-content' }, accepts: ['form', 'workspace'], min: 0, max: 1 },
+    ],
+    ports: [],
+    componentRefs: ['sidebar', 'button', 'input'],
+    ruleRefs: [],
+    dependencyBlockIds: [],
+    layout: { frameRef: 'dialog-root' },
+    landmarks: { main: 0, primaryHeading: 0 },
+    provenance: makeProvenance(upstreamMap['sidebar-13'], 'sidebar-13'),
+  };
+
+  // sidebar-14: Right-hand inspector sidebar (data-side="right")
+  blocks['sidebar-14'] = {
+    schemaVersion: 1,
+    id: 'sidebar-14',
+    role: 'navigation',
+    family: 'layout',
+    description: upstreamMap['sidebar-14']?.data?.description ?? 'Right-hand inspector sidebar (data-side="right") with property sheet controls, metadata inspector, and action buttons.',
+    tags: ['navigation', 'sidebar', 'inspector', 'right-side', 'properties'],
+    root: 'nav-root',
+    fragments: [
+      {
+        id: 'nav-root',
+        emmet: 'aside.sidebar.w-72.border-s.border-border.bg-background.md:sticky.md:top-0.md:h-screen[aria-label=Inspector][data-slot=sidebar-host][data-component=sidebar][data-side=right]>div.flex.h-full.flex-col.justify-between.p-4>(div.flex.flex-col.gap-4>div.flex.items-center.justify-between.border-b.border-border.pb-2>span.text-sm.font-semibold{Inspector}+button.btn.btn-ghost.btn-xs{✕}^div.flex.flex-col.gap-4[data-slot=inspector-properties]>div.flex.flex-col.gap-2>label.text-xs.font-medium{Component ID}+input.input.input-sm[value=\'hero-card\'][readonly]^^div.flex.flex-col.gap-2>label.text-xs.font-medium{Layout}+select.select.select-sm>option{Center}+option{Left}+option{Right}^^div.flex.flex-col.gap-2>span.text-xs.font-semibold.text-muted-foreground{Metadata}+div.flex.justify-between.text-xs>span.text-muted-foreground{Modified}+span{2 mins ago})+(div.mt-auto.flex.flex-col.gap-2.pt-4.border-t.border-border>button.btn.btn-sm.btn-primary.w-full{Apply}+button.btn.btn-sm.btn-outline.w-full{Revert})',
+      },
+    ],
+    mounts: [],
+    slots: [
+      { id: 'inspector-properties', at: { fragment: 'nav-root', name: 'inspector-properties' }, accepts: ['details', 'settings'], min: 0, max: 1 },
+    ],
+    ports: [
+      { id: 'nav-toggle-in', at: { fragment: 'nav-root', name: 'nav-root' }, direction: 'in', kind: 'control', contract: 'nav-toggle', minLinks: 0, maxLinks: 1, scope: 'shell' },
+    ],
+    componentRefs: ['sidebar', 'button', 'input', 'select'],
+    ruleRefs: [],
+    dependencyBlockIds: [],
+    layout: { frameRef: 'nav-root' },
+    landmarks: { main: 0, primaryHeading: 0 },
+    provenance: makeProvenance(upstreamMap['sidebar-14'], 'sidebar-14'),
+  };
+
+  // sidebar-15: Dual left + right sidebars surrounding main workspace canvas
+  blocks['sidebar-15'] = {
+    schemaVersion: 1,
+    id: 'sidebar-15',
+    role: 'application-shell',
+    family: 'layout',
+    description: upstreamMap['sidebar-15']?.data?.description ?? 'Dual left + right sidebars surrounding main workspace canvas with center viewport and multi-panel inspector.',
+    tags: ['shell', 'sidebar', 'dual-sidebars', 'left-right', 'workspace'],
+    root: 'shell-root',
+    fragments: [
+      {
+        id: 'shell-root',
+        emmet: 'div.flex.min-h-screen.w-full[data-slot=shell-root][data-component=sidebar]>(aside.sidebar.w-64.border-e.border-border.bg-background.p-4[data-slot=nav-left][data-side=left]>div.flex.flex-col.gap-4>span.text-sm.font-semibold{Left Nav}+nav.flex.flex-col.gap-2>a.btn.btn-ghost.btn-sm.justify-start{Files}+a.btn.btn-ghost.btn-sm.justify-start{Assets})+div.flex.flex-1.flex-col.min-w-0>header.flex.h-12.items-center.border-b.border-border.px-4[data-slot=header]>span.text-sm.font-medium{Editor Workspace}^main.flex-1.overflow-auto.p-6[data-slot=content]^^aside.sidebar.w-64.border-s.border-border.bg-background.p-4[data-slot=nav-right][data-side=right]>div.flex.flex-col.gap-4>span.text-sm.font-semibold{Right Panel}+div.flex.flex-col.gap-2>span.text-xs.text-muted-foreground{Properties}',
+      },
+    ],
+    mounts: [],
+    slots: [
+      { id: 'nav-left', at: { fragment: 'shell-root', name: 'nav-left' }, accepts: ['navigation'], min: 1, max: 1 },
+      { id: 'header', at: { fragment: 'shell-root', name: 'header' }, accepts: ['header', 'workspace-header'], min: 1, max: 1 },
+      { id: 'content', at: { fragment: 'shell-root', name: 'content' }, accepts: ['dashboard', 'workspace', 'table'], min: 1, max: 1 },
+      { id: 'nav-right', at: { fragment: 'shell-root', name: 'nav-right' }, accepts: ['navigation', 'details'], min: 1, max: 1 },
+    ],
+    ports: [
+      { id: 'main-region', at: { fragment: 'shell-root', name: 'content' }, direction: 'out', kind: 'region', contract: 'main', minLinks: 0, maxLinks: 1, scope: 'shell' },
+    ],
+    componentRefs: ['sidebar', 'button'],
+    ruleRefs: [],
+    dependencyBlockIds: [],
+    layout: { frameRef: 'shell-root', gutterBoundary: 'shell-root', scrollBoundary: 'shell-root' },
+    landmarks: { main: 1, primaryHeading: 0 },
+    provenance: makeProvenance(upstreamMap['sidebar-15'], 'sidebar-15'),
+  };
+
+  // sidebar-16: Sticky global top header with collapsible sidebar below
+  blocks['sidebar-16'] = {
+    schemaVersion: 1,
+    id: 'sidebar-16',
+    role: 'application-shell',
+    family: 'layout',
+    description: upstreamMap['sidebar-16']?.data?.description ?? 'Sticky global top header with collapsible sidebar below and responsive layout grid.',
+    tags: ['shell', 'sidebar', 'topbar-header', 'collapsible-sidebar'],
+    root: 'shell-root',
+    fragments: [
+      {
+        id: 'shell-root',
+        emmet: 'div.flex.min-h-screen.flex-col.w-full[data-slot=shell-root][data-component=sidebar]>(header.sticky.top-0.z-30.flex.h-12.items-center.justify-between.border-b.border-border.bg-background.px-4[data-slot=top-header]>div.flex.items-center.gap-2>button.btn.btn-ghost.btn-xs[data-slot=sidebar-toggle]{☰}+span.text-sm.font-semibold{Global Platform}^div.flex.items-center.gap-2>div.size-8.rounded-full.bg-muted)+div.flex.flex-1.min-h-0>aside.sidebar.w-64.border-e.border-border.bg-background.p-4[data-slot=navigation][data-side=left]>nav.flex.flex-col.gap-2>a.btn.btn-ghost.btn-sm.justify-start[data-state=active]{Dashboard}+a.btn.btn-ghost.btn-sm.justify-start{Settings}^^main.flex-1.overflow-auto.p-6[data-slot=content]',
+      },
+    ],
+    mounts: [],
+    slots: [
+      { id: 'top-header', at: { fragment: 'shell-root', name: 'top-header' }, accepts: ['header'], min: 0, max: 1 },
+      { id: 'navigation', at: { fragment: 'shell-root', name: 'navigation' }, accepts: ['navigation'], min: 1, max: 1 },
+      { id: 'content', at: { fragment: 'shell-root', name: 'content' }, accepts: ['dashboard', 'workspace', 'table'], min: 1, max: 1 },
+    ],
+    ports: [
+      { id: 'main-region', at: { fragment: 'shell-root', name: 'content' }, direction: 'out', kind: 'region', contract: 'main', minLinks: 0, maxLinks: 1, scope: 'shell' },
+    ],
+    componentRefs: ['sidebar', 'button'],
+    ruleRefs: [],
+    dependencyBlockIds: [],
+    layout: { frameRef: 'shell-root', gutterBoundary: 'shell-root', scrollBoundary: 'shell-root' },
+    landmarks: { main: 1, primaryHeading: 0 },
+    provenance: makeProvenance(upstreamMap['sidebar-16'], 'sidebar-16'),
+  };
+
+  // -------------------------------------------------------------------------
+  // 3. Dashboards (dashboard-01 through dashboard-07)
+  // -------------------------------------------------------------------------
+
+  // dashboard-01
   const d01Upstream = upstreamMap['dashboard-01'];
   blocks['dashboard-01'] = {
     schemaVersion: 1,
@@ -289,7 +830,7 @@ function buildAuthoringBlocks(upstreamMap) {
       : { origin: 'authored', sourceHashes: {}, mappingVersion: '1.0.0' },
   };
 
-  // 5. shadcn v4 dashboard-02
+  // dashboard-02
   blocks['dashboard-02'] = {
     schemaVersion: 1,
     id: 'dashboard-02',
@@ -323,7 +864,7 @@ function buildAuthoringBlocks(upstreamMap) {
     provenance: { origin: 'authored', sourceHashes: {}, mappingVersion: '1.0.0' },
   };
 
-  // 6. shadcn v4 dashboard-03
+  // dashboard-03
   blocks['dashboard-03'] = {
     schemaVersion: 1,
     id: 'dashboard-03',
@@ -355,7 +896,7 @@ function buildAuthoringBlocks(upstreamMap) {
     provenance: { origin: 'authored', sourceHashes: {}, mappingVersion: '1.0.0' },
   };
 
-  // 7. shadcn v4 dashboard-04
+  // dashboard-04
   blocks['dashboard-04'] = {
     schemaVersion: 1,
     id: 'dashboard-04',
@@ -386,7 +927,7 @@ function buildAuthoringBlocks(upstreamMap) {
     provenance: { origin: 'authored', sourceHashes: {}, mappingVersion: '1.0.0' },
   };
 
-  // 8. shadcn v4 dashboard-05
+  // dashboard-05
   blocks['dashboard-05'] = {
     schemaVersion: 1,
     id: 'dashboard-05',
@@ -418,7 +959,7 @@ function buildAuthoringBlocks(upstreamMap) {
     provenance: { origin: 'authored', sourceHashes: {}, mappingVersion: '1.0.0' },
   };
 
-  // 9. shadcn v4 dashboard-06
+  // dashboard-06
   blocks['dashboard-06'] = {
     schemaVersion: 1,
     id: 'dashboard-06',
@@ -451,7 +992,7 @@ function buildAuthoringBlocks(upstreamMap) {
     provenance: { origin: 'authored', sourceHashes: {}, mappingVersion: '1.0.0' },
   };
 
-  // 10. shadcn v4 dashboard-07
+  // dashboard-07
   blocks['dashboard-07'] = {
     schemaVersion: 1,
     id: 'dashboard-07',
@@ -484,7 +1025,11 @@ function buildAuthoringBlocks(upstreamMap) {
     provenance: { origin: 'authored', sourceHashes: {}, mappingVersion: '1.0.0' },
   };
 
-  // 11. shadcn v4 translated authentication block
+  // -------------------------------------------------------------------------
+  // 4. Auth Blocks (login-01..05, signup-01..05, otp-01..05, authentication)
+  // -------------------------------------------------------------------------
+
+  // authentication
   const loginUpstream = upstreamMap['login-01'];
   blocks['authentication'] = {
     schemaVersion: 1,
@@ -523,69 +1068,401 @@ function buildAuthoringBlocks(upstreamMap) {
       : { origin: 'authored', sourceHashes: {}, mappingVersion: '1.0.0' },
   };
 
-  // 12. shadcn v4 translated forms block
-  blocks['forms'] = {
+  // login-01
+  blocks['login-01'] = {
     schemaVersion: 1,
-    id: 'forms',
-    role: 'form',
-    family: 'form',
-    description: 'Shadcn new-york-v4 form layout with multi-section inputs, select dropdowns, toggles, and validation feedback.',
-    tags: ['forms', 'new-york-v4', 'profile', 'validation'],
-    root: 'forms-root',
+    id: 'login-01',
+    role: 'page',
+    family: 'auth',
+    description: upstreamMap['login-01']?.data?.description ?? 'Simple centered card login form with email, password, and sign-in button.',
+    tags: ['auth', 'login', 'simple', 'card'],
+    root: 'auth-root',
     fragments: [
       {
-        id: 'forms-root',
-        emmet: 'section.flex.flex-col.gap-6.rounded-xl.border.border-border.bg-card.p-6.text-card-foreground.shadow-sm[data-component=forms][data-slot=form-container]>(header.flex.flex-col.gap-2>h2.text-lg.font-semibold{Profile Settings}+p.text-xs.text-muted-foreground{Configure how your personal information is shown})+div[data-slot=form-body]+(div.flex.items-center.justify-end.gap-4.pt-2>button.btn.btn-sm.btn-ghost{Reset}+button.btn.btn-sm.btn-primary{Save Changes})',
-      },
-      {
-        id: 'forms-body',
-        emmet: 'div.flex.flex-col.gap-4[data-slot=form-body]>(div.flex.flex-col.gap-2>label.text-xs.font-medium[for=usr]{Username}+input.input.input-sm#usr[placeholder=\'shadcn\'][required][data-state=valid]+p.text-xs.text-muted-foreground{Public display name.})+(div.flex.flex-col.gap-2>label.text-xs.font-medium[for=pref-lang]{Language}+select.select.select-sm#pref-lang[data-state=valid]>option{English}+option{Lithuanian}+option{French}^p.text-xs.text-muted-foreground{Preferred interface language.})+(div.flex.items-center.justify-between.rounded-lg.border.border-border.p-4>div.flex.flex-col.gap-2>span.text-xs.font-medium{Marketing Emails}+span.text-xs.text-muted-foreground{Receive updates about new features.}^input.switch.switch-sm[type=checkbox][data-state=checked])',
-      },
-    ],
-    mounts: [
-      { parent: 'forms-root', anchor: 'forms-body', child: 'forms-body', order: 0 },
-    ],
-    slots: [],
-    ports: [],
-    componentRefs: ['card', 'input', 'select', 'switch', 'button', 'label'],
-    ruleRefs: [],
-    dependencyBlockIds: [],
-    layout: { frameRef: 'forms-root' },
-    landmarks: { main: 0, primaryHeading: 0 },
-    provenance: { origin: 'authored', sourceHashes: {}, mappingVersion: '1.0.0' },
-  };
-
-  // 13. shadcn v4 translated tasks workspace block
-  blocks['tasks'] = {
-    schemaVersion: 1,
-    id: 'tasks',
-    role: 'workspace',
-    family: 'data',
-    description: 'Shadcn new-york-v4 tasks table workspace with task priority badges, status filters, and row action controls.',
-    tags: ['tasks', 'new-york-v4', 'table', 'workspace'],
-    root: 'tasks-root',
-    fragments: [
-      {
-        id: 'tasks-root',
-        emmet: 'div.flex.flex-1.flex-col.gap-6.p-6[data-role=canvas][data-macro=canvas][data-block=tasks]>div.flex.items-center.justify-between.gap-4[data-slot=tasks-header]>div.flex.flex-col.gap-2>h2.text-xl.font-semibold{Tasks}+p.text-xs.text-muted-foreground{Here is a list of your tasks for this month!}^button.btn.btn-sm.btn-primary{+ New Task}^^div[data-slot=table]',
+        id: 'auth-root',
+        emmet: 'main.flex.min-h-screen.w-full.items-center.justify-center.p-6.bg-muted[data-slot=auth-page]>div.card.w-full.max-w-sm.rounded-xl.border.border-border.bg-card.p-6.text-card-foreground.shadow-md[data-component=auth-card][data-fsm-recipe=auth-flow][data-fsm-state=idle]>(header.flex.flex-col.gap-2.text-center>h1.text-2xl.font-semibold{Login}+p.text-xs.text-muted-foreground{Enter your credentials to login})+form.flex.flex-col.gap-4.pt-4>(div.flex.flex-col.gap-2>label.text-xs.font-medium[for=login-01-email]{Email}+input.input.input-sm#login-01-email[type=email][placeholder=\'m@example.com\'][required])+(div.flex.flex-col.gap-2>div.flex.items-center.justify-between>label.text-xs.font-medium[for=login-01-password]{Password}+a.text-xs.text-muted-foreground.hover:underline[href=\'#forgot\']{Forgot?}^input.input.input-sm#login-01-password[type=password][required])+button.btn.btn-sm.btn-primary.w-full[type=submit]{Login}+(footer.text-center.text-xs.text-muted-foreground.pt-2>a.text-primary.font-medium.hover:underline[href=\'#signup\']{Sign up})',
       },
     ],
     mounts: [],
-    slots: [
-      { id: 'table', at: { fragment: 'tasks-root', name: 'table' }, accepts: ['table', 'data'], min: 0, max: 1 },
-    ],
-    ports: [
-      { id: 'main-in', at: { fragment: 'tasks-root', name: 'tasks-root' }, direction: 'in', kind: 'region', contract: 'main', minLinks: 0, maxLinks: 1, scope: 'shell' },
-    ],
-    componentRefs: ['button', 'badge', 'table'],
+    slots: [],
+    ports: [],
+    componentRefs: ['card', 'button', 'input', 'label', 'field'],
     ruleRefs: [],
-    dependencyBlockIds: ['data-table-rich'],
-    layout: { frameRef: 'tasks-root' },
-    landmarks: { main: 1, primaryHeading: 0 },
+    dependencyBlockIds: [],
+    layout: { frameRef: 'auth-root' },
+    landmarks: { main: 1, primaryHeading: 1 },
+    provenance: makeProvenance(upstreamMap['login-01'], 'login-01'),
+  };
+
+  // login-02
+  blocks['login-02'] = {
+    schemaVersion: 1,
+    id: 'login-02',
+    role: 'page',
+    family: 'auth',
+    description: upstreamMap['login-02']?.data?.description ?? 'Two-column split login page with cover brand banner, social providers, and credentials form.',
+    tags: ['auth', 'login', 'split-screen', 'social-auth'],
+    root: 'auth-root',
+    fragments: [
+      {
+        id: 'auth-root',
+        emmet: 'main.grid.min-h-screen.grid-cols-1.lg:grid-cols-2[data-slot=auth-page]>(div.relative.hidden.h-full.flex-col.justify-between.bg-muted.p-12.lg:flex>div.flex.items-center.gap-2.text-lg.font-medium>div.size-6.rounded.bg-primary+span{Acme Corp}^blockquote.space-y-2>p.text-lg{\"Saved me countless hours.\"}+footer.text-sm.text-muted-foreground{Sofia Davis})+div.flex.items-center.justify-center.p-6>div.mx-auto.flex.w-full.max-w-sm.flex-col.gap-6[data-fsm-recipe=auth-flow][data-fsm-state=idle]>(header.flex.flex-col.gap-2.text-center>h1.text-2xl.font-semibold{Login}+p.text-xs.text-muted-foreground{Enter your credentials})+form.flex.flex-col.gap-4>(div.flex.flex-col.gap-2>label.text-xs.font-medium{Email}+input.input.input-sm[type=email][required])+(div.flex.flex-col.gap-2>div.flex.items-center.justify-between>label.text-xs.font-medium{Password}+a.text-xs.hover:underline{Forgot?}^input.input.input-sm[type=password][required])+button.btn.btn-sm.btn-primary.w-full[type=submit]{Sign In}',
+      },
+    ],
+    mounts: [],
+    slots: [],
+    ports: [],
+    componentRefs: ['card', 'button', 'input', 'label', 'field'],
+    ruleRefs: [],
+    dependencyBlockIds: [],
+    layout: { frameRef: 'auth-root' },
+    landmarks: { main: 1, primaryHeading: 1 },
+    provenance: makeProvenance(upstreamMap['login-02'], 'login-02'),
+  };
+
+  // login-03
+  blocks['login-03'] = {
+    schemaVersion: 1,
+    id: 'login-03',
+    role: 'page',
+    family: 'auth',
+    description: upstreamMap['login-03']?.data?.description ?? 'Clean login card on muted background with card shadow and helper links.',
+    tags: ['auth', 'login', 'card', 'muted-background'],
+    root: 'auth-root',
+    fragments: [
+      {
+        id: 'auth-root',
+        emmet: 'main.flex.min-h-screen.items-center.justify-center.bg-muted.p-6[data-slot=auth-page]>div.card.w-full.max-w-md.rounded-xl.border.border-border.bg-card.p-8.shadow-lg[data-fsm-recipe=auth-flow][data-fsm-state=idle]>(header.flex.flex-col.gap-2.text-center>h1.text-2xl.font-semibold{Welcome Back}+p.text-xs.text-muted-foreground{Enter your credentials to continue})+form.flex.flex-col.gap-4.pt-4>(div.flex.flex-col.gap-2>label.text-xs.font-medium{Email}+input.input.input-sm[type=email][placeholder=\'m@example.com\'][required])+(div.flex.flex-col.gap-2>div.flex.items-center.justify-between>label.text-xs.font-medium{Password}+a.text-xs.hover:underline{Forgot?}^input.input.input-sm[type=password][required])+button.btn.btn-sm.btn-primary.w-full[type=submit]{Sign In}+div.text-center.text-xs.text-muted-foreground>a.hover:underline[href=\'#signup\']{Don\'t have an account? Sign up}',
+      },
+    ],
+    mounts: [],
+    slots: [],
+    ports: [],
+    componentRefs: ['card', 'button', 'input', 'label', 'field'],
+    ruleRefs: [],
+    dependencyBlockIds: [],
+    layout: { frameRef: 'auth-root' },
+    landmarks: { main: 1, primaryHeading: 1 },
+    provenance: makeProvenance(upstreamMap['login-03'], 'login-03'),
+  };
+
+  // login-04
+  blocks['login-04'] = {
+    schemaVersion: 1,
+    id: 'login-04',
+    role: 'page',
+    family: 'auth',
+    description: upstreamMap['login-04']?.data?.description ?? 'Horizontal card login with side-by-side marketing preview and sign-in form.',
+    tags: ['auth', 'login', 'horizontal-card', 'marketing'],
+    root: 'auth-root',
+    fragments: [
+      {
+        id: 'auth-root',
+        emmet: 'main.flex.min-h-screen.items-center.justify-center.p-6.bg-muted[data-slot=auth-page]>div.card.grid.w-full.max-w-3xl.grid-cols-1.overflow-hidden.rounded-xl.border.border-border.bg-card.shadow-xl.md:grid-cols-2[data-fsm-recipe=auth-flow][data-fsm-state=idle]>(div.p-8.flex.flex-col.justify-between>(header.flex.flex-col.gap-2>h1.text-2xl.font-semibold{Welcome back}+p.text-xs.text-muted-foreground{Sign in to access your dashboard})+form.flex.flex-col.gap-4.py-4>(div.flex.flex-col.gap-2>label.text-xs.font-medium{Email}+input.input.input-sm[type=email][required])+(div.flex.flex-col.gap-2>label.text-xs.font-medium{Password}+input.input.input-sm[type=password][required])+button.btn.btn-sm.btn-primary.w-full[type=submit]{Login})+footer.text-xs.text-muted-foreground>a.underline{Terms & Privacy})^div.hidden.bg-muted.p-8.flex.flex-col.justify-between.md:flex>span.text-sm.font-semibold{Acme Platform}+p.text-xs.text-muted-foreground{Fast, secure enterprise design system.}',
+      },
+    ],
+    mounts: [],
+    slots: [],
+    ports: [],
+    componentRefs: ['card', 'button', 'input', 'label', 'field'],
+    ruleRefs: [],
+    dependencyBlockIds: [],
+    layout: { frameRef: 'auth-root' },
+    landmarks: { main: 1, primaryHeading: 1 },
+    provenance: makeProvenance(upstreamMap['login-04'], 'login-04'),
+  };
+
+  // login-05
+  blocks['login-05'] = {
+    schemaVersion: 1,
+    id: 'login-05',
+    role: 'page',
+    family: 'auth',
+    description: upstreamMap['login-05']?.data?.description ?? 'Minimal passwordless / magic-link email-only login form with validation states.',
+    tags: ['auth', 'login', 'magic-link', 'passwordless'],
+    root: 'auth-root',
+    fragments: [
+      {
+        id: 'auth-root',
+        emmet: 'main.flex.min-h-screen.items-center.justify-center.p-6.bg-muted[data-slot=auth-page]>div.card.w-full.max-w-sm.rounded-xl.border.border-border.bg-card.p-6.shadow-md[data-fsm-recipe=auth-flow][data-fsm-state=idle]>(header.flex.flex-col.gap-2.text-center>h1.text-2xl.font-semibold{Magic Link Login}+p.text-xs.text-muted-foreground{Enter your work email and we\'ll send you a login link})+form.flex.flex-col.gap-4.pt-4>(div.flex.flex-col.gap-2>label.text-xs.font-medium{Work Email}+input.input.input-sm[type=email][placeholder=\'you@company.com\'][required])+button.btn.btn-sm.btn-primary.w-full[type=submit]{Send Magic Link}+(footer.text-center.text-xs.text-muted-foreground.pt-2>a.hover:underline[href=\'#sso\']{Sign in with Enterprise SSO})',
+      },
+    ],
+    mounts: [],
+    slots: [],
+    ports: [],
+    componentRefs: ['card', 'button', 'input', 'label', 'field'],
+    ruleRefs: [],
+    dependencyBlockIds: [],
+    layout: { frameRef: 'auth-root' },
+    landmarks: { main: 1, primaryHeading: 1 },
+    provenance: makeProvenance(upstreamMap['login-05'], 'login-05'),
+  };
+
+  // signup-01
+  blocks['signup-01'] = {
+    schemaVersion: 1,
+    id: 'signup-01',
+    role: 'page',
+    family: 'auth',
+    description: upstreamMap['signup-01']?.data?.description ?? 'Simple centered card registration form with email, password, confirm password, and terms checkbox.',
+    tags: ['auth', 'signup', 'register', 'card'],
+    root: 'auth-root',
+    fragments: [
+      {
+        id: 'auth-root',
+        emmet: 'main.flex.min-h-screen.items-center.justify-center.p-6.bg-muted[data-slot=auth-page]>div.card.w-full.max-w-sm.rounded-xl.border.border-border.bg-card.p-6.shadow-md[data-fsm-recipe=auth-flow][data-fsm-state=idle]>(header.flex.flex-col.gap-2.text-center>h1.text-2xl.font-semibold{Create an account}+p.text-xs.text-muted-foreground{Enter your email below to create your account})+form.flex.flex-col.gap-4.pt-4>(div.flex.flex-col.gap-2>label.text-xs.font-medium{Email}+input.input.input-sm[type=email][placeholder=\'m@example.com\'][required])+(div.flex.flex-col.gap-2>label.text-xs.font-medium{Password}+input.input.input-sm[type=password][required])+(div.flex.flex-col.gap-2>label.text-xs.font-medium{Confirm Password}+input.input.input-sm[type=password][required])+button.btn.btn-sm.btn-primary.w-full[type=submit]{Sign Up}+(footer.text-center.text-xs.text-muted-foreground.pt-2>span{Already have an account? }+a.text-primary.font-medium.hover:underline[href=\'#login\']{Sign in})',
+      },
+    ],
+    mounts: [],
+    slots: [],
+    ports: [],
+    componentRefs: ['card', 'button', 'input', 'label', 'field', 'checkbox'],
+    ruleRefs: [],
+    dependencyBlockIds: [],
+    layout: { frameRef: 'auth-root' },
+    landmarks: { main: 1, primaryHeading: 1 },
+    provenance: makeProvenance(upstreamMap['signup-01'], 'signup-01'),
+  };
+
+  // signup-02
+  blocks['signup-02'] = {
+    schemaVersion: 1,
+    id: 'signup-02',
+    role: 'page',
+    family: 'auth',
+    description: upstreamMap['signup-02']?.data?.description ?? 'Two-column split registration page with testimonial branding and account creation form.',
+    tags: ['auth', 'signup', 'split-screen', 'branding'],
+    root: 'auth-root',
+    fragments: [
+      {
+        id: 'auth-root',
+        emmet: 'main.grid.min-h-screen.grid-cols-1.lg:grid-cols-2[data-slot=auth-page]>(div.relative.hidden.h-full.flex-col.justify-between.bg-muted.p-12.lg:flex>div.flex.items-center.gap-2.text-lg.font-medium>div.size-6.rounded.bg-primary+span{Acme Corp}^blockquote.space-y-2>p.text-lg{\"Join thousands of teams.\"}+footer.text-sm.text-muted-foreground{Sofia Davis})+div.flex.items-center.justify-center.p-6>div.mx-auto.flex.w-full.max-w-sm.flex-col.gap-6[data-fsm-recipe=auth-flow][data-fsm-state=idle]>(header.flex.flex-col.gap-2.text-center>h1.text-2xl.font-semibold{Create account}+p.text-xs.text-muted-foreground{Start your 14-day trial})+form.flex.flex-col.gap-4>(div.flex.flex-col.gap-2>label.text-xs.font-medium{Name}+input.input.input-sm[required])+(div.flex.flex-col.gap-2>label.text-xs.font-medium{Email}+input.input.input-sm[type=email][required])+(div.flex.flex-col.gap-2>label.text-xs.font-medium{Password}+input.input.input-sm[type=password][required])+button.btn.btn-sm.btn-primary.w-full[type=submit]{Create Account}',
+      },
+    ],
+    mounts: [],
+    slots: [],
+    ports: [],
+    componentRefs: ['card', 'button', 'input', 'label', 'field', 'checkbox'],
+    ruleRefs: [],
+    dependencyBlockIds: [],
+    layout: { frameRef: 'auth-root' },
+    landmarks: { main: 1, primaryHeading: 1 },
+    provenance: makeProvenance(upstreamMap['signup-02'], 'signup-02'),
+  };
+
+  // signup-03
+  blocks['signup-03'] = {
+    schemaVersion: 1,
+    id: 'signup-03',
+    role: 'page',
+    family: 'auth',
+    description: upstreamMap['signup-03']?.data?.description ?? 'Elevated registration card on subtle muted backdrop with social OAuth triggers.',
+    tags: ['auth', 'signup', 'card', 'oauth'],
+    root: 'auth-root',
+    fragments: [
+      {
+        id: 'auth-root',
+        emmet: 'main.flex.min-h-screen.items-center.justify-center.bg-muted.p-6[data-slot=auth-page]>div.card.w-full.max-w-md.rounded-xl.border.border-border.bg-card.p-8.shadow-lg[data-fsm-recipe=auth-flow][data-fsm-state=idle]>(header.flex.flex-col.gap-2.text-center>h1.text-2xl.font-semibold{Sign Up for Acme}+p.text-xs.text-muted-foreground{Choose your preferred sign up method})+(div.grid.grid-cols-2.gap-4.pt-4>button.btn.btn-sm.btn-outline.w-full{GitHub}+button.btn.btn-sm.btn-outline.w-full{Google})+(div.relative.flex.items-center.justify-center.py-2>hr.w-full.border-border+span.bg-card.px-2.text-xs.text-muted-foreground{or})+form.flex.flex-col.gap-4>(div.flex.flex-col.gap-2>label.text-xs.font-medium{Email}+input.input.input-sm[type=email][required])+(div.flex.flex-col.gap-2>label.text-xs.font-medium{Password}+input.input.input-sm[type=password][required])+button.btn.btn-sm.btn-primary.w-full[type=submit]{Continue with Email}',
+      },
+    ],
+    mounts: [],
+    slots: [],
+    ports: [],
+    componentRefs: ['card', 'button', 'input', 'label', 'field', 'checkbox'],
+    ruleRefs: [],
+    dependencyBlockIds: [],
+    layout: { frameRef: 'auth-root' },
+    landmarks: { main: 1, primaryHeading: 1 },
+    provenance: makeProvenance(upstreamMap['signup-03'], 'signup-03'),
+  };
+
+  // signup-04
+  blocks['signup-04'] = {
+    schemaVersion: 1,
+    id: 'signup-04',
+    role: 'page',
+    family: 'auth',
+    description: upstreamMap['signup-04']?.data?.description ?? 'Split card registration with feature showcase image and tiered account signup.',
+    tags: ['auth', 'signup', 'split-card', 'showcase'],
+    root: 'auth-root',
+    fragments: [
+      {
+        id: 'auth-root',
+        emmet: 'main.flex.min-h-screen.items-center.justify-center.p-6.bg-muted[data-slot=auth-page]>div.card.grid.w-full.max-w-3xl.grid-cols-1.overflow-hidden.rounded-xl.border.border-border.bg-card.shadow-xl.md:grid-cols-2[data-fsm-recipe=auth-flow][data-fsm-state=idle]>(div.p-8.flex.flex-col.justify-between>(header.flex.flex-col.gap-2>h1.text-2xl.font-semibold{Start building}+p.text-xs.text-muted-foreground{Create your free account today})+form.flex.flex-col.gap-4.py-4>(div.flex.flex-col.gap-2>label.text-xs.font-medium{Email}+input.input.input-sm[type=email][required])+(div.flex.flex-col.gap-2>label.text-xs.font-medium{Password}+input.input.input-sm[type=password][required])+button.btn.btn-sm.btn-primary.w-full[type=submit]{Register})+footer.text-xs.text-muted-foreground>span{By signing up you agree to our Terms.})^div.hidden.bg-muted.p-8.flex.flex-col.justify-between.md:flex>span.text-sm.font-semibold{Starter Plan Included}+p.text-xs.text-muted-foreground{Unlimited sandbox projects and free deployments.}',
+      },
+    ],
+    mounts: [],
+    slots: [],
+    ports: [],
+    componentRefs: ['card', 'button', 'input', 'label', 'field', 'checkbox'],
+    ruleRefs: [],
+    dependencyBlockIds: [],
+    layout: { frameRef: 'auth-root' },
+    landmarks: { main: 1, primaryHeading: 1 },
+    provenance: makeProvenance(upstreamMap['signup-04'], 'signup-04'),
+  };
+
+  // signup-05
+  blocks['signup-05'] = {
+    schemaVersion: 1,
+    id: 'signup-05',
+    role: 'page',
+    family: 'auth',
+    description: upstreamMap['signup-05']?.data?.description ?? 'Full-featured registration form with social providers, credentials, and password strength indicator.',
+    tags: ['auth', 'signup', 'full-featured', 'password-strength'],
+    root: 'auth-root',
+    fragments: [
+      {
+        id: 'auth-root',
+        emmet: 'main.flex.min-h-screen.items-center.justify-center.p-6.bg-muted[data-slot=auth-page]>div.card.w-full.max-w-md.rounded-xl.border.border-border.bg-card.p-6.shadow-md[data-fsm-recipe=auth-flow][data-fsm-state=idle]>(header.flex.flex-col.gap-2.text-center>h1.text-2xl.font-semibold{Create your account}+p.text-xs.text-muted-foreground{Start your 30-day trial})+(div.grid.grid-cols-2.gap-4.pt-2>button.btn.btn-sm.btn-outline.w-full{GitHub}+button.btn.btn-sm.btn-outline.w-full{Google})+form.flex.flex-col.gap-4.pt-2>(div.flex.flex-col.gap-2>label.text-xs.font-medium{Full Name}+input.input.input-sm[placeholder=\'Jane Doe\'][required])+(div.flex.flex-col.gap-2>label.text-xs.font-medium{Work Email}+input.input.input-sm[type=email][placeholder=\'jane@company.com\'][required])+(div.flex.flex-col.gap-2>label.text-xs.font-medium{Password}+input.input.input-sm[type=password][required]+div.flex.gap-2.pt-2>div.h-2.flex-1.rounded.bg-primary*3)+button.btn.btn-sm.btn-primary.w-full[type=submit]{Create Account}',
+      },
+    ],
+    mounts: [],
+    slots: [],
+    ports: [],
+    componentRefs: ['card', 'button', 'input', 'label', 'field', 'checkbox'],
+    ruleRefs: [],
+    dependencyBlockIds: [],
+    layout: { frameRef: 'auth-root' },
+    landmarks: { main: 1, primaryHeading: 1 },
+    provenance: makeProvenance(upstreamMap['signup-05'], 'signup-05'),
+  };
+
+  // otp-01
+  blocks['otp-01'] = {
+    schemaVersion: 1,
+    id: 'otp-01',
+    role: 'page',
+    family: 'auth',
+    description: 'Centered 6-digit PIN verification card with segmented digit inputs, countdown timer, and resend action.',
+    tags: ['auth', 'otp', '2fa', 'verification', 'pin'],
+    root: 'auth-root',
+    fragments: [
+      {
+        id: 'auth-root',
+        emmet: 'main.flex.min-h-screen.items-center.justify-center.p-6.bg-muted[data-slot=auth-page]>div.card.w-full.max-w-sm.rounded-xl.border.border-border.bg-card.p-6.text-center.shadow-md[data-fsm-recipe=auth-flow][data-fsm-state=idle]>(header.flex.flex-col.gap-2>h1.text-2xl.font-semibold{Two-Factor Auth}+p.text-xs.text-muted-foreground{Enter the 6-digit code sent to your device})+form.flex.flex-col.gap-6.pt-4>(div.flex.justify-center.gap-2>input.input.input-sm.size-10.text-center.font-mono.text-lg[type=text][maxlength=1][required]*6)+button.btn.btn-sm.btn-primary.w-full[type=submit]{Verify Code}+(footer.flex.flex-col.gap-2.text-xs.text-muted-foreground.pt-2>span{Didn\'t receive code?}+button.btn.btn-ghost.btn-xs{Resend code (0:59)})',
+      },
+    ],
+    mounts: [],
+    slots: [],
+    ports: [],
+    componentRefs: ['card', 'button', 'input', 'label'],
+    ruleRefs: [],
+    dependencyBlockIds: [],
+    layout: { frameRef: 'auth-root' },
+    landmarks: { main: 1, primaryHeading: 1 },
     provenance: { origin: 'authored', sourceHashes: {}, mappingVersion: '1.0.0' },
   };
 
-  // 14. shadcn v4 translated mail block
+  // otp-02
+  blocks['otp-02'] = {
+    schemaVersion: 1,
+    id: 'otp-02',
+    role: 'page',
+    family: 'auth',
+    description: 'Two-column split security verification page with recovery code option and authenticator helper.',
+    tags: ['auth', 'otp', 'split-screen', 'recovery-code'],
+    root: 'auth-root',
+    fragments: [
+      {
+        id: 'auth-root',
+        emmet: 'main.grid.min-h-screen.grid-cols-1.lg:grid-cols-2[data-slot=auth-page]>(div.relative.hidden.h-full.flex-col.justify-between.bg-muted.p-12.text-foreground.lg:flex>div.flex.items-center.gap-2.text-lg.font-medium>div.size-6.rounded.bg-primary+span{Security Check}^p.text-sm.text-muted-foreground{Protecting your workspace with hardware-backed encryption.})+div.flex.items-center.justify-center.p-6>div.mx-auto.flex.w-full.max-w-sm.flex-col.gap-6[data-fsm-recipe=auth-flow][data-fsm-state=idle]>(header.flex.flex-col.gap-2.text-center>h1.text-2xl.font-semibold{Enter OTP Code}+p.text-xs.text-muted-foreground{Open your authenticator app to view your code})+form.flex.flex-col.gap-4>(div.flex.justify-center.gap-2>input.input.input-sm.size-10.text-center.font-mono.text-lg[type=text][maxlength=1]*6)+button.btn.btn-sm.btn-primary.w-full[type=submit]{Verify Identity}+div.text-center.text-xs>a.text-primary.hover:underline[href=\'#recovery\']{Use emergency backup code}',
+      },
+    ],
+    mounts: [],
+    slots: [],
+    ports: [],
+    componentRefs: ['card', 'button', 'input', 'label'],
+    ruleRefs: [],
+    dependencyBlockIds: [],
+    layout: { frameRef: 'auth-root' },
+    landmarks: { main: 1, primaryHeading: 1 },
+    provenance: { origin: 'authored', sourceHashes: {}, mappingVersion: '1.0.0' },
+  };
+
+  // otp-03
+  blocks['otp-03'] = {
+    schemaVersion: 1,
+    id: 'otp-03',
+    role: 'page',
+    family: 'auth',
+    description: 'Minimal numeric OTP card with auto-focus digit slots, expiry indicator, and verify submit.',
+    tags: ['auth', 'otp', 'minimal', 'verification'],
+    root: 'auth-root',
+    fragments: [
+      {
+        id: 'auth-root',
+        emmet: 'main.flex.min-h-screen.items-center.justify-center.bg-muted.p-6[data-slot=auth-page]>div.card.w-full.max-w-sm.rounded-xl.border.border-border.bg-card.p-6.shadow-md[data-fsm-recipe=auth-flow][data-fsm-state=idle]>(header.flex.flex-col.gap-2.text-center>h1.text-xl.font-semibold{Verification Required}+p.text-xs.text-muted-foreground{Code expires in 5 minutes})+form.flex.flex-col.gap-4.pt-4>(div.flex.justify-center.gap-2>input.input.input-sm.size-10.text-center.font-mono.text-lg[type=text][maxlength=1]*6)+button.btn.btn-sm.btn-primary.w-full[type=submit]{Confirm}+div.text-center.text-xs.text-muted-foreground>a.hover:underline{Need help? Contact support}',
+      },
+    ],
+    mounts: [],
+    slots: [],
+    ports: [],
+    componentRefs: ['card', 'button', 'input', 'label'],
+    ruleRefs: [],
+    dependencyBlockIds: [],
+    layout: { frameRef: 'auth-root' },
+    landmarks: { main: 1, primaryHeading: 1 },
+    provenance: { origin: 'authored', sourceHashes: {}, mappingVersion: '1.0.0' },
+  };
+
+  // otp-04
+  blocks['otp-04'] = {
+    schemaVersion: 1,
+    id: 'otp-04',
+    role: 'page',
+    family: 'auth',
+    description: 'Security modal dialog OTP verification with automatic submit on completion and cancel button.',
+    tags: ['auth', 'otp', 'modal', 'dialog'],
+    root: 'auth-root',
+    fragments: [
+      {
+        id: 'auth-root',
+        emmet: 'main.flex.min-h-screen.items-center.justify-center.p-6.bg-muted-80[data-slot=auth-page]>div.card.w-full.max-w-md.rounded-xl.border.border-border.bg-card.p-6.shadow-2xl[data-fsm-recipe=auth-flow][data-fsm-state=idle]>(header.flex.flex-col.gap-2>h2.text-lg.font-semibold{Confirm High-Risk Action}+p.text-xs.text-muted-foreground{Please enter your one-time code to authorize this transfer.})+form.flex.flex-col.gap-4.pt-4>(div.flex.justify-center.gap-2>input.input.input-sm.size-10.text-center.font-mono.text-lg[type=text][maxlength=1]*6)+(div.flex.justify-end.gap-2.pt-2>button.btn.btn-sm.btn-ghost[type=button]{Cancel}+button.btn.btn-sm.btn-primary[type=submit]{Authorize})',
+      },
+    ],
+    mounts: [],
+    slots: [],
+    ports: [],
+    componentRefs: ['card', 'button', 'input', 'label'],
+    ruleRefs: [],
+    dependencyBlockIds: [],
+    layout: { frameRef: 'auth-root' },
+    landmarks: { main: 1, primaryHeading: 1 },
+    provenance: { origin: 'authored', sourceHashes: {}, mappingVersion: '1.0.0' },
+  };
+
+  // otp-05
+  blocks['otp-05'] = {
+    schemaVersion: 1,
+    id: 'otp-05',
+    role: 'page',
+    family: 'auth',
+    description: 'Mobile-friendly full-height OTP card with numeric keypad layout and resend countdown.',
+    tags: ['auth', 'otp', 'mobile-optimized', 'keypad'],
+    root: 'auth-root',
+    fragments: [
+      {
+        id: 'auth-root',
+        emmet: 'main.flex.min-h-screen.flex-col.justify-between.p-6.bg-background[data-slot=auth-page]>(header.flex.flex-col.gap-2.pt-6.text-center>h1.text-2xl.font-semibold{Enter SMS Code}+p.text-xs.text-muted-foreground{Sent to +1 (555) ***-4829})+form.flex.flex-col.gap-6.py-6>(div.flex.justify-center.gap-2>input.input.input-sm.size-12.text-center.font-mono.text-xl[type=text][maxlength=1]*4)+button.btn.btn-sm.btn-primary.w-full[type=submit]{Verify}+div.text-center.text-xs.text-muted-foreground>span{Resend available in 30s})',
+      },
+    ],
+    mounts: [],
+    slots: [],
+    ports: [],
+    componentRefs: ['card', 'button', 'input', 'label'],
+    ruleRefs: [],
+    dependencyBlockIds: [],
+    layout: { frameRef: 'auth-root' },
+    landmarks: { main: 1, primaryHeading: 1 },
+    provenance: { origin: 'authored', sourceHashes: {}, mappingVersion: '1.0.0' },
+  };
+
+  // -------------------------------------------------------------------------
+  // 5. Workspace Blocks (mail, tasks, forms, products, analytics, billing, settings)
+  // -------------------------------------------------------------------------
+
+  // mail
   blocks['mail'] = {
     schemaVersion: 1,
     id: 'mail',
@@ -628,6 +1505,204 @@ function buildAuthoringBlocks(upstreamMap) {
     landmarks: { main: 1, primaryHeading: 0 },
     provenance: { origin: 'authored', sourceHashes: {}, mappingVersion: '1.0.0' },
   };
+
+  // tasks
+  blocks['tasks'] = {
+    schemaVersion: 1,
+    id: 'tasks',
+    role: 'workspace',
+    family: 'data',
+    description: 'Shadcn new-york-v4 tasks table workspace with task priority badges, status filters, and row action controls.',
+    tags: ['tasks', 'new-york-v4', 'table', 'workspace'],
+    root: 'tasks-root',
+    fragments: [
+      {
+        id: 'tasks-root',
+        emmet: 'div.flex.flex-1.flex-col.gap-6.p-6[data-role=canvas][data-macro=canvas][data-block=tasks]>div.flex.items-center.justify-between.gap-4[data-slot=tasks-header]>div.flex.flex-col.gap-2>h2.text-xl.font-semibold{Tasks}+p.text-xs.text-muted-foreground{Here is a list of your tasks for this month!}^button.btn.btn-sm.btn-primary{+ New Task}^^div[data-slot=table]',
+      },
+    ],
+    mounts: [],
+    slots: [
+      { id: 'table', at: { fragment: 'tasks-root', name: 'table' }, accepts: ['table', 'data'], min: 0, max: 1 },
+    ],
+    ports: [
+      { id: 'main-in', at: { fragment: 'tasks-root', name: 'tasks-root' }, direction: 'in', kind: 'region', contract: 'main', minLinks: 0, maxLinks: 1, scope: 'shell' },
+    ],
+    componentRefs: ['button', 'badge', 'table'],
+    ruleRefs: [],
+    dependencyBlockIds: ['data-table-rich'],
+    layout: { frameRef: 'tasks-root' },
+    landmarks: { main: 1, primaryHeading: 0 },
+    provenance: { origin: 'authored', sourceHashes: {}, mappingVersion: '1.0.0' },
+  };
+
+  // forms
+  blocks['forms'] = {
+    schemaVersion: 1,
+    id: 'forms',
+    role: 'form',
+    family: 'form',
+    description: 'Shadcn new-york-v4 form layout with multi-section inputs, select dropdowns, toggles, and validation feedback.',
+    tags: ['forms', 'new-york-v4', 'profile', 'validation'],
+    root: 'forms-root',
+    fragments: [
+      {
+        id: 'forms-root',
+        emmet: 'section.flex.flex-col.gap-6.rounded-xl.border.border-border.bg-card.p-6.text-card-foreground.shadow-sm[data-component=forms][data-slot=form-container]>(header.flex.flex-col.gap-2>h2.text-lg.font-semibold{Profile Settings}+p.text-xs.text-muted-foreground{Configure how your personal information is shown})+div[data-slot=form-body]+(div.flex.items-center.justify-end.gap-4.pt-2>button.btn.btn-sm.btn-ghost{Reset}+button.btn.btn-sm.btn-primary{Save Changes})',
+      },
+      {
+        id: 'forms-body',
+        emmet: 'div.flex.flex-col.gap-4[data-slot=form-body]>(div.flex.flex-col.gap-2>label.text-xs.font-medium[for=usr]{Username}+input.input.input-sm#usr[placeholder=\'shadcn\'][required][data-state=valid]+p.text-xs.text-muted-foreground{Public display name.})+(div.flex.flex-col.gap-2>label.text-xs.font-medium[for=pref-lang]{Language}+select.select.select-sm#pref-lang[data-state=valid]>option{English}+option{Lithuanian}+option{French}^p.text-xs.text-muted-foreground{Preferred interface language.})+(div.flex.items-center.justify-between.rounded-lg.border.border-border.p-4>div.flex.flex-col.gap-2>span.text-xs.font-medium{Marketing Emails}+span.text-xs.text-muted-foreground{Receive updates about new features.}^input.switch.switch-sm[type=checkbox][data-state=checked])',
+      },
+    ],
+    mounts: [
+      { parent: 'forms-root', anchor: 'forms-body', child: 'forms-body', order: 0 },
+    ],
+    slots: [],
+    ports: [],
+    componentRefs: ['card', 'input', 'select', 'switch', 'button', 'label'],
+    ruleRefs: [],
+    dependencyBlockIds: [],
+    layout: { frameRef: 'forms-root' },
+    landmarks: { main: 0, primaryHeading: 0 },
+    provenance: { origin: 'authored', sourceHashes: {}, mappingVersion: '1.0.0' },
+  };
+
+  // products
+  blocks['products'] = {
+    schemaVersion: 1,
+    id: 'products',
+    role: 'workspace',
+    family: 'workspace',
+    description: 'Product catalog workspace with filter toolbar, inventory table, stock status badges, and pagination.',
+    tags: ['workspace', 'products', 'ecommerce', 'catalog', 'table'],
+    root: 'content-frame',
+    fragments: [
+      {
+        id: 'content-frame',
+        emmet: 'div.flex.flex-1.flex-col.gap-6.p-6[data-role=canvas][data-macro=canvas][data-block=products]>div.flex.items-center.justify-between.gap-4[data-slot=header]>div.flex.flex-col.gap-2>h2.text-xl.font-semibold{Products}+p.text-xs.text-muted-foreground{Manage catalog items, pricing, and stock status.}^button.btn.btn-sm.btn-primary{+ Add Product}^^div[data-slot=table]',
+      },
+    ],
+    mounts: [],
+    slots: [
+      { id: 'table', at: { fragment: 'content-frame', name: 'table' }, accepts: ['table', 'data'], min: 0, max: 1 },
+    ],
+    ports: [
+      { id: 'main-in', at: { fragment: 'content-frame', name: 'content-frame' }, direction: 'in', kind: 'region', contract: 'main', minLinks: 0, maxLinks: 1, scope: 'shell' },
+    ],
+    componentRefs: ['card', 'table', 'button', 'input'],
+    ruleRefs: [],
+    dependencyBlockIds: ['data-table-rich'],
+    layout: { frameRef: 'content-frame' },
+    landmarks: { main: 1, primaryHeading: 0 },
+    provenance: { origin: 'authored', sourceHashes: {}, mappingVersion: '1.0.0' },
+  };
+
+  // analytics
+  blocks['analytics'] = {
+    schemaVersion: 1,
+    id: 'analytics',
+    role: 'dashboard',
+    family: 'workspace',
+    description: 'Multi-metric analytics dashboard workspace with period selectors, conversion metrics, revenue chart canvas, and source breakdown.',
+    tags: ['dashboard', 'analytics', 'workspace', 'chart', 'metrics'],
+    root: 'content-frame',
+    fragments: [
+      {
+        id: 'content-frame',
+        emmet: 'div.flex.flex-1.flex-col.gap-6.p-6[data-role=canvas][data-macro=canvas][data-block=analytics]>div.flex.items-center.justify-between.gap-4[data-slot=header]>div.flex.flex-col.gap-2>h2.text-xl.font-semibold{Analytics Overview}+p.text-xs.text-muted-foreground{Realtime user traffic and conversion performance.}^div[data-slot=period-filter]^^div[data-slot=kpi]+div.grid.grid-cols-1.gap-6.lg:grid-cols-3>div.lg:col-span-2[data-slot=chart]+div[data-slot=sources]',
+      },
+    ],
+    mounts: [],
+    slots: [
+      { id: 'period-filter', at: { fragment: 'content-frame', name: 'period-filter' }, accepts: ['action', 'range-control'], min: 0, max: 1 },
+      { id: 'kpi', at: { fragment: 'content-frame', name: 'kpi' }, accepts: ['metrics', 'kpi'], min: 0, max: 1 },
+      { id: 'chart', at: { fragment: 'content-frame', name: 'chart' }, accepts: ['chart', 'activity'], min: 0, max: 1 },
+      { id: 'sources', at: { fragment: 'content-frame', name: 'sources' }, accepts: ['table', 'data', 'workspace'], min: 0, max: 1 },
+    ],
+    ports: [
+      { id: 'main-in', at: { fragment: 'content-frame', name: 'content-frame' }, direction: 'in', kind: 'region', contract: 'main', minLinks: 0, maxLinks: 1, scope: 'shell' },
+    ],
+    componentRefs: ['card', 'button', 'table'],
+    ruleRefs: [],
+    dependencyBlockIds: ['metrics-summary', 'svg-area-chart'],
+    layout: { frameRef: 'content-frame' },
+    landmarks: { main: 1, primaryHeading: 0 },
+    provenance: { origin: 'authored', sourceHashes: {}, mappingVersion: '1.0.0' },
+  };
+
+  // billing
+  blocks['billing'] = {
+    schemaVersion: 1,
+    id: 'billing',
+    role: 'workspace',
+    family: 'workspace',
+    description: 'Subscription and billing workspace with active plan card, payment method list, invoice history table, and upgrade CTA.',
+    tags: ['workspace', 'billing', 'subscription', 'invoices', 'payment'],
+    root: 'content-frame',
+    fragments: [
+      {
+        id: 'content-frame',
+        emmet: 'div.flex.flex-1.flex-col.gap-6.p-6[data-role=canvas][data-macro=canvas][data-block=billing]>div.flex.items-center.justify-between.gap-4[data-slot=header]>div.flex.flex-col.gap-2>h2.text-xl.font-semibold{Billing & Subscription}+p.text-xs.text-muted-foreground{Manage your plan, payment methods, and invoice history.}^button.btn.btn-sm.btn-primary{Upgrade Plan}^^div.grid.grid-cols-1.gap-6.md:grid-cols-2>div.card.p-6.border.border-border.rounded-xl.bg-card[data-slot=plan-card]>span.text-xs.text-muted-foreground{Current Plan}+h3.text-xl.font-semibold.pt-2{Pro Team Plan}+p.text-xs.text-muted-foreground{Renews on Nov 1, 2026}^div.card.p-6.border.border-border.rounded-xl.bg-card[data-slot=payment-card]>span.text-xs.text-muted-foreground{Payment Method}+h3.text-lg.font-semibold.pt-2{Visa ending in 4242}+button.btn.btn-xs.btn-outline.mt-2{Update}^^div[data-slot=invoice-table]',
+      },
+    ],
+    mounts: [],
+    slots: [
+      { id: 'plan-card', at: { fragment: 'content-frame', name: 'plan-card' }, accepts: ['card', 'workspace'], min: 0, max: 1 },
+      { id: 'payment-card', at: { fragment: 'content-frame', name: 'payment-card' }, accepts: ['card', 'workspace'], min: 0, max: 1 },
+      { id: 'invoice-table', at: { fragment: 'content-frame', name: 'invoice-table' }, accepts: ['table', 'data'], min: 0, max: 1 },
+    ],
+    ports: [
+      { id: 'main-in', at: { fragment: 'content-frame', name: 'content-frame' }, direction: 'in', kind: 'region', contract: 'main', minLinks: 0, maxLinks: 1, scope: 'shell' },
+    ],
+    componentRefs: ['card', 'table', 'button'],
+    ruleRefs: [],
+    dependencyBlockIds: ['data-table-rich'],
+    layout: { frameRef: 'content-frame' },
+    landmarks: { main: 1, primaryHeading: 0 },
+    provenance: { origin: 'authored', sourceHashes: {}, mappingVersion: '1.0.0' },
+  };
+
+  // settings
+  blocks['settings'] = {
+    schemaVersion: 1,
+    id: 'settings',
+    role: 'workspace',
+    family: 'workspace',
+    description: 'Organization and user settings workspace with tabbed navigation, general settings form, and security options.',
+    tags: ['workspace', 'settings', 'profile', 'organization', 'tabs'],
+    root: 'content-frame',
+    fragments: [
+      {
+        id: 'content-frame',
+        emmet: 'div.flex.flex-1.flex-col.gap-6.p-6[data-role=canvas][data-macro=canvas][data-block=settings]>div.flex.flex-col.gap-2[data-slot=header]>h2.text-xl.font-semibold{Settings}+p.text-xs.text-muted-foreground{Manage your account settings and preferences.}^^div[data-slot=tabs]+div[data-slot=content]',
+      },
+    ],
+    mounts: [],
+    slots: [
+      { id: 'tabs', at: { fragment: 'content-frame', name: 'tabs' }, accepts: ['tabs'], min: 0, max: 1 },
+      { id: 'content', at: { fragment: 'content-frame', name: 'content' }, accepts: ['form', 'workspace'], min: 0, max: 1 },
+    ],
+    ports: [
+      { id: 'main-in', at: { fragment: 'content-frame', name: 'content-frame' }, direction: 'in', kind: 'region', contract: 'main', minLinks: 0, maxLinks: 1, scope: 'shell' },
+    ],
+    componentRefs: ['card', 'button', 'input', 'select'],
+    ruleRefs: [],
+    dependencyBlockIds: [],
+    layout: { frameRef: 'content-frame' },
+    landmarks: { main: 1, primaryHeading: 0 },
+    provenance: { origin: 'authored', sourceHashes: {}, mappingVersion: '1.0.0' },
+  };
+
+  // Safety assertions on all generated fragments: length and spacing
+  for (const [blockId, block] of Object.entries(blocks)) {
+    for (const frag of block.fragments) {
+      if (frag.emmet.length > 1200) {
+        throw new Error(`Block ${blockId} fragment ${frag.id} exceeds 1200 chars: ${frag.emmet.length}`);
+      }
+      assertValidSpacing(frag.emmet, blockId, frag.id);
+    }
+  }
 
   return blocks;
 }
@@ -791,8 +1866,26 @@ function buildAuthoringRecipes() {
 async function main() {
   console.log('Ingesting shadcn/ui new-york-v4 blocks and authoring recipes...');
 
-  // Target block names
+  // Target block names: sidebars 01-16, dashboards 01-07, auth, workspaces
   const targetBlocks = [
+    // Sidebars
+    'sidebar-01',
+    'sidebar-02',
+    'sidebar-03',
+    'sidebar-04',
+    'sidebar-05',
+    'sidebar-06',
+    'sidebar-07',
+    'sidebar-08',
+    'sidebar-09',
+    'sidebar-10',
+    'sidebar-11',
+    'sidebar-12',
+    'sidebar-13',
+    'sidebar-14',
+    'sidebar-15',
+    'sidebar-16',
+    // Dashboards
     'dashboard-01',
     'dashboard-02',
     'dashboard-03',
@@ -800,16 +1893,40 @@ async function main() {
     'dashboard-05',
     'dashboard-06',
     'dashboard-07',
-    'authentication',
-    'forms',
-    'tasks',
-    'mail',
+    // Auth
     'login-01',
+    'login-02',
+    'login-03',
+    'login-04',
+    'login-05',
+    'signup-01',
+    'signup-02',
+    'signup-03',
+    'signup-04',
+    'signup-05',
+    'otp-01',
+    'otp-02',
+    'otp-03',
+    'otp-04',
+    'otp-05',
+    'authentication',
+    // Workspaces
+    'mail',
+    'tasks',
+    'forms',
+    'products',
+    'analytics',
+    'billing',
+    'settings',
   ];
 
   const upstreamMap = {};
-  for (const name of targetBlocks) {
+  const fetchPromises = targetBlocks.map(async (name) => {
     const upstream = await fetchUpstreamBlock(name);
+    return [name, upstream];
+  });
+  const fetchResults = await Promise.all(fetchPromises);
+  for (const [name, upstream] of fetchResults) {
     if (upstream) {
       console.log(`✓ Fetched upstream: ${name}`);
       upstreamMap[name] = upstream;
@@ -844,7 +1961,6 @@ async function main() {
   }
 
   // Compile blocks into snapshot
-  const { execSync } = await import('node:child_process');
   try {
     execSync('npm run compile:blocks', { cwd: ROOT, stdio: 'inherit' });
   } catch (err) {
@@ -862,8 +1978,8 @@ async function main() {
   }
 
   console.log('\nIngestion Complete:');
-  console.log(`Blocks: ${writtenBlockIds.join(', ')}`);
-  console.log(`Recipes: ${writtenRecipeIds.join(', ')}`);
+  console.log(`Blocks (${writtenBlockIds.length}): ${writtenBlockIds.join(', ')}`);
+  console.log(`Recipes (${writtenRecipeIds.length}): ${writtenRecipeIds.join(', ')}`);
 }
 
 main().catch((err) => {

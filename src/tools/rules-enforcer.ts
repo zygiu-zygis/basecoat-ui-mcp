@@ -7,10 +7,23 @@ import { INTERACTIVE_PRIMITIVES, SEMANTIC_TAGS, TW3_DEPRECATED_UTILITY } from '.
 export const rulesEnforcerInputShape = {
   category: z
     .enum(['all', 'tailwind-v4', 'fsm-contracts', 'tokens', 'semantic-html', 'dashboard-patterns'])
-    .optional(),
-  query: z.string().max(120).optional(),
-  code: z.string().max(16000).optional(),
-  html: z.string().max(16000).optional(),
+    .optional()
+    .describe('Filter rules by technical domain: "tailwind-v4", "fsm-contracts", "tokens", "semantic-html", "dashboard-patterns", or "all".'),
+  query: z
+    .string()
+    .max(120)
+    .optional()
+    .describe('Search query to match against rule IDs, titles, forbidden patterns, or required syntax.'),
+  code: z
+    .string()
+    .max(16000)
+    .optional()
+    .describe('HTML/markup snippet to audit against the indexed technical constraints.'),
+  html: z
+    .string()
+    .max(16000)
+    .optional()
+    .describe('Alternative alias for the code parameter to audit against constraints.'),
 };
 
 export type RulesEnforcerInput = z.infer<z.ZodObject<typeof rulesEnforcerInputShape>>;
@@ -167,6 +180,133 @@ const TECHNICAL_RULES: TechnicalRule[] = [
       'Sidebar: <aside class="sidebar group/sidebar" data-state="expanded" data-collapsible="tooltip" data-fsm-recipe="navigation" data-fsm-state="expanded" aria-label="Primary navigation">',
       'Header: <header class="flex h-12 (or h-14) items-center justify-between border-b border-border/60">',
       'Breadcrumb: <nav aria-label="Breadcrumb" class="breadcrumb text-sm">',
+    ],
+  },
+  {
+    id: 'no-space-xy',
+    category: 'tailwind-v4',
+    rule: 'Forbid space-x-* and space-y-* utility classes; enforce flex gap-* or flex flex-col gap-*.',
+    forbidden: [
+      'space-x-* (legacy margin injection)',
+      'space-y-* (causes flex layout bleed)',
+    ],
+    required: [
+      'flex gap-* (horizontal flex child spacing)',
+      'flex flex-col gap-* (vertical flex stack spacing)',
+    ],
+  },
+  {
+    id: 'enforce-size-shorthand',
+    category: 'tailwind-v4',
+    rule: 'Use modern Tailwind size-* utility instead of matching pairs of w-* and h-*.',
+    forbidden: [
+      'w-4 h-4 (redundant dimension pair)',
+      'w-8 h-8, w-10 h-10, w-12 h-12',
+    ],
+    required: [
+      'size-4, size-8, size-10, size-12 shorthand utilities',
+    ],
+  },
+  {
+    id: 'no-manual-dark',
+    category: 'tokens',
+    rule: 'Forbid manual dark: class overrides; rely exclusively on semantic CSS variables.',
+    forbidden: [
+      'dark:bg-slate-900 (manual dark class override)',
+      'dark:text-white, dark:border-zinc-800',
+    ],
+    required: [
+      'Semantic CSS variables: bg-background, text-foreground, border-border, bg-card',
+      'HTML root .dark class managed by single theme controller',
+    ],
+  },
+  {
+    id: 'semantic-color-tokens',
+    category: 'tokens',
+    rule: 'Forbid raw Tailwind palette colors (e.g. bg-blue-500, text-gray-600); enforce semantic theme tokens.',
+    forbidden: [
+      'bg-blue-500, bg-red-600, text-gray-600, bg-slate-100',
+      'Non-semantic color utilities outside badge semantic variants',
+    ],
+    required: [
+      'bg-primary, text-primary-foreground, bg-muted, text-muted-foreground',
+      'bg-destructive, text-destructive-foreground, border-border',
+    ],
+  },
+  {
+    id: 'field-group-hierarchy',
+    category: 'dashboard-patterns',
+    rule: 'Enforce FieldGroup (data-component="field-group") and Field (data-component="field" / .field) with label association and dual data-invalid / aria-invalid contracts.',
+    forbidden: [
+      'Raw input stacked with label in plain space-y-* div',
+      'data-invalid on container without aria-invalid on input control',
+    ],
+    required: [
+      '<div class="field" data-component="field"><label class="label" for="id">...<input class="input" id="id">',
+      'Dual invalid contract: container data-invalid="true" + control aria-invalid="true"',
+    ],
+  },
+  {
+    id: 'input-group-addon',
+    category: 'dashboard-patterns',
+    rule: 'Enforce InputGroup structure (data-component="input-group") with explicit addons (data-slot="input-group-addon").',
+    forbidden: [
+      'Unstructured inline icons floating over inputs without input-group slot',
+      'Ad-hoc absolute positioned icon overlays inside raw text inputs',
+    ],
+    required: [
+      '<div class="input-group" data-component="input-group"><span data-slot="input-group-addon">...</span><input class="input"></div>',
+    ],
+  },
+  {
+    id: 'select-and-menu-groups',
+    category: 'semantic-html',
+    rule: 'Enforce grouped selections inside <optgroup>, SelectGroup, DropdownMenuGroup, or CommandGroup wrappers.',
+    forbidden: [
+      'Flat lists of options or menu items without categorical grouping',
+      'Ad-hoc divider divs separating option lists',
+    ],
+    required: [
+      '<optgroup label="..."> in native <select>',
+      '<div data-slot="select-group" role="group"> with group label in custom menus',
+    ],
+  },
+  {
+    id: 'icon-data-attribute-no-size',
+    category: 'semantic-html',
+    rule: 'Enforce data-icon="inline-start|inline-end" on button icons without manual size-4 / w-4 h-4 classes.',
+    forbidden: [
+      '<button class="btn"><svg class="size-4" data-icon="inline-start"> (redundant sizing)',
+      '<button class="btn"><svg class="w-4 h-4"> (missing data-icon attribute)',
+    ],
+    required: [
+      '<button class="btn"><svg data-icon="inline-start" ...> (automatic CSS sizing)',
+      'data-icon="inline-start" for leading icons, data-icon="inline-end" for trailing',
+    ],
+  },
+  {
+    id: 'dialog-accessible-title',
+    category: 'fsm-contracts',
+    rule: 'Require DialogTitle / <h2> with aria-labelledby on <dialog>, drawer, and sheet overlays.',
+    forbidden: [
+      '<dialog class="dialog"> without aria-labelledby or visible accessible title',
+      'Sheet / drawer panels with missing modal title heading',
+    ],
+    required: [
+      '<dialog id="dlg" class="dialog" aria-labelledby="dlg-title"><h2 id="dlg-title" class="text-lg font-semibold">Title</h2></dialog>',
+    ],
+  },
+  {
+    id: 'empty-and-skeleton-primitives',
+    category: 'dashboard-patterns',
+    rule: 'Require .empty state containers and .skeleton primitives instead of custom animate-pulse divs.',
+    forbidden: [
+      'Ad-hoc <div class="animate-pulse bg-gray-200"> loading placeholders',
+      'Empty table/card fallback without .empty landmark structure',
+    ],
+    required: [
+      '<div class="skeleton h-4 w-full"> or <div class="skeleton size-10 rounded-full">',
+      '<div class="empty text-center p-8"><p class="text-sm text-muted-foreground">No records</p></div>',
     ],
   },
 ];
@@ -372,7 +512,7 @@ export function runRulesEnforcer(input: RulesEnforcerInput = {}) {
   }
 
   for (const sliceCount of [2, 1, 0]) {
-    for (const ruleLimit of [9, 7, 5, 4, 3]) {
+    for (const ruleLimit of [19, 15, 12, 10, 8, 6, 5, 4, 3]) {
       const candidate = {
         stage: '2a-rules-enforcer',
         category,

@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "id": "signup-05",
+  "role": "page",
+  "family": "auth",
+  "description": "A simple signup form with social providers.",
+  "tags": [
+    "auth",
+    "signup",
+    "full-featured",
+    "password-strength"
+  ],
+  "root": "auth-root",
+  "fragments": [
+    {
+      "id": "auth-root",
+      "emmet": "main.flex.min-h-screen.items-center.justify-center.p-6.bg-muted[data-slot=auth-page]>div.card.w-full.max-w-md.rounded-xl.border.border-border.bg-card.p-6.shadow-md[data-fsm-recipe=auth-flow][data-fsm-state=idle]>(header.flex.flex-col.gap-2.text-center>h1.text-2xl.font-semibold{Create your account}+p.text-xs.text-muted-foreground{Start your 30-day trial})+(div.grid.grid-cols-2.gap-4.pt-2>button.btn.btn-sm.btn-outline.w-full{GitHub}+button.btn.btn-sm.btn-outline.w-full{Google})+form.flex.flex-col.gap-4.pt-2>(div.flex.flex-col.gap-2>label.text-xs.font-medium{Full Name}+input.input.input-sm[placeholder='Jane Doe'][required])+(div.flex.flex-col.gap-2>label.text-xs.font-medium{Work Email}+input.input.input-sm[type=email][placeholder='jane@company.com'][required])+(div.flex.flex-col.gap-2>label.text-xs.font-medium{Password}+input.input.input-sm[type=password][required]+div.flex.gap-2.pt-2>div.h-2.flex-1.rounded.bg-primary*3)+button.btn.btn-sm.btn-primary.w-full[type=submit]{Create Account}"
+    }
+  ],
+  "mounts": [],
+  "slots": [],
+  "ports": [],
+  "componentRefs": [
+    "card",
+    "button",
+    "input",
+    "label",
+    "field",
+    "checkbox"
+  ],
+  "ruleRefs": [],
+  "dependencyBlockIds": [],
+  "layout": {
+    "frameRef": "auth-root"
+  },
+  "landmarks": {
+    "main": 1,
+    "primaryHeading": 1
+  },
+  "provenance": {
+    "origin": "authored",
+    "sourceHashes": {
+      "upstream:signup-05": "6a4223363b2e7de3c8ec233838ebdaa52f6be065ddb3c59b261cefad03b4b421"
+    },
+    "mappingVersion": "1.0.0"
+  }
+}

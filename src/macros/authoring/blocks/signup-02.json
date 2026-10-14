@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "id": "signup-02",
+  "role": "page",
+  "family": "auth",
+  "description": "A two column signup page with a cover image.",
+  "tags": [
+    "auth",
+    "signup",
+    "split-screen",
+    "branding"
+  ],
+  "root": "auth-root",
+  "fragments": [
+    {
+      "id": "auth-root",
+      "emmet": "main.grid.min-h-screen.grid-cols-1.lg:grid-cols-2[data-slot=auth-page]>(div.relative.hidden.h-full.flex-col.justify-between.bg-muted.p-12.lg:flex>div.flex.items-center.gap-2.text-lg.font-medium>div.size-6.rounded.bg-primary+span{Acme Corp}^blockquote.space-y-2>p.text-lg{\"Join thousands of teams.\"}+footer.text-sm.text-muted-foreground{Sofia Davis})+div.flex.items-center.justify-center.p-6>div.mx-auto.flex.w-full.max-w-sm.flex-col.gap-6[data-fsm-recipe=auth-flow][data-fsm-state=idle]>(header.flex.flex-col.gap-2.text-center>h1.text-2xl.font-semibold{Create account}+p.text-xs.text-muted-foreground{Start your 14-day trial})+form.flex.flex-col.gap-4>(div.flex.flex-col.gap-2>label.text-xs.font-medium{Name}+input.input.input-sm[required])+(div.flex.flex-col.gap-2>label.text-xs.font-medium{Email}+input.input.input-sm[type=email][required])+(div.flex.flex-col.gap-2>label.text-xs.font-medium{Password}+input.input.input-sm[type=password][required])+button.btn.btn-sm.btn-primary.w-full[type=submit]{Create Account}"
+    }
+  ],
+  "mounts": [],
+  "slots": [],
+  "ports": [],
+  "componentRefs": [
+    "card",
+    "button",
+    "input",
+    "label",
+    "field",
+    "checkbox"
+  ],
+  "ruleRefs": [],
+  "dependencyBlockIds": [],
+  "layout": {
+    "frameRef": "auth-root"
+  },
+  "landmarks": {
+    "main": 1,
+    "primaryHeading": 1
+  },
+  "provenance": {
+    "origin": "authored",
+    "sourceHashes": {
+      "upstream:signup-02": "25710129501618353e91e1bb5fb280c42044fb6689b426b76324be8ca963c081"
+    },
+    "mappingVersion": "1.0.0"
+  }
+}

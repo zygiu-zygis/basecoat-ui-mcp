@@ -143,20 +143,47 @@ Only that exact directory is used. The server does not walk parent directories. 
 
 ## Basecoat MCP tools
 
-The server exposes **5 high-level intent-driven tools**, four component tools, six macro tools, and two semantic tools (17 tools total). Every tool result is a bounded MCP packet of at most **1,999 UTF-8 bytes**. Larger result sets use cursors; responses are not sliced mid-JSON.
+The server exposes **22 offline MCP tools** organized across six architectural layers: project setup and configuration, intent-driven layout orchestration, theme-aware charts, component retrieval, macro design graphs, and semantic state contracts. Every tool result is a bounded MCP packet of at most **1,999 UTF-8 bytes**. Larger result sets use cursors; responses are not sliced mid-JSON.
 
-### 4-Stage Intent-Driven Tooling Layer (Fast Path)
+### Complete MCP Tool Table
 
-### 4-Stage Intent-Driven Tooling Layer (Fast Path)
+| Tool Name | Layer | Description | Mode |
+| --- | --- | --- | --- |
+| `basecoat_setup_config` | Setup & Config | Generates framework boilerplates, Tailwind CSS 4 imports, OKLCH variables, and no-flash dark mode scripts | Read-only |
+| `basecoat_page_architect` | Intent Fast Path | Plans complete layout scaffolds with container grid contracts and explicit slot topology | Read-only |
+| `basecoat_compose_stack` | Intent Fast Path | Assembles composable component stacks into canonical shells (sidebar-01..16, topbar, inset, split) with slot hydration | Read-only |
+| `basecoat_rules_enforcer` | Intent Fast Path | Enforces technical constraints across Tailwind v4, FSM state contracts, semantic tokens, and dashboard rules | Read-only |
+| `basecoat_creative_director` | Intent Fast Path | Surfaces Kanso minimalism, 4px/8px optical rhythm, density profiles, typography ladders, and contrast pairings | Read-only |
+| `basecoat_component_syntax` | Intent Fast Path | Delivers copy-pasteable HTML/Astro component markup with pre-configured FSM state variants and inline SVG icons | Read-only |
+| `basecoat_list_charts` | Charts & Data Viz | Lists and filters 56 theme-aware chart blueprints across 7 categories with keyword search | Read-only |
+| `basecoat_get_chart_blueprint` | Charts & Data Viz | Retrieves chart HTML using semantic CSS tokens (--chart-1..5) and mount scripts for 5 frameworks | Read-only |
+| `basecoat_quality_inspector` | Quality & Audit | Audits HTML/Astro markup with Score (0-100), letter grade, syntax violations, a11y omissions, and auto-fix suggestions | Read-only |
+| `search_components` | Components | Searches up to 8 compact component summaries by intent and/or query across 61 curated components | Read-only |
+| `get_component_details` | Components | Retrieves minimal component template, dependencies, and composition guidance for Astro or HTML | Read-only |
+| `get_component_html` | Components | Retrieves HTML markup template and dependencies for any curated component | Read-only |
+| `validate_composition` | Static Analysis | Statically checks up to 256 KiB of markup for migration errors, rhythm, FSM bindings, and accessibility | Read-only |
+| `validate_markup` | Static Analysis | Validates HTML/Astro markup syntax, structure, landmark ordering, and semantic constraints | Read-only |
+| `search_macro_blocks` | Macro Graph | Searches approved macro layout blocks by query, role, family, or tag across 84 blocks and aliases | Read-only |
+| `get_macro_block` | Macro Graph | Retrieves a section of a compiled macro block blueprint (manifest, structure, slots, ports, rules, etc.) | Read-only |
+| `begin_design` | Macro Graph | Creates a persistent, hash-verified design session under .basecoat/designer/ pinning profile and registry revision | Mutation (idempotent) |
+| `get_design_context` | Macro Graph | Reads focused design session views (sessions, overview, decisions, graph, rules, focus, next) | Read-only |
+| `apply_design_patch` | Macro Graph | Applies atomic graph mutations with expectedRevision and idempotent operationId | Mutation (idempotent) |
+| `validate_design` | Macro Graph | Validates draft or complete design graphs, returning diagnostic totals and paginated issues | Read-only |
+| `get_rhythm_rules` | Semantics & Tokens | Reads effective semantic rhythm profiles and approved utilities by family, supporting project-local overrides | Read-only |
+| `get_fsm_recipe` | Semantics & State | Reads finite state machine interaction states, events, transitions, guards, and actions | Read-only |
 
-1. `basecoat_page_architect` — Query recipes (`src/macros/authoring/recipes/*.json`) and macro blocks (`src/macros/authoring/blocks/*.json`) by `intent`, `recipe`, or `block`. Delivers full layout scaffolds with explicit `data-slot` markers, semantic HTML skeletons, grid structures, and responsive containers. Fully covers 5 dashboard page archetypes:
-   - **Executive Dashboard** (`workspace-dashboard`, `executive-dashboard`) — KPI stat cards, revenue chart, and recent activity.
-   - **E-commerce Overview** (`ecommerce-overview`) — Sales metrics, revenue analytics, top products card, and order summary.
-   - **Analytics Workspace** (`analytics-workspace`) — Filter toolbar, time-series interactive chart, and cohort analysis breakdown.
-   - **Data Table Detail** (`workspace-detail`, `data-table-detail`) — Paginated data table with search/filters and slide-over inspection drawer.
-   - **Settings Split-Screen** (`workspace-settings`, `settings-split-screen`) — Two-column responsive layout with vertical section navigation and form controls.
+### Intent-Driven Design Layer (Fast Path)
+
+1. `basecoat_setup_config` - Framework and styling configuration generator. Outputs ready-to-use boilerplate for 6 targets (`astro`, `vanilla`, `nextjs`, `sveltekit`, `vite`, `htmx`), 8 aesthetic style packs (`vega`, `nova`, `maia`, `lyra`, `mira`, `luma`, `sera`, `rhea`), complete OKLCH `@theme inline` blocks, and synchronous `<head>` inline dark mode scripts.
+2. `basecoat_page_architect` - Query recipes (`src/macros/authoring/recipes/*.json`) and macro blocks (`src/macros/authoring/blocks/*.json`) by `intent`, `recipe`, or `block`. Delivers full layout scaffolds with explicit `data-slot` markers, semantic HTML skeletons, grid structures, and responsive containers. Fully covers 5 dashboard page archetypes:
+   - **Executive Dashboard** (`workspace-dashboard`, `executive-dashboard`) - KPI stat cards, revenue chart, and recent activity.
+   - **E-commerce Overview** (`ecommerce-overview`) - Sales metrics, revenue analytics, top products card, and order summary.
+   - **Analytics Workspace** (`analytics-workspace`) - Filter toolbar, time-series interactive chart, and cohort analysis breakdown.
+   - **Data Table Detail** (`workspace-detail`, `data-table-detail`) - Paginated data table with search/filters and slide-over inspection drawer.
+   - **Settings Split-Screen** (`workspace-settings`, `settings-split-screen`) - Two-column responsive layout with vertical section navigation and form controls.
    Supports density controls (`compact` for high-density enterprise tools, `comfortable` for standard interfaces).
-2. `basecoat_rules_enforcer` — Enforces strict technical constraints across `tailwind-v4`, `fsm-contracts`, `tokens`, `semantic-html`, and `dashboard-patterns`:
+3. `basecoat_compose_stack` - Dynamically composes 41 pre-built component stacks across 7 categories (`shell-stacks`, `header-stacks`, `kpi-stacks`, `chart-stacks`, `table-stacks`, `overlay-stacks`, `form-stacks`) into canonical shells (`sidebar-01`..`sidebar-16`, `topbar-shell`, `inset-shell`, `split-shell`) with automated slot hydration.
+4. `basecoat_rules_enforcer` - Enforces strict technical constraints across `tailwind-v4`, `fsm-contracts`, `tokens`, `semantic-html`, and `dashboard-patterns`:
    - `MET-01`: KPI numerals require `text-2xl`/`text-3xl` with `tabular-nums` and semantic trend indicators.
    - `TBL-01`: Data tables require `<div class="overflow-x-auto">` wrapper, sticky blurred `<thead class="sticky top-0 bg-background/90 backdrop-blur">`, and right-aligned numeric cells.
    - `FRM-01`: Input controls require `<div class="field">` wrappers with associated `<label class="label" for="id">`.
@@ -164,29 +191,35 @@ The server exposes **5 high-level intent-driven tools**, four component tools, s
    - `TW4-01`: Rejects deprecated Tailwind v3 utilities (`bg-opacity-*`, `flex-shrink-*`, `@tailwind` directives).
    - `TOK-01`: Rejects arbitrary bracket dimensions (`w-[327px]`) and hardcoded hex colors (`#ff0000`, `bg-[#123456]`).
    - `FSM-01`: Enforces finite state machine contracts on interactive primitives (`dialog`, `dropdown-menu`, `accordion`, `tabs`).
-3. `basecoat_creative_director` — Surfaces Kanso minimalism and Basecoat design intelligence:
+5. `basecoat_creative_director` - Surfaces Kanso minimalism and Basecoat design intelligence:
    - Density profiles: `compact` (p-4 gap-4, header h-12, table py-2), `standard` (p-6 gap-4/gap-6, header h-14, table py-3), and `comfortable` (p-6 md:p-8, header h-14).
    - Mathematical 4px/8px optical rhythm grid and typography ladders (`tabular-nums` on all metrics and numeric table cells).
    - Subtle 1px card ring elevation without conflicting `border` utilities.
    - WCAG 2.1 AA (contrast >= 4.5:1) and APCA ($L_c \ge 60$) token pairings.
-4. `basecoat_component_syntax` — Delivers copy-pasteable HTML or Astro component markup from `src/registry/components.json` with pre-configured FSM state variants (`default`, `active`, `loading`, `disabled`, `open`, `closed`, `open/closed`), verified inline SVG action icons (`plus`, `edit`, `trash`, `search`, `chevron-down`, `check`, `external-link`), and composite component patterns:
-   - `metric-card` (`metrics-summary`, `kpi-card`) — Stat card with tabular-nums numeral and trend badge.
-   - `data-table` (`datatable`) — Sticky header table wrapped in `overflow-x-auto` with right-aligned numeric cells.
-   - `sidebar-shell` (`sidebar-dashboard-shell`) — Desktop sticky navigation with responsive flyout below `md`.
-5. `basecoat_quality_inspector` — Audits HTML/Astro compositions against dashboard audit rules: `table-overflow-wrapper`, `kpi-metric-tabular-nums`, `table-numeric-alignment`, `a11y-focus-ring` (flagging `outline-none` without focus visible ring), arbitrary color/dimension violations, and WCAG/APCA contrast pairings. Returns `score` (`0–100`), letter `grade` (`A–F`), structured issues, and actionable `autoFixSuggestions`.
+6. `basecoat_component_syntax` - Delivers copy-pasteable HTML or Astro component markup from `src/registry/components.json` with pre-configured FSM state variants (`default`, `active`, `loading`, `disabled`, `open`, `closed`, `open/closed`), verified inline SVG action icons (`plus`, `edit`, `trash`, `search`, `chevron-down`, `check`, `external-link`), and composite component patterns:
+   - `metric-card` (`metrics-summary`, `kpi-card`) - Stat card with tabular-nums numeral and trend badge.
+   - `data-table` (`datatable`) - Sticky header table wrapped in `overflow-x-auto` with right-aligned numeric cells.
+   - `sidebar-shell` (`sidebar-dashboard-shell`) - Desktop sticky navigation with responsive flyout below `md`.
+7. `basecoat_quality_inspector` - Audits HTML/Astro compositions against dashboard audit rules: `table-overflow-wrapper`, `kpi-metric-tabular-nums`, `table-numeric-alignment`, `a11y-focus-ring` (flagging `outline-none` without focus visible ring), arbitrary color/dimension violations, and WCAG/APCA contrast pairings. Returns `score` (`0-100`), letter `grade` (`A-F`), structured issues, and actionable `autoFixSuggestions`.
+
+### Theme-Aware Charts and Data Visualization
+
+8. `basecoat_list_charts` - Discovers and filters 56 theme-aware chart blueprints across 7 categories (`area`, `bar`, `line`, `pie`, `radar`, `radial`, `tooltip`) with keyword search and variant summaries.
+9. `basecoat_get_chart_blueprint` - Retrieves chart container HTML using semantic theme tokens (`var(--chart-1)` through `var(--chart-5)`) and copy-pasteable mount scripts for 5 frameworks (`vanilla`, `astro`, `react`, `vue`, `svelte`).
 
 ### Component tools
 
-- `search_components` returns up to 8 compact `{id, name, intent}` summaries and never returns markup. `intent` and `query` are optional; an empty search returns an empty list.
+- `search_components` returns up to 8 compact `{id, name, intent}` summaries across the 61 curated components and never returns markup. `intent` and `query` are optional; an empty search returns an empty list.
 - `get_component_details` returns one Astro or HTML template with dependencies and composition guidance. Oversized entries fail closed. `theme-toggle` resolves to `theme-switcher`.
-- `get_component_html` returns the HTML markup template and dependencies for a Basecoat component (`environment` defaults to `html`).
+- `get_component_html` returns the HTML markup template and dependencies for any curated component (`environment` defaults to `html`).
 - `validate_composition` statically checks up to **256 KiB** (262,144 UTF-8 bytes) of HTML or Astro source and returns at most 24 issues (including WCAG 2.1 / APCA token contrast, arbitrary dimensions, dialog focus traps, and `aria-controls` bindings). Pass `code` or `html`, and optional `semanticProfile` or `densityProfile` (comfortable|compact). It does not render, execute, resolve application modules, or certify runtime browser accessibility.
+- `validate_markup` statically validates HTML/Astro source syntax, container tags, landmark ordering, and semantic constraints against Basecoat guidelines.
 
 ### Macro tools
 
 The macro layer is this project's curated, project-specific composition system for shells, auth flows, data workspaces, slots, ports, rules, and recipes. It is compiled into a pinned registry snapshot. These layout contracts are not supplied automatically by shadcn or by MCP.
 
-1. `search_macro_blocks` - find compatible blueprint blocks by query, role, family, or tag.
+1. `search_macro_blocks` - find compatible blueprint blocks by query, role, family, or tag across 84 blocks and aliases.
 2. `get_macro_block` - read a block section such as `manifest`, `structure`, `slots`, `ports`, `rules`, `dependencies`, or `provenance`.
 3. `begin_design` - create a persistent design session and pin its profile and registry revision. Pinned registries are hash-verified on load.
 4. `get_design_context` - read session lists or focused views such as `overview`, `graph`, `rules`, `focus`, and `next`.
@@ -195,14 +228,14 @@ The macro layer is this project's curated, project-specific composition system f
 
 Design sessions persist under `<project-root>/.basecoat/designer/`. Registry revisions are content-addressed; a session keeps using its pinned revision even after the package snapshot changes. Design snapshots use the form `d:<designId>@<revision>`.
 
-Curated block blueprints (including translated shadcn/ui v4 blocks):
-- **Dashboards & Workspaces**: `dashboard-01` through `dashboard-07`, `dashboard-workspace`, `dashboard-main`, `dashboard-activity`, `analytics-workspace`, `ecommerce-overview`, `tasks-table-workspace`, `mail-workspace`.
-- **Metrics & Data Tables**: `metrics-summary`, `data-table-rich`, `data-table`, `data-table-detail-layout`, `data-workspace`, `data-bulk-actions`, `data-filters`, `data-pager`.
-- **Forms & Authentication**: `form-field-group`, `forms`, `form-section`, `authentication`, `auth-sign-in`, `auth-sign-up`, `auth-split-screen`, `auth-recovery`, `auth-reset`.
-- **Shells & Navigation**: `sidebar-dashboard-shell`, `sidebar-inset-shell`, `sidebar-collapsible-icon`, `sidebar-mobile-flyout`, `sidebar-nav`, `topbar-shell`, `topbar-nav`, `app-shell`, `page-header`.
+Curated block blueprints (84 blocks and aliases including translated shadcn/ui v4 blocks):
+- **Canonical Shells & Sidebars**: `sidebar-01` through `sidebar-16`, `sidebar-dashboard-shell`, `sidebar-inset-shell`, `sidebar-collapsible-icon`, `sidebar-mobile-flyout`, `sidebar-nav`, `topbar-shell`, `topbar-nav`, `app-shell`, `page-header`.
+- **Dashboards & Workspaces**: `dashboard-01` through `dashboard-07`, `dashboard-workspace`, `dashboard-main`, `dashboard-activity`, `analytics`, `analytics-workspace`, `ecommerce-overview`, `tasks`, `tasks-table-workspace`, `mail`, `mail-workspace`.
+- **Metrics & Data Tables**: `metrics-summary`, `data-table-rich`, `data-table`, `data-table-detail-layout`, `data-workspace`, `data-bulk-actions`, `data-filters`, `data-pager`, `products`, `billing`, `settings`.
+- **Forms & Authentication**: `login-01` through `login-05`, `signup-01` through `signup-05`, `otp-01` through `otp-05`, `form-field-group`, `forms`, `form-section`, `authentication`, `auth-sign-in`, `auth-sign-up`, `auth-split-screen`, `auth-recovery`, `auth-reset`.
 - **Charts & Feedback**: `svg-area-chart`, `empty-state`, `error-boundary`, `newsletter-waitlist`, `pricing-tiers`, `segmented-toggle`, `detail-drawer-panel`, `product-detail-layout`, `settings-workspace`.
 
-Multi-block recipes:
+Multi-block recipes (11 page recipes):
 - `workspace-dashboard` - full analytics dashboard (KPI cards, activity chart, records table).
 - `ecommerce-overview` - e-commerce operational dashboard with order metrics and product highlights.
 - `analytics-workspace` - analytics dashboard with time-series charts and cohort views.
@@ -218,8 +251,8 @@ Multi-block recipes:
 
 The semantic layer provides compiled rhythm profiles and finite state machine recipes:
 
-7. `get_rhythm_rules` - access approved spacing, typography, surfaces, borders, and layout patterns by profile and family filters.
-8. `get_fsm_recipe` - read interaction states, events, transitions, guards, and actions for `dialog`, `navigation` (`collapsible-navigation`), `auth-flow`, and `tabs`.
+1. `get_rhythm_rules` - access approved spacing, typography, surfaces, borders, and layout patterns by profile and family filters.
+2. `get_fsm_recipe` - read interaction states, events, transitions, guards, and actions for `dialog`, `navigation` (`collapsible-navigation`), `auth-flow`, and `tabs`.
 
 Semantic tools use the same bounded pagination as macro tools. Each rhythm record keeps the semantic token ID separate from its approved Tailwind utility. Put the utility in `class`; keep the semantic ID in design metadata and agent reasoning. Project overrides from `<project-root>/.basecoat/rhythm.json` are reflected in an effective content ref and revision. FSM recipes are structural metadata, not runtime implementations.
 
@@ -285,8 +318,27 @@ curated adaptations owned by this project's macro layer. They are not features
 provided by shadcn or by MCP. Upstream refreshes are separate maintainer authoring
 operations and never occur from the MCP server.
 
-## Basecoat design resources
+## Basecoat MCP resources
 
+The server exposes **8 authoritative MCP resources** spanning the 3-pillar Skill Vault, core design system contracts, multi-framework integration guides, and live host project context:
+
+### Complete MCP Resource Table
+
+| Resource URI | Category | Description | MIME Type |
+| --- | --- | --- | --- |
+| `basecoat://skills/core` | Skill Vault | Core Basecoat UI design philosophy, Kanso minimalism, and foundational component usage | `text/markdown` |
+| `basecoat://skills/dashboard` | Skill Vault | Comprehensive dashboard architecture, layout patterns, page types, sidebar configurations, and audit checklists | `text/markdown` |
+| `basecoat://skills/charts` | Skill Vault | Theme-aware chart blueprints, CSS token mapping (--chart-1..5), ApexCharts configuration, and multi-framework integration | `text/markdown` |
+| `basecoat://skills/files/*` | Skill Vault | Dynamic file access resource to read individual documentation and reference markdown files across the 95-file Skill Vault | `text/markdown` |
+| `basecoat://design/rhythm` | Design System | Content hierarchy, 4px/8px optical spacing rhythm, typography ladders, density profiles, and structural composition rules | `text/markdown` |
+| `basecoat://design/theming` | Theming & Dark Mode | Basecoat OKLCH token contract, 8 official style packs (Vega..Rhea), class-based dark mode (themeMode resolver), and no-flash bootstrap | `text/markdown` |
+| `basecoat://integration/frameworks` | Integration Guide | Production integration guide covering Astro, Next.js, Express, Vite, Tailwind CSS 4 setup, and framework-agnostic HTML | `text/markdown` |
+| `basecoat://project/context` | Project Context | Live on-demand read of the host project's DESIGN.md (bounded to 6,000 UTF-8 bytes) | `application/json` |
+
+- `basecoat://skills/core` provides foundational guidelines for building clean, minimal interfaces using Basecoat CSS, including design philosophy, atomic styling principles, and component construction.
+- `basecoat://skills/dashboard` provides enterprise dashboard architecture, navigation patterns, data display conventions, form layouts, and accessibility checklists.
+- `basecoat://skills/charts` provides complete guidance on theme-aware ApexCharts and SVG data visualization using pure Basecoat CSS color tokens (`var(--chart-1)` through `var(--chart-5)`) across 5 frameworks.
+- `basecoat://skills/files/*` enables dynamic lookup and retrieval of any specific markdown file within the 95-file Skill Vault (`skills/basecoat`, `skills/basecoat-dashboard`, `skills/basecoat-charts`).
 - `basecoat://design/rhythm` provides content hierarchy, spacing, typography, component-family, and structural composition rules.
 - `basecoat://design/theming` provides the Basecoat token contract, all 8 official style packs (Vega, Nova, Maia, Lyra, Mira, Luma, Sera, Rhea), class-based dark mode via `window.basecoat.theme` (`themeMode` key), no-flash bootstrap, and form-control/autofill pitfalls. Read it before restyling or auditing an existing UI.
 - `basecoat://integration/frameworks` provides Astro, Next.js, Express, Vite, Tailwind CSS 4 (including style pack imports like `@import "basecoat-css/vega";`), selective Basecoat JavaScript, and native dialog setup.
@@ -342,13 +394,20 @@ The MCP server provides a robust set of macro layouts (`search_macro_blocks`) th
 
 ## Registry and exclusions
 
-The checked-in registry contains **41 searchable templates**: 39 curated from
-the Basecoat 1.0.2 upstream inventory and two MCP-only templates
-(`segmented-toggle` and `svg-area-chart`):
+The checked-in registry contains **61 curated components**: all 57 `shadcn/ui` New York v4 primitives adapted for pure Basecoat CSS without React, plus Basecoat extensions (`theme-switcher`, `segmented-toggle`, `svg-area-chart`, `native-select`) with explicit FSM state contracts:
 
-`accordion`, `alert`, `alert-dialog`, `avatar`, `badge`, `breadcrumb`, `button`, `button-group`, `card`, `chart`, `checkbox`, `combobox`, `command`, `dialog`, `drawer`, `dropdown-menu`, `empty`, `field`, `input`, `input-group`, `item`, `kbd`, `label`, `native-select`, `popover`, `progress`, `radio-group`, `scroll-area`, `segmented-toggle`, `select`, `sidebar`, `skeleton`, `slider`, `svg-area-chart`, `switch`, `table`, `tabs`, `textarea`, `theme-switcher`, `toast`, `tooltip`
+`accordion`, `alert`, `alert-dialog`, `aspect-ratio`, `avatar`, `badge`, `breadcrumb`, `button`, `button-group`, `calendar`, `card`, `carousel`, `chart`, `checkbox`, `collapsible`, `combobox`, `command`, `context-menu`, `data-table`, `date-picker`, `dialog`, `drawer`, `dropdown-menu`, `empty`, `field`, `form`, `hover-card`, `input`, `input-group`, `input-otp`, `item`, `kbd`, `label`, `menubar`, `native-select`, `navigation-menu`, `pagination`, `popover`, `progress`, `radio-group`, `resizable`, `scroll-area`, `segmented-toggle`, `select`, `separator`, `sheet`, `sidebar`, `skeleton`, `slider`, `sonner`, `spinner`, `svg-area-chart`, `switch`, `table`, `tabs`, `textarea`, `theme-switcher`, `toast`, `toggle`, `toggle-group`, `tooltip`
 
-The maintenance snapshot records 41 discovered upstream components. `pagination` and `spinner` remain excluded from search and details until manually curated. Slider uses `basecoat-css/range`, not a `slider` module.
+### Comprehensive Catalog Counts
+
+- **61 Curated Components**: All 57 `shadcn/ui` new-york-v4 primitives plus Basecoat extensions with verified HTML/Astro markup templates, zero React bundling requirements, and finite state machine (FSM) contracts.
+- **84 Macro Blocks & Aliases**: Layout blueprints covering `sidebar-01..16`, `dashboard-01..07`, `login-01..05`, `signup-01..05`, `otp-01..05`, `mail`, `tasks`, `forms`, `products`, `analytics`, `billing`, and `settings`.
+- **11 Page Recipes**: End-to-end multi-page layout graphs (`workspace-dashboard`, `ecommerce-overview`, `analytics-workspace`, `workspace-settings`, `workspace-detail`, `tasks-table-workspace`, `mail-workspace`, `auth-flow`, `auth-split-flow`, `data-records`, `marketing-pricing`).
+- **41 Composable Component Stacks**: Composable stacks across 7 categories (`shell-stacks`, `header-stacks`, `kpi-stacks`, `chart-stacks`, `table-stacks`, `overlay-stacks`, `form-stacks`) with slot hydration into canonical shells.
+- **56 Theme-Aware Chart Blueprints**: Visualizations across 7 categories (`area`, `bar`, `line`, `pie`, `radar`, `radial`, `tooltip`) mapped to CSS tokens (`var(--chart-1)` through `var(--chart-5)`) with mounts for 5 frameworks (`vanilla`, `astro`, `react`, `vue`, `svelte`).
+- **95 Markdown Files across the 3-Pillar Skill Vault**: Distributed across `skills/basecoat` (core foundations and 57 component guides), `skills/basecoat-dashboard` (dashboard architecture, block patterns, and audit checklist), and `skills/basecoat-charts` (ApexCharts blueprints and token mapping).
+
+The maintenance snapshot records 41 discovered upstream components. All 57 shadcn/ui primitives are now curated with templates, dependencies, and state contracts. Slider uses `basecoat-css/range`, not a `slider` module.
 
 The runtime has no network client, remote documentation dependency, frontend framework runtime, remote media analysis, or bundled host assets. Generated templates may not use `basecoat-css/all`; each controller is imported explicitly. Search results do not contain markup, newly discovered components are never auto-promoted, and JSON or HTML is never sliced to fit a response budget.
 

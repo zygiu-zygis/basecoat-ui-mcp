@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "id": "login-03",
+  "role": "page",
+  "family": "auth",
+  "description": "A login page with a muted background color.",
+  "tags": [
+    "auth",
+    "login",
+    "card",
+    "muted-background"
+  ],
+  "root": "auth-root",
+  "fragments": [
+    {
+      "id": "auth-root",
+      "emmet": "main.flex.min-h-screen.items-center.justify-center.bg-muted.p-6[data-slot=auth-page]>div.card.w-full.max-w-md.rounded-xl.border.border-border.bg-card.p-8.shadow-lg[data-fsm-recipe=auth-flow][data-fsm-state=idle]>(header.flex.flex-col.gap-2.text-center>h1.text-2xl.font-semibold{Welcome Back}+p.text-xs.text-muted-foreground{Enter your credentials to continue})+form.flex.flex-col.gap-4.pt-4>(div.flex.flex-col.gap-2>label.text-xs.font-medium{Email}+input.input.input-sm[type=email][placeholder='m@example.com'][required])+(div.flex.flex-col.gap-2>div.flex.items-center.justify-between>label.text-xs.font-medium{Password}+a.text-xs.hover:underline{Forgot?}^input.input.input-sm[type=password][required])+button.btn.btn-sm.btn-primary.w-full[type=submit]{Sign In}+div.text-center.text-xs.text-muted-foreground>a.hover:underline[href='#signup']{Don't have an account? Sign up}"
+    }
+  ],
+  "mounts": [],
+  "slots": [],
+  "ports": [],
+  "componentRefs": [
+    "card",
+    "button",
+    "input",
+    "label",
+    "field"
+  ],
+  "ruleRefs": [],
+  "dependencyBlockIds": [],
+  "layout": {
+    "frameRef": "auth-root"
+  },
+  "landmarks": {
+    "main": 1,
+    "primaryHeading": 1
+  },
+  "provenance": {
+    "origin": "authored",
+    "sourceHashes": {
+      "upstream:login-03": "553981aac4660931b6113e5ff179eb70dd32359ad816f2c8d20adbc59e1fc6d9"
+    },
+    "mappingVersion": "1.0.0"
+  }
+}

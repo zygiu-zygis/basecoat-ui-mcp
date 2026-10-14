@@ -1,0 +1,98 @@
+{
+  "schemaVersion": 1,
+  "id": "sidebar-16",
+  "role": "application-shell",
+  "family": "layout",
+  "description": "A sidebar with a sticky site header.",
+  "tags": [
+    "shell",
+    "sidebar",
+    "topbar-header",
+    "collapsible-sidebar"
+  ],
+  "root": "shell-root",
+  "fragments": [
+    {
+      "id": "shell-root",
+      "emmet": "div.flex.min-h-screen.flex-col.w-full[data-slot=shell-root][data-component=sidebar]>(header.sticky.top-0.z-30.flex.h-12.items-center.justify-between.border-b.border-border.bg-background.px-4[data-slot=top-header]>div.flex.items-center.gap-2>button.btn.btn-ghost.btn-xs[data-slot=sidebar-toggle]{☰}+span.text-sm.font-semibold{Global Platform}^div.flex.items-center.gap-2>div.size-8.rounded-full.bg-muted)+div.flex.flex-1.min-h-0>aside.sidebar.w-64.border-e.border-border.bg-background.p-4[data-slot=navigation][data-side=left]>nav.flex.flex-col.gap-2>a.btn.btn-ghost.btn-sm.justify-start[data-state=active]{Dashboard}+a.btn.btn-ghost.btn-sm.justify-start{Settings}^^main.flex-1.overflow-auto.p-6[data-slot=content]"
+    }
+  ],
+  "mounts": [],
+  "slots": [
+    {
+      "id": "top-header",
+      "at": {
+        "fragment": "shell-root",
+        "name": "top-header"
+      },
+      "accepts": [
+        "header"
+      ],
+      "min": 0,
+      "max": 1
+    },
+    {
+      "id": "navigation",
+      "at": {
+        "fragment": "shell-root",
+        "name": "navigation"
+      },
+      "accepts": [
+        "navigation"
+      ],
+      "min": 1,
+      "max": 1
+    },
+    {
+      "id": "content",
+      "at": {
+        "fragment": "shell-root",
+        "name": "content"
+      },
+      "accepts": [
+        "dashboard",
+        "workspace",
+        "table"
+      ],
+      "min": 1,
+      "max": 1
+    }
+  ],
+  "ports": [
+    {
+      "id": "main-region",
+      "at": {
+        "fragment": "shell-root",
+        "name": "content"
+      },
+      "direction": "out",
+      "kind": "region",
+      "contract": "main",
+      "minLinks": 0,
+      "maxLinks": 1,
+      "scope": "shell"
+    }
+  ],
+  "componentRefs": [
+    "sidebar",
+    "button"
+  ],
+  "ruleRefs": [],
+  "dependencyBlockIds": [],
+  "layout": {
+    "frameRef": "shell-root",
+    "gutterBoundary": "shell-root",
+    "scrollBoundary": "shell-root"
+  },
+  "landmarks": {
+    "main": 1,
+    "primaryHeading": 0
+  },
+  "provenance": {
+    "origin": "authored",
+    "sourceHashes": {
+      "upstream:sidebar-16": "12475c587403b61aeb2bcc15aa079f109dd0e8d0c6db24522e8ef09b3cbd7a49"
+    },
+    "mappingVersion": "1.0.0"
+  }
+}

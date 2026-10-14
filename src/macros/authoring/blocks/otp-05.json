@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "id": "otp-05",
+  "role": "page",
+  "family": "auth",
+  "description": "Mobile-friendly full-height OTP card with numeric keypad layout and resend countdown.",
+  "tags": [
+    "auth",
+    "otp",
+    "mobile-optimized",
+    "keypad"
+  ],
+  "root": "auth-root",
+  "fragments": [
+    {
+      "id": "auth-root",
+      "emmet": "main.flex.min-h-screen.flex-col.justify-between.p-6.bg-background[data-slot=auth-page]>(header.flex.flex-col.gap-2.pt-6.text-center>h1.text-2xl.font-semibold{Enter SMS Code}+p.text-xs.text-muted-foreground{Sent to +1 (555) ***-4829})+form.flex.flex-col.gap-6.py-6>(div.flex.justify-center.gap-2>input.input.input-sm.size-12.text-center.font-mono.text-xl[type=text][maxlength=1]*4)+button.btn.btn-sm.btn-primary.w-full[type=submit]{Verify}+div.text-center.text-xs.text-muted-foreground>span{Resend available in 30s})"
+    }
+  ],
+  "mounts": [],
+  "slots": [],
+  "ports": [],
+  "componentRefs": [
+    "card",
+    "button",
+    "input",
+    "label"
+  ],
+  "ruleRefs": [],
+  "dependencyBlockIds": [],
+  "layout": {
+    "frameRef": "auth-root"
+  },
+  "landmarks": {
+    "main": 1,
+    "primaryHeading": 1
+  },
+  "provenance": {
+    "origin": "authored",
+    "sourceHashes": {},
+    "mappingVersion": "1.0.0"
+  }
+}

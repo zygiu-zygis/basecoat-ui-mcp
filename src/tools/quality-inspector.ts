@@ -8,22 +8,58 @@ import {
   type ValidationOptions,
 } from './validate.js';
 
+import { parseHtmlWithDiagnostics } from './html.js';
+
 export const qualityInspectorInputShape = {
-  code: z.string().max(VALIDATE_COMPOSITION_MAX_BYTES).optional(),
-  html: z.string().max(VALIDATE_COMPOSITION_MAX_BYTES).optional(),
-  markup: z.string().max(VALIDATE_COMPOSITION_MAX_BYTES).optional(),
-  semanticProfile: z.string().max(64).optional(),
-  densityProfile: z.enum(['comfortable', 'compact']).optional(),
-  enforceFsm: z.boolean().optional(),
+  code: z
+    .string()
+    .max(VALIDATE_COMPOSITION_MAX_BYTES)
+    .optional()
+    .describe('HTML/component markup string to inspect for syntax violations, a11y omissions, and quality metrics.'),
+  html: z
+    .string()
+    .max(VALIDATE_COMPOSITION_MAX_BYTES)
+    .optional()
+    .describe('Alternative parameter alias for the code string to inspect.'),
+  markup: z
+    .string()
+    .max(VALIDATE_COMPOSITION_MAX_BYTES)
+    .optional()
+    .describe('Alternative parameter alias for the markup snippet to inspect.'),
+  semanticProfile: z
+    .string()
+    .max(64)
+    .optional()
+    .describe('Semantic token rhythm profile to validate against (defaults to "default").'),
+  densityProfile: z
+    .enum(['comfortable', 'compact'])
+    .optional()
+    .describe('Density profile context: "comfortable" (standard rhythm) or "compact" (dense micro-spacing allowed).'),
+  enforceFsm: z
+    .boolean()
+    .optional()
+    .describe('Whether to strictly enforce FSM data-state bindings and field-group hierarchies on interactive controls.'),
 };
 
 export type QualityInspectorInput = z.infer<z.ZodObject<typeof qualityInspectorInputShape>>;
 
-const A11Y_RULE_PREFIX = /^(?:a11y-|color-contrast-wcag|duplicate-main-landmark|duplicate-primary-heading|structural-order|fsm-|semantic-div-nesting)/;
+const A11Y_RULE_PREFIX = /^(?:a11y-|color-contrast-wcag|duplicate-main-landmark|duplicate-primary-heading|structural-order|fsm-|semantic-div-nesting|field-group|dual-invalid|dialog-accessible)/;
 
 function defaultRepairForIssue(issue: CompositionIssue): string {
   if (issue.repair) return issue.repair;
   switch (issue.rule) {
+    case 'no-space-xy':
+      return 'Replace space-x/space-y with flex gap-* or flex flex-col gap-*.';
+    case 'icon-data-attribute-no-size':
+      return 'Remove manual size-4 / w-4 h-4 from [data-icon] element; Basecoat styles icon dimensions automatically.';
+    case 'field-group-hierarchy':
+      return 'Wrap input and label in <div class="field" data-component="field">.';
+    case 'dual-invalid-contract':
+      return 'Add aria-invalid="true" to input control matching container data-invalid="true".';
+    case 'dialog-accessible-title':
+      return 'Add <h2> title with aria-labelledby on <dialog>.';
+    case 'empty-and-skeleton-primitives':
+      return 'Use .skeleton or .empty primitives instead of custom divs.';
     case 'emoji-usage':
       return 'Replace Unicode emojis with inline Lucide/Phosphor SVG (<svg class="size-4" ...>).';
     case 'cdn-dependency':
@@ -68,7 +104,129 @@ export function runQualityInspector(
   options: ValidationOptions & { enforceFsm?: boolean } = {},
 ) {
   const base = validateComposition(code, { ...options, checkLegacySyntax: true });
-  const allIssues = base.issues;
+  const allIssues: CompositionIssue[] = [...base.issues];
+
+  const parsed = parseHtmlWithDiagnostics(code);
+  const seenRulesOnNodes = new Set<string>();
+
+  for (let idx = 0; idx < parsed.nodes.length; idx++) {
+    const node = parsed.nodes[idx]!;
+
+    // 1. space-x-* / space-y-* classes -> violation with auto-fix suggestion
+    for (const cls of node.classes) {
+      if (/(?:^|:)space-[xy]-/.test(cls)) {
+        const key = `no-space-xy:${node.line}`;
+        if (!seenRulesOnNodes.has(key)) {
+          seenRulesOnNodes.add(key);
+          const isY = cls.includes('space-y-');
+          allIssues.push({
+            line: node.line,
+            column: node.column,
+            rule: 'no-space-xy',
+            severity: 'warning',
+            message: `Class '${cls}' violates no-space-xy; use flex gap-* or flex flex-col gap-*.`,
+            repair: isY ? 'Replace space-y-* with flex flex-col gap-*.' : 'Replace space-x-* with flex items-center gap-*.',
+          });
+        }
+      }
+    }
+
+    // 2. data-icon element having size-4 or w-4 h-4 -> violation
+    if (node.attrs['data-icon'] !== undefined) {
+      const hasSize4 = node.classes.includes('size-4');
+      const hasW4H4 = node.classes.includes('w-4') && node.classes.includes('h-4');
+      if (hasSize4 || hasW4H4) {
+        const key = `icon-data-attribute-no-size:${node.line}`;
+        if (!seenRulesOnNodes.has(key)) {
+          seenRulesOnNodes.add(key);
+          allIssues.push({
+            line: node.line,
+            column: node.column,
+            rule: 'icon-data-attribute-no-size',
+            severity: 'warning',
+            message: 'Element with [data-icon] has manual sizing classes; Basecoat handles data-icon dimensions.',
+            repair: 'Remove manual size-4 / w-4 h-4 on [data-icon].',
+          });
+        }
+      }
+    }
+
+    // 3A. Raw <input> stacked with <label> inside a space-y-* div without data-component="field" / .field when enforceFsm is enabled
+    if (options.enforceFsm && node.tag === 'div' && node.classes.some(c => /(?:^|:)space-y-/.test(c))) {
+      const isField = node.classes.includes('field') || node.attrs['data-component'] === 'field';
+      if (!isField) {
+        const children = parsed.nodes.filter(n => n.parent === idx);
+        const hasInput = children.some(c => c.tag === 'input' && c.attrs.type !== 'hidden');
+        const hasLabel = children.some(c => c.tag === 'label');
+        if (hasInput && hasLabel) {
+          const key = `field-group-hierarchy:${node.line}`;
+          if (!seenRulesOnNodes.has(key)) {
+            seenRulesOnNodes.add(key);
+            allIssues.push({
+              line: node.line,
+              column: node.column,
+              rule: 'field-group-hierarchy',
+              severity: 'error',
+              message: 'Raw input stacked with label in space-y div without data-component="field" or .field wrapper.',
+              repair: 'Wrap with <div class="field" data-component="field">.',
+            });
+          }
+        }
+      }
+    }
+
+    // 3B. Missing aria-invalid when data-invalid is used
+    if (node.attrs['data-invalid'] !== undefined && node.attrs['data-invalid'] !== 'false') {
+      // If node is an input/textarea/select itself
+      if (['input', 'textarea', 'select'].includes(node.tag)) {
+        if (!node.attrs['aria-invalid'] || node.attrs['aria-invalid'] === 'false') {
+          const key = `dual-invalid-contract:${node.line}`;
+          if (!seenRulesOnNodes.has(key)) {
+            seenRulesOnNodes.add(key);
+            allIssues.push({
+              line: node.line,
+              column: node.column,
+              rule: 'dual-invalid-contract',
+              severity: 'error',
+              message: 'Control marked data-invalid is missing aria-invalid="true".',
+              repair: 'Add aria-invalid="true" matching data-invalid="true".',
+            });
+          }
+        }
+      } else {
+        // Container with data-invalid
+        const descendantInputs = parsed.nodes.filter(
+          n => ['input', 'textarea', 'select'].includes(n.tag) && n.line >= node.line,
+        );
+        for (const inputNode of descendantInputs) {
+          // Check if parent chain links to this container
+          let p: number | null = inputNode.parent;
+          let isDescendant = false;
+          while (p !== null) {
+            if (p === idx) {
+              isDescendant = true;
+              break;
+            }
+            p = parsed.nodes[p]?.parent ?? null;
+          }
+          if (isDescendant && (!inputNode.attrs['aria-invalid'] || inputNode.attrs['aria-invalid'] === 'false')) {
+            const key = `dual-invalid-contract:${inputNode.line}`;
+            if (!seenRulesOnNodes.has(key)) {
+              seenRulesOnNodes.add(key);
+              allIssues.push({
+                line: inputNode.line,
+                column: inputNode.column,
+                rule: 'dual-invalid-contract',
+                severity: 'error',
+                message: 'Input inside data-invalid container is missing aria-invalid="true".',
+                repair: 'Add aria-invalid="true" matching container data-invalid="true".',
+              });
+            }
+          }
+        }
+      }
+    }
+  }
   const errors = allIssues.filter(i => i.severity === 'error').length;
   const warnings = allIssues.filter(i => i.severity === 'warning').length;
   const info = allIssues.filter(i => i.severity === 'info').length;

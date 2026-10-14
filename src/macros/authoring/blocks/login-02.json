@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "id": "login-02",
+  "role": "page",
+  "family": "auth",
+  "description": "A two column login page with a cover image.",
+  "tags": [
+    "auth",
+    "login",
+    "split-screen",
+    "social-auth"
+  ],
+  "root": "auth-root",
+  "fragments": [
+    {
+      "id": "auth-root",
+      "emmet": "main.grid.min-h-screen.grid-cols-1.lg:grid-cols-2[data-slot=auth-page]>(div.relative.hidden.h-full.flex-col.justify-between.bg-muted.p-12.lg:flex>div.flex.items-center.gap-2.text-lg.font-medium>div.size-6.rounded.bg-primary+span{Acme Corp}^blockquote.space-y-2>p.text-lg{\"Saved me countless hours.\"}+footer.text-sm.text-muted-foreground{Sofia Davis})+div.flex.items-center.justify-center.p-6>div.mx-auto.flex.w-full.max-w-sm.flex-col.gap-6[data-fsm-recipe=auth-flow][data-fsm-state=idle]>(header.flex.flex-col.gap-2.text-center>h1.text-2xl.font-semibold{Login}+p.text-xs.text-muted-foreground{Enter your credentials})+form.flex.flex-col.gap-4>(div.flex.flex-col.gap-2>label.text-xs.font-medium{Email}+input.input.input-sm[type=email][required])+(div.flex.flex-col.gap-2>div.flex.items-center.justify-between>label.text-xs.font-medium{Password}+a.text-xs.hover:underline{Forgot?}^input.input.input-sm[type=password][required])+button.btn.btn-sm.btn-primary.w-full[type=submit]{Sign In}"
+    }
+  ],
+  "mounts": [],
+  "slots": [],
+  "ports": [],
+  "componentRefs": [
+    "card",
+    "button",
+    "input",
+    "label",
+    "field"
+  ],
+  "ruleRefs": [],
+  "dependencyBlockIds": [],
+  "layout": {
+    "frameRef": "auth-root"
+  },
+  "landmarks": {
+    "main": 1,
+    "primaryHeading": 1
+  },
+  "provenance": {
+    "origin": "authored",
+    "sourceHashes": {
+      "upstream:login-02": "cbd671ae672a860dfc75603a5f2e84368737be4dd4d8f2cbe86e1c26572fc570"
+    },
+    "mappingVersion": "1.0.0"
+  }
+}

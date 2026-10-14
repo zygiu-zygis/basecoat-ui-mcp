@@ -1,0 +1,82 @@
+{
+  "schemaVersion": 1,
+  "id": "sidebar-02",
+  "role": "navigation",
+  "family": "layout",
+  "description": "A sidebar with collapsible sections.",
+  "tags": [
+    "navigation",
+    "sidebar",
+    "collapsible-sections",
+    "workspace-switcher"
+  ],
+  "root": "nav-root",
+  "fragments": [
+    {
+      "id": "nav-root",
+      "emmet": "aside.sidebar.w-64.border-e.border-border.bg-background.md:sticky.md:top-0.md:h-screen[aria-label=Sidebar][data-slot=sidebar-host][data-component=sidebar][data-side=left]>nav.flex.h-full.flex-col.justify-between.p-2>(div.flex.flex-col.gap-4>div.flex.items-center.justify-between.rounded-lg.border.border-border.p-2.text-sm.font-semibold[data-slot=workspace-switcher]>div.flex.items-center.gap-2>div.size-6.rounded.bg-primary+span{Workspace}^button.btn.btn-ghost.btn-xs{↕}^section.flex.flex-col.gap-2>span.px-2.text-xs.text-muted-foreground{Platform}+details.group[open]>summary.flex.items-center.justify-between.p-2.text-xs.cursor-pointer.hover:bg-muted{Playground+span{▾}}+div.flex.flex-col.gap-2.pl-4>a.btn.btn-ghost.btn-sm.justify-start{History}+a.btn.btn-ghost.btn-sm.justify-start{Starred}^^section.flex.flex-col.gap-2>span.px-2.text-xs.text-muted-foreground{Projects}+a.btn.btn-ghost.btn-sm.justify-start{Design}+a.btn.btn-ghost.btn-sm.justify-start{Sales})+(div.mt-auto.p-2.border-t.border-border[data-slot=user-footer]>div.flex.items-center.gap-2>div.size-8.rounded.bg-muted+div.text-xs>span.font-medium{User})"
+    }
+  ],
+  "mounts": [],
+  "slots": [
+    {
+      "id": "workspace-switcher",
+      "at": {
+        "fragment": "nav-root",
+        "name": "workspace-switcher"
+      },
+      "accepts": [
+        "action"
+      ],
+      "min": 0,
+      "max": 1
+    },
+    {
+      "id": "user-footer",
+      "at": {
+        "fragment": "nav-root",
+        "name": "user-footer"
+      },
+      "accepts": [
+        "action"
+      ],
+      "min": 0,
+      "max": 1
+    }
+  ],
+  "ports": [
+    {
+      "id": "nav-toggle-in",
+      "at": {
+        "fragment": "nav-root",
+        "name": "nav-root"
+      },
+      "direction": "in",
+      "kind": "control",
+      "contract": "nav-toggle",
+      "minLinks": 0,
+      "maxLinks": 1,
+      "scope": "shell"
+    }
+  ],
+  "componentRefs": [
+    "sidebar",
+    "button"
+  ],
+  "ruleRefs": [],
+  "dependencyBlockIds": [],
+  "layout": {
+    "frameRef": "nav-root"
+  },
+  "landmarks": {
+    "main": 0,
+    "primaryHeading": 0
+  },
+  "provenance": {
+    "origin": "authored",
+    "sourceHashes": {
+      "upstream:sidebar-02": "ab22f5ea142263347c3bd1232410c3686abf2e3c3de53e36569bf1794a6d8ba3"
+    },
+    "mappingVersion": "1.0.0"
+  }
+}

@@ -1,0 +1,83 @@
+{
+  "schemaVersion": 1,
+  "id": "sidebar-10",
+  "role": "navigation",
+  "family": "layout",
+  "description": "A sidebar in a popover.",
+  "tags": [
+    "navigation",
+    "sidebar",
+    "popover",
+    "drawer",
+    "slide-over"
+  ],
+  "root": "nav-root",
+  "fragments": [
+    {
+      "id": "nav-root",
+      "emmet": "div[data-slot=sidebar-host][data-component=sidebar]>(div.flex.items-center.gap-2.p-4.border-b.border-border>button.btn.btn-sm.btn-outline[data-slot=toggle-btn]{Toggle Navigation}+span.text-sm.font-semibold{Project Space})+aside.fixed.inset-y-0.left-0.z-40.w-72.border-e.border-border.bg-background.p-4.shadow-xl.flex.flex-col.justify-between[data-slot=popover-sidebar][data-state=open]>(div.flex.flex-col.gap-4>div.flex.items-center.justify-between>span.text-sm.font-semibold{Quick Nav}+button.btn.btn-ghost.btn-xs{✕}^nav.flex.flex-col.gap-2>a.btn.btn-ghost.btn-sm.justify-start{Recent Files}+a.btn.btn-ghost.btn-sm.justify-start{Shared With Me}+a.btn.btn-ghost.btn-sm.justify-start{Archived})+(div.mt-auto.border-t.border-border.pt-2>span.text-xs.text-muted-foreground{Press Esc to close})"
+    }
+  ],
+  "mounts": [],
+  "slots": [
+    {
+      "id": "toggle-btn",
+      "at": {
+        "fragment": "nav-root",
+        "name": "toggle-btn"
+      },
+      "accepts": [
+        "action"
+      ],
+      "min": 0,
+      "max": 1
+    },
+    {
+      "id": "popover-sidebar",
+      "at": {
+        "fragment": "nav-root",
+        "name": "popover-sidebar"
+      },
+      "accepts": [
+        "navigation"
+      ],
+      "min": 0,
+      "max": 1
+    }
+  ],
+  "ports": [
+    {
+      "id": "nav-toggle-in",
+      "at": {
+        "fragment": "nav-root",
+        "name": "nav-root"
+      },
+      "direction": "in",
+      "kind": "control",
+      "contract": "nav-toggle",
+      "minLinks": 0,
+      "maxLinks": 1,
+      "scope": "shell"
+    }
+  ],
+  "componentRefs": [
+    "sidebar",
+    "button"
+  ],
+  "ruleRefs": [],
+  "dependencyBlockIds": [],
+  "layout": {
+    "frameRef": "nav-root"
+  },
+  "landmarks": {
+    "main": 0,
+    "primaryHeading": 0
+  },
+  "provenance": {
+    "origin": "authored",
+    "sourceHashes": {
+      "upstream:sidebar-10": "5b7936412244a4163e2d9997fac194eb8dfc3e571ca8f56f648a3cb45dc871ff"
+    },
+    "mappingVersion": "1.0.0"
+  }
+}

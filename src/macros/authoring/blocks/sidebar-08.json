@@ -1,0 +1,100 @@
+{
+  "schemaVersion": 1,
+  "id": "sidebar-08",
+  "role": "application-shell",
+  "family": "layout",
+  "description": "An inset sidebar with secondary navigation.",
+  "tags": [
+    "shell",
+    "sidebar",
+    "inset",
+    "workspace-shell"
+  ],
+  "root": "shell-root",
+  "fragments": [
+    {
+      "id": "shell-root",
+      "emmet": "div.flex.min-h-screen.w-full.bg-muted[data-slot=shell-root][data-component=sidebar][data-variant=inset]>aside.sidebar.w-64.bg-muted.p-4[data-slot=navigation][data-side=left]>div.flex.flex-col.gap-4>div.p-2.text-sm.font-semibold{Acme Inset}+nav.flex.flex-col.gap-2>a.btn.btn-ghost.btn-sm.justify-start[data-state=active]{Dashboard}+a.btn.btn-ghost.btn-sm.justify-start{Documents}+a.btn.btn-ghost.btn-sm.justify-start{Settings}^div.mt-auto.pt-4{User}^^div.flex.flex-1.flex-col.p-2>div.flex.flex-1.flex-col.rounded-xl.border.border-border.bg-background.shadow-sm[data-slot=inset-canvas]>header.flex.h-12.items-center.justify-between.border-b.border-border.px-4[data-slot=header]>span.text-sm.font-medium{Overview}^main.flex-1.overflow-auto.p-6[data-slot=content]"
+    }
+  ],
+  "mounts": [],
+  "slots": [
+    {
+      "id": "navigation",
+      "at": {
+        "fragment": "shell-root",
+        "name": "navigation"
+      },
+      "accepts": [
+        "navigation"
+      ],
+      "min": 1,
+      "max": 1
+    },
+    {
+      "id": "header",
+      "at": {
+        "fragment": "shell-root",
+        "name": "header"
+      },
+      "accepts": [
+        "header",
+        "workspace-header"
+      ],
+      "min": 1,
+      "max": 1
+    },
+    {
+      "id": "content",
+      "at": {
+        "fragment": "shell-root",
+        "name": "content"
+      },
+      "accepts": [
+        "dashboard",
+        "workspace",
+        "table"
+      ],
+      "min": 1,
+      "max": 1
+    }
+  ],
+  "ports": [
+    {
+      "id": "main-region",
+      "at": {
+        "fragment": "shell-root",
+        "name": "content"
+      },
+      "direction": "out",
+      "kind": "region",
+      "contract": "main",
+      "minLinks": 0,
+      "maxLinks": 1,
+      "scope": "shell"
+    }
+  ],
+  "componentRefs": [
+    "sidebar",
+    "breadcrumb",
+    "button"
+  ],
+  "ruleRefs": [],
+  "dependencyBlockIds": [],
+  "layout": {
+    "frameRef": "shell-root",
+    "gutterBoundary": "shell-root",
+    "scrollBoundary": "shell-root"
+  },
+  "landmarks": {
+    "main": 1,
+    "primaryHeading": 0
+  },
+  "provenance": {
+    "origin": "authored",
+    "sourceHashes": {
+      "upstream:sidebar-08": "6f0a5a4f839122bbf9849d8d78f62d3dff862c5b910b0ccf732340a2742a579a"
+    },
+    "mappingVersion": "1.0.0"
+  }
+}

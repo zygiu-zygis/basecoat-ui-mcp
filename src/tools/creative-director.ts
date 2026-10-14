@@ -8,12 +8,20 @@ import { assertDetailBudget, MAX_DETAIL_BYTES, responseBytes } from './budget.js
 export const creativeDirectorInputShape = {
   topic: z
     .enum(['all', 'typography', 'whitespace', 'hierarchy', 'elevation', 'style-packs', 'content-strategy', 'density'])
-    .optional(),
-  visitorJob: z.enum(['operate', 'persuade', 'read', 'experience']).optional(),
+    .optional()
+    .describe('Design topic to inspect: "typography", "whitespace", "hierarchy", "elevation", "style-packs", "content-strategy", "density", or "all".'),
+  visitorJob: z
+    .enum(['operate', 'persuade', 'read', 'experience'])
+    .optional()
+    .describe('Visitor mental model and primary task: "operate" (fast scanning SaaS), "persuade" (marketing landing), "read" (prose doc), or "experience" (immersive showcase).'),
   stylePack: z
     .enum(['vega', 'nova', 'maia', 'lyra', 'mira', 'luma', 'sera', 'rhea'])
-    .optional(),
-  density: z.enum(['compact', 'standard', 'comfortable']).optional(),
+    .optional()
+    .describe('Basecoat curated style pack aesthetic: "vega" (default New York v4), "nova" (SaaS), "maia" (organic pill), "lyra" (high-density brutalist), "mira" (editorial), "luma" (soft), "sera" (architectural), or "rhea" (curved).'),
+  density: z
+    .enum(['compact', 'standard', 'comfortable'])
+    .optional()
+    .describe('Interface spatial density profile: "compact" (dense table/data tool, p-4/h-12), "standard" (balanced dashboard, p-6/h-14), or "comfortable" (generous whitespace reading, p-8/h-14).'),
 };
 
 export type CreativeDirectorInput = z.infer<z.ZodObject<typeof creativeDirectorInputShape>>;

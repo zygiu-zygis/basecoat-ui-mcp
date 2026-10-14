@@ -1,0 +1,82 @@
+{
+  "schemaVersion": 1,
+  "id": "sidebar-05",
+  "role": "navigation",
+  "family": "layout",
+  "description": "A sidebar with collapsible submenus.",
+  "tags": [
+    "navigation",
+    "sidebar",
+    "collapsible-tree",
+    "active-indicators"
+  ],
+  "root": "nav-root",
+  "fragments": [
+    {
+      "id": "nav-root",
+      "emmet": "aside.sidebar.w-64.border-e.border-border.bg-background.md:sticky.md:top-0.md:h-screen[aria-label=Sidebar][data-slot=sidebar-host][data-component=sidebar][data-side=left]>nav.flex.h-full.flex-col.justify-between.p-2>(div.flex.flex-col.gap-2>div.p-2.text-sm.font-semibold[data-slot=brand]{Enterprise App}+div.flex.flex-col.gap-2[data-slot=menu-tree]>details.group[open]>summary.flex.items-center.justify-between.p-2.text-xs.font-medium.cursor-pointer.hover:bg-muted{Analytics+span{▾}}+div.flex.flex-col.gap-2.pl-4>a.btn.btn-ghost.btn-sm.justify-start.border-l-2.border-primary.pl-2[data-state=active]{Realtime}+a.btn.btn-ghost.btn-sm.justify-start.pl-2{Conversions}^details.group>summary.flex.items-center.justify-between.p-2.text-xs.font-medium.cursor-pointer.hover:bg-muted{Reports+span{▾}}+div.flex.flex-col.gap-2.pl-4>a.btn.btn-ghost.btn-sm.justify-start.pl-2{Scheduled}+a.btn.btn-ghost.btn-sm.justify-start.pl-2{Custom})+(div.mt-auto.p-2.border-t.border-border[data-slot=user-footer]>span.text-xs.text-muted-foreground{v2.4.0-stable})"
+    }
+  ],
+  "mounts": [],
+  "slots": [
+    {
+      "id": "brand",
+      "at": {
+        "fragment": "nav-root",
+        "name": "brand"
+      },
+      "accepts": [
+        "action"
+      ],
+      "min": 0,
+      "max": 1
+    },
+    {
+      "id": "user-footer",
+      "at": {
+        "fragment": "nav-root",
+        "name": "user-footer"
+      },
+      "accepts": [
+        "action"
+      ],
+      "min": 0,
+      "max": 1
+    }
+  ],
+  "ports": [
+    {
+      "id": "nav-toggle-in",
+      "at": {
+        "fragment": "nav-root",
+        "name": "nav-root"
+      },
+      "direction": "in",
+      "kind": "control",
+      "contract": "nav-toggle",
+      "minLinks": 0,
+      "maxLinks": 1,
+      "scope": "shell"
+    }
+  ],
+  "componentRefs": [
+    "sidebar",
+    "button"
+  ],
+  "ruleRefs": [],
+  "dependencyBlockIds": [],
+  "layout": {
+    "frameRef": "nav-root"
+  },
+  "landmarks": {
+    "main": 0,
+    "primaryHeading": 0
+  },
+  "provenance": {
+    "origin": "authored",
+    "sourceHashes": {
+      "upstream:sidebar-05": "10f958b85f2eb1efafb55738708c8510eadca40ad087950f2b86347ad52b40c7"
+    },
+    "mappingVersion": "1.0.0"
+  }
+}

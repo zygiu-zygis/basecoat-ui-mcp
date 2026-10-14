@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "id": "signup-04",
+  "role": "page",
+  "family": "auth",
+  "description": "A signup page with form and image.",
+  "tags": [
+    "auth",
+    "signup",
+    "split-card",
+    "showcase"
+  ],
+  "root": "auth-root",
+  "fragments": [
+    {
+      "id": "auth-root",
+      "emmet": "main.flex.min-h-screen.items-center.justify-center.p-6.bg-muted[data-slot=auth-page]>div.card.grid.w-full.max-w-3xl.grid-cols-1.overflow-hidden.rounded-xl.border.border-border.bg-card.shadow-xl.md:grid-cols-2[data-fsm-recipe=auth-flow][data-fsm-state=idle]>(div.p-8.flex.flex-col.justify-between>(header.flex.flex-col.gap-2>h1.text-2xl.font-semibold{Start building}+p.text-xs.text-muted-foreground{Create your free account today})+form.flex.flex-col.gap-4.py-4>(div.flex.flex-col.gap-2>label.text-xs.font-medium{Email}+input.input.input-sm[type=email][required])+(div.flex.flex-col.gap-2>label.text-xs.font-medium{Password}+input.input.input-sm[type=password][required])+button.btn.btn-sm.btn-primary.w-full[type=submit]{Register})+footer.text-xs.text-muted-foreground>span{By signing up you agree to our Terms.})^div.hidden.bg-muted.p-8.flex.flex-col.justify-between.md:flex>span.text-sm.font-semibold{Starter Plan Included}+p.text-xs.text-muted-foreground{Unlimited sandbox projects and free deployments.}"
+    }
+  ],
+  "mounts": [],
+  "slots": [],
+  "ports": [],
+  "componentRefs": [
+    "card",
+    "button",
+    "input",
+    "label",
+    "field",
+    "checkbox"
+  ],
+  "ruleRefs": [],
+  "dependencyBlockIds": [],
+  "layout": {
+    "frameRef": "auth-root"
+  },
+  "landmarks": {
+    "main": 1,
+    "primaryHeading": 1
+  },
+  "provenance": {
+    "origin": "authored",
+    "sourceHashes": {
+      "upstream:signup-04": "d8e6bd5b91e38b0e03e6d0791b3ff338e73a1450114634eb9aec381b46cb03f0"
+    },
+    "mappingVersion": "1.0.0"
+  }
+}

@@ -1359,6 +1359,21 @@
       ]
     },
     {
+      "id": "aspect-ratio",
+      "name": "Aspect Ratio",
+      "intent": "Constrain content to a specific ratio such as video or square",
+      "categories": [
+        "layout"
+      ],
+      "keywords": [
+        "ratio",
+        "video",
+        "square",
+        "embed",
+        "frame"
+      ]
+    },
+    {
       "id": "avatar",
       "name": "Avatar",
       "intent": "Display a portrait or initials fallback",
@@ -1429,6 +1444,20 @@
       ]
     },
     {
+      "id": "calendar",
+      "name": "Calendar",
+      "intent": "Display monthly date grid and enable date navigation",
+      "categories": [
+        "date-time"
+      ],
+      "keywords": [
+        "month",
+        "schedule",
+        "picker",
+        "days"
+      ]
+    },
+    {
       "id": "card",
       "name": "Card",
       "intent": "Group a self-contained content section",
@@ -1439,6 +1468,21 @@
         "surface",
         "container",
         "section"
+      ]
+    },
+    {
+      "id": "carousel",
+      "name": "Carousel",
+      "intent": "Navigate horizontally through featured slides or cards",
+      "categories": [
+        "layout",
+        "navigation"
+      ],
+      "keywords": [
+        "slider-cards",
+        "slides",
+        "gallery",
+        "swiper"
       ]
     },
     {
@@ -1468,6 +1512,21 @@
       ]
     },
     {
+      "id": "collapsible",
+      "name": "Collapsible",
+      "intent": "Expand or collapse content sections with an interactive trigger",
+      "categories": [
+        "disclosure"
+      ],
+      "keywords": [
+        "accordion-item",
+        "expand",
+        "collapse",
+        "details",
+        "summary"
+      ]
+    },
+    {
       "id": "combobox",
       "name": "Combobox",
       "intent": "Filter options and select a value",
@@ -1489,6 +1548,47 @@
       "keywords": [
         "palette",
         "commands"
+      ]
+    },
+    {
+      "id": "context-menu",
+      "name": "Context Menu",
+      "intent": "Display contextual actions triggered by secondary click",
+      "categories": [
+        "overlay"
+      ],
+      "keywords": [
+        "right-click",
+        "context",
+        "actions",
+        "shortcut-menu"
+      ]
+    },
+    {
+      "id": "data-table",
+      "name": "Data Table",
+      "intent": "Display tabular data with structured rows and column headers",
+      "categories": [
+        "data-display"
+      ],
+      "keywords": [
+        "grid",
+        "records",
+        "columns",
+        "dataset"
+      ]
+    },
+    {
+      "id": "date-picker",
+      "name": "Date Picker",
+      "intent": "Select a date from an input control",
+      "categories": [
+        "input-controls"
+      ],
+      "keywords": [
+        "calendar-input",
+        "date-field",
+        "day-select"
       ]
     },
     {
@@ -1561,6 +1661,34 @@
       ]
     },
     {
+      "id": "form",
+      "name": "Form",
+      "intent": "Structure input submission with labeled fields and actions",
+      "categories": [
+        "form-layout"
+      ],
+      "keywords": [
+        "form-layout",
+        "input-controls",
+        "submission",
+        "fieldset-layout"
+      ]
+    },
+    {
+      "id": "hover-card",
+      "name": "Hover Card",
+      "intent": "Preview detailed profile or entity content on pointer hover",
+      "categories": [
+        "overlay"
+      ],
+      "keywords": [
+        "preview",
+        "flyover",
+        "peek",
+        "tooltip-card"
+      ]
+    },
+    {
       "id": "input",
       "name": "Input",
       "intent": "Enter a single text value",
@@ -1586,6 +1714,21 @@
         "addon",
         "prefix",
         "suffix"
+      ]
+    },
+    {
+      "id": "input-otp",
+      "name": "Input OTP",
+      "intent": "Enter one-time passcode verification digits into discrete inputs",
+      "categories": [
+        "input-controls"
+      ],
+      "keywords": [
+        "pin",
+        "otp",
+        "code",
+        "verification",
+        "auth-digits"
       ]
     },
     {
@@ -1628,6 +1771,19 @@
       ]
     },
     {
+      "id": "menubar",
+      "name": "Menubar",
+      "intent": "Present horizontal top-level desktop application menu commands",
+      "categories": [
+        "navigation"
+      ],
+      "keywords": [
+        "top-menu",
+        "command-bar",
+        "app-menu"
+      ]
+    },
+    {
       "id": "native-select",
       "name": "Native Select",
       "intent": "Choose a value with a native select",
@@ -1638,6 +1794,34 @@
         "native",
         "options",
         "pick"
+      ]
+    },
+    {
+      "id": "navigation-menu",
+      "name": "Navigation Menu",
+      "intent": "Display primary website section navigation links",
+      "categories": [
+        "navigation"
+      ],
+      "keywords": [
+        "site-nav",
+        "header-nav",
+        "nav-links",
+        "top-nav"
+      ]
+    },
+    {
+      "id": "pagination",
+      "name": "Pagination",
+      "intent": "Navigate across paginated list pages with previous and next controls",
+      "categories": [
+        "navigation"
+      ],
+      "keywords": [
+        "pages",
+        "pager",
+        "paging",
+        "page-numbers"
       ]
     },
     {
@@ -1676,6 +1860,20 @@
         "exclusive",
         "choice",
         "radio"
+      ]
+    },
+    {
+      "id": "resizable",
+      "name": "Resizable",
+      "intent": "Split panels with an interactive draggable divider handle",
+      "categories": [
+        "layout"
+      ],
+      "keywords": [
+        "splitter",
+        "split-pane",
+        "divider-handle",
+        "panes"
       ]
     },
     {
@@ -1719,6 +1917,34 @@
       ]
     },
     {
+      "id": "separator",
+      "name": "Separator",
+      "intent": "Visually separate sections with a horizontal or vertical divider line",
+      "categories": [
+        "layout"
+      ],
+      "keywords": [
+        "divider",
+        "rule",
+        "split",
+        "hr"
+      ]
+    },
+    {
+      "id": "sheet",
+      "name": "Sheet",
+      "intent": "Slide-over secondary panel anchored to viewport edge",
+      "categories": [
+        "overlay"
+      ],
+      "keywords": [
+        "slide-over",
+        "side-panel",
+        "drawer-side",
+        "off-canvas"
+      ]
+    },
+    {
       "id": "sidebar",
       "name": "Sidebar",
       "intent": "Show collapsible application navigation",
@@ -1754,6 +1980,33 @@
         "range",
         "thumb",
         "value"
+      ]
+    },
+    {
+      "id": "sonner",
+      "name": "Sonner",
+      "intent": "Show modern stacked feedback notifications and action alerts",
+      "categories": [
+        "feedback"
+      ],
+      "keywords": [
+        "stack-toast",
+        "snackbar",
+        "notification-feed"
+      ]
+    },
+    {
+      "id": "spinner",
+      "name": "Spinner",
+      "intent": "Display animated circular loading indicator",
+      "categories": [
+        "feedback"
+      ],
+      "keywords": [
+        "loader",
+        "busy",
+        "throbber",
+        "activity"
       ]
     },
     {
@@ -1851,6 +2104,33 @@
       ]
     },
     {
+      "id": "toggle",
+      "name": "Toggle",
+      "intent": "Single pressable button that switches between on and off states",
+      "categories": [
+        "input-controls"
+      ],
+      "keywords": [
+        "toggle-button",
+        "pressed",
+        "state-button",
+        "binary-button"
+      ]
+    },
+    {
+      "id": "toggle-group",
+      "name": "Toggle Group",
+      "intent": "Group of coordinated toggle buttons for formatting or option choices",
+      "categories": [
+        "input-controls"
+      ],
+      "keywords": [
+        "toolbar-buttons",
+        "segmented-buttons",
+        "button-toggles"
+      ]
+    },
+    {
       "id": "tooltip",
       "name": "Tooltip",
       "intent": "Show a brief hint on hover or focus",
@@ -1898,6 +2178,16 @@
       "markup_template": "<button type=\"button\" class=\"btn\" data-variant=\"outline\" data-open-dialog=\"confirm\">Review action</button>\n<dialog id=\"confirm\" class=\"alert-dialog\" aria-labelledby=\"confirm-title\" aria-describedby=\"confirm-help\">\n  <div>\n    <header><h2 id=\"confirm-title\">Are you absolutely sure?</h2><p id=\"confirm-help\">This action cannot be undone.</p></header>\n    <footer><button type=\"button\" class=\"btn\" data-variant=\"outline\" value=\"cancel\" onclick=\"this.closest('dialog').close(this.value)\">Cancel</button><button type=\"button\" class=\"btn\" value=\"confirm\" onclick=\"this.closest('dialog').close(this.value)\">Continue</button></footer>\n  </div>\n</dialog>",
       "composition_rules": "Native dialog with alert-dialog class; no Basecoat JS. Omit dismiss controls when the user must choose explicitly. Wire showModal() from a trigger; check returnValue on close. Wrong: use class=\"dialog\" alone or backdrop click to dismiss a destructive confirm.",
       "native_script": "document.addEventListener('click', (e) => {\n  if (!(e.target instanceof Element)) return;\n  const id = e.target.closest('[data-open-dialog]')?.getAttribute('data-open-dialog');\n  const dialog = id && document.getElementById(id);\n  if (dialog instanceof HTMLDialogElement) dialog.showModal();\n});"
+    },
+    "aspect-ratio": {
+      "dependencies": {
+        "css": [
+          "basecoat-css/base"
+        ],
+        "js": []
+      },
+      "markup_template": "<div class=\"aspect-video w-full overflow-hidden rounded-md bg-muted\">\n  <img src=\"/placeholder.svg\" alt=\"Preview\" class=\"h-full w-full object-cover\" />\n</div>",
+      "composition_rules": "Constrain images, videos, and embedded frames to defined aspect ratios (e.g. aspect-video, aspect-square). Use standard Tailwind v4 aspect utilities."
     },
     "avatar": {
       "dependencies": {
@@ -1949,6 +2239,16 @@
       "markup_template": "<div role=\"group\" aria-label=\"Message actions\" class=\"button-group\">\n  <button type=\"button\" class=\"btn\" data-variant=\"outline\">Archive</button>\n  <button type=\"button\" class=\"btn\" data-variant=\"outline\">Report</button>\n</div>",
       "composition_rules": "Wrap related btn controls sharing outer radius. data-orientation=\"vertical\" stacks controls. hr[role=\"separator\"] divides groups. Wrong: nest unrelated standalone buttons without the button-group wrapper."
     },
+    "calendar": {
+      "dependencies": {
+        "css": [
+          "basecoat-css/base"
+        ],
+        "js": []
+      },
+      "markup_template": "<div class=\"p-4 rounded-lg bg-card text-card-foreground shadow-xs w-fit\">\n  <div class=\"flex items-center justify-between gap-4 mb-4\">\n    <h3 class=\"text-sm font-semibold\">February 2026</h3>\n    <div class=\"flex items-center gap-2\">\n      <button type=\"button\" class=\"btn\" data-variant=\"ghost\" aria-label=\"Previous month\">&lt;</button>\n      <button type=\"button\" class=\"btn\" data-variant=\"ghost\" aria-label=\"Next month\">&gt;</button>\n    </div>\n  </div>\n  <div class=\"grid grid-cols-7 gap-2 text-center text-xs text-muted-foreground\">\n    <span>Su</span><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span>\n  </div>\n  <div class=\"grid grid-cols-7 gap-2 mt-2 text-center text-sm\">\n    <button type=\"button\" class=\"btn\" data-variant=\"outline\" aria-label=\"Day 1\">1</button>\n    <button type=\"button\" class=\"btn\" data-variant=\"ghost\" aria-label=\"Day 2\">2</button>\n    <button type=\"button\" class=\"btn\" data-variant=\"ghost\" aria-label=\"Day 3\">3</button>\n  </div>\n</div>",
+      "composition_rules": "Render monthly date grids using 7-column CSS grid. Day action buttons must declare aria-label for accessibility. Date selection and range states are managed by host logic."
+    },
     "card": {
       "dependencies": {
         "css": [
@@ -1958,6 +2258,16 @@
       },
       "markup_template": "<article class=\"card\">\n  <header><h2>Summary</h2><p>Supporting context.</p></header>\n  <section>Content</section>\n  <footer><button type=\"button\" class=\"btn\">Continue</button></footer>\n</article>",
       "composition_rules": "Never nest a card inside a card. Use flat sections or dividers for inner groups. Keep one primary action per card."
+    },
+    "carousel": {
+      "dependencies": {
+        "css": [
+          "basecoat-css/base"
+        ],
+        "js": []
+      },
+      "markup_template": "<div class=\"relative w-full max-w-md\" role=\"region\" aria-roledescription=\"carousel\" aria-label=\"Featured items\">\n  <div class=\"flex gap-4 overflow-x-auto snap-x snap-mandatory\">\n    <div class=\"shrink-0 w-full snap-center rounded-lg bg-card p-6 shadow-xs\">\n      <h3 class=\"text-sm font-semibold\">Slide 1</h3>\n      <p class=\"text-sm text-muted-foreground mt-2\">First featured item description.</p>\n    </div>\n    <div class=\"shrink-0 w-full snap-center rounded-lg bg-card p-6 shadow-xs\">\n      <h3 class=\"text-sm font-semibold\">Slide 2</h3>\n      <p class=\"text-sm text-muted-foreground mt-2\">Second featured item description.</p>\n    </div>\n  </div>\n  <div class=\"flex justify-end gap-2 mt-4\">\n    <button type=\"button\" class=\"btn\" data-variant=\"outline\" data-size=\"icon\" aria-label=\"Previous slide\">\n      <svg class=\"size-4\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"m15 18-6-6 6-6\"/></svg>\n    </button>\n    <button type=\"button\" class=\"btn\" data-variant=\"outline\" data-size=\"icon\" aria-label=\"Next slide\">\n      <svg class=\"size-4\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"m9 18 6-6-6-6\"/></svg>\n    </button>\n  </div>\n</div>",
+      "composition_rules": "CSS scroll snap provides native horizontal carousels without heavy JavaScript libraries. Provide aria-label on navigation controls."
     },
     "chart": {
       "dependencies": {
@@ -1982,6 +2292,16 @@
       },
       "markup_template": "<div role=\"group\" class=\"field\" data-orientation=\"horizontal\">\n  <input type=\"checkbox\" id=\"terms\" name=\"terms\" class=\"input\" />\n  <label for=\"terms\">Accept terms and conditions</label>\n</div>",
       "composition_rules": "Checkbox uses class=\"input\" on input[type=\"checkbox\"]. Pair with field and label. data-disabled on field mirrors disabled input. Wrong: add role=\"checkbox\" on a div or omit the label association."
+    },
+    "collapsible": {
+      "dependencies": {
+        "css": [
+          "basecoat-css/base"
+        ],
+        "js": []
+      },
+      "markup_template": "<details class=\"w-full rounded-md border border-border p-4\">\n  <summary class=\"flex cursor-pointer items-center justify-between font-medium text-sm list-none\">\n    <span>Can I customize the styling?</span>\n    <svg class=\"size-4\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"m6 9 6 6 6-6\"/></svg>\n  </summary>\n  <div class=\"mt-2 text-sm text-muted-foreground\">\n    Yes! Basecoat uses standard Tailwind v4 classes and native HTML.\n  </div>\n</details>",
+      "composition_rules": "Native details and summary elements provide accessible collapsible sections without script dependencies. Do not nest card inside details."
     },
     "combobox": {
       "dependencies": {
@@ -2008,6 +2328,36 @@
       },
       "markup_template": "<div id=\"cmd\" class=\"command\" aria-label=\"Command menu\">\n  <header><input type=\"text\" id=\"cmd-input\" aria-label=\"Search commands\" placeholder=\"Search\" autocomplete=\"off\" autocorrect=\"off\" spellcheck=\"false\" aria-autocomplete=\"list\" role=\"combobox\" aria-expanded=\"true\" aria-controls=\"cmd-menu\" /></header>\n  <div role=\"menu\" id=\"cmd-menu\" aria-orientation=\"vertical\" data-empty=\"No results\">\n    <div id=\"cmd-a\" role=\"menuitem\">Open</div>\n    <div id=\"cmd-b\" role=\"menuitem\" aria-disabled=\"true\">Unavailable</div>\n  </div>\n</div>",
       "composition_rules": "Standalone command stays expanded. Modal variant: dialog.command-dialog wraps .command; use showModal()/close(). Disabled items: aria-disabled=true. Runtime manages active, aria-activedescendant and filtered aria-hidden. Bind application actions. Wrong: use listbox/option instead of menu/menuitem."
+    },
+    "context-menu": {
+      "dependencies": {
+        "css": [
+          "basecoat-css/base"
+        ],
+        "js": []
+      },
+      "markup_template": "<div class=\"flex h-36 w-full max-w-md items-center justify-center rounded-md border border-dashed border-border text-sm text-muted-foreground\">\n  Right click here to open\n</div>\n<div role=\"menu\" class=\"hidden min-w-48 rounded-md border border-border bg-popover p-2 text-popover-foreground shadow-md\">\n  <div role=\"menuitem\" class=\"flex cursor-pointer items-center rounded-sm p-2 text-sm hover:bg-accent hover:text-accent-foreground\">\n    Back\n  </div>\n  <div role=\"menuitem\" class=\"flex cursor-pointer items-center rounded-sm p-2 text-sm hover:bg-accent hover:text-accent-foreground\">\n    Reload\n  </div>\n</div>",
+      "composition_rules": "Context menus trigger on secondary pointer click. Position dynamically using coordinates in host client scripts."
+    },
+    "data-table": {
+      "dependencies": {
+        "css": [
+          "basecoat-css/base"
+        ],
+        "js": []
+      },
+      "markup_template": "<div class=\"w-full space-y-4\">\n  <div class=\"overflow-x-auto rounded-md border border-border\">\n    <table class=\"table w-full text-sm\">\n      <thead>\n        <tr class=\"border-b border-border text-muted-foreground\">\n          <th class=\"p-4 text-left font-medium\">Invoice</th>\n          <th class=\"p-4 text-left font-medium\">Status</th>\n          <th class=\"p-4 text-right font-medium\">Amount</th>\n        </tr>\n      </thead>\n      <tbody>\n        <tr class=\"border-b border-border\">\n          <td class=\"p-4 font-medium\">INV-001</td>\n          <td class=\"p-4\">Paid</td>\n          <td class=\"p-4 text-right\">$250.00</td>\n        </tr>\n      </tbody>\n    </table>\n  </div>\n</div>",
+      "composition_rules": "Always enclose table inside an overflow-x-auto container. Align numeric currency and metric columns to the right."
+    },
+    "date-picker": {
+      "dependencies": {
+        "css": [
+          "basecoat-css/base"
+        ],
+        "js": []
+      },
+      "markup_template": "<div class=\"grid w-full max-w-sm gap-2\">\n  <label for=\"date-input\" class=\"text-sm font-medium leading-none\">Pick a date</label>\n  <input id=\"date-input\" type=\"date\" class=\"input w-full\" />\n</div>",
+      "composition_rules": "Pair date input with explicit label for accessibility. Keep input styling consistent with Basecoat input tokens."
     },
     "dialog": {
       "dependencies": {
@@ -2066,6 +2416,26 @@
       "markup_template": "<div role=\"group\" class=\"field\">\n  <label for=\"message\">Message</label>\n  <textarea id=\"message\" placeholder=\"Type your message here\"></textarea>\n  <p>Write a short message.</p>\n</div>",
       "composition_rules": "One control per field. data-orientation=\"horizontal\" or responsive flips label beside control. fieldset/fieldset groups related fields. Wrong: stack multiple unrelated inputs in one field without a group legend."
     },
+    "form": {
+      "dependencies": {
+        "css": [
+          "basecoat-css/base"
+        ],
+        "js": []
+      },
+      "markup_template": "<form class=\"w-full max-w-md space-y-4\">\n  <div class=\"grid gap-2\">\n    <label for=\"username\" class=\"text-sm font-medium leading-none\">Username</label>\n    <input id=\"username\" type=\"text\" class=\"input w-full\" placeholder=\"Enter username\" />\n    <p class=\"text-xs text-muted-foreground\">This is your public display name.</p>\n  </div>\n  <button type=\"submit\" class=\"btn\" data-variant=\"default\">Submit</button>\n</form>",
+      "composition_rules": "Structure forms with explicit labels, descriptive helper text, and single primary submit actions."
+    },
+    "hover-card": {
+      "dependencies": {
+        "css": [
+          "basecoat-css/base"
+        ],
+        "js": []
+      },
+      "markup_template": "<div class=\"relative inline-block\">\n  <a href=\"#profile\" class=\"text-sm font-medium underline underline-offset-4\">@basecoat</a>\n  <div class=\"absolute top-full left-0 z-50 mt-2 w-80 rounded-md border border-border bg-popover p-4 text-popover-foreground shadow-md\">\n    <div class=\"flex gap-4\">\n      <div class=\"size-10 rounded-full bg-muted flex items-center justify-center font-semibold text-xs\">BC</div>\n      <div class=\"space-y-2\">\n        <h4 class=\"text-sm font-semibold\">Basecoat UI</h4>\n        <p class=\"text-xs text-muted-foreground\">Minimalist UI primitives built with Tailwind CSS v4.</p>\n      </div>\n    </div>\n  </div>\n</div>",
+      "composition_rules": "Hover cards provide rich secondary previews on pointer hover. Ensure interactive content remains reachable via focus."
+    },
     "input": {
       "dependencies": {
         "css": [
@@ -2085,6 +2455,16 @@
       },
       "markup_template": "<div class=\"input-group\">\n  <input type=\"text\" aria-label=\"Search\" placeholder=\"Search...\" />\n  <span data-align=\"start\" aria-hidden=\"true\">Search</span>\n  <span data-align=\"end\">12 results</span>\n</div>",
       "composition_rules": "Native input/textarea/select stay borderless children. data-align=\"start|end\" places addons; data-orientation=\"vertical\" uses header/footer rows. Wrong: wrap the control outside input-group or omit aria-hidden on decorative icons."
+    },
+    "input-otp": {
+      "dependencies": {
+        "css": [
+          "basecoat-css/base"
+        ],
+        "js": []
+      },
+      "markup_template": "<div class=\"flex items-center gap-2\" role=\"group\" aria-label=\"One-time password\">\n  <input type=\"text\" maxlength=\"1\" class=\"input size-10 text-center font-semibold\" aria-label=\"Digit 1\" />\n  <input type=\"text\" maxlength=\"1\" class=\"input size-10 text-center font-semibold\" aria-label=\"Digit 2\" />\n  <input type=\"text\" maxlength=\"1\" class=\"input size-10 text-center font-semibold\" aria-label=\"Digit 3\" />\n  <input type=\"text\" maxlength=\"1\" class=\"input size-10 text-center font-semibold\" aria-label=\"Digit 4\" />\n  <input type=\"text\" maxlength=\"1\" class=\"input size-10 text-center font-semibold\" aria-label=\"Digit 5\" />\n  <input type=\"text\" maxlength=\"1\" class=\"input size-10 text-center font-semibold\" aria-label=\"Digit 6\" />\n</div>",
+      "composition_rules": "One-time passcode inputs require discrete character cells with individual aria-label attributes and role=\"group\"."
     },
     "item": {
       "dependencies": {
@@ -2116,6 +2496,16 @@
       "markup_template": "<label class=\"label\" for=\"email\">Your email address</label>",
       "composition_rules": "Apply label class on native label. for must match control id. Can wrap checkbox/radio inside label. Wrong: replace label with a bare span for visible field names."
     },
+    "menubar": {
+      "dependencies": {
+        "css": [
+          "basecoat-css/base"
+        ],
+        "js": []
+      },
+      "markup_template": "<div class=\"flex items-center gap-2 rounded-md border border-border bg-background p-2\" role=\"menubar\" aria-label=\"Application menu\">\n  <button type=\"button\" class=\"btn\" data-variant=\"ghost\" role=\"menuitem\">File</button>\n  <button type=\"button\" class=\"btn\" data-variant=\"ghost\" role=\"menuitem\">Edit</button>\n  <button type=\"button\" class=\"btn\" data-variant=\"ghost\" role=\"menuitem\">View</button>\n</div>",
+      "composition_rules": "Declare role=\"menubar\" with menuitem children. Group application level commands horizontally."
+    },
     "native-select": {
       "dependencies": {
         "css": [
@@ -2125,6 +2515,26 @@
       },
       "markup_template": "<select class=\"select\" aria-label=\"Fruit\">\n  <option value=\"\">Select a fruit</option>\n  <option value=\"apple\">Apple</option>\n  <option value=\"banana\">Banana</option>\n</select>",
       "composition_rules": "Native select uses class=\"select\" (not the JS custom select). Provide aria-label or an associated label. disabled on select blocks interaction. Wrong: reuse the custom .select div/listbox markup for a native element."
+    },
+    "navigation-menu": {
+      "dependencies": {
+        "css": [
+          "basecoat-css/base"
+        ],
+        "js": []
+      },
+      "markup_template": "<nav class=\"flex items-center gap-2\" aria-label=\"Main navigation\">\n  <a href=\"#getting-started\" class=\"btn\" data-variant=\"ghost\">Getting Started</a>\n  <a href=\"#components\" class=\"btn\" data-variant=\"ghost\">Components</a>\n  <a href=\"#documentation\" class=\"btn\" data-variant=\"ghost\">Documentation</a>\n</nav>",
+      "composition_rules": "Navigation landmark must declare an aria-label to differentiate from sidebar or footer navigation links."
+    },
+    "pagination": {
+      "dependencies": {
+        "css": [
+          "basecoat-css/base"
+        ],
+        "js": []
+      },
+      "markup_template": "<nav class=\"flex items-center justify-center gap-2\" aria-label=\"Pagination\">\n  <a href=\"#prev\" class=\"btn\" data-variant=\"outline\" data-size=\"icon\" aria-label=\"Previous page\">\n    <svg class=\"size-4\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"m15 18-6-6 6-6\"/></svg>\n  </a>\n  <a href=\"#page1\" class=\"btn\" data-variant=\"outline\">1</a>\n  <a href=\"#page2\" class=\"btn\" data-variant=\"ghost\">2</a>\n  <a href=\"#page3\" class=\"btn\" data-variant=\"ghost\">3</a>\n  <a href=\"#next\" class=\"btn\" data-variant=\"outline\" data-size=\"icon\" aria-label=\"Next page\">\n    <svg class=\"size-4\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"m9 18 6-6-6-6\"/></svg>\n  </a>\n</nav>",
+      "composition_rules": "Pagination navigation landmark requires aria-label. Active page button uses data-variant=\"outline\" while sibling links use ghost."
     },
     "popover": {
       "dependencies": {
@@ -2159,6 +2569,16 @@
       "markup_template": "<div role=\"radiogroup\" aria-label=\"View density\" class=\"w-fit\">\n  <div class=\"flex items-center gap-2\">\n    <input type=\"radio\" id=\"r1\" name=\"density\" value=\"default\" class=\"input\" />\n    <label for=\"r1\">Default</label>\n  </div>\n  <div class=\"flex items-center gap-2\">\n    <input type=\"radio\" id=\"r2\" name=\"density\" value=\"comfortable\" class=\"input\" checked />\n    <label for=\"r2\">Comfortable</label>\n  </div>\n</div>",
       "composition_rules": "Radios use class=\"input\" with a shared name. Wrap in role=\"radiogroup\" or fieldset with legend. field+section adds descriptions. Wrong: give each radio a different name or skip the group landmark."
     },
+    "resizable": {
+      "dependencies": {
+        "css": [
+          "basecoat-css/base"
+        ],
+        "js": []
+      },
+      "markup_template": "<div class=\"flex h-48 w-full max-w-md rounded-lg border border-border\">\n  <div class=\"flex flex-1 items-center justify-center p-6 text-sm text-muted-foreground\">\n    Panel One\n  </div>\n  <div class=\"w-px bg-border hover:bg-ring transition-colors\" role=\"separator\" aria-orientation=\"vertical\"></div>\n  <div class=\"flex flex-1 items-center justify-center p-6 text-sm text-muted-foreground\">\n    Panel Two\n  </div>\n</div>",
+      "composition_rules": "Use flex containers with divider separator handles. Handle dragging logic is implemented in client script."
+    },
     "scroll-area": {
       "dependencies": {
         "css": [
@@ -2168,6 +2588,16 @@
       },
       "markup_template": "<div class=\"scrollbar h-72 overflow-y-auto rounded-md border p-4\">\n  Your scrollable content here.\n</div>",
       "composition_rules": "Apply scrollbar or scrollbar-sm on an element that already uses overflow-auto/y/x. CSS-only; no JS wrapper. Wrong: expect scroll-area to create overflow without overflow utilities on the same node."
+    },
+    "segmented-toggle": {
+      "dependencies": {
+        "css": [
+          "basecoat-css/base"
+        ],
+        "js": []
+      },
+      "markup_template": "<div data-component=\"segmented-toggle\" data-variant=\"pill\" role=\"radiogroup\" aria-label=\"Date range\" class=\"flex gap-2\">\n  <label class=\"btn\" data-variant=\"outline\"><input type=\"radio\" name=\"date-range\" value=\"3m\" class=\"sr-only\" /><span>Last 3 months</span></label>\n  <label class=\"btn\" data-variant=\"outline\"><input type=\"radio\" name=\"date-range\" value=\"30d\" class=\"sr-only\" checked /><span>Last 30 days</span></label>\n  <label class=\"btn\" data-variant=\"outline\"><input type=\"radio\" name=\"date-range\" value=\"7d\" class=\"sr-only\" /><span>Last 7 days</span></label>\n</div>",
+      "composition_rules": "Radio-backed pill control: role=radiogroup, data-variant=pill, shared radio name, three options. Reuses radio-group semantics without Chart.js. Wrong: use button-group alone without radios for exclusive selection."
     },
     "select": {
       "dependencies": {
@@ -2181,6 +2611,27 @@
       },
       "markup_template": "<div id=\"s\" class=\"select\" data-placeholder=\"Choose\">\n  <button type=\"button\" id=\"s-t\" aria-haspopup=\"listbox\" aria-expanded=\"false\" aria-controls=\"s-l\"><span>Choose</span></button>\n  <div id=\"s-p\" data-popover aria-hidden=\"true\">\n    <div role=\"listbox\" id=\"s-l\" aria-orientation=\"vertical\" aria-labelledby=\"s-t\">\n      <div id=\"s-a\" role=\"option\" data-value=\"a\">Alpha</div>\n      <div id=\"s-b\" role=\"option\" data-value=\"b\" aria-disabled=\"true\">Beta</div>\n    </div>\n  </div>\n  <input type=\"hidden\" name=\"choice\" value=\"\" />\n</div>",
       "composition_rules": "Closed: aria-expanded=false, aria-hidden=true; open reverses both. Selected option: aria-selected=true; runtime sets aria-activedescendant. Disable trigger with disabled; options with aria-disabled=true. Wrong: omit the direct-child hidden input or trigger span."
+    },
+    "separator": {
+      "dependencies": {
+        "css": [
+          "basecoat-css/base"
+        ],
+        "js": []
+      },
+      "markup_template": "<div class=\"w-full max-w-md space-y-4\">\n  <div class=\"space-y-2\">\n    <h4 class=\"text-sm font-medium leading-none\">Basecoat UI</h4>\n    <p class=\"text-sm text-muted-foreground\">Minimalist primitives for web applications.</p>\n  </div>\n  <div class=\"h-px w-full bg-border\" role=\"separator\"></div>\n  <div class=\"flex items-center gap-4 text-sm\">\n    <span>Docs</span>\n    <div class=\"h-4 w-px bg-border\" role=\"separator\" aria-orientation=\"vertical\"></div>\n    <span>Source</span>\n  </div>\n</div>",
+      "composition_rules": "Separators provide visual division between elements. Declare role=\"separator\" and aria-orientation=\"vertical\" when dividing horizontally."
+    },
+    "sheet": {
+      "dependencies": {
+        "css": [
+          "basecoat-css/base"
+        ],
+        "js": []
+      },
+      "markup_template": "<button type=\"button\" class=\"btn\" data-variant=\"outline\" data-open-sheet=\"sheet-demo\">Open sheet</button>\n<dialog id=\"sheet-demo\" class=\"fixed inset-y-0 right-0 z-50 m-0 h-full w-80 bg-background p-6 shadow-xl\" aria-labelledby=\"sheet-title\">\n  <div class=\"flex flex-col gap-4\">\n    <header class=\"flex items-center justify-between\">\n      <h2 id=\"sheet-title\" class=\"text-lg font-semibold\">Sheet Panel</h2>\n      <form method=\"dialog\"><button class=\"btn\" data-variant=\"outline\" value=\"cancel\">Close</button></form>\n    </header>\n    <p class=\"text-sm text-muted-foreground\">Panel content goes here.</p>\n  </div>\n</dialog>",
+      "composition_rules": "Native dialog provides modal focus trap and escape handling for off-canvas side sheets. Use fixed edge anchoring.",
+      "native_script": "document.addEventListener('click', (e) => {\n  if (!(e.target instanceof Element)) return;\n  const id = e.target.closest('[data-open-sheet]')?.getAttribute('data-open-sheet');\n  const d = id && document.getElementById(id);\n  if (d instanceof HTMLDialogElement) d.showModal();\n});"
     },
     "sidebar": {
       "dependencies": {
@@ -2217,6 +2668,36 @@
       },
       "markup_template": "<input type=\"range\" aria-label=\"Slider\" class=\"input w-full\" min=\"0\" max=\"100\" value=\"50\" />",
       "composition_rules": "Native input[type=\"range\"] with class=\"input\". range.js sets --slider-value on input events. Single thumb only; no vertical or multi-thumb API. Wrong: import basecoat-css/slider or omit the range module while using type=\"range\"."
+    },
+    "sonner": {
+      "dependencies": {
+        "css": [
+          "basecoat-css/base"
+        ],
+        "js": []
+      },
+      "markup_template": "<div class=\"flex flex-col gap-2 w-full max-w-sm\" role=\"region\" aria-label=\"Notifications\">\n  <div class=\"flex items-center justify-between gap-4 rounded-lg border border-border bg-background p-4 shadow-lg text-sm\" role=\"status\">\n    <div class=\"space-y-2\">\n      <p class=\"font-medium\">Event created</p>\n      <p class=\"text-xs text-muted-foreground\">Monday, February 16, 2026 at 9:00 AM</p>\n    </div>\n    <button type=\"button\" class=\"btn\" data-variant=\"outline\" data-size=\"sm\">Undo</button>\n  </div>\n</div>",
+      "composition_rules": "Render toast notifications inside an accessible status region. Include concise message and optional single action."
+    },
+    "spinner": {
+      "dependencies": {
+        "css": [
+          "basecoat-css/base"
+        ],
+        "js": []
+      },
+      "markup_template": "<div class=\"flex items-center gap-2\" role=\"status\" aria-label=\"Loading\">\n  <svg class=\"size-4 animate-spin text-muted-foreground\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n    <path d=\"M21 12a9 9 0 1 1-6.219-8.56\"/>\n  </svg>\n  <span class=\"text-sm text-muted-foreground\">Loading...</span>\n</div>",
+      "composition_rules": "Provide role=\"status\" and visible or screen-reader text alongside the animated spinner SVG for accessibility."
+    },
+    "svg-area-chart": {
+      "dependencies": {
+        "css": [
+          "basecoat-css/base"
+        ],
+        "js": []
+      },
+      "markup_template": "<div data-component=\"svg-area-chart\">\n  <svg class=\"w-full\" role=\"img\" aria-label=\"Total visitors area chart\" viewBox=\"0 0 100 40\">\n    <title>Total visitors</title>\n    <desc>Area series for desktop and mobile visitors.</desc>\n    <path data-series=\"desktop\" fill=\"currentColor\" d=\"M0 30 L20 18 L40 22 L60 10 L80 16 L100 8 L100 40 L0 40 Z\"></path>\n    <path data-series=\"mobile\" fill=\"currentColor\" d=\"M0 34 L20 28 L40 30 L60 24 L80 26 L100 20 L100 40 L0 40 Z\"></path>\n  </svg>\n</div>",
+      "composition_rules": "Zero-runtime SVG area chart. No window.Chart or basecoat.chart(). Keep accessible title/desc. Existing chart leaf remains Chart.js-based. Wrong: require Chart.js for this leaf."
     },
     "switch": {
       "dependencies": {
@@ -2286,6 +2767,28 @@
       "markup_template": "<div id=\"toaster\" class=\"toaster\">\n  <div class=\"toast\" role=\"status\" aria-atomic=\"true\" aria-hidden=\"false\" data-duration=\"-1\">\n    <div class=\"toast-content\">\n      <section><h2>Saved</h2><p>Changes saved.</p></section>\n      <footer><button type=\"button\" class=\"btn\" data-variant=\"outline\" data-size=\"sm\" data-toast-cancel>Dismiss</button></footer>\n    </div>\n  </div>\n</div>",
       "composition_rules": "Use one #toaster. Open: aria-hidden=false; close() sets true then removes the toast after transition. data-duration=-1 disables timeout. Footer buttons/links dismiss; native disabled blocks buttons. Error category uses role=alert. Wrong: rename #toaster or add a fake data-toast-trigger attribute."
     },
+    "toggle": {
+      "dependencies": {
+        "css": [
+          "basecoat-css/base"
+        ],
+        "js": []
+      },
+      "markup_template": "<button type=\"button\" class=\"btn\" data-variant=\"outline\" data-size=\"icon\" aria-pressed=\"false\" aria-label=\"Toggle italic\">\n  <svg class=\"size-4\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><line x1=\"19\" y1=\"4\" x2=\"10\" y2=\"4\"/><line x1=\"14\" y1=\"20\" x2=\"5\" y2=\"20\"/><line x1=\"15\" y1=\"4\" x2=\"9\" y2=\"20\"/></svg>\n</button>",
+      "composition_rules": "Two-state toggle button must reflect state with aria-pressed. Provide accessible aria-label on icon-only toggles.",
+      "native_script": "document.addEventListener('click', (e) => {\n  const btn = (e.target instanceof Element) ? e.target.closest('[aria-pressed]') : null;\n  if (btn) btn.setAttribute('aria-pressed', btn.getAttribute('aria-pressed') === 'true' ? 'false' : 'true');\n});"
+    },
+    "toggle-group": {
+      "dependencies": {
+        "css": [
+          "basecoat-css/base"
+        ],
+        "js": []
+      },
+      "markup_template": "<div class=\"flex items-center gap-2 rounded-md border border-border p-2\" role=\"group\" aria-label=\"Text styles\">\n  <button type=\"button\" class=\"btn\" data-variant=\"ghost\" aria-pressed=\"true\">Bold</button>\n  <button type=\"button\" class=\"btn\" data-variant=\"ghost\" aria-pressed=\"false\">Italic</button>\n  <button type=\"button\" class=\"btn\" data-variant=\"ghost\" aria-pressed=\"false\">Underline</button>\n</div>",
+      "composition_rules": "Group toggle buttons inside role=\"group\" container with aria-label. Maintain individual aria-pressed state on buttons.",
+      "native_script": "document.addEventListener('click', (e) => {\n  const btn = (e.target instanceof Element) ? e.target.closest('[role=\"group\"] [aria-pressed]') : null;\n  if (btn) btn.setAttribute('aria-pressed', btn.getAttribute('aria-pressed') === 'true' ? 'false' : 'true');\n});"
+    },
     "tooltip": {
       "dependencies": {
         "css": [
@@ -2295,26 +2798,6 @@
       },
       "markup_template": "<button class=\"btn\" data-variant=\"outline\" data-tooltip=\"Tooltip text\" data-side=\"bottom\" data-align=\"center\">Hover</button>",
       "composition_rules": "CSS-only: data-tooltip text on the trigger. data-side top|bottom|left|right|inline-start|inline-end; data-align start|center|end. Text only, no portal markup. Wrong: nest a separate tooltip span or invent aria-describedby portals like shadcn Tooltip."
-    },
-    "segmented-toggle": {
-      "dependencies": {
-        "css": [
-          "basecoat-css/base"
-        ],
-        "js": []
-      },
-      "markup_template": "<div data-component=\"segmented-toggle\" data-variant=\"pill\" role=\"radiogroup\" aria-label=\"Date range\" class=\"flex gap-2\">\n  <label class=\"btn\" data-variant=\"outline\"><input type=\"radio\" name=\"date-range\" value=\"3m\" class=\"sr-only\" /><span>Last 3 months</span></label>\n  <label class=\"btn\" data-variant=\"outline\"><input type=\"radio\" name=\"date-range\" value=\"30d\" class=\"sr-only\" checked /><span>Last 30 days</span></label>\n  <label class=\"btn\" data-variant=\"outline\"><input type=\"radio\" name=\"date-range\" value=\"7d\" class=\"sr-only\" /><span>Last 7 days</span></label>\n</div>",
-      "composition_rules": "Radio-backed pill control: role=radiogroup, data-variant=pill, shared radio name, three options. Reuses radio-group semantics without Chart.js. Wrong: use button-group alone without radios for exclusive selection."
-    },
-    "svg-area-chart": {
-      "dependencies": {
-        "css": [
-          "basecoat-css/base"
-        ],
-        "js": []
-      },
-      "markup_template": "<div data-component=\"svg-area-chart\">\n  <svg class=\"w-full\" role=\"img\" aria-label=\"Total visitors area chart\" viewBox=\"0 0 100 40\">\n    <title>Total visitors</title>\n    <desc>Area series for desktop and mobile visitors.</desc>\n    <path data-series=\"desktop\" fill=\"currentColor\" d=\"M0 30 L20 18 L40 22 L60 10 L80 16 L100 8 L100 40 L0 40 Z\"></path>\n    <path data-series=\"mobile\" fill=\"currentColor\" d=\"M0 34 L20 28 L40 30 L60 24 L80 26 L100 20 L100 40 L0 40 Z\"></path>\n  </svg>\n</div>",
-      "composition_rules": "Zero-runtime SVG area chart. No window.Chart or basecoat.chart(). Keep accessible title/desc. Existing chart leaf remains Chart.js-based. Wrong: require Chart.js for this leaf."
     }
   }
 }

@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "id": "otp-01",
+  "role": "page",
+  "family": "auth",
+  "description": "Centered 6-digit PIN verification card with segmented digit inputs, countdown timer, and resend action.",
+  "tags": [
+    "auth",
+    "otp",
+    "2fa",
+    "verification",
+    "pin"
+  ],
+  "root": "auth-root",
+  "fragments": [
+    {
+      "id": "auth-root",
+      "emmet": "main.flex.min-h-screen.items-center.justify-center.p-6.bg-muted[data-slot=auth-page]>div.card.w-full.max-w-sm.rounded-xl.border.border-border.bg-card.p-6.text-center.shadow-md[data-fsm-recipe=auth-flow][data-fsm-state=idle]>(header.flex.flex-col.gap-2>h1.text-2xl.font-semibold{Two-Factor Auth}+p.text-xs.text-muted-foreground{Enter the 6-digit code sent to your device})+form.flex.flex-col.gap-6.pt-4>(div.flex.justify-center.gap-2>input.input.input-sm.size-10.text-center.font-mono.text-lg[type=text][maxlength=1][required]*6)+button.btn.btn-sm.btn-primary.w-full[type=submit]{Verify Code}+(footer.flex.flex-col.gap-2.text-xs.text-muted-foreground.pt-2>span{Didn't receive code?}+button.btn.btn-ghost.btn-xs{Resend code (0:59)})"
+    }
+  ],
+  "mounts": [],
+  "slots": [],
+  "ports": [],
+  "componentRefs": [
+    "card",
+    "button",
+    "input",
+    "label"
+  ],
+  "ruleRefs": [],
+  "dependencyBlockIds": [],
+  "layout": {
+    "frameRef": "auth-root"
+  },
+  "landmarks": {
+    "main": 1,
+    "primaryHeading": 1
+  },
+  "provenance": {
+    "origin": "authored",
+    "sourceHashes": {},
+    "mappingVersion": "1.0.0"
+  }
+}

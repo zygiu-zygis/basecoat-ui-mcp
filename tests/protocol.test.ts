@@ -77,10 +77,14 @@ test('offline stdio initializes and serves the bounded, project-scoped MCP surfa
     assert.deepEqual(tools.map(tool => tool.name).sort(), [
       'apply_design_patch',
       'basecoat_component_syntax',
+      'basecoat_compose_stack',
       'basecoat_creative_director',
+      'basecoat_get_chart_blueprint',
+      'basecoat_list_charts',
       'basecoat_page_architect',
       'basecoat_quality_inspector',
       'basecoat_rules_enforcer',
+      'basecoat_setup_config',
       'begin_design',
       'get_component_details',
       'get_component_html',
@@ -92,13 +96,18 @@ test('offline stdio initializes and serves the bounded, project-scoped MCP surfa
       'search_macro_blocks',
       'validate_composition',
       'validate_design',
+      'validate_markup',
     ]);
     const readOnly = new Set([
       'basecoat_component_syntax',
+      'basecoat_compose_stack',
       'basecoat_creative_director',
+      'basecoat_get_chart_blueprint',
+      'basecoat_list_charts',
       'basecoat_page_architect',
       'basecoat_quality_inspector',
       'basecoat_rules_enforcer',
+      'basecoat_setup_config',
       'get_component_details',
       'get_component_html',
       'get_design_context',
@@ -109,6 +118,7 @@ test('offline stdio initializes and serves the bounded, project-scoped MCP surfa
       'search_macro_blocks',
       'validate_composition',
       'validate_design',
+      'validate_markup',
     ]);
     const mutations = new Set(['apply_design_patch', 'begin_design']);
     for (const tool of tools) {
@@ -122,9 +132,20 @@ test('offline stdio initializes and serves the bounded, project-scoped MCP surfa
       }
     }
     const { resources } = await client.listResources();
-    assert.deepEqual(resources.map(resource => resource.uri).sort(), [
-      'basecoat://design/rhythm', 'basecoat://design/theming', 'basecoat://integration/frameworks', 'basecoat://project/context',
-    ]);
+    const resourceUris = new Set(resources.map(resource => resource.uri));
+    for (const required of [
+      'basecoat://design/rhythm',
+      'basecoat://design/theming',
+      'basecoat://integration/frameworks',
+      'basecoat://project/context',
+      'basecoat://skills/core',
+      'basecoat://skills/dashboard',
+      'basecoat://skills/charts',
+      'basecoat://skills/files/basecoat/rules/styling.md',
+    ]) {
+      assert(resourceUris.has(required), `resource missing: ${required}`);
+    }
+    assert(resources.length >= 95, `expected at least 95 resources, got ${resources.length}`);
 
     const query = { name: 'search_components', arguments: { intent: '', query: 'forms' } };
     const first = await client.callTool(query);

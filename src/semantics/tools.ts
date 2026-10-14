@@ -22,17 +22,17 @@ import type {
 // --- Input Schemas ---
 
 export const getRhythmRulesInputShape = {
-  profile: idSchema.optional(),
-  family: idSchema.optional(),
-  limit: z.number().int().min(1).max(32).optional(),
-  cursor: z.string().min(1).max(LIMITS.cursorMaxBytes).optional(),
+  profile: idSchema.optional().describe('Rhythm profile identifier to query (e.g. "default", "compact", "comfortable"). Defaults to "default".'),
+  family: idSchema.optional().describe('Semantic rhythm family to filter by (e.g. "spacing", "layout", "typography", "colors", "elevation"). Accepts aliases like "layouts".'),
+  limit: z.number().int().min(1).max(32).optional().describe('Maximum number of rhythm mappings to return per page (1-32, default 10).'),
+  cursor: z.string().min(1).max(LIMITS.cursorMaxBytes).optional().describe('Pagination cursor for bounded continuation of rhythm rules.'),
 };
 
 export const getFsmRecipeInputShape = {
-  recipe: idSchema.optional(),
-  section: z.enum(['states', 'events', 'guards', 'actions', 'transitions']).optional(),
-  limit: z.number().int().min(1).max(32).optional(),
-  cursor: z.string().min(1).max(LIMITS.cursorMaxBytes).optional(),
+  recipe: idSchema.optional().describe('FSM recipe identifier or alias to retrieve (e.g. "dialog", "tabs", "navigation", "collapsible-navigation", "sidebar").'),
+  section: z.enum(['states', 'events', 'guards', 'actions', 'transitions']).optional().describe('Specific FSM recipe contract section to inspect ("states", "events", "guards", "actions", "transitions").'),
+  limit: z.number().int().min(1).max(32).optional().describe('Maximum number of FSM entries to return per page (1-32, default 10).'),
+  cursor: z.string().min(1).max(LIMITS.cursorMaxBytes).optional().describe('Pagination cursor for bounded continuation of FSM recipe details.'),
 };
 
 // --- Helper Types ---

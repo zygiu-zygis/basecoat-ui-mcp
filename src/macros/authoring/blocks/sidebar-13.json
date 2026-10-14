@@ -1,0 +1,71 @@
+{
+  "schemaVersion": 1,
+  "id": "sidebar-13",
+  "role": "details",
+  "family": "workspace",
+  "description": "A sidebar in a dialog.",
+  "tags": [
+    "modal",
+    "dialog",
+    "sidebar",
+    "settings",
+    "embedded-nav"
+  ],
+  "root": "dialog-root",
+  "fragments": [
+    {
+      "id": "dialog-root",
+      "emmet": "div.card.flex.w-full.max-w-4xl.overflow-hidden.rounded-xl.border.border-border.bg-card.shadow-2xl[data-slot=settings-dialog][data-component=sidebar]>(aside.w-48.border-e.border-border.bg-muted.p-4.flex.flex-col.justify-between[data-slot=settings-nav]>div.flex.flex-col.gap-2>span.text-xs.font-semibold.uppercase.text-muted-foreground.px-2{Settings}+a.btn.btn-ghost.btn-sm.justify-start[data-state=active]{General}+a.btn.btn-ghost.btn-sm.justify-start{Account}+a.btn.btn-ghost.btn-sm.justify-start{Billing}^div.mt-auto>button.btn.btn-ghost.btn-xs.w-full.justify-start{Log Out})+section.flex.flex-1.flex-col.gap-4.p-6[data-slot=settings-content]>(header.flex.flex-col.gap-2.border-b.border-border.pb-4>h2.text-lg.font-semibold{General Settings}+p.text-xs.text-muted-foreground{Manage workspace details.})+div.flex.flex-col.gap-4[data-slot=settings-fields]>div.flex.flex-col.gap-2>label.text-xs.font-medium{Workspace Name}+input.input.input-sm[value='Acme Labs']^footer.mt-auto.flex.justify-end.gap-2.pt-4.border-t.border-border>button.btn.btn-sm.btn-ghost{Cancel}+button.btn.btn-sm.btn-primary{Save Changes})"
+    }
+  ],
+  "mounts": [],
+  "slots": [
+    {
+      "id": "settings-nav",
+      "at": {
+        "fragment": "dialog-root",
+        "name": "settings-nav"
+      },
+      "accepts": [
+        "navigation"
+      ],
+      "min": 0,
+      "max": 1
+    },
+    {
+      "id": "settings-content",
+      "at": {
+        "fragment": "dialog-root",
+        "name": "settings-content"
+      },
+      "accepts": [
+        "form",
+        "workspace"
+      ],
+      "min": 0,
+      "max": 1
+    }
+  ],
+  "ports": [],
+  "componentRefs": [
+    "sidebar",
+    "button",
+    "input"
+  ],
+  "ruleRefs": [],
+  "dependencyBlockIds": [],
+  "layout": {
+    "frameRef": "dialog-root"
+  },
+  "landmarks": {
+    "main": 0,
+    "primaryHeading": 0
+  },
+  "provenance": {
+    "origin": "authored",
+    "sourceHashes": {
+      "upstream:sidebar-13": "dc96f195579f5f839db9bbd0cbb9c60cbd228fb8308944b3c190d09b8b6b80f2"
+    },
+    "mappingVersion": "1.0.0"
+  }
+}

@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { registry } from '../src/registry/index.js';
-import { buildSnapshot, parseSyncArgs, scrapeComponent } from '../scripts/sync.js';
+import { buildSnapshot, parseSyncArgs, scrapeComponent, MCP_ONLY_LEAVES } from '../scripts/sync.js';
 
 function fixtures() {
   const sources: Record<string, string> = {
@@ -9,7 +9,7 @@ function fixtures() {
     'src/css/components/all.css': '.accordion {} .alert {} .alert-dialog {} .avatar {} .badge {} .breadcrumb {} .btn {} .button-group {} .card {} .chart {} .checkbox {} .combobox {} .command {} .dialog {} .drawer {} .dropdown-menu {} .empty {} .field {} .input {} .input-group {} .item {} .kbd {} .label {} .native-select {} .popover {} .progress {} .radio-group {} .scroll-area {} .select {} .sidebar {} .skeleton {} .slider {} .switch {} .table {} .tabs {} .textarea {} .theme-switcher {} .toast {} .tooltip {}',
   };
   for (const { id, name } of registry.index) {
-    if (id === 'segmented-toggle' || id === 'svg-area-chart') continue;
+    if (MCP_ONLY_LEAVES.has(id)) continue;
     sources[`site/src/docs/components/${id}.mdx`] = `# ${name}\n<Preview><div class="${id === 'button' ? 'btn' : id}" data-variant="outline"></div></Preview>`;
   }  const tree = { sha: 'a'.repeat(40), truncated: false, tree: Object.keys(sources).map(path => ({ path, type: 'blob' })) };
   return { sources, tree, read: async (path: string) => { if (!(path in sources)) throw new Error(`Missing fixture: ${path}`); return sources[path]!; } };
@@ -22,7 +22,7 @@ test('sync extracts variants/classes deterministically and retains curated skele
   assert.deepEqual(first, second);
   assert.deepEqual(first.details, registry.details);
   assert.equal(first.upstream.revision, 'a'.repeat(40));
-  assert.equal(first.upstream.components.length, 39);
+  assert.equal(first.upstream.components.length, 41);
   assert.deepEqual(first.upstream.css_classes, ['accordion', 'alert', 'alert-dialog', 'avatar', 'badge', 'breadcrumb', 'btn', 'button-group', 'card', 'chart', 'checkbox', 'combobox', 'command', 'dialog', 'drawer', 'dropdown-menu', 'empty', 'field', 'input', 'input-group', 'item', 'kbd', 'label', 'native-select', 'popover', 'progress', 'radio-group', 'scroll-area', 'select', 'sidebar', 'skeleton', 'slider', 'switch', 'table', 'tabs', 'textarea', 'theme-switcher', 'toast', 'tooltip']);
   const scraped = scrapeComponent('button', '# Button\n<button class="btn btn" data-variant="outline|primary">');
   assert.deepEqual(scraped.variants, ['outline', 'primary']);

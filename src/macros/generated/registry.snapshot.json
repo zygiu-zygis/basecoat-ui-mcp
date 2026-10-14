@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "revision": "0473d056fc8599426117299a08855b729070f715cab04768d77c3d1042de3c6b",
+  "revision": "bebae95d03c506ef67d9ab3ee3814d1082ce66262b5dce2892cb52053edd9262",
   "blocks": {
     "cbe0f152631792d61e6ebb46d791ae123dd45d83b58f2105e1c8f38e1bf283a7": {
       "schemaVersion": 1,
@@ -1383,6 +1383,105 @@
         "mappingVersion": "1.0.0"
       }
     },
+    "e20d37b026f92976d606c358b347970a9ab029d77149ccd3643629381f8f3095": {
+      "schemaVersion": 1,
+      "id": "billing",
+      "role": "workspace",
+      "family": "workspace",
+      "description": "Subscription and billing workspace with active plan card, payment method list, invoice history table, and upgrade CTA.",
+      "tags": [
+        "workspace",
+        "billing",
+        "subscription",
+        "invoices",
+        "payment"
+      ],
+      "root": "content-frame",
+      "fragments": [
+        {
+          "id": "content-frame",
+          "emmet": "div.flex.flex-1.flex-col.gap-6.p-6[data-role=canvas][data-macro=canvas][data-block=billing]>div.flex.items-center.justify-between.gap-4[data-slot=header]>div.flex.flex-col.gap-2>h2.text-xl.font-semibold{Billing & Subscription}+p.text-xs.text-muted-foreground{Manage your plan, payment methods, and invoice history.}^button.btn.btn-sm.btn-primary{Upgrade Plan}^^div.grid.grid-cols-1.gap-6.md:grid-cols-2>div.card.p-6.border.border-border.rounded-xl.bg-card[data-slot=plan-card]>span.text-xs.text-muted-foreground{Current Plan}+h3.text-xl.font-semibold.pt-2{Pro Team Plan}+p.text-xs.text-muted-foreground{Renews on Nov 1, 2026}^div.card.p-6.border.border-border.rounded-xl.bg-card[data-slot=payment-card]>span.text-xs.text-muted-foreground{Payment Method}+h3.text-lg.font-semibold.pt-2{Visa ending in 4242}+button.btn.btn-xs.btn-outline.mt-2{Update}^^div[data-slot=invoice-table]"
+        }
+      ],
+      "mounts": [],
+      "slots": [
+        {
+          "id": "plan-card",
+          "at": {
+            "fragment": "content-frame",
+            "name": "plan-card"
+          },
+          "accepts": [
+            "card",
+            "workspace"
+          ],
+          "min": 0,
+          "max": 1
+        },
+        {
+          "id": "payment-card",
+          "at": {
+            "fragment": "content-frame",
+            "name": "payment-card"
+          },
+          "accepts": [
+            "card",
+            "workspace"
+          ],
+          "min": 0,
+          "max": 1
+        },
+        {
+          "id": "invoice-table",
+          "at": {
+            "fragment": "content-frame",
+            "name": "invoice-table"
+          },
+          "accepts": [
+            "table",
+            "data"
+          ],
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "ports": [
+        {
+          "id": "main-in",
+          "at": {
+            "fragment": "content-frame",
+            "name": "content-frame"
+          },
+          "direction": "in",
+          "kind": "region",
+          "contract": "main",
+          "minLinks": 0,
+          "maxLinks": 1,
+          "scope": "shell"
+        }
+      ],
+      "componentRefs": [
+        "card",
+        "table",
+        "button"
+      ],
+      "ruleRefs": [],
+      "dependencyRefs": [
+        "9fd839dafa3ad90f5eb8223898c1d0d7b69a68bb16af66c595b6977c2d9db8ad"
+      ],
+      "layout": {
+        "frameRef": "content-frame"
+      },
+      "landmarks": {
+        "main": 1,
+        "primaryHeading": 0
+      },
+      "provenance": {
+        "origin": "authored",
+        "sourceHashes": {},
+        "mappingVersion": "1.0.0"
+      }
+    },
     "81a3941e6d578051e01a68c1015cd8d811855fa49b19946612d68e270f36f075": {
       "schemaVersion": 1,
       "id": "dashboard-06",
@@ -2061,6 +2160,236 @@
         "mappingVersion": "1.0.0"
       }
     },
+    "71e93ca895449af69e8be53cd0f0acdcbd520eae9dd4ae2d11768f9ade0196c7": {
+      "schemaVersion": 1,
+      "id": "login-01",
+      "role": "page",
+      "family": "auth",
+      "description": "A simple login form.",
+      "tags": [
+        "auth",
+        "login",
+        "simple",
+        "card"
+      ],
+      "root": "auth-root",
+      "fragments": [
+        {
+          "id": "auth-root",
+          "emmet": "main.flex.min-h-screen.w-full.items-center.justify-center.p-6.bg-muted[data-slot=auth-page]>div.card.w-full.max-w-sm.rounded-xl.border.border-border.bg-card.p-6.text-card-foreground.shadow-md[data-component=auth-card][data-fsm-recipe=auth-flow][data-fsm-state=idle]>(header.flex.flex-col.gap-2.text-center>h1.text-2xl.font-semibold{Login}+p.text-xs.text-muted-foreground{Enter your credentials to login})+form.flex.flex-col.gap-4.pt-4>(div.flex.flex-col.gap-2>label.text-xs.font-medium[for=login-01-email]{Email}+input.input.input-sm#login-01-email[type=email][placeholder='m@example.com'][required])+(div.flex.flex-col.gap-2>div.flex.items-center.justify-between>label.text-xs.font-medium[for=login-01-password]{Password}+a.text-xs.text-muted-foreground.hover:underline[href='#forgot']{Forgot?}^input.input.input-sm#login-01-password[type=password][required])+button.btn.btn-sm.btn-primary.w-full[type=submit]{Login}+(footer.text-center.text-xs.text-muted-foreground.pt-2>a.text-primary.font-medium.hover:underline[href='#signup']{Sign up})"
+        }
+      ],
+      "mounts": [],
+      "slots": [],
+      "ports": [],
+      "componentRefs": [
+        "card",
+        "button",
+        "input",
+        "label",
+        "field"
+      ],
+      "ruleRefs": [],
+      "dependencyRefs": [],
+      "layout": {
+        "frameRef": "auth-root"
+      },
+      "landmarks": {
+        "main": 1,
+        "primaryHeading": 1
+      },
+      "provenance": {
+        "origin": "authored",
+        "sourceHashes": {
+          "upstream:login-01": "1830088a392d11fad8ed4a84743c991da69942ed66ec0bf47caa0ae37a2e1fee"
+        },
+        "mappingVersion": "1.0.0"
+      }
+    },
+    "2c0210a2c074ef345ef1be76c49633f5f6ded79536a770a33c92f097a7db9520": {
+      "schemaVersion": 1,
+      "id": "login-02",
+      "role": "page",
+      "family": "auth",
+      "description": "A two column login page with a cover image.",
+      "tags": [
+        "auth",
+        "login",
+        "split-screen",
+        "social-auth"
+      ],
+      "root": "auth-root",
+      "fragments": [
+        {
+          "id": "auth-root",
+          "emmet": "main.grid.min-h-screen.grid-cols-1.lg:grid-cols-2[data-slot=auth-page]>(div.relative.hidden.h-full.flex-col.justify-between.bg-muted.p-12.lg:flex>div.flex.items-center.gap-2.text-lg.font-medium>div.size-6.rounded.bg-primary+span{Acme Corp}^blockquote.space-y-2>p.text-lg{\"Saved me countless hours.\"}+footer.text-sm.text-muted-foreground{Sofia Davis})+div.flex.items-center.justify-center.p-6>div.mx-auto.flex.w-full.max-w-sm.flex-col.gap-6[data-fsm-recipe=auth-flow][data-fsm-state=idle]>(header.flex.flex-col.gap-2.text-center>h1.text-2xl.font-semibold{Login}+p.text-xs.text-muted-foreground{Enter your credentials})+form.flex.flex-col.gap-4>(div.flex.flex-col.gap-2>label.text-xs.font-medium{Email}+input.input.input-sm[type=email][required])+(div.flex.flex-col.gap-2>div.flex.items-center.justify-between>label.text-xs.font-medium{Password}+a.text-xs.hover:underline{Forgot?}^input.input.input-sm[type=password][required])+button.btn.btn-sm.btn-primary.w-full[type=submit]{Sign In}"
+        }
+      ],
+      "mounts": [],
+      "slots": [],
+      "ports": [],
+      "componentRefs": [
+        "card",
+        "button",
+        "input",
+        "label",
+        "field"
+      ],
+      "ruleRefs": [],
+      "dependencyRefs": [],
+      "layout": {
+        "frameRef": "auth-root"
+      },
+      "landmarks": {
+        "main": 1,
+        "primaryHeading": 1
+      },
+      "provenance": {
+        "origin": "authored",
+        "sourceHashes": {
+          "upstream:login-02": "cbd671ae672a860dfc75603a5f2e84368737be4dd4d8f2cbe86e1c26572fc570"
+        },
+        "mappingVersion": "1.0.0"
+      }
+    },
+    "c9d28a4fbdc2f7fbd6ece60769494a0909d3f719a656443b322f9ce0bd3ae642": {
+      "schemaVersion": 1,
+      "id": "login-03",
+      "role": "page",
+      "family": "auth",
+      "description": "A login page with a muted background color.",
+      "tags": [
+        "auth",
+        "login",
+        "card",
+        "muted-background"
+      ],
+      "root": "auth-root",
+      "fragments": [
+        {
+          "id": "auth-root",
+          "emmet": "main.flex.min-h-screen.items-center.justify-center.bg-muted.p-6[data-slot=auth-page]>div.card.w-full.max-w-md.rounded-xl.border.border-border.bg-card.p-8.shadow-lg[data-fsm-recipe=auth-flow][data-fsm-state=idle]>(header.flex.flex-col.gap-2.text-center>h1.text-2xl.font-semibold{Welcome Back}+p.text-xs.text-muted-foreground{Enter your credentials to continue})+form.flex.flex-col.gap-4.pt-4>(div.flex.flex-col.gap-2>label.text-xs.font-medium{Email}+input.input.input-sm[type=email][placeholder='m@example.com'][required])+(div.flex.flex-col.gap-2>div.flex.items-center.justify-between>label.text-xs.font-medium{Password}+a.text-xs.hover:underline{Forgot?}^input.input.input-sm[type=password][required])+button.btn.btn-sm.btn-primary.w-full[type=submit]{Sign In}+div.text-center.text-xs.text-muted-foreground>a.hover:underline[href='#signup']{Don't have an account? Sign up}"
+        }
+      ],
+      "mounts": [],
+      "slots": [],
+      "ports": [],
+      "componentRefs": [
+        "card",
+        "button",
+        "input",
+        "label",
+        "field"
+      ],
+      "ruleRefs": [],
+      "dependencyRefs": [],
+      "layout": {
+        "frameRef": "auth-root"
+      },
+      "landmarks": {
+        "main": 1,
+        "primaryHeading": 1
+      },
+      "provenance": {
+        "origin": "authored",
+        "sourceHashes": {
+          "upstream:login-03": "553981aac4660931b6113e5ff179eb70dd32359ad816f2c8d20adbc59e1fc6d9"
+        },
+        "mappingVersion": "1.0.0"
+      }
+    },
+    "cd79a8f4b76e9752fbc708e0a9971ec1d9d6aceee16c806754d78e975a3ad824": {
+      "schemaVersion": 1,
+      "id": "login-04",
+      "role": "page",
+      "family": "auth",
+      "description": "A login page with form and image.",
+      "tags": [
+        "auth",
+        "login",
+        "horizontal-card",
+        "marketing"
+      ],
+      "root": "auth-root",
+      "fragments": [
+        {
+          "id": "auth-root",
+          "emmet": "main.flex.min-h-screen.items-center.justify-center.p-6.bg-muted[data-slot=auth-page]>div.card.grid.w-full.max-w-3xl.grid-cols-1.overflow-hidden.rounded-xl.border.border-border.bg-card.shadow-xl.md:grid-cols-2[data-fsm-recipe=auth-flow][data-fsm-state=idle]>(div.p-8.flex.flex-col.justify-between>(header.flex.flex-col.gap-2>h1.text-2xl.font-semibold{Welcome back}+p.text-xs.text-muted-foreground{Sign in to access your dashboard})+form.flex.flex-col.gap-4.py-4>(div.flex.flex-col.gap-2>label.text-xs.font-medium{Email}+input.input.input-sm[type=email][required])+(div.flex.flex-col.gap-2>label.text-xs.font-medium{Password}+input.input.input-sm[type=password][required])+button.btn.btn-sm.btn-primary.w-full[type=submit]{Login})+footer.text-xs.text-muted-foreground>a.underline{Terms & Privacy})^div.hidden.bg-muted.p-8.flex.flex-col.justify-between.md:flex>span.text-sm.font-semibold{Acme Platform}+p.text-xs.text-muted-foreground{Fast, secure enterprise design system.}"
+        }
+      ],
+      "mounts": [],
+      "slots": [],
+      "ports": [],
+      "componentRefs": [
+        "card",
+        "button",
+        "input",
+        "label",
+        "field"
+      ],
+      "ruleRefs": [],
+      "dependencyRefs": [],
+      "layout": {
+        "frameRef": "auth-root"
+      },
+      "landmarks": {
+        "main": 1,
+        "primaryHeading": 1
+      },
+      "provenance": {
+        "origin": "authored",
+        "sourceHashes": {
+          "upstream:login-04": "e99ece2d6c1198df1e2ec91764afec11bfb783f08cb4f1b5b758090d91aa5ffb"
+        },
+        "mappingVersion": "1.0.0"
+      }
+    },
+    "cbbc681a255a88f09f2b4ee3dc21afaa846eedbcaed2f4879d11bb65e530c163": {
+      "schemaVersion": 1,
+      "id": "login-05",
+      "role": "page",
+      "family": "auth",
+      "description": "A simple email-only login page.",
+      "tags": [
+        "auth",
+        "login",
+        "magic-link",
+        "passwordless"
+      ],
+      "root": "auth-root",
+      "fragments": [
+        {
+          "id": "auth-root",
+          "emmet": "main.flex.min-h-screen.items-center.justify-center.p-6.bg-muted[data-slot=auth-page]>div.card.w-full.max-w-sm.rounded-xl.border.border-border.bg-card.p-6.shadow-md[data-fsm-recipe=auth-flow][data-fsm-state=idle]>(header.flex.flex-col.gap-2.text-center>h1.text-2xl.font-semibold{Magic Link Login}+p.text-xs.text-muted-foreground{Enter your work email and we'll send you a login link})+form.flex.flex-col.gap-4.pt-4>(div.flex.flex-col.gap-2>label.text-xs.font-medium{Work Email}+input.input.input-sm[type=email][placeholder='you@company.com'][required])+button.btn.btn-sm.btn-primary.w-full[type=submit]{Send Magic Link}+(footer.text-center.text-xs.text-muted-foreground.pt-2>a.hover:underline[href='#sso']{Sign in with Enterprise SSO})"
+        }
+      ],
+      "mounts": [],
+      "slots": [],
+      "ports": [],
+      "componentRefs": [
+        "card",
+        "button",
+        "input",
+        "label",
+        "field"
+      ],
+      "ruleRefs": [],
+      "dependencyRefs": [],
+      "layout": {
+        "frameRef": "auth-root"
+      },
+      "landmarks": {
+        "main": 1,
+        "primaryHeading": 1
+      },
+      "provenance": {
+        "origin": "authored",
+        "sourceHashes": {
+          "upstream:login-05": "370b14eec54effdf9987763f669e072490b96c260c33d53ca21cf38b6d42dbd9"
+        },
+        "mappingVersion": "1.0.0"
+      }
+    },
     "fce7ef64d5f208c14b12f0b69f2a3ba51387032aa87f19134d6f200c45bb64ae": {
       "schemaVersion": 1,
       "id": "mail",
@@ -2396,6 +2725,222 @@
         "mappingVersion": "1.0.0"
       }
     },
+    "8a791d5e2cfe60227c9ce8b8952797116f3725349b909671299bd6e787b9f219": {
+      "schemaVersion": 1,
+      "id": "otp-01",
+      "role": "page",
+      "family": "auth",
+      "description": "Centered 6-digit PIN verification card with segmented digit inputs, countdown timer, and resend action.",
+      "tags": [
+        "auth",
+        "otp",
+        "2fa",
+        "verification",
+        "pin"
+      ],
+      "root": "auth-root",
+      "fragments": [
+        {
+          "id": "auth-root",
+          "emmet": "main.flex.min-h-screen.items-center.justify-center.p-6.bg-muted[data-slot=auth-page]>div.card.w-full.max-w-sm.rounded-xl.border.border-border.bg-card.p-6.text-center.shadow-md[data-fsm-recipe=auth-flow][data-fsm-state=idle]>(header.flex.flex-col.gap-2>h1.text-2xl.font-semibold{Two-Factor Auth}+p.text-xs.text-muted-foreground{Enter the 6-digit code sent to your device})+form.flex.flex-col.gap-6.pt-4>(div.flex.justify-center.gap-2>input.input.input-sm.size-10.text-center.font-mono.text-lg[type=text][maxlength=1][required]*6)+button.btn.btn-sm.btn-primary.w-full[type=submit]{Verify Code}+(footer.flex.flex-col.gap-2.text-xs.text-muted-foreground.pt-2>span{Didn't receive code?}+button.btn.btn-ghost.btn-xs{Resend code (0:59)})"
+        }
+      ],
+      "mounts": [],
+      "slots": [],
+      "ports": [],
+      "componentRefs": [
+        "card",
+        "button",
+        "input",
+        "label"
+      ],
+      "ruleRefs": [],
+      "dependencyRefs": [],
+      "layout": {
+        "frameRef": "auth-root"
+      },
+      "landmarks": {
+        "main": 1,
+        "primaryHeading": 1
+      },
+      "provenance": {
+        "origin": "authored",
+        "sourceHashes": {},
+        "mappingVersion": "1.0.0"
+      }
+    },
+    "6f179fb5930f384c423d5baa51244c967ef8cffc38869689eed0dd887b18edec": {
+      "schemaVersion": 1,
+      "id": "otp-02",
+      "role": "page",
+      "family": "auth",
+      "description": "Two-column split security verification page with recovery code option and authenticator helper.",
+      "tags": [
+        "auth",
+        "otp",
+        "split-screen",
+        "recovery-code"
+      ],
+      "root": "auth-root",
+      "fragments": [
+        {
+          "id": "auth-root",
+          "emmet": "main.grid.min-h-screen.grid-cols-1.lg:grid-cols-2[data-slot=auth-page]>(div.relative.hidden.h-full.flex-col.justify-between.bg-muted.p-12.text-foreground.lg:flex>div.flex.items-center.gap-2.text-lg.font-medium>div.size-6.rounded.bg-primary+span{Security Check}^p.text-sm.text-muted-foreground{Protecting your workspace with hardware-backed encryption.})+div.flex.items-center.justify-center.p-6>div.mx-auto.flex.w-full.max-w-sm.flex-col.gap-6[data-fsm-recipe=auth-flow][data-fsm-state=idle]>(header.flex.flex-col.gap-2.text-center>h1.text-2xl.font-semibold{Enter OTP Code}+p.text-xs.text-muted-foreground{Open your authenticator app to view your code})+form.flex.flex-col.gap-4>(div.flex.justify-center.gap-2>input.input.input-sm.size-10.text-center.font-mono.text-lg[type=text][maxlength=1]*6)+button.btn.btn-sm.btn-primary.w-full[type=submit]{Verify Identity}+div.text-center.text-xs>a.text-primary.hover:underline[href='#recovery']{Use emergency backup code}"
+        }
+      ],
+      "mounts": [],
+      "slots": [],
+      "ports": [],
+      "componentRefs": [
+        "card",
+        "button",
+        "input",
+        "label"
+      ],
+      "ruleRefs": [],
+      "dependencyRefs": [],
+      "layout": {
+        "frameRef": "auth-root"
+      },
+      "landmarks": {
+        "main": 1,
+        "primaryHeading": 1
+      },
+      "provenance": {
+        "origin": "authored",
+        "sourceHashes": {},
+        "mappingVersion": "1.0.0"
+      }
+    },
+    "d2778d5b254f722b3f805cfc6187b81109a3877abe61911270bd3bbc1d45cc52": {
+      "schemaVersion": 1,
+      "id": "otp-03",
+      "role": "page",
+      "family": "auth",
+      "description": "Minimal numeric OTP card with auto-focus digit slots, expiry indicator, and verify submit.",
+      "tags": [
+        "auth",
+        "otp",
+        "minimal",
+        "verification"
+      ],
+      "root": "auth-root",
+      "fragments": [
+        {
+          "id": "auth-root",
+          "emmet": "main.flex.min-h-screen.items-center.justify-center.bg-muted.p-6[data-slot=auth-page]>div.card.w-full.max-w-sm.rounded-xl.border.border-border.bg-card.p-6.shadow-md[data-fsm-recipe=auth-flow][data-fsm-state=idle]>(header.flex.flex-col.gap-2.text-center>h1.text-xl.font-semibold{Verification Required}+p.text-xs.text-muted-foreground{Code expires in 5 minutes})+form.flex.flex-col.gap-4.pt-4>(div.flex.justify-center.gap-2>input.input.input-sm.size-10.text-center.font-mono.text-lg[type=text][maxlength=1]*6)+button.btn.btn-sm.btn-primary.w-full[type=submit]{Confirm}+div.text-center.text-xs.text-muted-foreground>a.hover:underline{Need help? Contact support}"
+        }
+      ],
+      "mounts": [],
+      "slots": [],
+      "ports": [],
+      "componentRefs": [
+        "card",
+        "button",
+        "input",
+        "label"
+      ],
+      "ruleRefs": [],
+      "dependencyRefs": [],
+      "layout": {
+        "frameRef": "auth-root"
+      },
+      "landmarks": {
+        "main": 1,
+        "primaryHeading": 1
+      },
+      "provenance": {
+        "origin": "authored",
+        "sourceHashes": {},
+        "mappingVersion": "1.0.0"
+      }
+    },
+    "c98a24b064d9b2bc3c8c83a293a5b7540aa1eecfaa19c14b00e2f0c7c0678f65": {
+      "schemaVersion": 1,
+      "id": "otp-04",
+      "role": "page",
+      "family": "auth",
+      "description": "Security modal dialog OTP verification with automatic submit on completion and cancel button.",
+      "tags": [
+        "auth",
+        "otp",
+        "modal",
+        "dialog"
+      ],
+      "root": "auth-root",
+      "fragments": [
+        {
+          "id": "auth-root",
+          "emmet": "main.flex.min-h-screen.items-center.justify-center.p-6.bg-muted-80[data-slot=auth-page]>div.card.w-full.max-w-md.rounded-xl.border.border-border.bg-card.p-6.shadow-2xl[data-fsm-recipe=auth-flow][data-fsm-state=idle]>(header.flex.flex-col.gap-2>h2.text-lg.font-semibold{Confirm High-Risk Action}+p.text-xs.text-muted-foreground{Please enter your one-time code to authorize this transfer.})+form.flex.flex-col.gap-4.pt-4>(div.flex.justify-center.gap-2>input.input.input-sm.size-10.text-center.font-mono.text-lg[type=text][maxlength=1]*6)+(div.flex.justify-end.gap-2.pt-2>button.btn.btn-sm.btn-ghost[type=button]{Cancel}+button.btn.btn-sm.btn-primary[type=submit]{Authorize})"
+        }
+      ],
+      "mounts": [],
+      "slots": [],
+      "ports": [],
+      "componentRefs": [
+        "card",
+        "button",
+        "input",
+        "label"
+      ],
+      "ruleRefs": [],
+      "dependencyRefs": [],
+      "layout": {
+        "frameRef": "auth-root"
+      },
+      "landmarks": {
+        "main": 1,
+        "primaryHeading": 1
+      },
+      "provenance": {
+        "origin": "authored",
+        "sourceHashes": {},
+        "mappingVersion": "1.0.0"
+      }
+    },
+    "1042dd1403b046675f5bd4ac5aeead10ec72065ac4ba475ea5c21c9aa52f0b0c": {
+      "schemaVersion": 1,
+      "id": "otp-05",
+      "role": "page",
+      "family": "auth",
+      "description": "Mobile-friendly full-height OTP card with numeric keypad layout and resend countdown.",
+      "tags": [
+        "auth",
+        "otp",
+        "mobile-optimized",
+        "keypad"
+      ],
+      "root": "auth-root",
+      "fragments": [
+        {
+          "id": "auth-root",
+          "emmet": "main.flex.min-h-screen.flex-col.justify-between.p-6.bg-background[data-slot=auth-page]>(header.flex.flex-col.gap-2.pt-6.text-center>h1.text-2xl.font-semibold{Enter SMS Code}+p.text-xs.text-muted-foreground{Sent to +1 (555) ***-4829})+form.flex.flex-col.gap-6.py-6>(div.flex.justify-center.gap-2>input.input.input-sm.size-12.text-center.font-mono.text-xl[type=text][maxlength=1]*4)+button.btn.btn-sm.btn-primary.w-full[type=submit]{Verify}+div.text-center.text-xs.text-muted-foreground>span{Resend available in 30s})"
+        }
+      ],
+      "mounts": [],
+      "slots": [],
+      "ports": [],
+      "componentRefs": [
+        "card",
+        "button",
+        "input",
+        "label"
+      ],
+      "ruleRefs": [],
+      "dependencyRefs": [],
+      "layout": {
+        "frameRef": "auth-root"
+      },
+      "landmarks": {
+        "main": 1,
+        "primaryHeading": 1
+      },
+      "provenance": {
+        "origin": "authored",
+        "sourceHashes": {},
+        "mappingVersion": "1.0.0"
+      }
+    },
     "a3e401eda6136789ae31b411ada1ef977bd5f2b665471460ff0a9db93aacd1aa": {
       "schemaVersion": 1,
       "id": "page-header",
@@ -2622,6 +3167,80 @@
         "mappingVersion": "1.0.0"
       }
     },
+    "c76675674dba379b4864ea5da747988c298df5490253cb7cb4ab21802932c593": {
+      "schemaVersion": 1,
+      "id": "products",
+      "role": "workspace",
+      "family": "workspace",
+      "description": "Product catalog workspace with filter toolbar, inventory table, stock status badges, and pagination.",
+      "tags": [
+        "workspace",
+        "products",
+        "ecommerce",
+        "catalog",
+        "table"
+      ],
+      "root": "content-frame",
+      "fragments": [
+        {
+          "id": "content-frame",
+          "emmet": "div.flex.flex-1.flex-col.gap-6.p-6[data-role=canvas][data-macro=canvas][data-block=products]>div.flex.items-center.justify-between.gap-4[data-slot=header]>div.flex.flex-col.gap-2>h2.text-xl.font-semibold{Products}+p.text-xs.text-muted-foreground{Manage catalog items, pricing, and stock status.}^button.btn.btn-sm.btn-primary{+ Add Product}^^div[data-slot=table]"
+        }
+      ],
+      "mounts": [],
+      "slots": [
+        {
+          "id": "table",
+          "at": {
+            "fragment": "content-frame",
+            "name": "table"
+          },
+          "accepts": [
+            "table",
+            "data"
+          ],
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "ports": [
+        {
+          "id": "main-in",
+          "at": {
+            "fragment": "content-frame",
+            "name": "content-frame"
+          },
+          "direction": "in",
+          "kind": "region",
+          "contract": "main",
+          "minLinks": 0,
+          "maxLinks": 1,
+          "scope": "shell"
+        }
+      ],
+      "componentRefs": [
+        "card",
+        "table",
+        "button",
+        "input"
+      ],
+      "ruleRefs": [],
+      "dependencyRefs": [
+        "9fd839dafa3ad90f5eb8223898c1d0d7b69a68bb16af66c595b6977c2d9db8ad"
+      ],
+      "layout": {
+        "frameRef": "content-frame"
+      },
+      "landmarks": {
+        "main": 1,
+        "primaryHeading": 0
+      },
+      "provenance": {
+        "origin": "authored",
+        "sourceHashes": {},
+        "mappingVersion": "1.0.0"
+      }
+    },
     "aa973b7c26d26f157693ad3a693e98375230fa704481d4853814c7d021d223c1": {
       "schemaVersion": 1,
       "id": "segmented-toggle",
@@ -2670,6 +3289,90 @@
       },
       "landmarks": {
         "main": 0,
+        "primaryHeading": 0
+      },
+      "provenance": {
+        "origin": "authored",
+        "sourceHashes": {},
+        "mappingVersion": "1.0.0"
+      }
+    },
+    "6f76fd377664b66591fb77567f111f07eaaa460a413f07429ab84594cbf86e8f": {
+      "schemaVersion": 1,
+      "id": "settings",
+      "role": "workspace",
+      "family": "workspace",
+      "description": "Organization and user settings workspace with tabbed navigation, general settings form, and security options.",
+      "tags": [
+        "workspace",
+        "settings",
+        "profile",
+        "organization",
+        "tabs"
+      ],
+      "root": "content-frame",
+      "fragments": [
+        {
+          "id": "content-frame",
+          "emmet": "div.flex.flex-1.flex-col.gap-6.p-6[data-role=canvas][data-macro=canvas][data-block=settings]>div.flex.flex-col.gap-2[data-slot=header]>h2.text-xl.font-semibold{Settings}+p.text-xs.text-muted-foreground{Manage your account settings and preferences.}^^div[data-slot=tabs]+div[data-slot=content]"
+        }
+      ],
+      "mounts": [],
+      "slots": [
+        {
+          "id": "tabs",
+          "at": {
+            "fragment": "content-frame",
+            "name": "tabs"
+          },
+          "accepts": [
+            "tabs"
+          ],
+          "min": 0,
+          "max": 1
+        },
+        {
+          "id": "content",
+          "at": {
+            "fragment": "content-frame",
+            "name": "content"
+          },
+          "accepts": [
+            "form",
+            "workspace"
+          ],
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "ports": [
+        {
+          "id": "main-in",
+          "at": {
+            "fragment": "content-frame",
+            "name": "content-frame"
+          },
+          "direction": "in",
+          "kind": "region",
+          "contract": "main",
+          "minLinks": 0,
+          "maxLinks": 1,
+          "scope": "shell"
+        }
+      ],
+      "componentRefs": [
+        "card",
+        "button",
+        "input",
+        "select"
+      ],
+      "ruleRefs": [],
+      "dependencyRefs": [],
+      "layout": {
+        "frameRef": "content-frame"
+      },
+      "landmarks": {
+        "main": 1,
         "primaryHeading": 0
       },
       "provenance": {
@@ -2735,6 +3438,1360 @@
       "provenance": {
         "origin": "authored",
         "sourceHashes": {},
+        "mappingVersion": "1.0.0"
+      }
+    },
+    "6f84d1c3802fbaf26cab121cabec1035992b59c629728608e07b9a835e3d1642": {
+      "schemaVersion": 1,
+      "id": "sidebar-01",
+      "role": "navigation",
+      "family": "layout",
+      "description": "A simple sidebar with navigation grouped by section.",
+      "tags": [
+        "navigation",
+        "sidebar",
+        "collapsible",
+        "details",
+        "grouped"
+      ],
+      "root": "nav-root",
+      "fragments": [
+        {
+          "id": "nav-root",
+          "emmet": "aside.sidebar.w-64.border-e.border-border.bg-background.md:sticky.md:top-0.md:h-screen[aria-label=Sidebar][data-slot=sidebar-host][data-component=sidebar][data-side=left]>nav.flex.h-full.flex-col.justify-between.p-2>(div.flex.flex-col.gap-2>div.flex.items-center.gap-2.p-2.text-sm.font-semibold[data-slot=workspace-switcher]{Acme Corp}+details.group[open]>summary.flex.items-center.justify-between.p-2.text-xs.font-medium.cursor-pointer.hover:bg-muted{Getting Started+span{▾}}+div.flex.flex-col.gap-2.pl-4>a.btn.btn-ghost.btn-sm.justify-start[data-state=active]{Installation}+a.btn.btn-ghost.btn-sm.justify-start{Structure}^details.group[open]>summary.flex.items-center.justify-between.p-2.text-xs.font-medium.cursor-pointer.hover:bg-muted{Building Apps+span{▾}}+div.flex.flex-col.gap-2.pl-4>a.btn.btn-ghost.btn-sm.justify-start{Routing}+a.btn.btn-ghost.btn-sm.justify-start{Fetching})+(div.mt-auto.p-2.border-t.border-border[data-slot=user-footer]>div.flex.items-center.gap-2>div.size-8.rounded.bg-muted+div.text-xs>span.font-medium{shadcn})"
+        }
+      ],
+      "mounts": [],
+      "slots": [
+        {
+          "id": "workspace-switcher",
+          "at": {
+            "fragment": "nav-root",
+            "name": "workspace-switcher"
+          },
+          "accepts": [
+            "action"
+          ],
+          "min": 0,
+          "max": 1
+        },
+        {
+          "id": "user-footer",
+          "at": {
+            "fragment": "nav-root",
+            "name": "user-footer"
+          },
+          "accepts": [
+            "action"
+          ],
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "ports": [
+        {
+          "id": "nav-toggle-in",
+          "at": {
+            "fragment": "nav-root",
+            "name": "nav-root"
+          },
+          "direction": "in",
+          "kind": "control",
+          "contract": "nav-toggle",
+          "minLinks": 0,
+          "maxLinks": 1,
+          "scope": "shell"
+        }
+      ],
+      "componentRefs": [
+        "sidebar",
+        "button"
+      ],
+      "ruleRefs": [],
+      "dependencyRefs": [],
+      "layout": {
+        "frameRef": "nav-root"
+      },
+      "landmarks": {
+        "main": 0,
+        "primaryHeading": 0
+      },
+      "provenance": {
+        "origin": "authored",
+        "sourceHashes": {
+          "upstream:sidebar-01": "4745eb0457d6d6c8735421808de8ccdfb104575b4301852630f06f8b6b7a2662"
+        },
+        "mappingVersion": "1.0.0"
+      }
+    },
+    "aad31f456aa3927cba0fd6d646aa31d7faa7629e930cc890fb7ecbc23ec44e16": {
+      "schemaVersion": 1,
+      "id": "sidebar-02",
+      "role": "navigation",
+      "family": "layout",
+      "description": "A sidebar with collapsible sections.",
+      "tags": [
+        "navigation",
+        "sidebar",
+        "collapsible-sections",
+        "workspace-switcher"
+      ],
+      "root": "nav-root",
+      "fragments": [
+        {
+          "id": "nav-root",
+          "emmet": "aside.sidebar.w-64.border-e.border-border.bg-background.md:sticky.md:top-0.md:h-screen[aria-label=Sidebar][data-slot=sidebar-host][data-component=sidebar][data-side=left]>nav.flex.h-full.flex-col.justify-between.p-2>(div.flex.flex-col.gap-4>div.flex.items-center.justify-between.rounded-lg.border.border-border.p-2.text-sm.font-semibold[data-slot=workspace-switcher]>div.flex.items-center.gap-2>div.size-6.rounded.bg-primary+span{Workspace}^button.btn.btn-ghost.btn-xs{↕}^section.flex.flex-col.gap-2>span.px-2.text-xs.text-muted-foreground{Platform}+details.group[open]>summary.flex.items-center.justify-between.p-2.text-xs.cursor-pointer.hover:bg-muted{Playground+span{▾}}+div.flex.flex-col.gap-2.pl-4>a.btn.btn-ghost.btn-sm.justify-start{History}+a.btn.btn-ghost.btn-sm.justify-start{Starred}^^section.flex.flex-col.gap-2>span.px-2.text-xs.text-muted-foreground{Projects}+a.btn.btn-ghost.btn-sm.justify-start{Design}+a.btn.btn-ghost.btn-sm.justify-start{Sales})+(div.mt-auto.p-2.border-t.border-border[data-slot=user-footer]>div.flex.items-center.gap-2>div.size-8.rounded.bg-muted+div.text-xs>span.font-medium{User})"
+        }
+      ],
+      "mounts": [],
+      "slots": [
+        {
+          "id": "workspace-switcher",
+          "at": {
+            "fragment": "nav-root",
+            "name": "workspace-switcher"
+          },
+          "accepts": [
+            "action"
+          ],
+          "min": 0,
+          "max": 1
+        },
+        {
+          "id": "user-footer",
+          "at": {
+            "fragment": "nav-root",
+            "name": "user-footer"
+          },
+          "accepts": [
+            "action"
+          ],
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "ports": [
+        {
+          "id": "nav-toggle-in",
+          "at": {
+            "fragment": "nav-root",
+            "name": "nav-root"
+          },
+          "direction": "in",
+          "kind": "control",
+          "contract": "nav-toggle",
+          "minLinks": 0,
+          "maxLinks": 1,
+          "scope": "shell"
+        }
+      ],
+      "componentRefs": [
+        "sidebar",
+        "button"
+      ],
+      "ruleRefs": [],
+      "dependencyRefs": [],
+      "layout": {
+        "frameRef": "nav-root"
+      },
+      "landmarks": {
+        "main": 0,
+        "primaryHeading": 0
+      },
+      "provenance": {
+        "origin": "authored",
+        "sourceHashes": {
+          "upstream:sidebar-02": "ab22f5ea142263347c3bd1232410c3686abf2e3c3de53e36569bf1794a6d8ba3"
+        },
+        "mappingVersion": "1.0.0"
+      }
+    },
+    "5f3950cbe0b5308f07454b8a5d0974dea8314baaae2ea5851d1f4b6e1466c915": {
+      "schemaVersion": 1,
+      "id": "sidebar-03",
+      "role": "navigation",
+      "family": "layout",
+      "description": "A sidebar with submenus.",
+      "tags": [
+        "navigation",
+        "sidebar",
+        "nested-submenu",
+        "hierarchy"
+      ],
+      "root": "nav-root",
+      "fragments": [
+        {
+          "id": "nav-root",
+          "emmet": "aside.sidebar.w-64.border-e.border-border.bg-background.md:sticky.md:top-0.md:h-screen[aria-label=Sidebar][data-slot=sidebar-host][data-component=sidebar][data-side=left]>nav.flex.h-full.flex-col.justify-between.p-2>(div.flex.flex-col.gap-4>div.p-2.text-sm.font-semibold[data-slot=header]{Documentation}+div.flex.flex-col.gap-2[data-slot=nav-tree]>div.flex.flex-col.gap-2>span.px-2.text-xs.font-semibold{Core Concepts}+a.btn.btn-ghost.btn-sm.justify-start.pl-4[data-state=active]{Overview}+div.flex.flex-col.gap-2.pl-6>a.text-xs.text-muted-foreground.hover:underline{Architecture}+a.text-xs.text-muted-foreground.hover:underline{Rendering}^a.btn.btn-ghost.btn-sm.justify-start.pl-4{State Machines}+div.flex.flex-col.gap-2.pl-6>a.text-xs.text-muted-foreground.hover:underline{FSM Patterns}+a.text-xs.text-muted-foreground.hover:underline{Transitions}})+(div.mt-auto.p-2.border-t.border-border[data-slot=user-footer]>a.btn.btn-ghost.btn-sm.w-full.justify-start{Support})"
+        }
+      ],
+      "mounts": [],
+      "slots": [
+        {
+          "id": "header",
+          "at": {
+            "fragment": "nav-root",
+            "name": "header"
+          },
+          "accepts": [
+            "action",
+            "navigation"
+          ],
+          "min": 0,
+          "max": 1
+        },
+        {
+          "id": "user-footer",
+          "at": {
+            "fragment": "nav-root",
+            "name": "user-footer"
+          },
+          "accepts": [
+            "action"
+          ],
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "ports": [
+        {
+          "id": "nav-toggle-in",
+          "at": {
+            "fragment": "nav-root",
+            "name": "nav-root"
+          },
+          "direction": "in",
+          "kind": "control",
+          "contract": "nav-toggle",
+          "minLinks": 0,
+          "maxLinks": 1,
+          "scope": "shell"
+        }
+      ],
+      "componentRefs": [
+        "sidebar",
+        "button"
+      ],
+      "ruleRefs": [],
+      "dependencyRefs": [],
+      "layout": {
+        "frameRef": "nav-root"
+      },
+      "landmarks": {
+        "main": 0,
+        "primaryHeading": 0
+      },
+      "provenance": {
+        "origin": "authored",
+        "sourceHashes": {
+          "upstream:sidebar-03": "38b09ff41262aac91123b678df853e35c65ae514b49ba25acf535f82607165b5"
+        },
+        "mappingVersion": "1.0.0"
+      }
+    },
+    "1d363c3b5f3d7a4ff19ac29c7a3a0a7ef7517a5ed6f53021e5f8e665f054437a": {
+      "schemaVersion": 1,
+      "id": "sidebar-04",
+      "role": "navigation",
+      "family": "layout",
+      "description": "A floating sidebar with submenus.",
+      "tags": [
+        "navigation",
+        "sidebar",
+        "floating",
+        "card-container"
+      ],
+      "root": "nav-root",
+      "fragments": [
+        {
+          "id": "nav-root",
+          "emmet": "aside.sidebar.p-4.md:sticky.md:top-0.md:h-screen[aria-label=Sidebar][data-slot=sidebar-host][data-component=sidebar][data-variant=floating][data-side=left]>div.card.flex.h-full.w-64.flex-col.justify-between.rounded-xl.border.border-border.bg-card.p-4.shadow-md>div.flex.flex-col.gap-4>(div.flex.items-center.gap-2.p-2.text-sm.font-semibold[data-slot=workspace-switcher]>div.size-6.rounded.bg-primary+span{Acme Inc})+nav.flex.flex-col.gap-2[aria-label=FloatingNav]>a.btn.btn-ghost.btn-sm.justify-start[data-state=active]{Dashboard}+a.btn.btn-ghost.btn-sm.justify-start{Analytics}+a.btn.btn-ghost.btn-sm.justify-start{Projects}+a.btn.btn-ghost.btn-sm.justify-start{Settings}^div.mt-auto.flex.flex-col.gap-2.border-t.border-border.pt-2[data-slot=user-footer]>div.flex.items-center.gap-2.p-2>div.size-8.rounded-full.bg-muted+div.flex-1.text-xs>span.font-medium{Alex}+span.text-muted-foreground{alex@acme.inc}"
+        }
+      ],
+      "mounts": [],
+      "slots": [
+        {
+          "id": "workspace-switcher",
+          "at": {
+            "fragment": "nav-root",
+            "name": "workspace-switcher"
+          },
+          "accepts": [
+            "action"
+          ],
+          "min": 0,
+          "max": 1
+        },
+        {
+          "id": "user-footer",
+          "at": {
+            "fragment": "nav-root",
+            "name": "user-footer"
+          },
+          "accepts": [
+            "action"
+          ],
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "ports": [
+        {
+          "id": "nav-toggle-in",
+          "at": {
+            "fragment": "nav-root",
+            "name": "nav-root"
+          },
+          "direction": "in",
+          "kind": "control",
+          "contract": "nav-toggle",
+          "minLinks": 0,
+          "maxLinks": 1,
+          "scope": "shell"
+        }
+      ],
+      "componentRefs": [
+        "sidebar",
+        "button",
+        "card"
+      ],
+      "ruleRefs": [],
+      "dependencyRefs": [],
+      "layout": {
+        "frameRef": "nav-root"
+      },
+      "landmarks": {
+        "main": 0,
+        "primaryHeading": 0
+      },
+      "provenance": {
+        "origin": "authored",
+        "sourceHashes": {
+          "upstream:sidebar-04": "a56818b9490189a3bc18760d431cf8d3b81ba567b1ae3e839c8101442e14ac58"
+        },
+        "mappingVersion": "1.0.0"
+      }
+    },
+    "60e8db1dc2ae8d41c8a187f78792a3b3d0c4e137ea48fdad7b9966477b4c5be0": {
+      "schemaVersion": 1,
+      "id": "sidebar-05",
+      "role": "navigation",
+      "family": "layout",
+      "description": "A sidebar with collapsible submenus.",
+      "tags": [
+        "navigation",
+        "sidebar",
+        "collapsible-tree",
+        "active-indicators"
+      ],
+      "root": "nav-root",
+      "fragments": [
+        {
+          "id": "nav-root",
+          "emmet": "aside.sidebar.w-64.border-e.border-border.bg-background.md:sticky.md:top-0.md:h-screen[aria-label=Sidebar][data-slot=sidebar-host][data-component=sidebar][data-side=left]>nav.flex.h-full.flex-col.justify-between.p-2>(div.flex.flex-col.gap-2>div.p-2.text-sm.font-semibold[data-slot=brand]{Enterprise App}+div.flex.flex-col.gap-2[data-slot=menu-tree]>details.group[open]>summary.flex.items-center.justify-between.p-2.text-xs.font-medium.cursor-pointer.hover:bg-muted{Analytics+span{▾}}+div.flex.flex-col.gap-2.pl-4>a.btn.btn-ghost.btn-sm.justify-start.border-l-2.border-primary.pl-2[data-state=active]{Realtime}+a.btn.btn-ghost.btn-sm.justify-start.pl-2{Conversions}^details.group>summary.flex.items-center.justify-between.p-2.text-xs.font-medium.cursor-pointer.hover:bg-muted{Reports+span{▾}}+div.flex.flex-col.gap-2.pl-4>a.btn.btn-ghost.btn-sm.justify-start.pl-2{Scheduled}+a.btn.btn-ghost.btn-sm.justify-start.pl-2{Custom})+(div.mt-auto.p-2.border-t.border-border[data-slot=user-footer]>span.text-xs.text-muted-foreground{v2.4.0-stable})"
+        }
+      ],
+      "mounts": [],
+      "slots": [
+        {
+          "id": "brand",
+          "at": {
+            "fragment": "nav-root",
+            "name": "brand"
+          },
+          "accepts": [
+            "action"
+          ],
+          "min": 0,
+          "max": 1
+        },
+        {
+          "id": "user-footer",
+          "at": {
+            "fragment": "nav-root",
+            "name": "user-footer"
+          },
+          "accepts": [
+            "action"
+          ],
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "ports": [
+        {
+          "id": "nav-toggle-in",
+          "at": {
+            "fragment": "nav-root",
+            "name": "nav-root"
+          },
+          "direction": "in",
+          "kind": "control",
+          "contract": "nav-toggle",
+          "minLinks": 0,
+          "maxLinks": 1,
+          "scope": "shell"
+        }
+      ],
+      "componentRefs": [
+        "sidebar",
+        "button"
+      ],
+      "ruleRefs": [],
+      "dependencyRefs": [],
+      "layout": {
+        "frameRef": "nav-root"
+      },
+      "landmarks": {
+        "main": 0,
+        "primaryHeading": 0
+      },
+      "provenance": {
+        "origin": "authored",
+        "sourceHashes": {
+          "upstream:sidebar-05": "10f958b85f2eb1efafb55738708c8510eadca40ad087950f2b86347ad52b40c7"
+        },
+        "mappingVersion": "1.0.0"
+      }
+    },
+    "a81210b5fc165eb35c8a02b96fff538011ec81bfe1ccfc2393ac808abc5254f4": {
+      "schemaVersion": 1,
+      "id": "sidebar-06",
+      "role": "navigation",
+      "family": "layout",
+      "description": "A sidebar with submenus as dropdowns.",
+      "tags": [
+        "navigation",
+        "sidebar",
+        "compact",
+        "popover-menus",
+        "dropdown"
+      ],
+      "root": "nav-root",
+      "fragments": [
+        {
+          "id": "nav-root",
+          "emmet": "aside.sidebar.w-56.border-e.border-border.bg-background.md:sticky.md:top-0.md:h-screen[aria-label=Sidebar][data-slot=sidebar-host][data-component=sidebar][data-variant=compact][data-side=left]>nav.flex.h-full.flex-col.justify-between.p-2>(div.flex.flex-col.gap-2>div.flex.items-center.gap-2.p-2[data-slot=header]>div.size-6.rounded.bg-primary+span.text-sm.font-semibold{SaaS Kit}+div.flex.flex-col.gap-2[data-slot=nav-items]>div.relative>button.btn.btn-ghost.btn-sm.w-full.justify-between[data-slot=menu-trigger][aria-haspopup=menu]{Workspace+span{▸}}+div.relative>button.btn.btn-ghost.btn-sm.w-full.justify-between[data-slot=menu-trigger][aria-haspopup=menu]{Billing+span{▸}}+div.relative>button.btn.btn-ghost.btn-sm.w-full.justify-between[data-slot=menu-trigger][aria-haspopup=menu]{Integrations+span{▸}})+(div.mt-auto.p-2.border-t.border-border[data-slot=user-footer]>button.btn.btn-ghost.btn-sm.w-full.justify-start{Settings})"
+        }
+      ],
+      "mounts": [],
+      "slots": [
+        {
+          "id": "header",
+          "at": {
+            "fragment": "nav-root",
+            "name": "header"
+          },
+          "accepts": [
+            "action"
+          ],
+          "min": 0,
+          "max": 1
+        },
+        {
+          "id": "user-footer",
+          "at": {
+            "fragment": "nav-root",
+            "name": "user-footer"
+          },
+          "accepts": [
+            "action"
+          ],
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "ports": [
+        {
+          "id": "nav-toggle-in",
+          "at": {
+            "fragment": "nav-root",
+            "name": "nav-root"
+          },
+          "direction": "in",
+          "kind": "control",
+          "contract": "nav-toggle",
+          "minLinks": 0,
+          "maxLinks": 1,
+          "scope": "shell"
+        }
+      ],
+      "componentRefs": [
+        "sidebar",
+        "button"
+      ],
+      "ruleRefs": [],
+      "dependencyRefs": [],
+      "layout": {
+        "frameRef": "nav-root"
+      },
+      "landmarks": {
+        "main": 0,
+        "primaryHeading": 0
+      },
+      "provenance": {
+        "origin": "authored",
+        "sourceHashes": {
+          "upstream:sidebar-06": "f247e93cb1fc5c7e9d7fbc33dbed9d05b4b89f2aa1c0a12c6d88720292908a08"
+        },
+        "mappingVersion": "1.0.0"
+      }
+    },
+    "6a21faf2d344fb35b453436901124b9e156fe15959b333d688aa35dd7b2b2257": {
+      "schemaVersion": 1,
+      "id": "sidebar-07",
+      "role": "navigation",
+      "family": "layout",
+      "description": "A sidebar that collapses to icons.",
+      "tags": [
+        "navigation",
+        "sidebar",
+        "icon-rail",
+        "collapsible-icon"
+      ],
+      "root": "nav-root",
+      "fragments": [
+        {
+          "id": "nav-root",
+          "emmet": "aside.sidebar.w-16.border-e.border-border.bg-background.flex.flex-col.items-center.py-4.gap-4.md:sticky.md:top-0.md:h-screen[aria-label=Sidebar][data-slot=sidebar-host][data-component=sidebar][data-collapsible=icon][data-side=left]>(button.btn.btn-ghost.size-10.rounded-lg[data-slot=workspace-switcher][aria-label=Home]>div.size-6.rounded.bg-primary)+nav.flex.flex-col.gap-2.flex-1.items-center[aria-label=IconNav]>button.btn.btn-ghost.size-10.rounded-lg[data-state=active][aria-label=Dashboard]>span{D}^button.btn.btn-ghost.size-10.rounded-lg.relative[aria-label=Notifications]>span{N}+span.badge.size-4.rounded-full.p-0.text-xs{3}^button.btn.btn-ghost.size-10.rounded-lg[aria-label=Analytics]>span{A}^button.btn.btn-ghost.size-10.rounded-lg[aria-label=Settings]>span{S}^div.mt-auto.flex.flex-col.gap-2.items-center[data-slot=user-footer]>div.size-8.rounded-full.bg-muted[aria-label=User]"
+        }
+      ],
+      "mounts": [],
+      "slots": [
+        {
+          "id": "workspace-switcher",
+          "at": {
+            "fragment": "nav-root",
+            "name": "workspace-switcher"
+          },
+          "accepts": [
+            "action"
+          ],
+          "min": 0,
+          "max": 1
+        },
+        {
+          "id": "user-footer",
+          "at": {
+            "fragment": "nav-root",
+            "name": "user-footer"
+          },
+          "accepts": [
+            "action"
+          ],
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "ports": [
+        {
+          "id": "nav-toggle-in",
+          "at": {
+            "fragment": "nav-root",
+            "name": "nav-root"
+          },
+          "direction": "in",
+          "kind": "control",
+          "contract": "nav-toggle",
+          "minLinks": 0,
+          "maxLinks": 1,
+          "scope": "shell"
+        }
+      ],
+      "componentRefs": [
+        "sidebar",
+        "button"
+      ],
+      "ruleRefs": [],
+      "dependencyRefs": [],
+      "layout": {
+        "frameRef": "nav-root"
+      },
+      "landmarks": {
+        "main": 0,
+        "primaryHeading": 0
+      },
+      "provenance": {
+        "origin": "authored",
+        "sourceHashes": {
+          "upstream:sidebar-07": "1ccd9a021cf102378001f5a39a2fe4b9b7127da0a90bad4e7c04adf4f17681d9"
+        },
+        "mappingVersion": "1.0.0"
+      }
+    },
+    "b52b80219d2aed07f188f0462e6cfcb751a97b878a9ed43210cd221acb294c74": {
+      "schemaVersion": 1,
+      "id": "sidebar-08",
+      "role": "application-shell",
+      "family": "layout",
+      "description": "An inset sidebar with secondary navigation.",
+      "tags": [
+        "shell",
+        "sidebar",
+        "inset",
+        "workspace-shell"
+      ],
+      "root": "shell-root",
+      "fragments": [
+        {
+          "id": "shell-root",
+          "emmet": "div.flex.min-h-screen.w-full.bg-muted[data-slot=shell-root][data-component=sidebar][data-variant=inset]>aside.sidebar.w-64.bg-muted.p-4[data-slot=navigation][data-side=left]>div.flex.flex-col.gap-4>div.p-2.text-sm.font-semibold{Acme Inset}+nav.flex.flex-col.gap-2>a.btn.btn-ghost.btn-sm.justify-start[data-state=active]{Dashboard}+a.btn.btn-ghost.btn-sm.justify-start{Documents}+a.btn.btn-ghost.btn-sm.justify-start{Settings}^div.mt-auto.pt-4{User}^^div.flex.flex-1.flex-col.p-2>div.flex.flex-1.flex-col.rounded-xl.border.border-border.bg-background.shadow-sm[data-slot=inset-canvas]>header.flex.h-12.items-center.justify-between.border-b.border-border.px-4[data-slot=header]>span.text-sm.font-medium{Overview}^main.flex-1.overflow-auto.p-6[data-slot=content]"
+        }
+      ],
+      "mounts": [],
+      "slots": [
+        {
+          "id": "navigation",
+          "at": {
+            "fragment": "shell-root",
+            "name": "navigation"
+          },
+          "accepts": [
+            "navigation"
+          ],
+          "min": 1,
+          "max": 1
+        },
+        {
+          "id": "header",
+          "at": {
+            "fragment": "shell-root",
+            "name": "header"
+          },
+          "accepts": [
+            "header",
+            "workspace-header"
+          ],
+          "min": 1,
+          "max": 1
+        },
+        {
+          "id": "content",
+          "at": {
+            "fragment": "shell-root",
+            "name": "content"
+          },
+          "accepts": [
+            "dashboard",
+            "workspace",
+            "table"
+          ],
+          "min": 1,
+          "max": 1
+        }
+      ],
+      "ports": [
+        {
+          "id": "main-region",
+          "at": {
+            "fragment": "shell-root",
+            "name": "content"
+          },
+          "direction": "out",
+          "kind": "region",
+          "contract": "main",
+          "minLinks": 0,
+          "maxLinks": 1,
+          "scope": "shell"
+        }
+      ],
+      "componentRefs": [
+        "sidebar",
+        "breadcrumb",
+        "button"
+      ],
+      "ruleRefs": [],
+      "dependencyRefs": [],
+      "layout": {
+        "frameRef": "shell-root",
+        "gutterBoundary": "shell-root",
+        "scrollBoundary": "shell-root"
+      },
+      "landmarks": {
+        "main": 1,
+        "primaryHeading": 0
+      },
+      "provenance": {
+        "origin": "authored",
+        "sourceHashes": {
+          "upstream:sidebar-08": "6f0a5a4f839122bbf9849d8d78f62d3dff862c5b910b0ccf732340a2742a579a"
+        },
+        "mappingVersion": "1.0.0"
+      }
+    },
+    "2cb0f37a916f4503dc51bc548768854ed2e073c942e9e0fa6d86eae79e1ef890": {
+      "schemaVersion": 1,
+      "id": "sidebar-09",
+      "role": "navigation",
+      "family": "layout",
+      "description": "Collapsible nested sidebars.",
+      "tags": [
+        "navigation",
+        "sidebar",
+        "dual-sidebar",
+        "nested-sidebars",
+        "rail"
+      ],
+      "root": "nav-root",
+      "fragments": [
+        {
+          "id": "nav-root",
+          "emmet": "div.flex.h-screen.border-e.border-border[data-slot=sidebar-host][data-component=sidebar]>(aside.w-16.border-e.border-border.bg-muted.flex.flex-col.items-center.py-4.gap-4[data-slot=rail]>button.btn.btn-ghost.size-10.rounded-lg[data-state=active]{M}+button.btn.btn-ghost.size-10.rounded-lg{F}+button.btn.btn-ghost.size-10.rounded-lg{T}+div.mt-auto>div.size-8.rounded-full.bg-muted)+aside.w-64.bg-background.flex.flex-col.justify-between.p-4[data-slot=secondary-pane]>(div.flex.flex-col.gap-4>div.flex.items-center.justify-between>span.text-sm.font-semibold{Mailboxes}+button.btn.btn-ghost.btn-xs{+}^nav.flex.flex-col.gap-2>a.btn.btn-ghost.btn-sm.justify-start[data-state=active]{All Inboxes}+a.btn.btn-ghost.btn-sm.justify-start{Primary}+a.btn.btn-ghost.btn-sm.justify-start{Promotions}+a.btn.btn-ghost.btn-sm.justify-start{Updates}+a.btn.btn-ghost.btn-sm.justify-start{Spam})+(div.mt-auto.border-t.border-border.pt-2>span.text-xs.text-muted-foreground{Storage: 12GB of 15GB})"
+        }
+      ],
+      "mounts": [],
+      "slots": [
+        {
+          "id": "rail",
+          "at": {
+            "fragment": "nav-root",
+            "name": "rail"
+          },
+          "accepts": [
+            "action"
+          ],
+          "min": 0,
+          "max": 1
+        },
+        {
+          "id": "secondary-pane",
+          "at": {
+            "fragment": "nav-root",
+            "name": "secondary-pane"
+          },
+          "accepts": [
+            "navigation"
+          ],
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "ports": [
+        {
+          "id": "nav-toggle-in",
+          "at": {
+            "fragment": "nav-root",
+            "name": "nav-root"
+          },
+          "direction": "in",
+          "kind": "control",
+          "contract": "nav-toggle",
+          "minLinks": 0,
+          "maxLinks": 1,
+          "scope": "shell"
+        }
+      ],
+      "componentRefs": [
+        "sidebar",
+        "button"
+      ],
+      "ruleRefs": [],
+      "dependencyRefs": [],
+      "layout": {
+        "frameRef": "nav-root"
+      },
+      "landmarks": {
+        "main": 0,
+        "primaryHeading": 0
+      },
+      "provenance": {
+        "origin": "authored",
+        "sourceHashes": {
+          "upstream:sidebar-09": "d18cbd0f669ceb13105c84e29ffb62911e7a3c95e04a19eac85fc0a259ec68ed"
+        },
+        "mappingVersion": "1.0.0"
+      }
+    },
+    "c0ae9563b4285a24b3d7905449c245090cd46ab495fd45b9b960722ff24594cf": {
+      "schemaVersion": 1,
+      "id": "sidebar-10",
+      "role": "navigation",
+      "family": "layout",
+      "description": "A sidebar in a popover.",
+      "tags": [
+        "navigation",
+        "sidebar",
+        "popover",
+        "drawer",
+        "slide-over"
+      ],
+      "root": "nav-root",
+      "fragments": [
+        {
+          "id": "nav-root",
+          "emmet": "div[data-slot=sidebar-host][data-component=sidebar]>(div.flex.items-center.gap-2.p-4.border-b.border-border>button.btn.btn-sm.btn-outline[data-slot=toggle-btn]{Toggle Navigation}+span.text-sm.font-semibold{Project Space})+aside.fixed.inset-y-0.left-0.z-40.w-72.border-e.border-border.bg-background.p-4.shadow-xl.flex.flex-col.justify-between[data-slot=popover-sidebar][data-state=open]>(div.flex.flex-col.gap-4>div.flex.items-center.justify-between>span.text-sm.font-semibold{Quick Nav}+button.btn.btn-ghost.btn-xs{✕}^nav.flex.flex-col.gap-2>a.btn.btn-ghost.btn-sm.justify-start{Recent Files}+a.btn.btn-ghost.btn-sm.justify-start{Shared With Me}+a.btn.btn-ghost.btn-sm.justify-start{Archived})+(div.mt-auto.border-t.border-border.pt-2>span.text-xs.text-muted-foreground{Press Esc to close})"
+        }
+      ],
+      "mounts": [],
+      "slots": [
+        {
+          "id": "toggle-btn",
+          "at": {
+            "fragment": "nav-root",
+            "name": "toggle-btn"
+          },
+          "accepts": [
+            "action"
+          ],
+          "min": 0,
+          "max": 1
+        },
+        {
+          "id": "popover-sidebar",
+          "at": {
+            "fragment": "nav-root",
+            "name": "popover-sidebar"
+          },
+          "accepts": [
+            "navigation"
+          ],
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "ports": [
+        {
+          "id": "nav-toggle-in",
+          "at": {
+            "fragment": "nav-root",
+            "name": "nav-root"
+          },
+          "direction": "in",
+          "kind": "control",
+          "contract": "nav-toggle",
+          "minLinks": 0,
+          "maxLinks": 1,
+          "scope": "shell"
+        }
+      ],
+      "componentRefs": [
+        "sidebar",
+        "button"
+      ],
+      "ruleRefs": [],
+      "dependencyRefs": [],
+      "layout": {
+        "frameRef": "nav-root"
+      },
+      "landmarks": {
+        "main": 0,
+        "primaryHeading": 0
+      },
+      "provenance": {
+        "origin": "authored",
+        "sourceHashes": {
+          "upstream:sidebar-10": "5b7936412244a4163e2d9997fac194eb8dfc3e571ca8f56f648a3cb45dc871ff"
+        },
+        "mappingVersion": "1.0.0"
+      }
+    },
+    "9c2bdf11b973698db429417c1cdc1e36494d4a53e3fe6623159add6d9e6b5294": {
+      "schemaVersion": 1,
+      "id": "sidebar-11",
+      "role": "navigation",
+      "family": "layout",
+      "description": "A sidebar with a collapsible file tree.",
+      "tags": [
+        "navigation",
+        "sidebar",
+        "file-tree",
+        "explorer",
+        "tree"
+      ],
+      "root": "nav-root",
+      "fragments": [
+        {
+          "id": "nav-root",
+          "emmet": "aside.sidebar.w-64.border-e.border-border.bg-background.md:sticky.md:top-0.md:h-screen[aria-label=FileExplorer][data-slot=sidebar-host][data-component=sidebar][data-side=left]>nav.flex.h-full.flex-col.justify-between.p-2>(div.flex.flex-col.gap-2>div.flex.items-center.justify-between.p-2>span.text-xs.font-semibold.uppercase.text-muted-foreground{Explorer}+button.btn.btn-ghost.btn-xs{+}^div.flex.flex-col.gap-2[role=tree][aria-label=Files]>details.group[open]>summary.flex.items-center.gap-2.p-2.text-xs.cursor-pointer.hover:bg-muted{📁+span{src}+span{▾}}+div.flex.flex-col.gap-2.pl-4>details.group[open]>summary.flex.items-center.gap-2.p-2.text-xs.cursor-pointer.hover:bg-muted{📁+span{ui}}+div.flex.flex-col.gap-2.pl-4>a.flex.items-center.gap-2.p-2.text-xs.hover:bg-muted[data-state=active]{📄+button.tsx}^a.flex.items-center.gap-2.p-2.text-xs.hover:bg-muted{📄+index.ts}^a.flex.items-center.gap-2.p-2.text-xs.hover:bg-muted{📄+package.json})+(div.mt-auto.p-2.border-t.border-border>span.text-xs.text-muted-foreground{main})"
+        }
+      ],
+      "mounts": [],
+      "slots": [
+        {
+          "id": "user-footer",
+          "at": {
+            "fragment": "nav-root",
+            "name": "user-footer"
+          },
+          "accepts": [
+            "action"
+          ],
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "ports": [
+        {
+          "id": "nav-toggle-in",
+          "at": {
+            "fragment": "nav-root",
+            "name": "nav-root"
+          },
+          "direction": "in",
+          "kind": "control",
+          "contract": "nav-toggle",
+          "minLinks": 0,
+          "maxLinks": 1,
+          "scope": "shell"
+        }
+      ],
+      "componentRefs": [
+        "sidebar",
+        "button"
+      ],
+      "ruleRefs": [],
+      "dependencyRefs": [],
+      "layout": {
+        "frameRef": "nav-root"
+      },
+      "landmarks": {
+        "main": 0,
+        "primaryHeading": 0
+      },
+      "provenance": {
+        "origin": "authored",
+        "sourceHashes": {
+          "upstream:sidebar-11": "e1900434fa050e7a25e15c24f122fb17f5257af9e3317dec330a73bb2688500e"
+        },
+        "mappingVersion": "1.0.0"
+      }
+    },
+    "af776258f398186fc5cec7191288e1dd76568aa8f5f76ae102fd5b5adee05d1d": {
+      "schemaVersion": 1,
+      "id": "sidebar-12",
+      "role": "navigation",
+      "family": "layout",
+      "description": "A sidebar with a calendar.",
+      "tags": [
+        "navigation",
+        "sidebar",
+        "calendar",
+        "schedule",
+        "events"
+      ],
+      "root": "nav-root",
+      "fragments": [
+        {
+          "id": "nav-root",
+          "emmet": "aside.sidebar.w-72.border-e.border-border.bg-background.md:sticky.md:top-0.md:h-screen[aria-label=CalendarSidebar][data-slot=sidebar-host][data-component=sidebar][data-side=left]>nav.flex.h-full.flex-col.justify-between.p-4>(div.flex.flex-col.gap-4>div.flex.items-center.justify-between>span.text-sm.font-semibold{Schedule}+button.btn.btn-sm.btn-primary{+ Event}^div.rounded-lg.border.border-border.p-2[data-slot=calendar-widget]>div.flex.items-center.justify-between.p-2.text-xs.font-semibold{<span>Oct 2026</span>+div.flex.gap-2>button.btn.btn-ghost.btn-xs{‹}+button.btn.btn-ghost.btn-xs{›}}^div.grid.grid-cols-7.gap-2.text-center.text-xs>span.text-muted-foreground*7{D}+span.p-2.hover:bg-muted*14{$}^^div.flex.flex-col.gap-2[data-slot=upcoming-events]>span.text-xs.font-semibold.text-muted-foreground{Upcoming}+div.flex.flex-col.gap-2.rounded-lg.border.border-border.p-2.text-xs>strong{Sprint Review}+span.text-muted-foreground{10:00 AM})+(div.mt-auto.pt-2.border-t.border-border>span.text-xs.text-muted-foreground{UTC+3})"
+        }
+      ],
+      "mounts": [],
+      "slots": [
+        {
+          "id": "calendar-widget",
+          "at": {
+            "fragment": "nav-root",
+            "name": "calendar-widget"
+          },
+          "accepts": [
+            "details"
+          ],
+          "min": 0,
+          "max": 1
+        },
+        {
+          "id": "upcoming-events",
+          "at": {
+            "fragment": "nav-root",
+            "name": "upcoming-events"
+          },
+          "accepts": [
+            "workspace"
+          ],
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "ports": [
+        {
+          "id": "nav-toggle-in",
+          "at": {
+            "fragment": "nav-root",
+            "name": "nav-root"
+          },
+          "direction": "in",
+          "kind": "control",
+          "contract": "nav-toggle",
+          "minLinks": 0,
+          "maxLinks": 1,
+          "scope": "shell"
+        }
+      ],
+      "componentRefs": [
+        "sidebar",
+        "button"
+      ],
+      "ruleRefs": [],
+      "dependencyRefs": [],
+      "layout": {
+        "frameRef": "nav-root"
+      },
+      "landmarks": {
+        "main": 0,
+        "primaryHeading": 0
+      },
+      "provenance": {
+        "origin": "authored",
+        "sourceHashes": {
+          "upstream:sidebar-12": "b1d119899019421f735c594b1e6a7274dd35a444d23d551716adfdc703b7dd03"
+        },
+        "mappingVersion": "1.0.0"
+      }
+    },
+    "b75e8f7ee3e10a12d08c0a467ebe5af18e55e0490100389f19ddcce9c776c087": {
+      "schemaVersion": 1,
+      "id": "sidebar-13",
+      "role": "details",
+      "family": "workspace",
+      "description": "A sidebar in a dialog.",
+      "tags": [
+        "modal",
+        "dialog",
+        "sidebar",
+        "settings",
+        "embedded-nav"
+      ],
+      "root": "dialog-root",
+      "fragments": [
+        {
+          "id": "dialog-root",
+          "emmet": "div.card.flex.w-full.max-w-4xl.overflow-hidden.rounded-xl.border.border-border.bg-card.shadow-2xl[data-slot=settings-dialog][data-component=sidebar]>(aside.w-48.border-e.border-border.bg-muted.p-4.flex.flex-col.justify-between[data-slot=settings-nav]>div.flex.flex-col.gap-2>span.text-xs.font-semibold.uppercase.text-muted-foreground.px-2{Settings}+a.btn.btn-ghost.btn-sm.justify-start[data-state=active]{General}+a.btn.btn-ghost.btn-sm.justify-start{Account}+a.btn.btn-ghost.btn-sm.justify-start{Billing}^div.mt-auto>button.btn.btn-ghost.btn-xs.w-full.justify-start{Log Out})+section.flex.flex-1.flex-col.gap-4.p-6[data-slot=settings-content]>(header.flex.flex-col.gap-2.border-b.border-border.pb-4>h2.text-lg.font-semibold{General Settings}+p.text-xs.text-muted-foreground{Manage workspace details.})+div.flex.flex-col.gap-4[data-slot=settings-fields]>div.flex.flex-col.gap-2>label.text-xs.font-medium{Workspace Name}+input.input.input-sm[value='Acme Labs']^footer.mt-auto.flex.justify-end.gap-2.pt-4.border-t.border-border>button.btn.btn-sm.btn-ghost{Cancel}+button.btn.btn-sm.btn-primary{Save Changes})"
+        }
+      ],
+      "mounts": [],
+      "slots": [
+        {
+          "id": "settings-nav",
+          "at": {
+            "fragment": "dialog-root",
+            "name": "settings-nav"
+          },
+          "accepts": [
+            "navigation"
+          ],
+          "min": 0,
+          "max": 1
+        },
+        {
+          "id": "settings-content",
+          "at": {
+            "fragment": "dialog-root",
+            "name": "settings-content"
+          },
+          "accepts": [
+            "form",
+            "workspace"
+          ],
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "ports": [],
+      "componentRefs": [
+        "sidebar",
+        "button",
+        "input"
+      ],
+      "ruleRefs": [],
+      "dependencyRefs": [],
+      "layout": {
+        "frameRef": "dialog-root"
+      },
+      "landmarks": {
+        "main": 0,
+        "primaryHeading": 0
+      },
+      "provenance": {
+        "origin": "authored",
+        "sourceHashes": {
+          "upstream:sidebar-13": "dc96f195579f5f839db9bbd0cbb9c60cbd228fb8308944b3c190d09b8b6b80f2"
+        },
+        "mappingVersion": "1.0.0"
+      }
+    },
+    "2b7abef1751574da62562e85d5eccda13e309797b42ad187a7196ec8ffbe1979": {
+      "schemaVersion": 1,
+      "id": "sidebar-14",
+      "role": "navigation",
+      "family": "layout",
+      "description": "A sidebar on the right.",
+      "tags": [
+        "navigation",
+        "sidebar",
+        "inspector",
+        "right-side",
+        "properties"
+      ],
+      "root": "nav-root",
+      "fragments": [
+        {
+          "id": "nav-root",
+          "emmet": "aside.sidebar.w-72.border-s.border-border.bg-background.md:sticky.md:top-0.md:h-screen[aria-label=Inspector][data-slot=sidebar-host][data-component=sidebar][data-side=right]>div.flex.h-full.flex-col.justify-between.p-4>(div.flex.flex-col.gap-4>div.flex.items-center.justify-between.border-b.border-border.pb-2>span.text-sm.font-semibold{Inspector}+button.btn.btn-ghost.btn-xs{✕}^div.flex.flex-col.gap-4[data-slot=inspector-properties]>div.flex.flex-col.gap-2>label.text-xs.font-medium{Component ID}+input.input.input-sm[value='hero-card'][readonly]^^div.flex.flex-col.gap-2>label.text-xs.font-medium{Layout}+select.select.select-sm>option{Center}+option{Left}+option{Right}^^div.flex.flex-col.gap-2>span.text-xs.font-semibold.text-muted-foreground{Metadata}+div.flex.justify-between.text-xs>span.text-muted-foreground{Modified}+span{2 mins ago})+(div.mt-auto.flex.flex-col.gap-2.pt-4.border-t.border-border>button.btn.btn-sm.btn-primary.w-full{Apply}+button.btn.btn-sm.btn-outline.w-full{Revert})"
+        }
+      ],
+      "mounts": [],
+      "slots": [
+        {
+          "id": "inspector-properties",
+          "at": {
+            "fragment": "nav-root",
+            "name": "inspector-properties"
+          },
+          "accepts": [
+            "details",
+            "settings"
+          ],
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "ports": [
+        {
+          "id": "nav-toggle-in",
+          "at": {
+            "fragment": "nav-root",
+            "name": "nav-root"
+          },
+          "direction": "in",
+          "kind": "control",
+          "contract": "nav-toggle",
+          "minLinks": 0,
+          "maxLinks": 1,
+          "scope": "shell"
+        }
+      ],
+      "componentRefs": [
+        "sidebar",
+        "button",
+        "input",
+        "select"
+      ],
+      "ruleRefs": [],
+      "dependencyRefs": [],
+      "layout": {
+        "frameRef": "nav-root"
+      },
+      "landmarks": {
+        "main": 0,
+        "primaryHeading": 0
+      },
+      "provenance": {
+        "origin": "authored",
+        "sourceHashes": {
+          "upstream:sidebar-14": "29fa8a6f3284bdd4bf943af61d9fe1bf93b642d7fe47d9dfb7750ffb372acc36"
+        },
+        "mappingVersion": "1.0.0"
+      }
+    },
+    "5a4098cfe06c8eea06314c8385a16afaee8a1adbd64be313f1b24e27b592282b": {
+      "schemaVersion": 1,
+      "id": "sidebar-15",
+      "role": "application-shell",
+      "family": "layout",
+      "description": "A left and right sidebar.",
+      "tags": [
+        "shell",
+        "sidebar",
+        "dual-sidebars",
+        "left-right",
+        "workspace"
+      ],
+      "root": "shell-root",
+      "fragments": [
+        {
+          "id": "shell-root",
+          "emmet": "div.flex.min-h-screen.w-full[data-slot=shell-root][data-component=sidebar]>(aside.sidebar.w-64.border-e.border-border.bg-background.p-4[data-slot=nav-left][data-side=left]>div.flex.flex-col.gap-4>span.text-sm.font-semibold{Left Nav}+nav.flex.flex-col.gap-2>a.btn.btn-ghost.btn-sm.justify-start{Files}+a.btn.btn-ghost.btn-sm.justify-start{Assets})+div.flex.flex-1.flex-col.min-w-0>header.flex.h-12.items-center.border-b.border-border.px-4[data-slot=header]>span.text-sm.font-medium{Editor Workspace}^main.flex-1.overflow-auto.p-6[data-slot=content]^^aside.sidebar.w-64.border-s.border-border.bg-background.p-4[data-slot=nav-right][data-side=right]>div.flex.flex-col.gap-4>span.text-sm.font-semibold{Right Panel}+div.flex.flex-col.gap-2>span.text-xs.text-muted-foreground{Properties}"
+        }
+      ],
+      "mounts": [],
+      "slots": [
+        {
+          "id": "nav-left",
+          "at": {
+            "fragment": "shell-root",
+            "name": "nav-left"
+          },
+          "accepts": [
+            "navigation"
+          ],
+          "min": 1,
+          "max": 1
+        },
+        {
+          "id": "header",
+          "at": {
+            "fragment": "shell-root",
+            "name": "header"
+          },
+          "accepts": [
+            "header",
+            "workspace-header"
+          ],
+          "min": 1,
+          "max": 1
+        },
+        {
+          "id": "content",
+          "at": {
+            "fragment": "shell-root",
+            "name": "content"
+          },
+          "accepts": [
+            "dashboard",
+            "workspace",
+            "table"
+          ],
+          "min": 1,
+          "max": 1
+        },
+        {
+          "id": "nav-right",
+          "at": {
+            "fragment": "shell-root",
+            "name": "nav-right"
+          },
+          "accepts": [
+            "navigation",
+            "details"
+          ],
+          "min": 1,
+          "max": 1
+        }
+      ],
+      "ports": [
+        {
+          "id": "main-region",
+          "at": {
+            "fragment": "shell-root",
+            "name": "content"
+          },
+          "direction": "out",
+          "kind": "region",
+          "contract": "main",
+          "minLinks": 0,
+          "maxLinks": 1,
+          "scope": "shell"
+        }
+      ],
+      "componentRefs": [
+        "sidebar",
+        "button"
+      ],
+      "ruleRefs": [],
+      "dependencyRefs": [],
+      "layout": {
+        "frameRef": "shell-root",
+        "gutterBoundary": "shell-root",
+        "scrollBoundary": "shell-root"
+      },
+      "landmarks": {
+        "main": 1,
+        "primaryHeading": 0
+      },
+      "provenance": {
+        "origin": "authored",
+        "sourceHashes": {
+          "upstream:sidebar-15": "5ce77bb1791b761290009c22a0beb0f025316c9931366a8aed10b6c9414fd525"
+        },
+        "mappingVersion": "1.0.0"
+      }
+    },
+    "6697de84636083e3f5bdaebefc0dff39ad76b2d5ad816aa45e05a87fa93630c4": {
+      "schemaVersion": 1,
+      "id": "sidebar-16",
+      "role": "application-shell",
+      "family": "layout",
+      "description": "A sidebar with a sticky site header.",
+      "tags": [
+        "shell",
+        "sidebar",
+        "topbar-header",
+        "collapsible-sidebar"
+      ],
+      "root": "shell-root",
+      "fragments": [
+        {
+          "id": "shell-root",
+          "emmet": "div.flex.min-h-screen.flex-col.w-full[data-slot=shell-root][data-component=sidebar]>(header.sticky.top-0.z-30.flex.h-12.items-center.justify-between.border-b.border-border.bg-background.px-4[data-slot=top-header]>div.flex.items-center.gap-2>button.btn.btn-ghost.btn-xs[data-slot=sidebar-toggle]{☰}+span.text-sm.font-semibold{Global Platform}^div.flex.items-center.gap-2>div.size-8.rounded-full.bg-muted)+div.flex.flex-1.min-h-0>aside.sidebar.w-64.border-e.border-border.bg-background.p-4[data-slot=navigation][data-side=left]>nav.flex.flex-col.gap-2>a.btn.btn-ghost.btn-sm.justify-start[data-state=active]{Dashboard}+a.btn.btn-ghost.btn-sm.justify-start{Settings}^^main.flex-1.overflow-auto.p-6[data-slot=content]"
+        }
+      ],
+      "mounts": [],
+      "slots": [
+        {
+          "id": "top-header",
+          "at": {
+            "fragment": "shell-root",
+            "name": "top-header"
+          },
+          "accepts": [
+            "header"
+          ],
+          "min": 0,
+          "max": 1
+        },
+        {
+          "id": "navigation",
+          "at": {
+            "fragment": "shell-root",
+            "name": "navigation"
+          },
+          "accepts": [
+            "navigation"
+          ],
+          "min": 1,
+          "max": 1
+        },
+        {
+          "id": "content",
+          "at": {
+            "fragment": "shell-root",
+            "name": "content"
+          },
+          "accepts": [
+            "dashboard",
+            "workspace",
+            "table"
+          ],
+          "min": 1,
+          "max": 1
+        }
+      ],
+      "ports": [
+        {
+          "id": "main-region",
+          "at": {
+            "fragment": "shell-root",
+            "name": "content"
+          },
+          "direction": "out",
+          "kind": "region",
+          "contract": "main",
+          "minLinks": 0,
+          "maxLinks": 1,
+          "scope": "shell"
+        }
+      ],
+      "componentRefs": [
+        "sidebar",
+        "button"
+      ],
+      "ruleRefs": [],
+      "dependencyRefs": [],
+      "layout": {
+        "frameRef": "shell-root",
+        "gutterBoundary": "shell-root",
+        "scrollBoundary": "shell-root"
+      },
+      "landmarks": {
+        "main": 1,
+        "primaryHeading": 0
+      },
+      "provenance": {
+        "origin": "authored",
+        "sourceHashes": {
+          "upstream:sidebar-16": "12475c587403b61aeb2bcc15aa079f109dd0e8d0c6db24522e8ef09b3cbd7a49"
+        },
         "mappingVersion": "1.0.0"
       }
     },
@@ -3153,6 +5210,241 @@
         "mappingVersion": "1.0.0"
       }
     },
+    "ba254c56be1b5b63dc6080c0114379fd09ecad1d33c5a8a06e2abb4b75aa599f": {
+      "schemaVersion": 1,
+      "id": "signup-01",
+      "role": "page",
+      "family": "auth",
+      "description": "A simple signup form.",
+      "tags": [
+        "auth",
+        "signup",
+        "register",
+        "card"
+      ],
+      "root": "auth-root",
+      "fragments": [
+        {
+          "id": "auth-root",
+          "emmet": "main.flex.min-h-screen.items-center.justify-center.p-6.bg-muted[data-slot=auth-page]>div.card.w-full.max-w-sm.rounded-xl.border.border-border.bg-card.p-6.shadow-md[data-fsm-recipe=auth-flow][data-fsm-state=idle]>(header.flex.flex-col.gap-2.text-center>h1.text-2xl.font-semibold{Create an account}+p.text-xs.text-muted-foreground{Enter your email below to create your account})+form.flex.flex-col.gap-4.pt-4>(div.flex.flex-col.gap-2>label.text-xs.font-medium{Email}+input.input.input-sm[type=email][placeholder='m@example.com'][required])+(div.flex.flex-col.gap-2>label.text-xs.font-medium{Password}+input.input.input-sm[type=password][required])+(div.flex.flex-col.gap-2>label.text-xs.font-medium{Confirm Password}+input.input.input-sm[type=password][required])+button.btn.btn-sm.btn-primary.w-full[type=submit]{Sign Up}+(footer.text-center.text-xs.text-muted-foreground.pt-2>span{Already have an account? }+a.text-primary.font-medium.hover:underline[href='#login']{Sign in})"
+        }
+      ],
+      "mounts": [],
+      "slots": [],
+      "ports": [],
+      "componentRefs": [
+        "card",
+        "button",
+        "input",
+        "label",
+        "field",
+        "checkbox"
+      ],
+      "ruleRefs": [],
+      "dependencyRefs": [],
+      "layout": {
+        "frameRef": "auth-root"
+      },
+      "landmarks": {
+        "main": 1,
+        "primaryHeading": 1
+      },
+      "provenance": {
+        "origin": "authored",
+        "sourceHashes": {
+          "upstream:signup-01": "5aeaaffda3aed13e5c5f6a220aa26abb508fd5ac74e35f3b73a041bb42746614"
+        },
+        "mappingVersion": "1.0.0"
+      }
+    },
+    "5752d5d30c794584203b4187958d2428731da53b962c119b51735445096f040c": {
+      "schemaVersion": 1,
+      "id": "signup-02",
+      "role": "page",
+      "family": "auth",
+      "description": "A two column signup page with a cover image.",
+      "tags": [
+        "auth",
+        "signup",
+        "split-screen",
+        "branding"
+      ],
+      "root": "auth-root",
+      "fragments": [
+        {
+          "id": "auth-root",
+          "emmet": "main.grid.min-h-screen.grid-cols-1.lg:grid-cols-2[data-slot=auth-page]>(div.relative.hidden.h-full.flex-col.justify-between.bg-muted.p-12.lg:flex>div.flex.items-center.gap-2.text-lg.font-medium>div.size-6.rounded.bg-primary+span{Acme Corp}^blockquote.space-y-2>p.text-lg{\"Join thousands of teams.\"}+footer.text-sm.text-muted-foreground{Sofia Davis})+div.flex.items-center.justify-center.p-6>div.mx-auto.flex.w-full.max-w-sm.flex-col.gap-6[data-fsm-recipe=auth-flow][data-fsm-state=idle]>(header.flex.flex-col.gap-2.text-center>h1.text-2xl.font-semibold{Create account}+p.text-xs.text-muted-foreground{Start your 14-day trial})+form.flex.flex-col.gap-4>(div.flex.flex-col.gap-2>label.text-xs.font-medium{Name}+input.input.input-sm[required])+(div.flex.flex-col.gap-2>label.text-xs.font-medium{Email}+input.input.input-sm[type=email][required])+(div.flex.flex-col.gap-2>label.text-xs.font-medium{Password}+input.input.input-sm[type=password][required])+button.btn.btn-sm.btn-primary.w-full[type=submit]{Create Account}"
+        }
+      ],
+      "mounts": [],
+      "slots": [],
+      "ports": [],
+      "componentRefs": [
+        "card",
+        "button",
+        "input",
+        "label",
+        "field",
+        "checkbox"
+      ],
+      "ruleRefs": [],
+      "dependencyRefs": [],
+      "layout": {
+        "frameRef": "auth-root"
+      },
+      "landmarks": {
+        "main": 1,
+        "primaryHeading": 1
+      },
+      "provenance": {
+        "origin": "authored",
+        "sourceHashes": {
+          "upstream:signup-02": "25710129501618353e91e1bb5fb280c42044fb6689b426b76324be8ca963c081"
+        },
+        "mappingVersion": "1.0.0"
+      }
+    },
+    "50f123c77cdd20b24e812c4f92148dbd8c169de799342ed1208efe540ad593b2": {
+      "schemaVersion": 1,
+      "id": "signup-03",
+      "role": "page",
+      "family": "auth",
+      "description": "A signup page with a muted background color.",
+      "tags": [
+        "auth",
+        "signup",
+        "card",
+        "oauth"
+      ],
+      "root": "auth-root",
+      "fragments": [
+        {
+          "id": "auth-root",
+          "emmet": "main.flex.min-h-screen.items-center.justify-center.bg-muted.p-6[data-slot=auth-page]>div.card.w-full.max-w-md.rounded-xl.border.border-border.bg-card.p-8.shadow-lg[data-fsm-recipe=auth-flow][data-fsm-state=idle]>(header.flex.flex-col.gap-2.text-center>h1.text-2xl.font-semibold{Sign Up for Acme}+p.text-xs.text-muted-foreground{Choose your preferred sign up method})+(div.grid.grid-cols-2.gap-4.pt-4>button.btn.btn-sm.btn-outline.w-full{GitHub}+button.btn.btn-sm.btn-outline.w-full{Google})+(div.relative.flex.items-center.justify-center.py-2>hr.w-full.border-border+span.bg-card.px-2.text-xs.text-muted-foreground{or})+form.flex.flex-col.gap-4>(div.flex.flex-col.gap-2>label.text-xs.font-medium{Email}+input.input.input-sm[type=email][required])+(div.flex.flex-col.gap-2>label.text-xs.font-medium{Password}+input.input.input-sm[type=password][required])+button.btn.btn-sm.btn-primary.w-full[type=submit]{Continue with Email}"
+        }
+      ],
+      "mounts": [],
+      "slots": [],
+      "ports": [],
+      "componentRefs": [
+        "card",
+        "button",
+        "input",
+        "label",
+        "field",
+        "checkbox"
+      ],
+      "ruleRefs": [],
+      "dependencyRefs": [],
+      "layout": {
+        "frameRef": "auth-root"
+      },
+      "landmarks": {
+        "main": 1,
+        "primaryHeading": 1
+      },
+      "provenance": {
+        "origin": "authored",
+        "sourceHashes": {
+          "upstream:signup-03": "aa1102b7d2c08a7d397092951e32d9d07ad82df0d0156be554dafddab0193358"
+        },
+        "mappingVersion": "1.0.0"
+      }
+    },
+    "3c3ecf08f5ac030e4a69a80c665e3e8661f3b03cff859bfef2ad3df962df7c41": {
+      "schemaVersion": 1,
+      "id": "signup-04",
+      "role": "page",
+      "family": "auth",
+      "description": "A signup page with form and image.",
+      "tags": [
+        "auth",
+        "signup",
+        "split-card",
+        "showcase"
+      ],
+      "root": "auth-root",
+      "fragments": [
+        {
+          "id": "auth-root",
+          "emmet": "main.flex.min-h-screen.items-center.justify-center.p-6.bg-muted[data-slot=auth-page]>div.card.grid.w-full.max-w-3xl.grid-cols-1.overflow-hidden.rounded-xl.border.border-border.bg-card.shadow-xl.md:grid-cols-2[data-fsm-recipe=auth-flow][data-fsm-state=idle]>(div.p-8.flex.flex-col.justify-between>(header.flex.flex-col.gap-2>h1.text-2xl.font-semibold{Start building}+p.text-xs.text-muted-foreground{Create your free account today})+form.flex.flex-col.gap-4.py-4>(div.flex.flex-col.gap-2>label.text-xs.font-medium{Email}+input.input.input-sm[type=email][required])+(div.flex.flex-col.gap-2>label.text-xs.font-medium{Password}+input.input.input-sm[type=password][required])+button.btn.btn-sm.btn-primary.w-full[type=submit]{Register})+footer.text-xs.text-muted-foreground>span{By signing up you agree to our Terms.})^div.hidden.bg-muted.p-8.flex.flex-col.justify-between.md:flex>span.text-sm.font-semibold{Starter Plan Included}+p.text-xs.text-muted-foreground{Unlimited sandbox projects and free deployments.}"
+        }
+      ],
+      "mounts": [],
+      "slots": [],
+      "ports": [],
+      "componentRefs": [
+        "card",
+        "button",
+        "input",
+        "label",
+        "field",
+        "checkbox"
+      ],
+      "ruleRefs": [],
+      "dependencyRefs": [],
+      "layout": {
+        "frameRef": "auth-root"
+      },
+      "landmarks": {
+        "main": 1,
+        "primaryHeading": 1
+      },
+      "provenance": {
+        "origin": "authored",
+        "sourceHashes": {
+          "upstream:signup-04": "d8e6bd5b91e38b0e03e6d0791b3ff338e73a1450114634eb9aec381b46cb03f0"
+        },
+        "mappingVersion": "1.0.0"
+      }
+    },
+    "3723bfddfd290bc3546e56995036328711d7ef41e71f61d9dd983da2b2d5e940": {
+      "schemaVersion": 1,
+      "id": "signup-05",
+      "role": "page",
+      "family": "auth",
+      "description": "A simple signup form with social providers.",
+      "tags": [
+        "auth",
+        "signup",
+        "full-featured",
+        "password-strength"
+      ],
+      "root": "auth-root",
+      "fragments": [
+        {
+          "id": "auth-root",
+          "emmet": "main.flex.min-h-screen.items-center.justify-center.p-6.bg-muted[data-slot=auth-page]>div.card.w-full.max-w-md.rounded-xl.border.border-border.bg-card.p-6.shadow-md[data-fsm-recipe=auth-flow][data-fsm-state=idle]>(header.flex.flex-col.gap-2.text-center>h1.text-2xl.font-semibold{Create your account}+p.text-xs.text-muted-foreground{Start your 30-day trial})+(div.grid.grid-cols-2.gap-4.pt-2>button.btn.btn-sm.btn-outline.w-full{GitHub}+button.btn.btn-sm.btn-outline.w-full{Google})+form.flex.flex-col.gap-4.pt-2>(div.flex.flex-col.gap-2>label.text-xs.font-medium{Full Name}+input.input.input-sm[placeholder='Jane Doe'][required])+(div.flex.flex-col.gap-2>label.text-xs.font-medium{Work Email}+input.input.input-sm[type=email][placeholder='jane@company.com'][required])+(div.flex.flex-col.gap-2>label.text-xs.font-medium{Password}+input.input.input-sm[type=password][required]+div.flex.gap-2.pt-2>div.h-2.flex-1.rounded.bg-primary*3)+button.btn.btn-sm.btn-primary.w-full[type=submit]{Create Account}"
+        }
+      ],
+      "mounts": [],
+      "slots": [],
+      "ports": [],
+      "componentRefs": [
+        "card",
+        "button",
+        "input",
+        "label",
+        "field",
+        "checkbox"
+      ],
+      "ruleRefs": [],
+      "dependencyRefs": [],
+      "layout": {
+        "frameRef": "auth-root"
+      },
+      "landmarks": {
+        "main": 1,
+        "primaryHeading": 1
+      },
+      "provenance": {
+        "origin": "authored",
+        "sourceHashes": {
+          "upstream:signup-05": "6a4223363b2e7de3c8ec233838ebdaa52f6be065ddb3c59b261cefad03b4b421"
+        },
+        "mappingVersion": "1.0.0"
+      }
+    },
     "5209282f4f9a9011131336fed4ab850de572ab3e542e8beb22a96e0a0c7e91fd": {
       "schemaVersion": 1,
       "id": "svg-area-chart",
@@ -3199,6 +5491,120 @@
       },
       "landmarks": {
         "main": 0,
+        "primaryHeading": 0
+      },
+      "provenance": {
+        "origin": "authored",
+        "sourceHashes": {},
+        "mappingVersion": "1.0.0"
+      }
+    },
+    "082705d57a2a89a3074a999560f7c9916ea2336b6c56e3c17805953ad5f70ba3": {
+      "schemaVersion": 1,
+      "id": "analytics",
+      "role": "dashboard",
+      "family": "workspace",
+      "description": "Multi-metric analytics dashboard workspace with period selectors, conversion metrics, revenue chart canvas, and source breakdown.",
+      "tags": [
+        "dashboard",
+        "analytics",
+        "workspace",
+        "chart",
+        "metrics"
+      ],
+      "root": "content-frame",
+      "fragments": [
+        {
+          "id": "content-frame",
+          "emmet": "div.flex.flex-1.flex-col.gap-6.p-6[data-role=canvas][data-macro=canvas][data-block=analytics]>div.flex.items-center.justify-between.gap-4[data-slot=header]>div.flex.flex-col.gap-2>h2.text-xl.font-semibold{Analytics Overview}+p.text-xs.text-muted-foreground{Realtime user traffic and conversion performance.}^div[data-slot=period-filter]^^div[data-slot=kpi]+div.grid.grid-cols-1.gap-6.lg:grid-cols-3>div.lg:col-span-2[data-slot=chart]+div[data-slot=sources]"
+        }
+      ],
+      "mounts": [],
+      "slots": [
+        {
+          "id": "period-filter",
+          "at": {
+            "fragment": "content-frame",
+            "name": "period-filter"
+          },
+          "accepts": [
+            "action",
+            "range-control"
+          ],
+          "min": 0,
+          "max": 1
+        },
+        {
+          "id": "kpi",
+          "at": {
+            "fragment": "content-frame",
+            "name": "kpi"
+          },
+          "accepts": [
+            "metrics",
+            "kpi"
+          ],
+          "min": 0,
+          "max": 1
+        },
+        {
+          "id": "chart",
+          "at": {
+            "fragment": "content-frame",
+            "name": "chart"
+          },
+          "accepts": [
+            "chart",
+            "activity"
+          ],
+          "min": 0,
+          "max": 1
+        },
+        {
+          "id": "sources",
+          "at": {
+            "fragment": "content-frame",
+            "name": "sources"
+          },
+          "accepts": [
+            "table",
+            "data",
+            "workspace"
+          ],
+          "min": 0,
+          "max": 1
+        }
+      ],
+      "ports": [
+        {
+          "id": "main-in",
+          "at": {
+            "fragment": "content-frame",
+            "name": "content-frame"
+          },
+          "direction": "in",
+          "kind": "region",
+          "contract": "main",
+          "minLinks": 0,
+          "maxLinks": 1,
+          "scope": "shell"
+        }
+      ],
+      "componentRefs": [
+        "card",
+        "button",
+        "table"
+      ],
+      "ruleRefs": [],
+      "dependencyRefs": [
+        "bb9894899b8d66b96ecf5b7e20c6ec6b50fa4ba6b73d87558c04642025df6d00",
+        "5209282f4f9a9011131336fed4ab850de572ab3e542e8beb22a96e0a0c7e91fd"
+      ],
+      "layout": {
+        "frameRef": "content-frame"
+      },
+      "landmarks": {
+        "main": 1,
         "primaryHeading": 0
       },
       "provenance": {
@@ -5356,6 +7762,7 @@
     "data-pager": "8db430e806c397ae4259c221b7030e80e783f34c1f1c5002702020e1041a9296",
     "data-table": "2ea00445a26e83d13d2346abcc6adc570445def46468eb924334e26bf5271e9f",
     "data-table-rich": "9fd839dafa3ad90f5eb8223898c1d0d7b69a68bb16af66c595b6977c2d9db8ad",
+    "billing": "e20d37b026f92976d606c358b347970a9ab029d77149ccd3643629381f8f3095",
     "dashboard-06": "81a3941e6d578051e01a68c1015cd8d811855fa49b19946612d68e270f36f075",
     "data-workspace": "fd464e595da290c7aeba1144598a7ebbf3f298d7192a4a60a9a6110bda6ed5a0",
     "detail-drawer-panel": "1cb011c6a62e6e6c82caddc5015ba58ceba8217f226a2bfcd6b587467083cb8b",
@@ -5365,21 +7772,55 @@
     "form-field-group": "0287630e74fce36efbc25d7019a39962eae1849b74ba66429ace7fdc4ca322f5",
     "form-section": "db0f381548cf79f10b2eb645ee1a4586b5eca810b8aa670849767271debd6bc3",
     "forms": "efa0b835fb0696279d6b7f8c23ba985e5b5f5dfe7855c169dc86c4837a3118a2",
+    "login-01": "71e93ca895449af69e8be53cd0f0acdcbd520eae9dd4ae2d11768f9ade0196c7",
+    "login-02": "2c0210a2c074ef345ef1be76c49633f5f6ded79536a770a33c92f097a7db9520",
+    "login-03": "c9d28a4fbdc2f7fbd6ece60769494a0909d3f719a656443b322f9ce0bd3ae642",
+    "login-04": "cd79a8f4b76e9752fbc708e0a9971ec1d9d6aceee16c806754d78e975a3ad824",
+    "login-05": "cbbc681a255a88f09f2b4ee3dc21afaa846eedbcaed2f4879d11bb65e530c163",
     "mail": "fce7ef64d5f208c14b12f0b69f2a3ba51387032aa87f19134d6f200c45bb64ae",
     "metrics-summary": "bb9894899b8d66b96ecf5b7e20c6ec6b50fa4ba6b73d87558c04642025df6d00",
     "dashboard-05": "805de39d820786a5d33ddca505e125c08ee0b8ce56a2fcaf6d0af1f2e2a0ecdb",
     "newsletter-waitlist": "57a13cd223e2a23e2c4c7ec875cfba5eb5030f6bf587bd1170dbec4db33989e9",
+    "otp-01": "8a791d5e2cfe60227c9ce8b8952797116f3725349b909671299bd6e787b9f219",
+    "otp-02": "6f179fb5930f384c423d5baa51244c967ef8cffc38869689eed0dd887b18edec",
+    "otp-03": "d2778d5b254f722b3f805cfc6187b81109a3877abe61911270bd3bbc1d45cc52",
+    "otp-04": "c98a24b064d9b2bc3c8c83a293a5b7540aa1eecfaa19c14b00e2f0c7c0678f65",
+    "otp-05": "1042dd1403b046675f5bd4ac5aeead10ec72065ac4ba475ea5c21c9aa52f0b0c",
     "page-header": "a3e401eda6136789ae31b411ada1ef977bd5f2b665471460ff0a9db93aacd1aa",
     "pricing-tiers": "5857b53433f74071b407f98b96554ac99c6515031ff21a63f252cc9f3874cd96",
     "product-detail-layout": "1274d7167afc432e06f100a16c8f31d9173a3bd11ea2a21ca673752be3637054",
+    "products": "c76675674dba379b4864ea5da747988c298df5490253cb7cb4ab21802932c593",
     "segmented-toggle": "aa973b7c26d26f157693ad3a693e98375230fa704481d4853814c7d021d223c1",
+    "settings": "6f76fd377664b66591fb77567f111f07eaaa460a413f07429ab84594cbf86e8f",
     "settings-workspace": "5307b337028dfb9f6fe1ece8975ad6a6857d3fe9fc1b41d1df2c28c709dc8cc8",
+    "sidebar-01": "6f84d1c3802fbaf26cab121cabec1035992b59c629728608e07b9a835e3d1642",
+    "sidebar-02": "aad31f456aa3927cba0fd6d646aa31d7faa7629e930cc890fb7ecbc23ec44e16",
+    "sidebar-03": "5f3950cbe0b5308f07454b8a5d0974dea8314baaae2ea5851d1f4b6e1466c915",
+    "sidebar-04": "1d363c3b5f3d7a4ff19ac29c7a3a0a7ef7517a5ed6f53021e5f8e665f054437a",
+    "sidebar-05": "60e8db1dc2ae8d41c8a187f78792a3b3d0c4e137ea48fdad7b9966477b4c5be0",
+    "sidebar-06": "a81210b5fc165eb35c8a02b96fff538011ec81bfe1ccfc2393ac808abc5254f4",
+    "sidebar-07": "6a21faf2d344fb35b453436901124b9e156fe15959b333d688aa35dd7b2b2257",
+    "sidebar-08": "b52b80219d2aed07f188f0462e6cfcb751a97b878a9ed43210cd221acb294c74",
+    "sidebar-09": "2cb0f37a916f4503dc51bc548768854ed2e073c942e9e0fa6d86eae79e1ef890",
+    "sidebar-10": "c0ae9563b4285a24b3d7905449c245090cd46ab495fd45b9b960722ff24594cf",
+    "sidebar-11": "9c2bdf11b973698db429417c1cdc1e36494d4a53e3fe6623159add6d9e6b5294",
+    "sidebar-12": "af776258f398186fc5cec7191288e1dd76568aa8f5f76ae102fd5b5adee05d1d",
+    "sidebar-13": "b75e8f7ee3e10a12d08c0a467ebe5af18e55e0490100389f19ddcce9c776c087",
+    "sidebar-14": "2b7abef1751574da62562e85d5eccda13e309797b42ad187a7196ec8ffbe1979",
+    "sidebar-15": "5a4098cfe06c8eea06314c8385a16afaee8a1adbd64be313f1b24e27b592282b",
+    "sidebar-16": "6697de84636083e3f5bdaebefc0dff39ad76b2d5ad816aa45e05a87fa93630c4",
     "sidebar-collapsible-icon": "8a79b7ec1e26b7522a1d32d85d3d5c0a924b1ab21c32252b5d3207eefd0e5274",
     "sidebar-dashboard-shell": "72804bd89e0100488d25d1610c25cf18499e14acaceda5c4061b8e3bb7762a92",
     "sidebar-inset-shell": "036d12c586a0dacff01c67cc745856d2eb02092f9ce096c44336f3034a8fe71d",
     "sidebar-mobile-flyout": "b2f95030c433acc594d2dd8ce1a1bdf20f2410e9e646a83803103d17806d85fb",
     "sidebar-nav": "9625532a4f0d2a345eb368fbf7fa3fc77337782d5c6340c28f0d5df2d525ecd3",
+    "signup-01": "ba254c56be1b5b63dc6080c0114379fd09ecad1d33c5a8a06e2abb4b75aa599f",
+    "signup-02": "5752d5d30c794584203b4187958d2428731da53b962c119b51735445096f040c",
+    "signup-03": "50f123c77cdd20b24e812c4f92148dbd8c169de799342ed1208efe540ad593b2",
+    "signup-04": "3c3ecf08f5ac030e4a69a80c665e3e8661f3b03cff859bfef2ad3df962df7c41",
+    "signup-05": "3723bfddfd290bc3546e56995036328711d7ef41e71f61d9dd983da2b2d5e940",
     "svg-area-chart": "5209282f4f9a9011131336fed4ab850de572ab3e542e8beb22a96e0a0c7e91fd",
+    "analytics": "082705d57a2a89a3074a999560f7c9916ea2336b6c56e3c17805953ad5f70ba3",
     "dashboard-01": "3dbe776b3e39e3a3e6227e455f836fca8f10ba7b7719bf9f9c36cb189082d5a6",
     "dashboard-02": "0484bff8778dcfc846c40ad8c519831e44e2576cf5a81eb22449ae8c62368b64",
     "dashboard-activity": "11e81ac3707d99da5d12cb7c146e3ce74fe616496372c176a2f0e15a125bdae8",

@@ -4,13 +4,36 @@ Maintained by **Žygimantas Jasiulionis / Intellmedia**.
 
 ## 1.7.1 - 2026-10-14
 
+- **Comprehensive 22-Tool Offline Protocol**:
+  - Expanded the MCP protocol surface to 22 offline tools:
+    - `basecoat_setup_config`: Automated configuration and boilerplate generator for 6 framework targets (`astro`, `vanilla`, `nextjs`, `sveltekit`, `vite`, `htmx`), 8 style packs (`vega`..`rhea`), OKLCH theme variables, and no-flash dark mode scripts.
+    - `basecoat_page_architect`: Scaffolds full layouts across 5 dashboard page archetypes with container contracts and slot topology.
+    - `basecoat_compose_stack`: Composes 41 pre-built component stacks across 7 categories into canonical shells (`sidebar-01`..`16`, `topbar-shell`, `inset-shell`, `split-shell`) with slot hydration.
+    - `basecoat_rules_enforcer`: Enforces technical constraints across Tailwind CSS v4, FSM state contracts, and accessibility rules (`MET-01`, `TBL-01`, `FRM-01`, `NAV-01`, `TW4-01`, `TOK-01`, `FSM-01`, `SEM-01`).
+    - `basecoat_creative_director`: Surfaces Kanso minimalism, 4px/8px optical rhythm grid, typography ladders, density profiles, and contrast pairings.
+    - `basecoat_component_syntax`: Delivers copy-pasteable component markup with FSM state variants and inline SVG action icons.
+    - `basecoat_list_charts` & `basecoat_get_chart_blueprint`: 56 theme-aware chart blueprints across 7 categories (`area`, `bar`, `line`, `pie`, `radar`, `radial`, `tooltip`) with pure Basecoat CSS tokens (`var(--chart-1)`..`var(--chart-5)`) and 5 framework mounts (`vanilla`, `astro`, `react`, `vue`, `svelte`).
+    - `basecoat_quality_inspector`: Audits HTML/Astro markup with score (0-100), letter grade (A-F), syntax violations, accessibility omissions, and auto-fix suggestions.
+    - Component tools: `search_components`, `get_component_details`, `get_component_html`, `validate_composition`, `validate_markup`.
+    - Macro tools: `search_macro_blocks`, `get_macro_block`, `begin_design`, `get_design_context`, `apply_design_patch`, `validate_design`.
+    - Semantic tools: `get_rhythm_rules`, `get_fsm_recipe`.
+- **Complete MCP Resource Endpoints (8 Resources)**:
+  - Added 3-pillar Skill Vault endpoints: `basecoat://skills/core`, `basecoat://skills/dashboard`, `basecoat://skills/charts`, and `basecoat://skills/files/*` dynamic file lookup.
+  - Core architectural endpoints: `basecoat://design/rhythm`, `basecoat://design/theming`, `basecoat://integration/frameworks`, and `basecoat://project/context`.
+- **Authoritative Catalog Expansion**:
+  - **61 Curated Components**: All 57 `shadcn/ui` new-york-v4 primitives + Basecoat extensions with verified HTML/Astro templates, zero React runtime dependencies, and FSM state contracts.
+  - **84 Macro Blocks & Aliases**: Full library covering canonical sidebars (`sidebar-01..16`), dashboards (`dashboard-01..07`), auth (`login-01..05`, `signup-01..05`, `otp-01..05`), and core application blocks (`mail`, `tasks`, `forms`, `products`, `analytics`, `billing`, `settings`).
+  - **11 Page Recipes**: End-to-end multi-page layout graphs (`workspace-dashboard`, `ecommerce-overview`, `analytics-workspace`, `workspace-settings`, `workspace-detail`, `tasks-table-workspace`, `mail-workspace`, `auth-flow`, `auth-split-flow`, `data-records`, `marketing-pricing`).
+  - **41 Composable Component Stacks**: Composable stacks across 7 categories (`shell-stacks`, `header-stacks`, `kpi-stacks`, `chart-stacks`, `table-stacks`, `overlay-stacks`, `form-stacks`) with slot hydration into canonical shells.
+  - **56 Theme-Aware Chart Blueprints**: Visualizations across 7 categories mapped to CSS tokens (`var(--chart-1)`..`var(--chart-5)`) with mounts for 5 frameworks.
+  - **95 Markdown Files across the 3-Pillar Skill Vault**: Distributed across `skills/basecoat` (core foundations and 57 component guides), `skills/basecoat-dashboard` (dashboard architecture, block patterns, and audit checklist), and `skills/basecoat-charts` (ApexCharts blueprints and token mapping).
 - **Dashboard Intelligence Ingestion & 5 Core Scaffolds (`basecoat_page_architect`)**:
   - Full coverage of 5 key dashboard page archetypes with responsive container grids, explicit slot topology, and density profiles (`compact`, `comfortable`):
-    - **Executive Dashboard** (`workspace-dashboard`, `executive-dashboard`) — KPI metric cards, revenue chart, and recent activity.
-    - **E-commerce Overview** (`ecommerce-overview`) — Sales metrics, revenue analytics, top products card, and order summary.
-    - **Analytics Workspace** (`analytics-workspace`) — Filter toolbar, time-series chart, and cohort analysis breakdown.
-    - **Data Table Detail** (`workspace-detail`, `data-table-detail`) — Paginated data table with search/filters and slide-over inspection drawer.
-    - **Settings Split-Screen** (`workspace-settings`, `settings-split-screen`) — Two-column responsive layout with vertical section navigation and form controls.
+    - **Executive Dashboard** (`workspace-dashboard`, `executive-dashboard`) - KPI metric cards, revenue chart, and recent activity.
+    - **E-commerce Overview** (`ecommerce-overview`) - Sales metrics, revenue analytics, top products card, and order summary.
+    - **Analytics Workspace** (`analytics-workspace`) - Filter toolbar, time-series chart, and cohort analysis breakdown.
+    - **Data Table Detail** (`workspace-detail`, `data-table-detail`) - Paginated data table with search/filters and slide-over inspection drawer.
+    - **Settings Split-Screen** (`workspace-settings`, `settings-split-screen`) - Two-column responsive layout with vertical section navigation and form controls.
 - **Dashboard Audit Rules & Precision Enforcement (`validate.ts` & `basecoat_rules_enforcer`)**:
   - Added `table-overflow-wrapper`: Data `<table>` requires an `overflow-x-auto` wrapper to prevent horizontal mobile viewport blowout.
   - Added `kpi-metric-tabular-nums`: Large KPI numerals (`text-2xl`..`text-5xl`) require `tabular-nums` for digit vertical alignment.
@@ -21,8 +44,8 @@ Maintained by **Žygimantas Jasiulionis / Intellmedia**.
   - Added composite patterns for `metric-card` (KPI card with tabular-nums and trend badge), `data-table` (sticky header table in `overflow-x-auto` with right-aligned numeric cells), and `sidebar-shell` (sticky desktop navigation with responsive flyout below `md`).
   - Supported all FSM lifecycle states: `default`, `active`, `loading`, `disabled`, `open`, `closed`, and compound `open/closed`.
 - **Ingestion of Translated shadcn/ui v4 Blocks & Multi-Block Recipes**:
-  - Compiled and registered 16 block blueprints: `dashboard-01` through `dashboard-07`, `metrics-summary`, `data-table-rich`, `form-field-group`, `svg-area-chart`, `sidebar-dashboard-shell`, `authentication`, `forms`, `tasks`, `mail`.
-  - Compiled and registered 5 multi-block recipes: `analytics-workspace`, `ecommerce-overview`, `tasks-table-workspace`, `mail-workspace`, and `auth-split-flow`.
+  - Compiled and registered 84 block blueprints: `sidebar-01` through `sidebar-16`, `dashboard-01` through `dashboard-07`, `login-01` through `login-05`, `signup-01` through `signup-05`, `otp-01` through `otp-05`, `metrics-summary`, `data-table-rich`, `form-field-group`, `svg-area-chart`, `sidebar-dashboard-shell`, `authentication`, `forms`, `tasks`, `mail`, `products`, `analytics`, `billing`, `settings`.
+  - Compiled and registered 11 multi-block recipes: `workspace-dashboard`, `ecommerce-overview`, `analytics-workspace`, `workspace-settings`, `workspace-detail`, `tasks-table-workspace`, `mail-workspace`, `auth-flow`, `auth-split-flow`, `data-records`, and `marketing-pricing`.
 - **WCAG 2.1 & APCA Contrast & Accessibility Heuristics (`validate.ts` & `basecoat_quality_inspector`)**:
   - Added `color-contrast-wcag` rule evaluating WCAG 2.1 relative luminance contrast ratios and APCA ($L_c$) thresholds across semantic surface/text token pairings (`bg-primary`, `bg-card`, `bg-muted`, `bg-destructive`, `bg-background`), flagging low-contrast pairings and suggesting canonical foreground tokens (`text-primary-foreground`, etc.).
   - Added `a11y-dialog-focus-trap` heuristic checking that modal `<dialog>` / `role="dialog"` containers include `aria-modal="true"` (when non-native) and at least one focusable exit/action control.
@@ -65,7 +88,7 @@ Maintained by **Žygimantas Jasiulionis / Intellmedia**.
   - `basecoat_rules_enforcer`: Exposes an indexed technical rule set enforcing strict Tailwind CSS v4 syntax (banning v3 `bg-opacity-*`, `flex-shrink-*`, `@tailwind` directives), mandatory FSM `data-state` contracts, semantic CSS variable tokens (`--color-primary`, `--color-surface`), and semantic HTML5 landmarks.
   - `basecoat_creative_director`: Surfaces Kanso minimalism, typography ladders, optical spacing rhythm, visitor job density profiles, contrast rules, and Basecoat style packs (`vega`..`rhea`).
   - `basecoat_component_syntax`: Delivers copy-pasteable HTML/Astro component markup pre-bound with FSM state variants (`default`, `active`, `loading`, `disabled`, `open`, `closed`) and required JS imports.
-  - `basecoat_quality_inspector`: Enhanced audit wrapper over `validate_composition` returning a `0–100` score, letter grade, categorized `syntaxViolations`, `accessibilityOmissions`, and `autoFixSuggestions`.
+  - `basecoat_quality_inspector`: Enhanced audit wrapper over `validate_composition` returning a `0-100` score, letter grade, categorized `syntaxViolations`, `accessibilityOmissions`, and `autoFixSuggestions`.
 - **Agent Rules & Prompt Engineering**: Updated `templates/cursor/basecoat-designer.mdc` and added `.cursor/rules/basecoat.mdc` documenting the mandatory 4-step tool chaining workflow.
 - **Deterministic Dashboard Generation**: Hardened the macro graph definitions (`dashboard-main`, `dashboard-workspace`, `workspace-dashboard.json`) for pixel-perfect Shadcn New York v4 `dashboard-01` parity.
 - **Layout Neutrality**: Introduced `topbar-shell` and `topbar-nav` macros to support non-sidebar dashboard generation out-of-the-box.
@@ -102,7 +125,7 @@ Maintained by **Žygimantas Jasiulionis / Intellmedia**.
 - **Validator precision**: theme rules accept backtick quotes, ignore unrelated `localStorage` keys (e.g. sidebar state) and lookalike classes such as `.dark-mode`.
 - **Agent template**: `templates/cursor/basecoat-designer.mdc` covers the audit/restyle path and theme rules.
 - **Release hygiene**: 1.5.0 never reached npm or the MCP Registry (`server.json` stuck at 1.4.0 with a description over the registry's 100-character limit). Tests now read the version from `package.json`; release runbook fixed (broken markdown, missing `server.json`/MCP Registry steps, nonexistent `gh discussion` command).
-- **Packaging**: the git-ignored local probe `tests/fixtures/offline-dashboard/` (incl. a 276 kB lockfile) no longer ships in the npm tarball (482 kB → 412 kB); guarded by a package-contract test.
+- **Packaging**: the git-ignored local probe `tests/fixtures/offline-dashboard/` (incl. a 276 kB lockfile) no longer ships in the npm tarball (482 kB -> 412 kB); guarded by a package-contract test.
 - **Repository**: README badges and `npx` quick start, `SECURITY.md`, issue/PR templates, `tmp/` ignored.
 
 ## 1.5.0 - 2026-10-04
@@ -148,7 +171,7 @@ Maintained by **Žygimantas Jasiulionis / Intellmedia**.
 
 - Documented offline dashboard MCP evaluation vs https://ui.shadcn.com/examples/dashboard in `docs/mcp-dashboard-eval.md`. Local disposable consumer probe lives at `tests/fixtures/offline-dashboard/` (gitignored; not for GitHub).
 - Decision rejection messages now list allowed profile keys (`begin_design` / `set_decision`).
-- `get_rhythm_rules` accepts singular family aliases `surface`→`surfaces` and `border`→`borders`.
+- `get_rhythm_rules` accepts singular family aliases `surface`->`surfaces` and `border`->`borders`.
 - `get_macro_block` returns `EXPECTED_BLOCK_GOT_RECIPE` (with recipe id, steps, root block) instead of opaque `UNKNOWN_BLOCK` for recipe aliases such as `data-records`.
 - Added `dashboard-workspace` canvas host (metrics / activity / records), four-KPI `dashboard-main` (`xl:grid-cols-4`), `dashboard-activity`, and updated `workspace-dashboard` recipe so KPIs + chart + table live in one design graph.
 - Remapped `data-filters` off `gap-3`; compiler rejects macro Emmet spacing outside approved rhythm steps (`0/2/4/6/12`).

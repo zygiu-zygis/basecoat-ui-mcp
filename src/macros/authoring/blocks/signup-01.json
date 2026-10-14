@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "id": "signup-01",
+  "role": "page",
+  "family": "auth",
+  "description": "A simple signup form.",
+  "tags": [
+    "auth",
+    "signup",
+    "register",
+    "card"
+  ],
+  "root": "auth-root",
+  "fragments": [
+    {
+      "id": "auth-root",
+      "emmet": "main.flex.min-h-screen.items-center.justify-center.p-6.bg-muted[data-slot=auth-page]>div.card.w-full.max-w-sm.rounded-xl.border.border-border.bg-card.p-6.shadow-md[data-fsm-recipe=auth-flow][data-fsm-state=idle]>(header.flex.flex-col.gap-2.text-center>h1.text-2xl.font-semibold{Create an account}+p.text-xs.text-muted-foreground{Enter your email below to create your account})+form.flex.flex-col.gap-4.pt-4>(div.flex.flex-col.gap-2>label.text-xs.font-medium{Email}+input.input.input-sm[type=email][placeholder='m@example.com'][required])+(div.flex.flex-col.gap-2>label.text-xs.font-medium{Password}+input.input.input-sm[type=password][required])+(div.flex.flex-col.gap-2>label.text-xs.font-medium{Confirm Password}+input.input.input-sm[type=password][required])+button.btn.btn-sm.btn-primary.w-full[type=submit]{Sign Up}+(footer.text-center.text-xs.text-muted-foreground.pt-2>span{Already have an account? }+a.text-primary.font-medium.hover:underline[href='#login']{Sign in})"
+    }
+  ],
+  "mounts": [],
+  "slots": [],
+  "ports": [],
+  "componentRefs": [
+    "card",
+    "button",
+    "input",
+    "label",
+    "field",
+    "checkbox"
+  ],
+  "ruleRefs": [],
+  "dependencyBlockIds": [],
+  "layout": {
+    "frameRef": "auth-root"
+  },
+  "landmarks": {
+    "main": 1,
+    "primaryHeading": 1
+  },
+  "provenance": {
+    "origin": "authored",
+    "sourceHashes": {
+      "upstream:signup-01": "5aeaaffda3aed13e5c5f6a220aa26abb508fd5ac74e35f3b73a041bb42746614"
+    },
+    "mappingVersion": "1.0.0"
+  }
+}

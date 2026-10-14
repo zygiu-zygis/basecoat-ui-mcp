@@ -1,0 +1,83 @@
+{
+  "schemaVersion": 1,
+  "id": "sidebar-01",
+  "role": "navigation",
+  "family": "layout",
+  "description": "A simple sidebar with navigation grouped by section.",
+  "tags": [
+    "navigation",
+    "sidebar",
+    "collapsible",
+    "details",
+    "grouped"
+  ],
+  "root": "nav-root",
+  "fragments": [
+    {
+      "id": "nav-root",
+      "emmet": "aside.sidebar.w-64.border-e.border-border.bg-background.md:sticky.md:top-0.md:h-screen[aria-label=Sidebar][data-slot=sidebar-host][data-component=sidebar][data-side=left]>nav.flex.h-full.flex-col.justify-between.p-2>(div.flex.flex-col.gap-2>div.flex.items-center.gap-2.p-2.text-sm.font-semibold[data-slot=workspace-switcher]{Acme Corp}+details.group[open]>summary.flex.items-center.justify-between.p-2.text-xs.font-medium.cursor-pointer.hover:bg-muted{Getting Started+span{▾}}+div.flex.flex-col.gap-2.pl-4>a.btn.btn-ghost.btn-sm.justify-start[data-state=active]{Installation}+a.btn.btn-ghost.btn-sm.justify-start{Structure}^details.group[open]>summary.flex.items-center.justify-between.p-2.text-xs.font-medium.cursor-pointer.hover:bg-muted{Building Apps+span{▾}}+div.flex.flex-col.gap-2.pl-4>a.btn.btn-ghost.btn-sm.justify-start{Routing}+a.btn.btn-ghost.btn-sm.justify-start{Fetching})+(div.mt-auto.p-2.border-t.border-border[data-slot=user-footer]>div.flex.items-center.gap-2>div.size-8.rounded.bg-muted+div.text-xs>span.font-medium{shadcn})"
+    }
+  ],
+  "mounts": [],
+  "slots": [
+    {
+      "id": "workspace-switcher",
+      "at": {
+        "fragment": "nav-root",
+        "name": "workspace-switcher"
+      },
+      "accepts": [
+        "action"
+      ],
+      "min": 0,
+      "max": 1
+    },
+    {
+      "id": "user-footer",
+      "at": {
+        "fragment": "nav-root",
+        "name": "user-footer"
+      },
+      "accepts": [
+        "action"
+      ],
+      "min": 0,
+      "max": 1
+    }
+  ],
+  "ports": [
+    {
+      "id": "nav-toggle-in",
+      "at": {
+        "fragment": "nav-root",
+        "name": "nav-root"
+      },
+      "direction": "in",
+      "kind": "control",
+      "contract": "nav-toggle",
+      "minLinks": 0,
+      "maxLinks": 1,
+      "scope": "shell"
+    }
+  ],
+  "componentRefs": [
+    "sidebar",
+    "button"
+  ],
+  "ruleRefs": [],
+  "dependencyBlockIds": [],
+  "layout": {
+    "frameRef": "nav-root"
+  },
+  "landmarks": {
+    "main": 0,
+    "primaryHeading": 0
+  },
+  "provenance": {
+    "origin": "authored",
+    "sourceHashes": {
+      "upstream:sidebar-01": "4745eb0457d6d6c8735421808de8ccdfb104575b4301852630f06f8b6b7a2662"
+    },
+    "mappingVersion": "1.0.0"
+  }
+}

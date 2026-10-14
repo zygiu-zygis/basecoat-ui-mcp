@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "id": "login-05",
+  "role": "page",
+  "family": "auth",
+  "description": "A simple email-only login page.",
+  "tags": [
+    "auth",
+    "login",
+    "magic-link",
+    "passwordless"
+  ],
+  "root": "auth-root",
+  "fragments": [
+    {
+      "id": "auth-root",
+      "emmet": "main.flex.min-h-screen.items-center.justify-center.p-6.bg-muted[data-slot=auth-page]>div.card.w-full.max-w-sm.rounded-xl.border.border-border.bg-card.p-6.shadow-md[data-fsm-recipe=auth-flow][data-fsm-state=idle]>(header.flex.flex-col.gap-2.text-center>h1.text-2xl.font-semibold{Magic Link Login}+p.text-xs.text-muted-foreground{Enter your work email and we'll send you a login link})+form.flex.flex-col.gap-4.pt-4>(div.flex.flex-col.gap-2>label.text-xs.font-medium{Work Email}+input.input.input-sm[type=email][placeholder='you@company.com'][required])+button.btn.btn-sm.btn-primary.w-full[type=submit]{Send Magic Link}+(footer.text-center.text-xs.text-muted-foreground.pt-2>a.hover:underline[href='#sso']{Sign in with Enterprise SSO})"
+    }
+  ],
+  "mounts": [],
+  "slots": [],
+  "ports": [],
+  "componentRefs": [
+    "card",
+    "button",
+    "input",
+    "label",
+    "field"
+  ],
+  "ruleRefs": [],
+  "dependencyBlockIds": [],
+  "layout": {
+    "frameRef": "auth-root"
+  },
+  "landmarks": {
+    "main": 1,
+    "primaryHeading": 1
+  },
+  "provenance": {
+    "origin": "authored",
+    "sourceHashes": {
+      "upstream:login-05": "370b14eec54effdf9987763f669e072490b96c260c33d53ca21cf38b6d42dbd9"
+    },
+    "mappingVersion": "1.0.0"
+  }
+}

@@ -1,0 +1,113 @@
+{
+  "schemaVersion": 1,
+  "id": "sidebar-15",
+  "role": "application-shell",
+  "family": "layout",
+  "description": "A left and right sidebar.",
+  "tags": [
+    "shell",
+    "sidebar",
+    "dual-sidebars",
+    "left-right",
+    "workspace"
+  ],
+  "root": "shell-root",
+  "fragments": [
+    {
+      "id": "shell-root",
+      "emmet": "div.flex.min-h-screen.w-full[data-slot=shell-root][data-component=sidebar]>(aside.sidebar.w-64.border-e.border-border.bg-background.p-4[data-slot=nav-left][data-side=left]>div.flex.flex-col.gap-4>span.text-sm.font-semibold{Left Nav}+nav.flex.flex-col.gap-2>a.btn.btn-ghost.btn-sm.justify-start{Files}+a.btn.btn-ghost.btn-sm.justify-start{Assets})+div.flex.flex-1.flex-col.min-w-0>header.flex.h-12.items-center.border-b.border-border.px-4[data-slot=header]>span.text-sm.font-medium{Editor Workspace}^main.flex-1.overflow-auto.p-6[data-slot=content]^^aside.sidebar.w-64.border-s.border-border.bg-background.p-4[data-slot=nav-right][data-side=right]>div.flex.flex-col.gap-4>span.text-sm.font-semibold{Right Panel}+div.flex.flex-col.gap-2>span.text-xs.text-muted-foreground{Properties}"
+    }
+  ],
+  "mounts": [],
+  "slots": [
+    {
+      "id": "nav-left",
+      "at": {
+        "fragment": "shell-root",
+        "name": "nav-left"
+      },
+      "accepts": [
+        "navigation"
+      ],
+      "min": 1,
+      "max": 1
+    },
+    {
+      "id": "header",
+      "at": {
+        "fragment": "shell-root",
+        "name": "header"
+      },
+      "accepts": [
+        "header",
+        "workspace-header"
+      ],
+      "min": 1,
+      "max": 1
+    },
+    {
+      "id": "content",
+      "at": {
+        "fragment": "shell-root",
+        "name": "content"
+      },
+      "accepts": [
+        "dashboard",
+        "workspace",
+        "table"
+      ],
+      "min": 1,
+      "max": 1
+    },
+    {
+      "id": "nav-right",
+      "at": {
+        "fragment": "shell-root",
+        "name": "nav-right"
+      },
+      "accepts": [
+        "navigation",
+        "details"
+      ],
+      "min": 1,
+      "max": 1
+    }
+  ],
+  "ports": [
+    {
+      "id": "main-region",
+      "at": {
+        "fragment": "shell-root",
+        "name": "content"
+      },
+      "direction": "out",
+      "kind": "region",
+      "contract": "main",
+      "minLinks": 0,
+      "maxLinks": 1,
+      "scope": "shell"
+    }
+  ],
+  "componentRefs": [
+    "sidebar",
+    "button"
+  ],
+  "ruleRefs": [],
+  "dependencyBlockIds": [],
+  "layout": {
+    "frameRef": "shell-root",
+    "gutterBoundary": "shell-root",
+    "scrollBoundary": "shell-root"
+  },
+  "landmarks": {
+    "main": 1,
+    "primaryHeading": 0
+  },
+  "provenance": {
+    "origin": "authored",
+    "sourceHashes": {
+      "upstream:sidebar-15": "5ce77bb1791b761290009c22a0beb0f025316c9931366a8aed10b6c9414fd525"
+    },
+    "mappingVersion": "1.0.0"
+  }
+}

@@ -1,0 +1,82 @@
+{
+  "schemaVersion": 1,
+  "id": "sidebar-07",
+  "role": "navigation",
+  "family": "layout",
+  "description": "A sidebar that collapses to icons.",
+  "tags": [
+    "navigation",
+    "sidebar",
+    "icon-rail",
+    "collapsible-icon"
+  ],
+  "root": "nav-root",
+  "fragments": [
+    {
+      "id": "nav-root",
+      "emmet": "aside.sidebar.w-16.border-e.border-border.bg-background.flex.flex-col.items-center.py-4.gap-4.md:sticky.md:top-0.md:h-screen[aria-label=Sidebar][data-slot=sidebar-host][data-component=sidebar][data-collapsible=icon][data-side=left]>(button.btn.btn-ghost.size-10.rounded-lg[data-slot=workspace-switcher][aria-label=Home]>div.size-6.rounded.bg-primary)+nav.flex.flex-col.gap-2.flex-1.items-center[aria-label=IconNav]>button.btn.btn-ghost.size-10.rounded-lg[data-state=active][aria-label=Dashboard]>span{D}^button.btn.btn-ghost.size-10.rounded-lg.relative[aria-label=Notifications]>span{N}+span.badge.size-4.rounded-full.p-0.text-xs{3}^button.btn.btn-ghost.size-10.rounded-lg[aria-label=Analytics]>span{A}^button.btn.btn-ghost.size-10.rounded-lg[aria-label=Settings]>span{S}^div.mt-auto.flex.flex-col.gap-2.items-center[data-slot=user-footer]>div.size-8.rounded-full.bg-muted[aria-label=User]"
+    }
+  ],
+  "mounts": [],
+  "slots": [
+    {
+      "id": "workspace-switcher",
+      "at": {
+        "fragment": "nav-root",
+        "name": "workspace-switcher"
+      },
+      "accepts": [
+        "action"
+      ],
+      "min": 0,
+      "max": 1
+    },
+    {
+      "id": "user-footer",
+      "at": {
+        "fragment": "nav-root",
+        "name": "user-footer"
+      },
+      "accepts": [
+        "action"
+      ],
+      "min": 0,
+      "max": 1
+    }
+  ],
+  "ports": [
+    {
+      "id": "nav-toggle-in",
+      "at": {
+        "fragment": "nav-root",
+        "name": "nav-root"
+      },
+      "direction": "in",
+      "kind": "control",
+      "contract": "nav-toggle",
+      "minLinks": 0,
+      "maxLinks": 1,
+      "scope": "shell"
+    }
+  ],
+  "componentRefs": [
+    "sidebar",
+    "button"
+  ],
+  "ruleRefs": [],
+  "dependencyBlockIds": [],
+  "layout": {
+    "frameRef": "nav-root"
+  },
+  "landmarks": {
+    "main": 0,
+    "primaryHeading": 0
+  },
+  "provenance": {
+    "origin": "authored",
+    "sourceHashes": {
+      "upstream:sidebar-07": "1ccd9a021cf102378001f5a39a2fe4b9b7127da0a90bad4e7c04adf4f17681d9"
+    },
+    "mappingVersion": "1.0.0"
+  }
+}

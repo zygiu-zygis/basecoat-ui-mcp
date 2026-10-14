@@ -1,0 +1,83 @@
+{
+  "schemaVersion": 1,
+  "id": "sidebar-03",
+  "role": "navigation",
+  "family": "layout",
+  "description": "A sidebar with submenus.",
+  "tags": [
+    "navigation",
+    "sidebar",
+    "nested-submenu",
+    "hierarchy"
+  ],
+  "root": "nav-root",
+  "fragments": [
+    {
+      "id": "nav-root",
+      "emmet": "aside.sidebar.w-64.border-e.border-border.bg-background.md:sticky.md:top-0.md:h-screen[aria-label=Sidebar][data-slot=sidebar-host][data-component=sidebar][data-side=left]>nav.flex.h-full.flex-col.justify-between.p-2>(div.flex.flex-col.gap-4>div.p-2.text-sm.font-semibold[data-slot=header]{Documentation}+div.flex.flex-col.gap-2[data-slot=nav-tree]>div.flex.flex-col.gap-2>span.px-2.text-xs.font-semibold{Core Concepts}+a.btn.btn-ghost.btn-sm.justify-start.pl-4[data-state=active]{Overview}+div.flex.flex-col.gap-2.pl-6>a.text-xs.text-muted-foreground.hover:underline{Architecture}+a.text-xs.text-muted-foreground.hover:underline{Rendering}^a.btn.btn-ghost.btn-sm.justify-start.pl-4{State Machines}+div.flex.flex-col.gap-2.pl-6>a.text-xs.text-muted-foreground.hover:underline{FSM Patterns}+a.text-xs.text-muted-foreground.hover:underline{Transitions}})+(div.mt-auto.p-2.border-t.border-border[data-slot=user-footer]>a.btn.btn-ghost.btn-sm.w-full.justify-start{Support})"
+    }
+  ],
+  "mounts": [],
+  "slots": [
+    {
+      "id": "header",
+      "at": {
+        "fragment": "nav-root",
+        "name": "header"
+      },
+      "accepts": [
+        "action",
+        "navigation"
+      ],
+      "min": 0,
+      "max": 1
+    },
+    {
+      "id": "user-footer",
+      "at": {
+        "fragment": "nav-root",
+        "name": "user-footer"
+      },
+      "accepts": [
+        "action"
+      ],
+      "min": 0,
+      "max": 1
+    }
+  ],
+  "ports": [
+    {
+      "id": "nav-toggle-in",
+      "at": {
+        "fragment": "nav-root",
+        "name": "nav-root"
+      },
+      "direction": "in",
+      "kind": "control",
+      "contract": "nav-toggle",
+      "minLinks": 0,
+      "maxLinks": 1,
+      "scope": "shell"
+    }
+  ],
+  "componentRefs": [
+    "sidebar",
+    "button"
+  ],
+  "ruleRefs": [],
+  "dependencyBlockIds": [],
+  "layout": {
+    "frameRef": "nav-root"
+  },
+  "landmarks": {
+    "main": 0,
+    "primaryHeading": 0
+  },
+  "provenance": {
+    "origin": "authored",
+    "sourceHashes": {
+      "upstream:sidebar-03": "38b09ff41262aac91123b678df853e35c65ae514b49ba25acf535f82607165b5"
+    },
+    "mappingVersion": "1.0.0"
+  }
+}

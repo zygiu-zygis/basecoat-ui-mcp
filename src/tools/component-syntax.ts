@@ -13,20 +13,40 @@ export const COMPONENT_STATES = [
   'disabled',
   'open',
   'closed',
+  'invalid',
   'open/closed',
 ] as const;
 
 export type ComponentStateVariant = (typeof COMPONENT_STATES)[number];
 
 export const componentSyntaxInputShape = {
-  component: z.string().max(80).optional(),
-  id: z.string().max(80).optional(),
-  state: z.enum(COMPONENT_STATES).optional(),
-  variant: z.string().max(40).optional(),
-  environment: z.enum(['html', 'astro']).optional(),
+  component: z
+    .string()
+    .max(80)
+    .optional()
+    .describe('Component name or alias to retrieve canonical FSM-bound syntax for (e.g. "dialog", "tabs", "button", "input", "select", "metric-card", "data-table", "sidebar-shell").'),
+  id: z
+    .string()
+    .max(80)
+    .optional()
+    .describe('Alternative identifier alias for the component (matches component argument).'),
+  state: z
+    .enum(COMPONENT_STATES)
+    .optional()
+    .describe('Target interactive state variant to bind to markup: "default", "active", "loading", "disabled", "open", "closed", "invalid", or "open/closed".'),
+  variant: z
+    .string()
+    .max(40)
+    .optional()
+    .describe('Visual variant token (e.g. "outline", "ghost", "secondary", "destructive", "subcard").'),
+  environment: z
+    .enum(['html', 'astro'])
+    .optional()
+    .describe('Target output environment: "html" emits script tags; "astro" emits client directives and clean imports.'),
   icon: z
     .enum(['plus', 'edit', 'trash', 'search', 'chevron-down', 'check', 'external-link'])
-    .optional(),
+    .optional()
+    .describe('Verified Lucide action icon to inject with canonical data-icon="inline-start|inline-end" positioning.'),
 };
 
 export type ComponentSyntaxInput = z.infer<z.ZodObject<typeof componentSyntaxInputShape>>;
@@ -133,13 +153,13 @@ const COMPOSITE_PATTERNS: Record<string, CompositePatternDetail> = {
 };
 
 const VERIFIED_ACTION_ICONS: Record<string, string> = {
-  plus: '<svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>',
-  edit: '<svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>',
-  trash: '<svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>',
-  search: '<svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>',
-  'chevron-down': '<svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>',
-  check: '<svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>',
-  'external-link': '<svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>',
+  plus: '<svg data-icon="inline-start" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>',
+  edit: '<svg data-icon="inline-start" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>',
+  trash: '<svg data-icon="inline-start" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>',
+  search: '<svg data-icon="inline-start" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>',
+  'chevron-down': '<svg data-icon="inline-end" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>',
+  check: '<svg data-icon="inline-start" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>',
+  'external-link': '<svg data-icon="inline-end" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>',
 };
 
 function mapToFsmState(recipeId: string, state: ComponentStateVariant): string {
@@ -163,14 +183,14 @@ function mapToFsmState(recipeId: string, state: ComponentStateVariant): string {
     case 'auth-flow':
       if (state === 'loading') return 'submitting';
       if (state === 'active' || state === 'open') return 'authenticated';
-      if (state === 'disabled') return 'error';
+      if (state === 'disabled' || state === 'invalid') return 'error';
       return 'idle';
     default:
       return state;
   }
 }
 
-function injectRootAttributes(
+export function applyStateVariant(
   markup: string,
   state: ComponentStateVariant,
   fsmRecipe?: string,
@@ -227,6 +247,11 @@ function injectRootAttributes(
       updatedAttrs = updatedAttrs.replace(/\s+open(?==["'][^"']*["']|\s|$)/gi, '');
     } else if (state === 'active') {
       setAttr('data-active', 'true');
+    } else if (state === 'invalid') {
+      setAttr('data-invalid', 'true');
+      if (tag === 'input' || tag === 'textarea' || tag === 'select') {
+        setAttr('aria-invalid', 'true');
+      }
     }
 
     return `${prefix}${updatedAttrs}${close}`;
@@ -238,10 +263,31 @@ function injectRootAttributes(
   } else if (state === 'closed') {
     result = result.replace(/\baria-expanded="true"/g, 'aria-expanded="false"');
     result = result.replace(/(<(?:dialog|details)\b[^>]*?)\s+open(?==["'][^"']*["']|\s|>)/gi, '$1');
+  } else if (state === 'invalid') {
+    result = result.replace(/(<(?:div|section|fieldset)\b[^>]*\b(?:class|data-component)=["'][^"']*\b(?:field|form|radio-group|switch|combobox|date-picker|input-otp)\b[^"']*["'])([^>]*)(>)/gi, (match, p1, p2, p3) => {
+      if (!/data-invalid=/i.test(match)) {
+        return `${p1} data-invalid="true"${p2}${p3}`;
+      }
+      return match;
+    });
+    result = result.replace(/(<(?:input|textarea|select)\b)([^>]*)(>)/gi, (match, p1, p2, p3) => {
+      if (!/aria-invalid=/i.test(match)) {
+        return `${p1} aria-invalid="true"${p2}${p3}`;
+      }
+      return match;
+    });
+    result = result.replace(/(<[a-zA-Z][a-zA-Z0-9-]*\b[^>]*\brole=["']combobox["'])([^>]*)(>)/gi, (match, p1, p2, p3) => {
+      if (!/aria-invalid=/i.test(match)) {
+        return `${p1} aria-invalid="true"${p2}${p3}`;
+      }
+      return match;
+    });
   }
 
   return result;
 }
+
+export const injectRootAttributes = applyStateVariant;
 
 export function runComponentSyntax(
   input: ComponentSyntaxInput,
@@ -251,7 +297,11 @@ export function runComponentSyntax(
   if (!rawId) {
     throw new Error('Provide component (e.g. "dialog", "tabs", "button", "dropdown-menu").');
   }
-  const aliasResolved = SYNTAX_ALIASES[rawId.toLowerCase()] ?? resolveComponentId(rawId.toLowerCase());
+  const needle = rawId.toLowerCase();
+  const isDirectRegistryMatch = input.state !== undefined && (needle in source.details || needle in COMPOSITE_PATTERNS);
+  const aliasResolved = isDirectRegistryMatch
+    ? needle
+    : (SYNTAX_ALIASES[needle] ?? resolveComponentId(needle));
   const entry = COMPOSITE_PATTERNS[aliasResolved] ?? source.details[aliasResolved];
   if (!entry) {
     const hint = suggestComponentId(aliasResolved);
@@ -259,7 +309,11 @@ export function runComponentSyntax(
     throw new Error(`Unknown component: ${rawId.slice(0, 80)}.${suffix} Use search_components.`);
   }
 
-  const id = aliasResolved;
+  const id = isDirectRegistryMatch
+    ? needle
+    : ('id' in entry && typeof (entry as { id?: unknown }).id === 'string'
+        ? (entry as { id: string }).id
+        : aliasResolved);
   const state: ComponentStateVariant = input.state ?? 'default';
   const effectiveState = state === 'open/closed' ? 'open' : state;
   const environment = input.environment ?? 'html';

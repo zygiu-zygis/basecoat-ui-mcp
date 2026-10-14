@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "id": "login-01",
+  "role": "page",
+  "family": "auth",
+  "description": "A simple login form.",
+  "tags": [
+    "auth",
+    "login",
+    "simple",
+    "card"
+  ],
+  "root": "auth-root",
+  "fragments": [
+    {
+      "id": "auth-root",
+      "emmet": "main.flex.min-h-screen.w-full.items-center.justify-center.p-6.bg-muted[data-slot=auth-page]>div.card.w-full.max-w-sm.rounded-xl.border.border-border.bg-card.p-6.text-card-foreground.shadow-md[data-component=auth-card][data-fsm-recipe=auth-flow][data-fsm-state=idle]>(header.flex.flex-col.gap-2.text-center>h1.text-2xl.font-semibold{Login}+p.text-xs.text-muted-foreground{Enter your credentials to login})+form.flex.flex-col.gap-4.pt-4>(div.flex.flex-col.gap-2>label.text-xs.font-medium[for=login-01-email]{Email}+input.input.input-sm#login-01-email[type=email][placeholder='m@example.com'][required])+(div.flex.flex-col.gap-2>div.flex.items-center.justify-between>label.text-xs.font-medium[for=login-01-password]{Password}+a.text-xs.text-muted-foreground.hover:underline[href='#forgot']{Forgot?}^input.input.input-sm#login-01-password[type=password][required])+button.btn.btn-sm.btn-primary.w-full[type=submit]{Login}+(footer.text-center.text-xs.text-muted-foreground.pt-2>a.text-primary.font-medium.hover:underline[href='#signup']{Sign up})"
+    }
+  ],
+  "mounts": [],
+  "slots": [],
+  "ports": [],
+  "componentRefs": [
+    "card",
+    "button",
+    "input",
+    "label",
+    "field"
+  ],
+  "ruleRefs": [],
+  "dependencyBlockIds": [],
+  "layout": {
+    "frameRef": "auth-root"
+  },
+  "landmarks": {
+    "main": 1,
+    "primaryHeading": 1
+  },
+  "provenance": {
+    "origin": "authored",
+    "sourceHashes": {
+      "upstream:login-01": "1830088a392d11fad8ed4a84743c991da69942ed66ec0bf47caa0ae37a2e1fee"
+    },
+    "mappingVersion": "1.0.0"
+  }
+}
