@@ -1,7 +1,7 @@
 {
   "name": "basecoat-ui-mcp",
   "displayName": "Basecoat UI MCP",
-  "version": "1.7.1",
+  "version": "1.8.0",
   "description": "Offline MCP server for Basecoat UI (shadcn/ui look without React): 4-Stage Intent-Driven Tooling Layer, Kanso design direction, and WCAG 2.1/APCA quality inspection.",
   "author": {
     "name": "Žygimantas Jasiulionis / Intellmedia",

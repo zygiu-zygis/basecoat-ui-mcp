@@ -63,7 +63,7 @@ The runtime registers **22 offline MCP tools**:
 | `basecoat_list_charts` | Charts & Data Viz | Lists and filters 56 theme-aware chart blueprints across 7 categories with keyword search | Read-only |
 | `basecoat_get_chart_blueprint` | Charts & Data Viz | Retrieves chart HTML using semantic CSS tokens (--chart-1..5) and mount scripts for 5 frameworks | Read-only |
 | `basecoat_quality_inspector` | Quality & Audit | Audits HTML/Astro markup with Score (0-100), letter grade, syntax violations, a11y omissions, and auto-fix suggestions | Read-only |
-| `search_components` | Components | Searches up to 8 compact component summaries by intent and/or query across 61 curated components | Read-only |
+| `search_components` | Components | Searches up to 8 compact component summaries by intent and/or query across 62 curated components | Read-only |
 | `get_component_details` | Components | Retrieves minimal component template, dependencies, and composition guidance for Astro or HTML | Read-only |
 | `get_component_html` | Components | Retrieves HTML markup template and dependencies for any curated component | Read-only |
 | `validate_composition` | Static Analysis | Statically checks up to 256 KiB of markup for migration errors, rhythm, FSM bindings, and accessibility | Read-only |
@@ -86,7 +86,7 @@ The runtime registers **8 authoritative MCP resources**:
 | `basecoat://skills/core` | Skill Vault | Core Basecoat UI design philosophy, Kanso minimalism, and foundational component usage | `text/markdown` |
 | `basecoat://skills/dashboard` | Skill Vault | Comprehensive dashboard architecture, layout patterns, page types, sidebar configurations, and audit checklists | `text/markdown` |
 | `basecoat://skills/charts` | Skill Vault | Theme-aware chart blueprints, CSS token mapping (--chart-1..5), ApexCharts configuration, and multi-framework integration | `text/markdown` |
-| `basecoat://skills/files/*` | Skill Vault | Dynamic file access resource to read individual documentation and reference markdown files across the 95-file Skill Vault | `text/markdown` |
+| `basecoat://skills/files/*` | Skill Vault | Dynamic file access resource to read individual documentation and reference markdown files across the 96-file Skill Vault | `text/markdown` |
 | `basecoat://design/rhythm` | Design System | Content hierarchy, 4px/8px optical spacing rhythm, typography ladders, density profiles, and structural composition rules | `text/markdown` |
 | `basecoat://design/theming` | Theming & Dark Mode | Basecoat OKLCH token contract, 8 official style packs (Vega..Rhea), class-based dark mode (themeMode resolver), and no-flash bootstrap | `text/markdown` |
 | `basecoat://integration/frameworks` | Integration Guide | Production integration guide covering Astro, Next.js, Express, Vite, Tailwind CSS 4 setup, and framework-agnostic HTML | `text/markdown` |
@@ -144,16 +144,16 @@ Search never returns markup. Details never participate in search scoring. Resour
 
 ## Curated templates vs discovered inventory
 
-The registry ships **61 curated components**: all 57 `shadcn/ui` New York v4 primitives adapted for pure Basecoat CSS without React, plus Basecoat extensions (`theme-switcher`, `segmented-toggle`, `svg-area-chart`, `native-select`) with explicit FSM state contracts. Upstream sync discovers 41 components in the pinned snapshot, all of which are now curated into the index and details registries.
+The registry ships **62 curated components**: all 57 `shadcn/ui` New York v4 primitives adapted for pure Basecoat CSS without React, plus Basecoat extensions (`theme-switcher`, `segmented-toggle`, `svg-area-chart`, `native-select`) with explicit FSM state contracts. Upstream sync discovers 41 components in the pinned snapshot, all of which are now curated into the index and details registries.
 
 ### Authoritative Catalog Counts
 
-- **61 Curated Components**: All 57 `shadcn/ui` new-york-v4 primitives plus Basecoat extensions with verified HTML/Astro markup templates, zero React bundling requirements, and finite state machine (FSM) contracts.
+- **62 Curated Components**: All 57 `shadcn/ui` new-york-v4 primitives plus Basecoat extensions with verified HTML/Astro markup templates, zero React bundling requirements, and finite state machine (FSM) contracts.
 - **84 Macro Blocks & Aliases**: Layout blueprints covering `sidebar-01..16`, `dashboard-01..07`, `login-01..05`, `signup-01..05`, `otp-01..05`, `mail`, `tasks`, `forms`, `products`, `analytics`, `billing`, and `settings`.
 - **11 Page Recipes**: End-to-end multi-page layout graphs (`workspace-dashboard`, `ecommerce-overview`, `analytics-workspace`, `workspace-settings`, `workspace-detail`, `tasks-table-workspace`, `mail-workspace`, `auth-flow`, `auth-split-flow`, `data-records`, `marketing-pricing`).
-- **41 Composable Component Stacks**: Composable stacks across 7 categories (`shell-stacks`, `header-stacks`, `kpi-stacks`, `chart-stacks`, `table-stacks`, `overlay-stacks`, `form-stacks`) with slot hydration into canonical shells.
+- **45 Composable Component Stacks**: Composable stacks across 7 categories (`shell-stacks`, `header-stacks`, `kpi-stacks`, `chart-stacks`, `table-stacks`, `overlay-stacks`, `form-stacks`) with slot hydration into canonical shells.
 - **56 Theme-Aware Chart Blueprints**: Visualizations across 7 categories (`area`, `bar`, `line`, `pie`, `radar`, `radial`, `tooltip`) mapped to CSS tokens (`var(--chart-1)` through `var(--chart-5)`) with mounts for 5 frameworks (`vanilla`, `astro`, `react`, `vue`, `svelte`).
-- **95 Markdown Files across the 3-Pillar Skill Vault**: Distributed across `skills/basecoat` (core foundations and 57 component guides), `skills/basecoat-dashboard` (dashboard architecture, block patterns, and audit checklist), and `skills/basecoat-charts` (ApexCharts blueprints and token mapping).
+- **96 Markdown Files across the 3-Pillar Skill Vault**: Distributed across `skills/basecoat` (core foundations and 57 component guides), `skills/basecoat-dashboard` (dashboard architecture, block patterns, and audit checklist), and `skills/basecoat-charts` (ApexCharts blueprints and token mapping).
 
 New upstream components are not auto-promoted into `index` or `details`. Sync updates `upstream.components`, variants, classes, and hashes while preserving curated templates. Promotion requires:
 

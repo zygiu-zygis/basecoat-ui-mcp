@@ -158,7 +158,7 @@ The server exposes **22 offline MCP tools** organized across six architectural l
 | `basecoat_list_charts` | Charts & Data Viz | Lists and filters 56 theme-aware chart blueprints across 7 categories with keyword search | Read-only |
 | `basecoat_get_chart_blueprint` | Charts & Data Viz | Retrieves chart HTML using semantic CSS tokens (--chart-1..5) and mount scripts for 5 frameworks | Read-only |
 | `basecoat_quality_inspector` | Quality & Audit | Audits HTML/Astro markup with Score (0-100), letter grade, syntax violations, a11y omissions, and auto-fix suggestions | Read-only |
-| `search_components` | Components | Searches up to 8 compact component summaries by intent and/or query across 61 curated components | Read-only |
+| `search_components` | Components | Searches up to 8 compact component summaries by intent and/or query across 62 curated components | Read-only |
 | `get_component_details` | Components | Retrieves minimal component template, dependencies, and composition guidance for Astro or HTML | Read-only |
 | `get_component_html` | Components | Retrieves HTML markup template and dependencies for any curated component | Read-only |
 | `validate_composition` | Static Analysis | Statically checks up to 256 KiB of markup for migration errors, rhythm, FSM bindings, and accessibility | Read-only |
@@ -182,7 +182,7 @@ The server exposes **22 offline MCP tools** organized across six architectural l
    - **Data Table Detail** (`workspace-detail`, `data-table-detail`) - Paginated data table with search/filters and slide-over inspection drawer.
    - **Settings Split-Screen** (`workspace-settings`, `settings-split-screen`) - Two-column responsive layout with vertical section navigation and form controls.
    Supports density controls (`compact` for high-density enterprise tools, `comfortable` for standard interfaces).
-3. `basecoat_compose_stack` - Dynamically composes 41 pre-built component stacks across 7 categories (`shell-stacks`, `header-stacks`, `kpi-stacks`, `chart-stacks`, `table-stacks`, `overlay-stacks`, `form-stacks`) into canonical shells (`sidebar-01`..`sidebar-16`, `topbar-shell`, `inset-shell`, `split-shell`) with automated slot hydration.
+3. `basecoat_compose_stack` - Dynamically composes 45 pre-built component stacks across 7 categories (`shell-stacks`, `header-stacks`, `kpi-stacks`, `chart-stacks`, `table-stacks`, `overlay-stacks`, `form-stacks`) into canonical shells (`sidebar-01`..`sidebar-16`, `topbar-shell`, `inset-shell`, `split-shell`) with automated slot hydration.
 4. `basecoat_rules_enforcer` - Enforces strict technical constraints across `tailwind-v4`, `fsm-contracts`, `tokens`, `semantic-html`, and `dashboard-patterns`:
    - `MET-01`: KPI numerals require `text-2xl`/`text-3xl` with `tabular-nums` and semantic trend indicators.
    - `TBL-01`: Data tables require `<div class="overflow-x-auto">` wrapper, sticky blurred `<thead class="sticky top-0 bg-background/90 backdrop-blur">`, and right-aligned numeric cells.
@@ -209,7 +209,7 @@ The server exposes **22 offline MCP tools** organized across six architectural l
 
 ### Component tools
 
-- `search_components` returns up to 8 compact `{id, name, intent}` summaries across the 61 curated components and never returns markup. `intent` and `query` are optional; an empty search returns an empty list.
+- `search_components` returns up to 8 compact `{id, name, intent}` summaries across the 62 curated components and never returns markup. `intent` and `query` are optional; an empty search returns an empty list.
 - `get_component_details` returns one Astro or HTML template with dependencies and composition guidance. Oversized entries fail closed. `theme-toggle` resolves to `theme-switcher`.
 - `get_component_html` returns the HTML markup template and dependencies for any curated component (`environment` defaults to `html`).
 - `validate_composition` statically checks up to **256 KiB** (262,144 UTF-8 bytes) of HTML or Astro source and returns at most 24 issues (including WCAG 2.1 / APCA token contrast, arbitrary dimensions, dialog focus traps, and `aria-controls` bindings). Pass `code` or `html`, and optional `semanticProfile` or `densityProfile` (comfortable|compact). It does not render, execute, resolve application modules, or certify runtime browser accessibility.
@@ -329,7 +329,7 @@ The server exposes **8 authoritative MCP resources** spanning the 3-pillar Skill
 | `basecoat://skills/core` | Skill Vault | Core Basecoat UI design philosophy, Kanso minimalism, and foundational component usage | `text/markdown` |
 | `basecoat://skills/dashboard` | Skill Vault | Comprehensive dashboard architecture, layout patterns, page types, sidebar configurations, and audit checklists | `text/markdown` |
 | `basecoat://skills/charts` | Skill Vault | Theme-aware chart blueprints, CSS token mapping (--chart-1..5), ApexCharts configuration, and multi-framework integration | `text/markdown` |
-| `basecoat://skills/files/*` | Skill Vault | Dynamic file access resource to read individual documentation and reference markdown files across the 95-file Skill Vault | `text/markdown` |
+| `basecoat://skills/files/*` | Skill Vault | Dynamic file access resource to read individual documentation and reference markdown files across the 96-file Skill Vault | `text/markdown` |
 | `basecoat://design/rhythm` | Design System | Content hierarchy, 4px/8px optical spacing rhythm, typography ladders, density profiles, and structural composition rules | `text/markdown` |
 | `basecoat://design/theming` | Theming & Dark Mode | Basecoat OKLCH token contract, 8 official style packs (Vega..Rhea), class-based dark mode (themeMode resolver), and no-flash bootstrap | `text/markdown` |
 | `basecoat://integration/frameworks` | Integration Guide | Production integration guide covering Astro, Next.js, Express, Vite, Tailwind CSS 4 setup, and framework-agnostic HTML | `text/markdown` |
@@ -338,7 +338,7 @@ The server exposes **8 authoritative MCP resources** spanning the 3-pillar Skill
 - `basecoat://skills/core` provides foundational guidelines for building clean, minimal interfaces using Basecoat CSS, including design philosophy, atomic styling principles, and component construction.
 - `basecoat://skills/dashboard` provides enterprise dashboard architecture, navigation patterns, data display conventions, form layouts, and accessibility checklists.
 - `basecoat://skills/charts` provides complete guidance on theme-aware ApexCharts and SVG data visualization using pure Basecoat CSS color tokens (`var(--chart-1)` through `var(--chart-5)`) across 5 frameworks.
-- `basecoat://skills/files/*` enables dynamic lookup and retrieval of any specific markdown file within the 95-file Skill Vault (`skills/basecoat`, `skills/basecoat-dashboard`, `skills/basecoat-charts`).
+- `basecoat://skills/files/*` enables dynamic lookup and retrieval of any specific markdown file within the 96-file Skill Vault (`skills/basecoat`, `skills/basecoat-dashboard`, `skills/basecoat-charts`).
 - `basecoat://design/rhythm` provides content hierarchy, spacing, typography, component-family, and structural composition rules.
 - `basecoat://design/theming` provides the Basecoat token contract, all 8 official style packs (Vega, Nova, Maia, Lyra, Mira, Luma, Sera, Rhea), class-based dark mode via `window.basecoat.theme` (`themeMode` key), no-flash bootstrap, and form-control/autofill pitfalls. Read it before restyling or auditing an existing UI.
 - `basecoat://integration/frameworks` provides Astro, Next.js, Express, Vite, Tailwind CSS 4 (including style pack imports like `@import "basecoat-css/vega";`), selective Basecoat JavaScript, and native dialog setup.
@@ -394,18 +394,18 @@ The MCP server provides a robust set of macro layouts (`search_macro_blocks`) th
 
 ## Registry and exclusions
 
-The checked-in registry contains **61 curated components**: all 57 `shadcn/ui` New York v4 primitives adapted for pure Basecoat CSS without React, plus Basecoat extensions (`theme-switcher`, `segmented-toggle`, `svg-area-chart`, `native-select`) with explicit FSM state contracts:
+The checked-in registry contains **62 curated components**: all 57 `shadcn/ui` New York v4 primitives adapted for pure Basecoat CSS without React, plus Basecoat extensions (`theme-switcher`, `segmented-toggle`, `svg-area-chart`, `native-select`) with explicit FSM state contracts:
 
 `accordion`, `alert`, `alert-dialog`, `aspect-ratio`, `avatar`, `badge`, `breadcrumb`, `button`, `button-group`, `calendar`, `card`, `carousel`, `chart`, `checkbox`, `collapsible`, `combobox`, `command`, `context-menu`, `data-table`, `date-picker`, `dialog`, `drawer`, `dropdown-menu`, `empty`, `field`, `form`, `hover-card`, `input`, `input-group`, `input-otp`, `item`, `kbd`, `label`, `menubar`, `native-select`, `navigation-menu`, `pagination`, `popover`, `progress`, `radio-group`, `resizable`, `scroll-area`, `segmented-toggle`, `select`, `separator`, `sheet`, `sidebar`, `skeleton`, `slider`, `sonner`, `spinner`, `svg-area-chart`, `switch`, `table`, `tabs`, `textarea`, `theme-switcher`, `toast`, `toggle`, `toggle-group`, `tooltip`
 
 ### Comprehensive Catalog Counts
 
-- **61 Curated Components**: All 57 `shadcn/ui` new-york-v4 primitives plus Basecoat extensions with verified HTML/Astro markup templates, zero React bundling requirements, and finite state machine (FSM) contracts.
+- **62 Curated Components**: All 57 `shadcn/ui` new-york-v4 primitives plus Basecoat extensions with verified HTML/Astro markup templates, zero React bundling requirements, and finite state machine (FSM) contracts.
 - **84 Macro Blocks & Aliases**: Layout blueprints covering `sidebar-01..16`, `dashboard-01..07`, `login-01..05`, `signup-01..05`, `otp-01..05`, `mail`, `tasks`, `forms`, `products`, `analytics`, `billing`, and `settings`.
 - **11 Page Recipes**: End-to-end multi-page layout graphs (`workspace-dashboard`, `ecommerce-overview`, `analytics-workspace`, `workspace-settings`, `workspace-detail`, `tasks-table-workspace`, `mail-workspace`, `auth-flow`, `auth-split-flow`, `data-records`, `marketing-pricing`).
-- **41 Composable Component Stacks**: Composable stacks across 7 categories (`shell-stacks`, `header-stacks`, `kpi-stacks`, `chart-stacks`, `table-stacks`, `overlay-stacks`, `form-stacks`) with slot hydration into canonical shells.
+- **45 Composable Component Stacks**: Composable stacks across 7 categories (`shell-stacks`, `header-stacks`, `kpi-stacks`, `chart-stacks`, `table-stacks`, `overlay-stacks`, `form-stacks`) with slot hydration into canonical shells.
 - **56 Theme-Aware Chart Blueprints**: Visualizations across 7 categories (`area`, `bar`, `line`, `pie`, `radar`, `radial`, `tooltip`) mapped to CSS tokens (`var(--chart-1)` through `var(--chart-5)`) with mounts for 5 frameworks (`vanilla`, `astro`, `react`, `vue`, `svelte`).
-- **95 Markdown Files across the 3-Pillar Skill Vault**: Distributed across `skills/basecoat` (core foundations and 57 component guides), `skills/basecoat-dashboard` (dashboard architecture, block patterns, and audit checklist), and `skills/basecoat-charts` (ApexCharts blueprints and token mapping).
+- **96 Markdown Files across the 3-Pillar Skill Vault**: Distributed across `skills/basecoat` (core foundations and 57 component guides), `skills/basecoat-dashboard` (dashboard architecture, block patterns, and audit checklist), and `skills/basecoat-charts` (ApexCharts blueprints and token mapping).
 
 The maintenance snapshot records 41 discovered upstream components. All 57 shadcn/ui primitives are now curated with templates, dependencies, and state contracts. Slider uses `basecoat-css/range`, not a `slider` module.
 
