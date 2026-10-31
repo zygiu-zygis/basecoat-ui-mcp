@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "peer": {
+    "id": "basecoat-ui-mcp"
+  },
+  "recall": {
+    "peer_scope": "actor",
+    "max_items": 3
+  },
+  "labels": {
+    "openviking_project": "basecoat-ui-mcp",
+    "retrieval_l05": "get_context_fragments"
+  }
+}
